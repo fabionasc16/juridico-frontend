@@ -1,0 +1,36 @@
+<template>
+  <div class="header px-4">
+      <slot></slot>
+      <b-dropdown class="dropdown" variant="dark">
+          <template #button-content>
+            <span>
+              Nome do usuario
+            </span>
+          </template>
+          <b-dropdown-divider />
+          <b-dropdown-item>
+            Logout
+          </b-dropdown-item>
+      </b-dropdown>
+  </div>
+</template>
+<script lang="ts">
+import Vue from "vue";
+export default Vue.extend({
+  
+});
+</script>
+<style scoped>
+.header {
+  background-color: #293258;
+  color: white;
+  min-height: 50px;
+  display: flex;
+  align-items: center;
+}
+.dropdown{
+  float: right;
+  right: 15px;
+  position: fixed;
+}
+</style>
