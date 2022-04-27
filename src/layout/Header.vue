@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="sticky-top">
     <div class="header px-4">
       <slot></slot>
       <b-dropdown class="dropdown" size="sm" variant="outline-light">
@@ -27,7 +27,7 @@ export default Vue.extend({
 });
 </script>
 <style scoped>
-.header {
+.header{
   background-color: #1b2038;
   color: white;
   min-height: 50px;
@@ -37,7 +37,7 @@ export default Vue.extend({
 .dropdown{
   float: right;
   right: 15px;
-  position: fixed;
+  position: absolute;
 }
 .breadcumb{
   background-color: #1b2038;

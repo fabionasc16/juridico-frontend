@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="sticky-top">
         <!-- Identificação do sistema -->
         <div class="logo text-center">
             <h3>Ticados</h3>

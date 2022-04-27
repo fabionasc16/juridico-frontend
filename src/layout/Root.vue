@@ -16,7 +16,7 @@
                             </router-link>
                         </b-nav>
                     </content-header>
-                    <div class="content-body">
+                    <div class="content-body p-3 p-lg-1">
                         <slot></slot>
                     </div>
                 </div>
@@ -68,9 +68,6 @@ export default Vue.extend({
     .content{
         background-color: white;
         padding: 0;
-    }
-    .content-body{
-        padding: 1%;
     }
     .botao-retrair{
         padding: 2%;   
