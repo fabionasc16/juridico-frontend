@@ -63,7 +63,7 @@ export default Vue.extend({
         min-height: 100vh;  
     }
     .sidebar{
-        background-color: #1b2038;
+        background-color: #293258;
     }
     .content{
         background-color: white;
@@ -79,8 +79,17 @@ export default Vue.extend({
         color:white;
         font-weight: bold;
     }
+    .listagem a{
+        box-shadow: inset 0 0 0 0 #00bac0;
+        color:white;
+        font-weight: bold;
+        transition: color .3s ease-in-out, box-shadow .3s ease-in-out;
+        border-radius: 15px;
+    }
     .listagem a:hover{
-        background-color:rgb(76, 138, 138);
         text-decoration: none;
+        box-shadow: inset 300px 0 0 0 #00bac0;
+        color:black;
+        border-radius: 15px;
     }
 </style>

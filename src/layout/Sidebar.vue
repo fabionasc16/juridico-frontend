@@ -2,16 +2,16 @@
     <div>
         <!-- Identificação do sistema -->
         <div class="logo text-center">
-            Ticados
+            <h3>Ticados</h3>
         </div>
         <!-- Listagem das rotas -->
         <nav class="listagem pt-5">
             <router-link class="d-block p-2" v-for="(r,index) in commonMenus" :key="index" :to="r.path">
-                {{r.name}}
+                <p style="font-weight: 600;">{{r.name}}</p>
             </router-link>
         </nav>
         <div class="footer">
-            <p class="justify-center">
+            <p class="justify-center" style="color: white; font-weight: 600;">
                 Secretaria de Saúde 
             </p>
         </div>
