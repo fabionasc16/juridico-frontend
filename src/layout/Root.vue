@@ -10,6 +10,11 @@
                        <b-btn class="d-none d-lg-block" variant="primary" @click="retraido = !retraido">
                            ...
                        </b-btn>
+                        <b-nav class="listagem" :class="menuHeaderClass">
+                            <router-link class="ml-2 px-3" v-for="(r,index) in commonMenus" :key="index" :to="r.path">
+                                {{r.name}}  
+                            </router-link>
+                        </b-nav>
                     </content-header>
                     <div class="content-body">
                         <slot></slot>
@@ -23,12 +28,16 @@
 <script lang="ts">
 import Sidebar from './Sidebar.vue'
 import ContentHeader from './Header.vue'
+import {menusMixin} from '../mixins/menu'
 import Vue from 'vue'
 export default Vue.extend({
     components:{
         ContentHeader,
         Sidebar
     },
+    mixins:[
+        menusMixin
+    ],
     data(){
         return {
             retraido: false as boolean
@@ -41,12 +50,15 @@ export default Vue.extend({
         contentClass(): string{
             return !this.retraido? "col-12 col-lg-10 " : "col-12" 
         },
+        menuHeaderClass(): string{
+            return !this.retraido? "d-block d-lg-none": "d-block" 
+        }
 
     }
 })
 </script>
 
-<style scoped>
+<style>
     .root .row{
         min-height: 100vh;  
     }
@@ -62,5 +74,13 @@ export default Vue.extend({
     }
     .botao-retrair{
         padding: 2%;   
+    }
+    .listagem a{
+        color:white;
+        font-weight: bold;
+    }
+    .listagem a:hover{
+        background-color:rgb(76, 138, 138);
+        text-decoration: none;
     }
 </style>

@@ -5,8 +5,8 @@
             Ticados
         </div>
         <!-- Listagem das rotas -->
-        <nav class="listagem">
-            <router-link class="d-block py-2" v-for="(r,index) in routes" :key="index" :to="r.path">
+        <nav class="listagem pt-5">
+            <router-link class="d-block p-2" v-for="(r,index) in commonMenus" :key="index" :to="r.path">
                 {{r.name}}
             </router-link>
         </nav>
@@ -20,21 +20,18 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import { RouteConfig } from 'vue-router'
+import {menusMixin} from '../mixins/menu'
 export default Vue.extend({
+    mixins:[
+        menusMixin as Object // Mixin com menus utilizáveis
+    ],
     data(){
         return {
-            routes:[
-                {
-                  name: "Página Inicial",
-                  path: "/"
-                },
-                {
-                  name: "About",
-                  path: "/about"
-                }
-            ] as Array<RouteConfig>
+            currentRoute: this.$route.name
         }
+    },
+    computed:{
+        currentRoute(){ return this.$route.name}
     }
 })
 </script>
@@ -49,13 +46,7 @@ export default Vue.extend({
     align-items: center;
     justify-content: center;
 }
-.listagem{
-    list-style-type:none;
-    margin-top: 20px;
-}
-.listagem a{
-    color:white;
-}
+
 .footer{
     position: fixed;
     bottom: 20px;
