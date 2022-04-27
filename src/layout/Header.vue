@@ -28,7 +28,7 @@ export default Vue.extend({
 </script>
 <style scoped>
 .header {
-  background-color: #293258;
+  background-color: #1b2038;
   color: white;
   min-height: 50px;
   display: flex;
