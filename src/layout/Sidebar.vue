@@ -7,7 +7,7 @@
         <!-- Listagem das rotas -->
         <nav class="listagem pt-5">
             <router-link class="d-block p-2" v-for="(r,index) in commonMenus" :key="index" :to="r.path">
-                <p style="color: white; font-weight: 600;">{{r.name}}</p>
+                <p style="font-weight: 600;">{{r.name}}</p>
             </router-link>
         </nav>
         <div class="footer">

@@ -89,10 +89,7 @@ export default Vue.extend({
     .listagem a:hover{
         text-decoration: none;
         box-shadow: inset 300px 0 0 0 #00bac0;
+        color:black;
         border-radius: 15px;
     }
-    /* .listagem a:hover{
-        background-color:rgb(76, 138, 138);
-        text-decoration: none;
-    } */
 </style>

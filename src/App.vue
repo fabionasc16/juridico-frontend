@@ -28,7 +28,6 @@ export default Vue.extend({
   p {
     font-family: 'Mulish', sans-serif;
     font-weight: 500;
-    color: #6d6d6d;
   }
   a {
     color: #00bac0;
