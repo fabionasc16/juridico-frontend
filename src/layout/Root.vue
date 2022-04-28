@@ -1,6 +1,6 @@
 <template>
     <div class="root container-fluid">
-        <div class="row">
+        <div id="root-row" class="row">
             <div class="sidebar" :class="sidebarClass">
                 <sidebar />
             </div>
@@ -59,7 +59,10 @@ export default Vue.extend({
 </script>
 
 <style>
-    .root .row{
+    .root{
+        min-height: 100vh;  
+    }
+    #root-row{
         min-height: 100vh;  
     }
     .sidebar{

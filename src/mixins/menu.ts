@@ -8,9 +8,13 @@ const menusMixin = {
 				path: "/"
 			},
 			{
+				name: "Características",
+				path: "/caracteristicas"
+			},
+			{
 				name: "About",
 				path: "/about"
-			}
+			}			
 			] as Array<RouteConfig>
 		}
 	},
