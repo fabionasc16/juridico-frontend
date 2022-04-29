@@ -8,10 +8,10 @@
       <div class="row">
         <div class="col-sm-8 col-md-8 col-lg-8">
           <b-form >
-            <b-form-group id="fieldset" label="Informe o nome da categoria" label-for="categoria">    
+            <b-form-group class="font" id="fieldset" label="Informe o nome da categoria" label-for="categoria">    
               <b-form-input id="categoria" v-model="categoria" :placeholder="'Exemplo: cor dos olhos'" />
             </b-form-group>
-            <b-form-group id="fieldset2" label="Informe o(s) tipo(s) da categoria (adicione mais campos se achar necessário)" label-for="tipo"> 
+            <b-form-group class="font" id="fieldset2" label="Informe o(s) tipo(s) da categoria (adicione mais campos se achar necessário)" label-for="tipo"> 
               <b-form-input class="mb-2" v-model="tipos[0]"  :placeholder="'Exemplo: Tipo 1'" />  
               <b-form-input class="mb-2" v-model="tipos[i+1]" :placeholder="'Exemplo: Tipo '+(i+2) " v-for="(qtd, i) in qtd_inputs" :key="qtd" />
             </b-form-group>  
@@ -66,3 +66,9 @@ export default Vue.extend({
   }
 })
 </script>
+
+<style scoped>
+.font {
+  font-family: 'Mulish', sans-serif;
+}
+</style>
