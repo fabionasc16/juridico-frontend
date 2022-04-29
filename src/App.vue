@@ -18,11 +18,17 @@ export default Vue.extend({
 <style>
 
   @import url('https://fonts.googleapis.com/css2?family=Mulish:wght@400;500&display=swap');
-  
+
+  hr {
+    border: none;
+    height: 1px;
+    color: rgb(197, 197, 197);
+    background-color: rgb(197, 197, 197); 
+  }
   h1 {
     font-family: 'Mulish', sans-serif;
   }
-  h2, h3 {
+  h2, h3, h4, h5, h6 {
     font-family: 'Mulish', sans-serif;
   }
   p {
