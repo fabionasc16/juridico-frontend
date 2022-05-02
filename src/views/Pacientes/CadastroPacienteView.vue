@@ -41,13 +41,13 @@
               </b-form-group>
 
               <b-form-group
-                label="Entrada através:"
+                label="Entrada através de:"
                 class="font col-sm-3 col-md-3 col-lg-3"
               >
                 <b-form-select v-model="form.entradaAtraves">
                   <b-form-select-option value="samu">SAMU</b-form-select-option>
                   <b-form-select-option value="policia"
-                    >Policia</b-form-select-option
+                    >Polícia</b-form-select-option
                   >
                 </b-form-select>
               </b-form-group>
@@ -55,7 +55,7 @@
               <b-form-group
                 label="B.O.:"
                 class="font col-sm-3 col-md-3 col-lg-3"
-                v-show="exibirbo"
+                v-show="exibirBO"
               >
                 <b-form-input type="text" v-model="form.boletim"></b-form-input>
               </b-form-group>
@@ -75,6 +75,7 @@
                 class="font col-sm-6 col-md-6 col-lg-6"
               >
                 <b-form-input
+                :placeholder="'Nome completo'"
                   type="text"
                   v-model="form.nomePaciente"
                 ></b-form-input>
@@ -84,7 +85,10 @@
                 label="Nome da mãe:"
                 class="font col-sm-6 col-md-6 col-lg-6"
               >
-                <b-form-input type="text" v-model="form.nomeMae"></b-form-input>
+                <b-form-input
+                :placeholder="'Nome completo da mãe'"
+                type="text"
+                v-model="form.nomeMae"></b-form-input>
               </b-form-group>
 
               <b-form-group
@@ -98,7 +102,7 @@
               </b-form-group>
 
               <b-form-group label="RG:" class="font col-sm-3 col-md-3 col-lg-3">
-                <b-form-input type="text" v-model="form.rg"></b-form-input>
+                <b-form-input :placeholder="'Exemplo: 0000000-0'" type="text" v-model="form.rg"></b-form-input>
               </b-form-group>
 
               <b-form-group
@@ -106,6 +110,7 @@
                 class="font col-sm-3 col-md-3 col-lg-3"
               >
                 <b-form-input
+                :placeholder="'Exemplo: 000.000.000-00'"
                   type="text"
                   v-model="form.cpf"
                   v-mask="'###.###.###-##'"
@@ -117,6 +122,7 @@
                 class="font col-sm-3 col-md-3 col-lg-3"
               >
                 <b-form-input
+                :placeholder="'Exemplo: 000.0000.0000.0000'"
                   type="text"
                   v-model="form.cns"
                   v-mask="'###.####.####.####'"
@@ -139,10 +145,10 @@
               >
                 <b-form-select v-model="form.nacionalidade">
                   <b-form-select-option value="brasileiro"
-                    >Brasileiro</b-form-select-option
+                    >Brasileira</b-form-select-option
                   >
                   <b-form-select-option value="estrangeiro"
-                    >Estrangeiro</b-form-select-option
+                    >Estrangeira</b-form-select-option
                   >
                 </b-form-select>
               </b-form-group>
@@ -158,8 +164,8 @@
                   <b-form-select-option value="feminino"
                     >Feminino</b-form-select-option
                   >
-                  <b-form-select-option value="intersexual"
-                    >Intersexual</b-form-select-option
+                  <b-form-select-option value="não_especificado"
+                    >Não especificado</b-form-select-option
                   >
                 </b-form-select>
               </b-form-group>
@@ -169,9 +175,7 @@
                 class="font col-sm-3 col-md-3 col-lg-3"
               >
                 <b-form-select size="sm" v-model="form.raca">
-                  <b-form-select-option value=""
-                    >Amarela (asiática)</b-form-select-option
-                  >
+                  <b-form-select-option value="">Amarela (asiática)</b-form-select-option>
                   <b-form-select-option value="">Branca</b-form-select-option>
                   <b-form-select-option value="">Indígena</b-form-select-option>
                   <b-form-select-option value="">Negra</b-form-select-option>
@@ -195,7 +199,7 @@
                   <b-form-select-option value="">Preto</b-form-select-option>
                   <b-form-select-option value="">Cinzento</b-form-select-option>
                   <b-form-select-option value=""
-                    >Desiguais na cor</b-form-select-option
+                    >Desiguais na cor (heterocromia)</b-form-select-option
                   >
                 </b-form-select>
               </b-form-group>
@@ -245,7 +249,7 @@
                   <b-form-select-option value="">Liso</b-form-select-option>
                   <b-form-select-option value="">Ondulado</b-form-select-option>
                   <b-form-select-option value=""
-                    >Encaracolado</b-form-select-option
+                    >Cacheado</b-form-select-option
                   >
                   <b-form-select-option value="">Raspado</b-form-select-option>
                   <b-form-select-option value="">Calvo</b-form-select-option>
@@ -257,6 +261,7 @@
                 class="font col-sm-3 col-md-3 col-lg-3"
               >
                 <b-form-select size="sm" v-model="form.corteCabelo">
+                  <b-form-select-option value="">Raspado/careca</b-form-select-option>
                   <b-form-select-option value="">Curto</b-form-select-option>
                   <b-form-select-option value="">Médio</b-form-select-option>
                   <b-form-select-option value="">Longo</b-form-select-option>
@@ -370,7 +375,7 @@
             </b-form-group>
             <div class="row">
               <b-form-group
-                label="Vestimentas que usava"
+                label="Vestimentas que usava:"
                 class="font col-sm-8 col-md-8 col-lg-8"
               >
                 <b-form-input
@@ -380,7 +385,7 @@
               </b-form-group>
 
               <b-form-group
-                label="Local onde foi encontrado(a)"
+                label="Local onde foi encontrado(a):"
                 class="font col-sm-8 col-md-8 col-lg-8"
                 description="(rua, ponto de referência etc)"
               >
@@ -390,7 +395,7 @@
                 ></b-form-input>
               </b-form-group>
               <b-form-group
-                label="Bairro"
+                label="Bairro:"
                 class="font col-sm-8 col-md-8 col-lg-8"
               >
                 <b-form-input
@@ -400,7 +405,7 @@
               </b-form-group>
 
               <b-form-group
-                label="Condições em que se encontrava"
+                label="Condições em que se encontrava:"
                 class="font col-sm-8 col-md-8 col-lg-8"
               >
                 <b-form-textarea
@@ -463,7 +468,7 @@ export default Vue.extend({
         condicoesEncontrada: "" as string,
         boletim: "" as string,
       },
-      exibirbo: false as boolean,
+      exibirBO: false as boolean,
     };
   },
   mounted() {

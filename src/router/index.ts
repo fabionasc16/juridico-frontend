@@ -28,7 +28,7 @@ const routes: Array<RouteConfig> = [
   },
   {
     path: '/caracteristicas',
-    name: 'Caracteristicas',
+    name: 'Características',
     component: () => import(/* webpackChunkName: "about" */ '../views/Caracteristicas/CadastroCaracteristica.vue')
   }
 ]

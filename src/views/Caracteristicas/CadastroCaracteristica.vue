@@ -1,9 +1,9 @@
 <template>
   <div class="container-fluid" style="padding: 5% 3% 3% 2%">
     <div class="animate__animated animate__fadeIn slower">
-      <h2>Cadastro de caracteristicas</h2>
+      <h2>Cadastro de características</h2>
       <p style="color: grey; font-size: 0.9em">
-        Adicione caracteristicas ao sistema
+        Adicione características ao sistema
       </p>
       <hr />
       <br />

@@ -83,13 +83,13 @@ export default Vue.extend({
         box-shadow: inset 0 0 0 0 #00bac0;
         color:white;
         font-weight: bold;
-        transition: color .3s ease-in-out, box-shadow .3s ease-in-out;
+        transition: color .3s ease-in-out, box-shadow;
         border-radius: 15px;
     }
     .listagem a:hover{
         text-decoration: none;
         box-shadow: inset 300px 0 0 0 #00bac0;
-        color:black;
+        color:white;
         border-radius: 15px;
     }
 </style>
