@@ -1,7 +1,13 @@
 <template>
   <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js + TypeScript App"/>
+    <div class="container-fluid" style="padding: 5% 3% 3% 2%">
+      <div class="animate__animated animate__fadeIn slower">
+        <div class="text-center">
+          <img alt="Vue logo" width="10%" src="../assets/logo.png">
+        </div>
+        <HelloWorld msg="Welcome to Your Vue.js + TypeScript App"/>
+      </div>
+    </div>
   </div>
 </template>
 

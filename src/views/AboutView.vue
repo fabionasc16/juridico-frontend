@@ -1,5 +1,10 @@
 <template>
   <div class="about">
-    <h1>This is an about page</h1>
+    <div class="container-fluid" style="padding: 5% 3% 3% 2%">
+      <div class="animate__animated animate__fadeIn slower">
+        <h2>This is an about page</h2>
+        <hr>
+      </div>
+    </div>
   </div>
 </template>
