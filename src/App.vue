@@ -18,7 +18,6 @@ export default Vue.extend({
 <style>
 
   @import url('https://fonts.googleapis.com/css2?family=Mulish:wght@400;500&display=swap');
-  
   hr {
     border: none;
     height: 1px;
