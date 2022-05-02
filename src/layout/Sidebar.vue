@@ -25,11 +25,6 @@ export default Vue.extend({
     mixins:[
         menusMixin as Object // Mixin com menus utilizáveis
     ],
-    data(){
-        return {
-            currentRoute: this.$route.name
-        }
-    },
     computed:{
         currentRoute(){ return this.$route.name}
     }

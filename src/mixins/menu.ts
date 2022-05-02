@@ -8,6 +8,10 @@ const menusMixin = {
 				path: "/"
 			},
 			{
+				name: "Cadastro de Pacientes",
+				path: "/pacientes"
+			},
+			{
 				name: "About",
 				path: "/about"
 			}
