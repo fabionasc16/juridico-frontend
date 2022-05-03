@@ -8,7 +8,7 @@
       <hr />
       <div class="row">
         <div class="col-12">
-          <b-form @submit.prevent="submit">
+          <b-form @submit.prevent="submit" enctype="multipart/form-data">
             <b-form-group
               class="titulo"
               label="Informações de entrada do paciente"
@@ -44,7 +44,13 @@
                 label="Entrada através de:"
                 class="font col-sm-3 col-md-3 col-lg-3"
               >
-                <b-form-select v-model="form.entradaAtraves">
+                <b-form-select
+                  v-model="form.entradaAtraves"
+                  @change="exibirCampo()"
+                >
+                  <b-form-select-option value="null"
+                    >-- Selecione --</b-form-select-option
+                  >
                   <b-form-select-option value="samu">SAMU</b-form-select-option>
                   <b-form-select-option value="policia"
                     >Polícia</b-form-select-option
@@ -53,11 +59,14 @@
               </b-form-group>
 
               <b-form-group
-                label="B.O.:"
+                label="Registro No.:"
                 class="font col-sm-3 col-md-3 col-lg-3"
-                v-show="exibirBO"
+                v-show="exibirRegistro"
               >
-                <b-form-input type="text" v-model="form.boletim"></b-form-input>
+                <b-form-input
+                  type="text"
+                  v-model="form.registro"
+                ></b-form-input>
               </b-form-group>
             </div>
 
@@ -75,7 +84,7 @@
                 class="font col-sm-6 col-md-6 col-lg-6"
               >
                 <b-form-input
-                :placeholder="'Nome completo'"
+                  :placeholder="'Nome completo'"
                   type="text"
                   v-model="form.nomePaciente"
                 ></b-form-input>
@@ -86,11 +95,13 @@
                 class="font col-sm-6 col-md-6 col-lg-6"
               >
                 <b-form-input
-                :placeholder="'Nome completo da mãe'"
-                type="text"
-                v-model="form.nomeMae"></b-form-input>
+                  :placeholder="'Nome completo da mãe'"
+                  type="text"
+                  v-model="form.nomeMae"
+                ></b-form-input>
               </b-form-group>
-
+            </div>
+            <div class="row">
               <b-form-group
                 label="Data de nascimento:"
                 class="font col-sm-3 col-md-3 col-lg-3"
@@ -102,7 +113,11 @@
               </b-form-group>
 
               <b-form-group label="RG:" class="font col-sm-3 col-md-3 col-lg-3">
-                <b-form-input :placeholder="'Exemplo: 0000000-0'" type="text" v-model="form.rg"></b-form-input>
+                <b-form-input
+                  :placeholder="'Exemplo: 0000000-0'"
+                  type="text"
+                  v-model="form.rg"
+                ></b-form-input>
               </b-form-group>
 
               <b-form-group
@@ -110,7 +125,7 @@
                 class="font col-sm-3 col-md-3 col-lg-3"
               >
                 <b-form-input
-                :placeholder="'Exemplo: 000.000.000-00'"
+                  :placeholder="'Exemplo: 000.000.000-00'"
                   type="text"
                   v-model="form.cpf"
                   v-mask="'###.###.###-##'"
@@ -122,21 +137,13 @@
                 class="font col-sm-3 col-md-3 col-lg-3"
               >
                 <b-form-input
-                :placeholder="'Exemplo: 000.0000.0000.0000'"
+                  :placeholder="'Exemplo: 000.0000.0000.0000'"
                   type="text"
                   v-model="form.cns"
                   v-mask="'###.####.####.####'"
                 ></b-form-input>
               </b-form-group>
             </div>
-
-            <b-form-group
-              class="titulo"
-              label="Características do paciente"
-              label-size="lg"
-            >
-              <hr />
-            </b-form-group>
 
             <div class="row">
               <b-form-group
@@ -169,13 +176,25 @@
                   >
                 </b-form-select>
               </b-form-group>
+            </div>
 
+            <b-form-group
+              class="titulo"
+              label="Características do paciente"
+              label-size="lg"
+            >
+              <hr />
+            </b-form-group>
+
+            <div class="row">
               <b-form-group
                 label="Raça/Etnia:"
                 class="font col-sm-3 col-md-3 col-lg-3"
               >
                 <b-form-select size="sm" v-model="form.raca">
-                  <b-form-select-option value="">Amarela (asiática)</b-form-select-option>
+                  <b-form-select-option value=""
+                    >Amarela (asiática)</b-form-select-option
+                  >
                   <b-form-select-option value="">Branca</b-form-select-option>
                   <b-form-select-option value="">Indígena</b-form-select-option>
                   <b-form-select-option value="">Negra</b-form-select-option>
@@ -201,6 +220,18 @@
                   <b-form-select-option value=""
                     >Desiguais na cor (heterocromia)</b-form-select-option
                   >
+                </b-form-select>
+              </b-form-group>
+              <b-form-group
+                label="Biotipo:"
+                class="font col-sm-3 col-md-3 col-lg-3"
+              >
+                <b-form-select size="sm" v-model="form.biotipo">
+                  <b-form-select-option value="">Magro</b-form-select-option>
+                  <b-form-select-option value=""
+                    >Sobrepeso</b-form-select-option
+                  >
+                  <b-form-select-option value="">Troncudo</b-form-select-option>
                 </b-form-select>
               </b-form-group>
             </div>
@@ -248,9 +279,7 @@
                 <b-form-select size="sm" v-model="form.tipoCabelo">
                   <b-form-select-option value="">Liso</b-form-select-option>
                   <b-form-select-option value="">Ondulado</b-form-select-option>
-                  <b-form-select-option value=""
-                    >Cacheado</b-form-select-option
-                  >
+                  <b-form-select-option value="">Cacheado</b-form-select-option>
                   <b-form-select-option value="">Raspado</b-form-select-option>
                   <b-form-select-option value="">Calvo</b-form-select-option>
                 </b-form-select>
@@ -261,23 +290,12 @@
                 class="font col-sm-3 col-md-3 col-lg-3"
               >
                 <b-form-select size="sm" v-model="form.corteCabelo">
-                  <b-form-select-option value="">Raspado/careca</b-form-select-option>
+                  <b-form-select-option value=""
+                    >Raspado/careca</b-form-select-option
+                  >
                   <b-form-select-option value="">Curto</b-form-select-option>
                   <b-form-select-option value="">Médio</b-form-select-option>
                   <b-form-select-option value="">Longo</b-form-select-option>
-                </b-form-select>
-              </b-form-group>
-
-              <b-form-group
-                label="Biotipo:"
-                class="font col-sm-3 col-md-3 col-lg-3"
-              >
-                <b-form-select size="sm" v-model="form.biotipo">
-                  <b-form-select-option value="">Magro</b-form-select-option>
-                  <b-form-select-option value=""
-                    >Sobrepeso</b-form-select-option
-                  >
-                  <b-form-select-option value="">Troncudo</b-form-select-option>
                 </b-form-select>
               </b-form-group>
             </div>
@@ -414,7 +432,22 @@
                   v-model="form.condicoesEncontrada"
                 ></b-form-textarea>
               </b-form-group>
+
+              <b-form-group
+                label="Foto do Paciente:"
+                class="font col-sm-8 col-md-8 col-lg-8"
+              >
+                <b-form-file
+                  id="file"
+                  accept=".jpg, .png"
+                  v-model="form.file"
+                  placeholder="Selecione uma foto"
+                  drop-placeholder="Drop file here..."
+                  @change="handleFileUpload"
+                ></b-form-file>
+              </b-form-group>
             </div>
+
             <div class="py-2">
               <b-button class="mr-2" variant="secondary" @click="voltar()"
                 >Voltar</b-button
@@ -431,6 +464,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { mask } from "vue-the-mask";
+//import axios from 'axios'
 
 export default Vue.extend({
   directives: { mask },
@@ -439,26 +473,26 @@ export default Vue.extend({
       form: {
         dataEntrada: "" as string,
         horaEntrada: "" as string,
-        entradaAtraves: [] as Array<string>,
+        entradaAtraves: "" as string,
         nomePaciente: "" as string,
         nomeMae: "" as string,
-        dataNascimento: new Date() as Date,
+        dataNascimento: "" as string,
         rg: "" as string,
         cpf: "" as string,
         cns: "" as string,
-        nacionalidade: [] as Array<string>,
-        sexo: [] as Array<string>,
-        raca: [] as Array<string>,
-        corOlhos: [] as Array<string>,
-        corCabelos: [] as Array<string>,
-        tipoCabelo: [] as Array<string>,
-        corteCabelo: [] as Array<string>,
-        biotipo: [] as Array<string>,
+        nacionalidade: "" as string,
+        sexo: "" as string,
+        raca: "" as string,
+        corOlhos: "" as string,
+        corCabelos: "" as string,
+        tipoCabelo: "" as string,
+        corteCabelo: "" as string,
+        biotipo: "" as string,
         estaturaAproximada: "" as string,
         pesoAproximado: "" as string,
         idadeAproximada: "" as string,
-        barba: false as boolean,
-        bigode: false as boolean,
+        barba: "" as string,
+        bigode: "" as string,
         sinaisParticulares: "" as string,
         acessoriosUtilizados: "" as string,
         deficiencia: "" as string,
@@ -466,14 +500,15 @@ export default Vue.extend({
         localEncontrado: "" as string,
         bairroEncontrado: "" as string,
         condicoesEncontrada: "" as string,
-        boletim: "" as string,
+        registro: "" as string,
+        file: "",
       },
-      exibirBO: false as boolean,
+      exibirRegistro: false as boolean,
     };
   },
   mounted() {
     this.form.dataEntrada = this.defaultData();
-    this.form.horaEntrada = this.defaultHora();
+    //this.form.horaEntrada = this.defaultHora();
   },
 
   methods: {
@@ -484,15 +519,35 @@ export default Vue.extend({
       let year = hoje.getFullYear();
       return year + "-" + month + "-" + day;
     },
-    defaultHora(): string {
+   /* defaultHora(): string {
       let hoje = new Date();
       let hora = ("0" + hoje.getHours()).slice(-2);
       var min = ("0" + hoje.getMinutes()).slice(-2);
       return hora + ":" + min;
+    },*/
+    exibirCampo(): void {
+      this.form.registro = ""
+      if (this.form.entradaAtraves != "null"){
+        this.exibirRegistro = true
+      }else{
+        this.exibirRegistro = false
+      }      
     },
+
+    handleFileUpload(event:any): void {
+      this.form.file = event.target.files[0];
+    },
+
     submit() {
-      alert("enviar");
+     /* axios.post('https://paciente/post', this.form)
+           .then(response => {
+              console.log(response);
+            })
+            .catch(function () {
+              console.log("falha!!");
+            });*/
     },
+
     voltar(): void {
       this.$router.push("/");
     },
