@@ -73,14 +73,14 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Categoria, Tipo } from "@/type/caracteristicas";
+import {Caracteristica} from '@/type/caracteristicas'
 
 export default Vue.extend({
   components: {},
   data() {
     return {
       qtd_inputs: 0 as number,
-      categoria: "" as Categoria,
+      categoria: "" as string,
       tipos: [] as Array<string>,
     };
   },
