@@ -3,7 +3,8 @@ import './plugins/bootstrap-vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
-import 'animate.css';
+import 'animate.css'
+import 'axios'
 
 Vue.config.productionTip = false
 new Vue({
