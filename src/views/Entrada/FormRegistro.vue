@@ -273,13 +273,7 @@ export default Vue.extend({
     },
 
     submit() {
-      /* axios.post('https://paciente/post', this.form)
-           .then(response => {
-              console.log(response);
-            })
-            .catch(function () {
-              console.log("falha!!");
-            });*/
+      /**/
     },
 
     voltar(): void {
