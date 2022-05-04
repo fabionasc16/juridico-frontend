@@ -12,6 +12,10 @@ const menusMixin = {
 				path: "/pacientes"
 			},
 			{
+				name: "Consulta de Pacientes",
+				path: "/pacientes/consulta"
+			},
+			{
 				name: "Cadastro de Usuários",
 				path: "/usuarios"
 			},
@@ -20,8 +24,8 @@ const menusMixin = {
 				path: "/caracteristicas"
 			},
 			{
-				name: "About",
-				path: "/about"
+				name: "Cadastro de Características",
+				path: "/caracteristicas"
 			}			
 			] as Array<RouteConfig>
 		}

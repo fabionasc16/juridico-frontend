@@ -5,37 +5,11 @@ import HomeView from '../views/HomeView.vue'
 Vue.use(VueRouter)
 
 const routes: Array<RouteConfig> = [
-  {
-    path: '/',
-    name: 'Home',
-    component: HomeView
-  },
-  {
-    path: '/about',
-    name: 'About',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
-  },
-  {
-    path: '/pacientes',
-    name: 'Pacientes',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/Pacientes/CadastroPacienteView.vue')
-  },
-  {
-    path: '/usuarios',
-    name: 'Usuários',
-    component: () => import(/* webpackChunkName: "about" */ '../views/Usuarios/CadastroUsuario.vue')
-  },
-  {
-    path: '/caracteristicas',
-    name: 'Características',
-    component: () => import(/* webpackChunkName: "about" */ '../views/Caracteristicas/CadastroCaracteristica.vue')
-  }
+  { path: '/', name: 'Home', component: HomeView },
+  { path: '/pacientes', name: 'Pacientes', component: () => import('../views/Pacientes/Cadastro.vue') },
+  { path: '/pacientes/consulta', name: 'Consulta de paciente', component: () => import('../views/Pacientes/Consulta.vue') },
+  { path: '/caracteristicas', name: 'Características', component: () => import('../views/Caracteristicas/CadastroCaracteristica.vue') },
+  { path: '/usuarios', name: 'Usuários', component: () => import(/* webpackChunkName: "about" */ '../views/Usuarios/CadastroUsuario.vue') },
 ]
 
 const router = new VueRouter({
