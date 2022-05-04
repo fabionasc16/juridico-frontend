@@ -264,7 +264,7 @@ export default Vue.extend({
       return year + "-" + month + "-" + day;
     },
     exibirCampo(): void {
-      this.form.numRegistro = "";
+      this.form.numRegistroExterno = "";
       if (this.form.entradaAtraves == "samu" || this.form.entradaAtraves == "policia" ) {
         this.exibirRegistro = true;
       } else {
