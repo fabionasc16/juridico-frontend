@@ -6,8 +6,41 @@ export type Caracteristica = {
 
 export const CaracteristicaSeeder:Array<Caracteristica> = [
     {
+        categoria: 'Raça/etnia',
+        label: 'raca',
+        tipos:[
+            'Amarela (asiática)',
+            'Branca',
+            'Indígena',
+            'Negra',
+            'Parda',
+        ]
+    },
+    {
+        categoria: 'Biotipo',
+        label: 'biotipo',
+        tipos:[
+            'Magro',
+            'Sobrepeso',
+            'Troncudo'
+        ]
+    },
+    {
         categoria: 'Cor dos olhos',
         label: 'corOlhos',
+        tipos:[
+            'Castanhos claros',
+            'Castanhos escuros',
+            'Azuis',
+            'Verdes',
+            'Pretos',
+            'Cinzentos',
+            'Desiguais na cor (heterocromia)'
+        ]
+    },
+    {
+        categoria: 'Cor do cabelo',
+        label: "corCabelo",
         tipos:[
             'Pretos',
             'Castanhos escuros',
@@ -23,10 +56,24 @@ export const CaracteristicaSeeder:Array<Caracteristica> = [
         ]
     },
     {
-        categoria: 'Cor do cabelo',
-        label: "corCabelo",
+        categoria: 'Tipo de cabelo',
+        label: "tipoCabelo",
         tipos:[
-            'Ruivo', 'Preto', 'Loiro', 'Grizalho', 'Tingido (azul)', 'Tingido (verde)', 'Tingido (ruivo)'
+            'Liso',
+            'Ondulado',
+            'Cacheado',
+            'Raspado',
+            'Calvo'
+        ]
+    },
+    {
+        categoria: 'Corte de cabelo',
+        label: "corteCabelo",
+        tipos:[
+            'Raspado/careca',
+            'Curto',
+            'Médio',
+            'Longo'
         ]
     }
 ]
