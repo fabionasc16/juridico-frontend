@@ -1,12 +1,7 @@
 <template>
-  <div class="container-fluid" style="padding: 5% 3% 3% 2%">
-    <div class="animate__animated animate__fadeIn slower">
-      <h2>Cadastro de características</h2>
-      <p style="color: grey; font-size: 0.9em">
-        Adicione características ao sistema
-      </p>
-      <hr />
-      <br />
+  <div class="">
+    <header-page :titulo="'Cadastro de características'" :descricao="' Adicione características ao sistema'" />
+    <b-container>
       <div class="row">
         <div class="col-sm-8 col-md-8 col-lg-8">
           <b-form>
@@ -67,16 +62,19 @@
           </b-form>
         </div>
       </div>
-    </div>
+    </b-container>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
+import HeaderPage from '@/components/HeaderPage.vue'
 import {Caracteristica} from '@/type/caracteristicas'
 
 export default Vue.extend({
-  components: {},
+  components: {
+    HeaderPage
+  },
   data() {
     return {
       qtd_inputs: 0 as number,

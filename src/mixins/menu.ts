@@ -22,11 +22,7 @@ const menusMixin = {
 			{
 				name: "Cadastro de Características",
 				path: "/caracteristicas"
-			},
-			{
-				name: "Cadastro de Características",
-				path: "/caracteristicas"
-			}			
+			},		
 			] as Array<RouteConfig>
 		}
 	},

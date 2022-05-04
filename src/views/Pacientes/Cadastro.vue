@@ -1,11 +1,7 @@
 <template>
-  <b-container fluid style="padding: 5% 3% 3% 2%">
-    <div class="animate__animated animate__fadeIn slower">
-      <h2>Cadastro de pacientes</h2>
-      <p style="color: grey; font-size: 0.9em">
-        Adicione novos pacientes ao sistema
-      </p>
-      <hr />
+  <div>
+    <header-page :titulo="'Cadastro de pacientes'" descricao="Adicione novos pacientes ao sistema" />
+    <b-container>
       <div class="row">
         <div class="col-12">
           <b-form @submit.prevent="submit" enctype="multipart/form-data">
@@ -457,14 +453,15 @@
           </b-form>
         </div>
       </div>
-    </div>
-  </b-container>
+    </b-container>
+  </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
 import { mask } from "vue-the-mask";
 //import axios from 'axios'
+import HeaderPage from '@/components/HeaderPage.vue'
 
 export default Vue.extend({
   directives: { mask },
@@ -552,6 +549,9 @@ export default Vue.extend({
       this.$router.push("/");
     },
   },
+  components:{
+    HeaderPage
+  }
 });
 </script>
 
