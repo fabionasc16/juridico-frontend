@@ -16,6 +16,14 @@ const menusMixin = {
 				path: "/pacientes/consulta"
 			},
 			{
+				name: "Cadastro de Usuários",
+				path: "/usuarios"
+			},
+			{
+				name: "Cadastro de Características",
+				path: "/caracteristicas"
+			},
+			{
 				name: "Cadastro de Características",
 				path: "/caracteristicas"
 			}			
