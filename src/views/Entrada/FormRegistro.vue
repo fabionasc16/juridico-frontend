@@ -4,10 +4,12 @@
       :titulo="'Registro de Entrada'"
       descricao="Adicione novos pacientes ao sistema"
     />
+    
     <b-container>
       <div class="row">
         <div class="col-12">
-          <b-form @submit.prevent="submit">
+          <b-form>
+            <notifications :notifications="this.Notificacao"></notifications>
             <b-form-group
               class="titulo"
               label="Informações de entrada do paciente"
@@ -23,21 +25,25 @@
               >
                 <b-form-input
                   type="text"
-                  v-model="form.numPronturario"
+                  v-model="form.numProntuario"
                 ></b-form-input>
               </b-form-group>
 
-               <b-form-group
+              <b-form-group
                 label="Status:"
                 class="font col-sm-3 col-md-3 col-lg-3"
               >
-                <b-form-select size="sm" v-model="form.statusRegistro" disabled style="color:blue">
-                  <b-form-select-option value="1" 
+                <b-form-select
+                  size="sm"
+                  v-model="form.statusRegistro"
+                  disabled
+                  style="color: blue"
+                >
+                  <b-form-select-option value="1"
                     >Não Identificado</b-form-select-option
-                  >                  
+                  >
                 </b-form-select>
               </b-form-group>
-
             </div>
 
             <div class="row">
@@ -48,7 +54,6 @@
                 <b-form-input
                   type="date"
                   v-model="form.dataEntrada"
-                  required
                 ></b-form-input>
               </b-form-group>
 
@@ -59,7 +64,6 @@
                 <b-form-input
                   type="time"
                   v-model="form.horaEntrada"
-                  required
                 ></b-form-input>
               </b-form-group>
 
@@ -95,6 +99,7 @@
                 <b-form-input
                   type="text"
                   v-model="form.numRegistroExterno"
+                  required
                 ></b-form-input>
               </b-form-group>
             </div>
@@ -139,12 +144,11 @@
                   rows="3"
                   max-rows="6"
                   v-model="form.condicoesEncontrada"
-                ></b-form-textarea>
+                 ></b-form-textarea>
               </b-form-group>
             </div>
 
-
-              <b-form-group
+            <b-form-group
               class="titulo"
               label="Pessoa de Contato:"
               label-size="lg"
@@ -164,23 +168,13 @@
               </b-form-group>
 
               <b-form-group
-                label="Graud de parentesco:"
+                label="Grau de parentesco:"
                 class="font col-sm-3 col-md-3 col-lg-3"
               >
-                <b-form-select size="sm" v-model="form.grauParentesco">
-                  <b-form-select-option value="null">-- Selecione --</b-form-select-option>  
-                  <b-form-select-option value="nenhum">Nenhum</b-form-select-option>
-                  <b-form-select-option value="Pai">Pai</b-form-select-option>
-                  <b-form-select-option value="Mãe">Mãe</b-form-select-option>
-                  <b-form-select-option value="Avô(ó)">Avô(ó)</b-form-select-option>
-                  <b-form-select-option value="Filho(a)">Filho(a)</b-form-select-option>
-                  <b-form-select-option value="Neto(a)">Neto(a)</b-form-select-option>
-                  <b-form-select-option value="Tio(a)">Tio(a)</b-form-select-option>
-                  <b-form-select-option value="Primo(a)">Primo(a)</b-form-select-option>
-                  <b-form-select-option value="Irmão(ã)">Irmão(ã)</b-form-select-option>
-                  <b-form-select-option value="Sobrinho(a)">Sobrinho(a)</b-form-select-option>
-                  <b-form-select-option value="Companheiro(a)">Companheiro(a)</b-form-select-option>
-                  <b-form-select-option value="Conjuge">Conjuge</b-form-select-option>
+                <b-form-select size="sm" v-model="selected">
+                   <b-form-select-option v-for="option in this.form.optionsGrauParentesco" :value="option.value">
+                    {{ option.texto }}
+                  </b-form-select-option>
                 </b-form-select>
               </b-form-group>
             </div>
@@ -207,14 +201,14 @@
                   v-model="form.cpfContato"
                   v-mask="'###.###.###-##'"
                 ></b-form-input>
-              </b-form-group>              
+              </b-form-group>
             </div>
 
             <div class="py-2">
               <b-button class="mr-2" variant="secondary" @click="voltar()"
                 >Voltar</b-button
               >
-              <b-button type="submit" variant="success">Salvar</b-button>
+              <b-button type="button" variant="success" @click="submit">Salvar</b-button>
             </div>
           </b-form>
         </div>
@@ -224,13 +218,19 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import { mask } from "vue-the-mask";
-//import axios from 'axios'
-import HeaderPage from "@/components/HeaderPage.vue";
+import Vue from "vue"
+import { mask } from "vue-the-mask"
+import Notifications from "@/components/Notifications.vue"
+import HeaderPage from "@/components/HeaderPage.vue"
+import { Notificacao } from "@/type/notificacao"
+import { GrauParentescoSeeder } from '@/type/parentesco'
 
 export default Vue.extend({
   directives: { mask },
+  components:{
+    Notifications,
+    HeaderPage,
+  },
   data() {
     return {
       form: {
@@ -246,9 +246,12 @@ export default Vue.extend({
         nomeContato: "" as string,
         telefoneContato: "" as string,
         cpfContato: "" as string,
-        grauParentesco: "" as string,        
+        grauParentesco: "" as string, 
+        optionsGrauParentesco:GrauParentescoSeeder          
       },
+      selected:null,
       exibirRegistro: false as boolean,
+      Notificacao: [] as Array<Notificacao>
     };
   },
   mounted() {
@@ -273,16 +276,71 @@ export default Vue.extend({
     },
 
     submit() {
-      /**/
-    },
+      this.validarCamposObrigatorios()
+    },  
 
     voltar(): void {
       this.$router.push("/");
     },
+
+    validarCamposObrigatorios():boolean{
+      if (!this.form.numProntuario){
+                this.Notificacao.push({
+                    type : 'danger',
+                    message : 'Número de Prontuário é obrigatório!'  
+                })              
+      }
+      if (!this.form.dataEntrada){
+                this.Notificacao.push({
+                    type : 'danger',
+                    message : 'Data de entrada é obrigatório!'  
+                })              
+      }
+      if ((this.form.entradaAtraves && this.form.entradaAtraves =='samu' && !this.form.numRegistroExterno) ||
+         (this.form.entradaAtraves && this.form.entradaAtraves =='policia' && !this.form.numRegistroExterno )){
+                this.Notificacao.push({
+                    type : 'danger',
+                    message : 'Registro No. é obrigatório!'  
+                })              
+      }
+      if (!this.form.horaEntrada){
+                this.Notificacao.push({
+                    type : 'danger',
+                    message : 'Hora de entrada é obrigatório!'  
+                })              
+      }
+      if (!this.form.entradaAtraves){
+                this.Notificacao.push({
+                    type : 'danger',
+                    message : 'Entrada através é obrigatório!'  
+                })              
+      }
+      if (!this.form.sexo){
+                this.Notificacao.push({
+                    type : 'danger',
+                    message : 'Sexo é obrigatório!'  
+                })              
+      }
+      if (!this.form.vestimentas){
+                this.Notificacao.push({
+                    type : 'danger',
+                    message : 'Vestimentas é obrigatório!'  
+                })              
+      }
+      if (!this.form.condicoesEncontrada){
+                this.Notificacao.push({
+                    type : 'danger',
+                    message : 'Condições em que se encontrava é obrigatório!'  
+                })              
+      }
+      setTimeout( ()=>{
+                this.Notificacao = []
+            },5000)
+      return false;
+      
+    }
   },
-  components: {
-    HeaderPage,
-  },
+  
 });
 </script>
 
