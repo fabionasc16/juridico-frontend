@@ -171,8 +171,8 @@
                 label="Grau de parentesco:"
                 class="font col-sm-3 col-md-3 col-lg-3"
               >
-                <b-form-select size="sm" v-model="selected">
-                   <b-form-select-option v-for="option in this.form.optionsGrauParentesco" :value="option.value">
+                <b-form-select size="sm" v-model="form.grauParentescoSelected">
+                   <b-form-select-option v-for="option in optionsGrauParentesco" :value="option.value">
                     {{ option.texto }}
                   </b-form-select-option>
                 </b-form-select>
@@ -246,18 +246,17 @@ export default Vue.extend({
         nomeContato: "" as string,
         telefoneContato: "" as string,
         cpfContato: "" as string,
-        grauParentesco: "" as string, 
-        optionsGrauParentesco:GrauParentescoSeeder          
-      },
-      selected:null,
+        grauParentescoSelected: "" as string
+      },              
       exibirRegistro: false as boolean,
-      Notificacao: [] as Array<Notificacao>
+      Notificacao: [] as Array<Notificacao>,
+      optionsGrauParentesco:GrauParentescoSeeder,
     };
   },
   mounted() {
-    this.form.dataEntrada = this.defaultData();
+    this.form.dataEntrada = this.defaultData()
   },
-
+  
   methods: {
     defaultData(): string {
       let hoje = new Date();
@@ -276,7 +275,9 @@ export default Vue.extend({
     },
 
     submit() {
-      this.validarCamposObrigatorios()
+      if (this.validarCamposObrigatorios()){
+        alert(JSON.stringify(this.form))
+      }
     },  
 
     voltar(): void {
@@ -332,12 +333,16 @@ export default Vue.extend({
                     type : 'danger',
                     message : 'Condições em que se encontrava é obrigatório!'  
                 })              
-      }
-      setTimeout( ()=>{
-                this.Notificacao = []
-            },5000)
-      return false;
-      
+      }     
+      if (this.Notificacao.length > 0){
+        setTimeout( ()=>{
+                  this.Notificacao = []
+              },5000)
+        return false
+      }else{
+        return true
+      }        
+
     }
   },
   
