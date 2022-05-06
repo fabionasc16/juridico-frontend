@@ -7,6 +7,7 @@ Vue.use(VueRouter)
 const routes: Array<RouteConfig> = [
   { path: '/', name: 'Home', component: HomeView },
   { path: '/registroEntrada', name: 'Registro de Entrada', component: () => import('../views/Entrada/FormRegistro.vue') },
+  { path: '/registroSaida', name: 'Registro de Saída', component: () => import('../views/Saida/FormRegistro.vue') },
   { path: '/pacientes', name: 'Pacientes', component: () => import('../views/Pacientes/Cadastro.vue') },
   { path: '/pacientes/consulta', name: 'Consulta de paciente', component: () => import('../views/Pacientes/Consulta.vue') },
   { path: '/caracteristicas', name: 'Características', component: () => import('../views/Caracteristicas/CadastroCaracteristica.vue') },
