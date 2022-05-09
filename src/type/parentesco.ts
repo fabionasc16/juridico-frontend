@@ -10,7 +10,6 @@ export const GrauParentescoSeeder:Array<GrauParentesco> = [
             { texto: 'Avô(ó)', value: 'Avô(ó)' },
             { texto: 'Filho(a)', value: 'Filo(a)' },
             { texto: 'Neto(a)', value: 'Neto(a)' },
-            { texto: 'Neto(a)', value: 'Neto(a)' },
             { texto: 'Tio(a)', value: 'Tio(a)' },
             { texto: 'Primo(a)', value: 'Primo(a)' },
             { texto: 'Irmão(ã)', value: 'Irmão(ã)' },

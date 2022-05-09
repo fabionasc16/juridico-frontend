@@ -4,7 +4,7 @@
       :titulo="'Registro de Entrada'"
       descricao="Adicione novos pacientes ao sistema"
     />
-    
+
     <b-container>
       <div class="row">
         <div class="col-12">
@@ -144,7 +144,7 @@
                   rows="3"
                   max-rows="6"
                   v-model="form.condicoesEncontrada"
-                 ></b-form-textarea>
+                ></b-form-textarea>
               </b-form-group>
             </div>
 
@@ -171,8 +171,11 @@
                 label="Grau de parentesco:"
                 class="font col-sm-3 col-md-3 col-lg-3"
               >
-                <b-form-select size="sm" v-model="form.grauParentescoSelected">
-                   <b-form-select-option v-for="option in optionsGrauParentesco" :value="option.value">
+                <b-form-select size="sm" v-model="form.grauParentescoSelected" >
+                  <b-form-select-option
+                    v-for="option in optionsGrauParentesco"
+                    :value="option.value" :key="option.value"
+                  >
                     {{ option.texto }}
                   </b-form-select-option>
                 </b-form-select>
@@ -208,7 +211,9 @@
               <b-button class="mr-2" variant="secondary" @click="voltar()"
                 >Voltar</b-button
               >
-              <b-button type="button" variant="success" @click="submit">Salvar</b-button>
+              <b-button type="button" variant="success" @click="submit"
+                >Salvar</b-button
+              >
             </div>
           </b-form>
         </div>
@@ -218,16 +223,18 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue"
-import { mask } from "vue-the-mask"
-import Notifications from "@/components/Notifications.vue"
-import HeaderPage from "@/components/HeaderPage.vue"
-import { Notificacao } from "@/type/notificacao"
-import { GrauParentescoSeeder } from '@/type/parentesco'
+import Vue from "vue";
+import { mask } from "vue-the-mask";
+import Notifications from "@/components/Notifications.vue";
+import HeaderPage from "@/components/HeaderPage.vue";
+import { Notificacao } from "@/type/notificacao";
+import { GrauParentescoSeeder } from "@/type/parentesco";
+import { mapActions } from 'vuex'
+
 
 export default Vue.extend({
   directives: { mask },
-  components:{
+  components: {
     Notifications,
     HeaderPage,
   },
@@ -246,18 +253,22 @@ export default Vue.extend({
         nomeContato: "" as string,
         telefoneContato: "" as string,
         cpfContato: "" as string,
-        grauParentescoSelected: "" as string
-      },              
+        grauParentescoSelected: "" as string,
+      },
       exibirRegistro: false as boolean,
       Notificacao: [] as Array<Notificacao>,
-      optionsGrauParentesco:GrauParentescoSeeder,
+      optionsGrauParentesco: GrauParentescoSeeder,
     };
   },
   mounted() {
-    this.form.dataEntrada = this.defaultData()
+    this.form.dataEntrada = this.defaultData();
   },
+
   
+
   methods: {
+    ...mapActions(['insereRegistro']),
+
     defaultData(): string {
       let hoje = new Date();
       let month = ("0" + (hoje.getMonth() + 1)).slice(-2);
@@ -267,83 +278,91 @@ export default Vue.extend({
     },
     exibirCampo(): void {
       this.form.numRegistroExterno = "";
-      if (this.form.entradaAtraves == "samu" || this.form.entradaAtraves == "policia" ) {
+      if (
+        this.form.entradaAtraves == "samu" ||
+        this.form.entradaAtraves == "policia"
+      ) {
         this.exibirRegistro = true;
       } else {
         this.exibirRegistro = false;
       }
     },
 
-    submit() {
-      if (this.validarCamposObrigatorios()){
-        alert(JSON.stringify(this.form))
+    submit():void {
+      if (this.validarCamposObrigatorios()) {
+        this.insereRegistro(this.form)
       }
-    },  
+    },
 
     voltar(): void {
       this.$router.push("/");
     },
 
-    validarCamposObrigatorios():boolean{
-      if (!this.form.numProntuario){
-                this.Notificacao.push({
-                    type : 'danger',
-                    message : 'Número de Prontuário é obrigatório!'  
-                })              
+    validarCamposObrigatorios(): boolean {
+      if (!this.form.numProntuario) {
+        this.Notificacao.push({
+          type: "danger",
+          message: "Número de Prontuário é obrigatório!",
+        });
       }
-      if (!this.form.dataEntrada){
-                this.Notificacao.push({
-                    type : 'danger',
-                    message : 'Data de entrada é obrigatório!'  
-                })              
+      if (!this.form.dataEntrada) {
+        this.Notificacao.push({
+          type: "danger",
+          message: "Data de entrada é obrigatório!",
+        });
       }
-      if ((this.form.entradaAtraves && this.form.entradaAtraves =='samu' && !this.form.numRegistroExterno) ||
-         (this.form.entradaAtraves && this.form.entradaAtraves =='policia' && !this.form.numRegistroExterno )){
-                this.Notificacao.push({
-                    type : 'danger',
-                    message : 'Registro No. é obrigatório!'  
-                })              
+      if (
+        (this.form.entradaAtraves &&
+          this.form.entradaAtraves == "samu" &&
+          !this.form.numRegistroExterno) ||
+        (this.form.entradaAtraves &&
+          this.form.entradaAtraves == "policia" &&
+          !this.form.numRegistroExterno)
+      ) {
+        this.Notificacao.push({
+          type: "danger",
+          message: "Registro No. é obrigatório!",
+        });
       }
-      if (!this.form.horaEntrada){
-                this.Notificacao.push({
-                    type : 'danger',
-                    message : 'Hora de entrada é obrigatório!'  
-                })              
+      if (!this.form.horaEntrada) {
+        this.Notificacao.push({
+          type: "danger",
+          message: "Hora de entrada é obrigatório!",
+        });
       }
-      if (!this.form.entradaAtraves){
-                this.Notificacao.push({
-                    type : 'danger',
-                    message : 'Entrada através é obrigatório!'  
-                })              
+      if (!this.form.entradaAtraves) {
+        this.Notificacao.push({
+          type: "danger",
+          message: "Entrada através é obrigatório!",
+        });
       }
-      if (!this.form.sexo){
-                this.Notificacao.push({
-                    type : 'danger',
-                    message : 'Sexo é obrigatório!'  
-                })              
+      if (!this.form.sexo) {
+        this.Notificacao.push({
+          type: "danger",
+          message: "Sexo é obrigatório!",
+        });
       }
-      if (!this.form.vestimentas){
-                this.Notificacao.push({
-                    type : 'danger',
-                    message : 'Vestimentas é obrigatório!'  
-                })              
+      if (!this.form.vestimentas) {
+        this.Notificacao.push({
+          type: "danger",
+          message: "Vestimentas é obrigatório!",
+        });
       }
-      if (!this.form.condicoesEncontrada){
-                this.Notificacao.push({
-                    type : 'danger',
-                    message : 'Condições em que se encontrava é obrigatório!'  
-                })              
-      }     
-      if (this.Notificacao.length > 0){
-        setTimeout( ()=>{
-                  this.Notificacao = []
-              },5000)
-        return false
-      }else{
-        return true
-      }        
-
-    }
+      if (!this.form.condicoesEncontrada) {
+        this.Notificacao.push({
+          type: "danger",
+          message: "Condições em que se encontrava é obrigatório!",
+        });
+      }
+      if (this.Notificacao.length > 0) {
+        setTimeout(() => {
+          this.Notificacao = [];
+        }, 5000);
+        return false;
+      } else {
+        return true;
+      }
+    },
   },
   
 });
