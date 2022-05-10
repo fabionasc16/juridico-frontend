@@ -10,15 +10,7 @@ const menusMixin = {
 			{
 				name: "Registro de Entrada",
 				path: "/registroEntrada"
-			},
-			{
-				name: "Registro de Saída",
-				path: "/registroSaida"
-			},
-			{
-				name: "Cadastro de Pacientes",
-				path: "/pacientes"
-			},
+			},			
 			{
 				name: "Consulta de Pacientes",
 				path: "/pacientes/consulta"
