@@ -8,6 +8,7 @@ const routes: Array<RouteConfig> = [
   { path: '/', name: 'Home', component: HomeView },
   { path: '/registroEntrada', name: 'Registro de Entrada', component: () => import('../views/Entrada/FormRegistro.vue') },
   { path: '/registroSaida', name: 'Registro de Saída', component: () => import('../views/Saida/FormRegistro.vue') },
+  { path: '/registroIdentificadoInternado', name: 'Registro de Paciente Internado e Identificado', component: () => import('../views/Entrada/Internado/FormRegistro.vue') },
   { path: '/listaRegistroEntrada', name: 'Lista de Registro de Entrada', component: () => import('../views/Entrada/ListaRegistro.vue') },
   { path: '/pacientes', name: 'Pacientes', component: () => import('../views/Pacientes/Cadastro.vue') },
   { path: '/pacientes/consulta', name: 'Consulta de paciente', component: () => import('../views/Pacientes/Consulta.vue') },

@@ -1,8 +1,8 @@
 <template>
   <div>
     <header-page
-      :titulo="'Registro de Saída'"
-      descricao="Registre a saída do paciente da unidade"
+      :titulo="'Registro de Paciente Internado e Identificado'"
+      descricao="Registre a identificação do Paciente"
     />
 
     <b-container>
@@ -22,86 +22,56 @@
 
             <div class="row">
               <b-form-group
-                label="Data de saída na unidade:"
+                label="Data de Identificação:"
                 class="font col-sm-3 col-md-3 col-lg-3"
               >
                 <b-form-input
                   type="date"
-                  v-model="form.dataSaida"
+                  v-model="form.dataIdentificacao"
                 ></b-form-input>
-              </b-form-group>
+              </b-form-group>     
 
-              <b-form-group
-                label="Hora de saída:"
-                class="font col-sm-2 col-md-2 col-lg-2"
-              >
-                <b-form-input
-                  type="time"
-                  v-model="form.horaSaida"
-                ></b-form-input>
-              </b-form-group>
-            </div>
-
-            <div class="row mt-3">
-              <b-form-group
-                label="Saída por:"
+               <b-form-group
+                label="Status:"
                 class="font col-sm-3 col-md-3 col-lg-3"
               >
-                <b-form-radio
-                  v-model="form.formaSaida"
-                  name="formaSaida"
-                  value="Alta"
-                  >Alta</b-form-radio
+                <b-form-select
+                  size="sm"
+                  v-model="form.statusRegistro"
+                  disabled
+                  style="color: blue"
                 >
-                <b-form-radio
-                  v-model="form.formaSaida"
-                  name="formaSaida"
-                  value="Óbito"
-                  >Óbito</b-form-radio
-                >
+                  <b-form-select-option value="2"
+                    >Identificado</b-form-select-option
+                  >
+                </b-form-select>
               </b-form-group>
 
               <b-form-group
-                label="Status Paciente:"
+                label="Situação:"
                 class="font col-sm-3 col-md-3 col-lg-3"
               >
-                <b-form-radio
-                  v-model="form.statusRegistro"
-                  name="statusRegistro"
-                  value="1"
-                  @change="exibirCamposIndentificacao()"
-                  >Não Identificado</b-form-radio
+                <b-form-select
+                  size="sm"
+                  v-model="form.internado"
+                  disabled
+                  style="color: blue"
                 >
-                <b-form-radio
-                  v-model="form.statusRegistro"
-                  name="statusRegistro"
-                  value="2"
-                  @change="exibirCamposIndentificacao()"
-                  >Identificado</b-form-radio
-                >
+                  <b-form-select-option value="Internado"
+                    >Internado</b-form-select-option
+                  >
+                </b-form-select>
               </b-form-group>
-            </div>
+            </div>        
 
-            <div v-show="exibirIdentificacao">
-              <div class="row mt-3">  
-                <b-form-group
-                  label="Data de Identificação:"
-                  class="font col-sm-3 col-md-3 col-lg-3"
-                >
-                  <b-form-input
-                    type="date"
-                    v-model="form.dataIdentificacao"
-                  ></b-form-input>
-                </b-form-group>
-              </div>
-                <b-form-group
-                  class="titulo"
-                  label="Identificação do paciente"
-                  label-size="lg"
-                >
+            <div>
+              <b-form-group
+                class="titulo"
+                label="Identificação do paciente"
+                label-size="lg"
+              >
                 <hr />
               </b-form-group>
-
               <div class="row">
                 <b-form-group
                   label="Nome:"
@@ -238,10 +208,9 @@ export default Vue.extend({
   data() {
     return {
       form: {
-        dataSaida: "" as string,
-        horaSaida: "" as string,
-        formaSaida: "" as string,
-        statusRegistro: "" as string,
+        dataIdentificacao: "" as string,
+        statusRegistro: "2" as string,
+        internado: "Internado" as string,
         nomePaciente: "" as string,
         nomeMae: "" as string,
         dataNascimento: "" as string,
@@ -250,14 +219,12 @@ export default Vue.extend({
         cns: "" as string,
         nacionalidade: "" as string,
         sexo: "" as string,
-        dataIdentificacao: "" as string
       },
-      Notificacao: [] as Array<Notificacao>,
-      exibirIdentificacao: false as boolean,
+      Notificacao: [] as Array<Notificacao>
     };
   },
   mounted() {
-    this.form.dataSaida = this.defaultData();
+    this.form.dataIdentificacao = this.defaultData();
   },
 
   methods: {
@@ -270,53 +237,32 @@ export default Vue.extend({
     },
 
     submit() {
-      if (this.validarCamposObrigatorios()) {
-        alert(JSON.stringify(this.form));
-      }
+     // if (this.validarCamposObrigatorios()) {
+     //   alert(JSON.stringify(this.form));
+     // }
+      this.$router.push("/listaRegistroEntrada");
     },
 
     voltar(): void {
-      this.$router.push("/");
-    },
-
-    exibirCamposIndentificacao(): void {
-      this.limparCamposIdentificacao();
-      if (this.form.statusRegistro == "2") {
-        this.exibirIdentificacao = true;
-      } else {
-        this.exibirIdentificacao = false;
-      }
+      this.$router.push("/listaRegistroEntrada");
     },
 
     limparCamposIdentificacao(): void {
-      this.form.nomePaciente = ""
-      this.form.nomeMae = ""
-      this.form.dataNascimento = ""
-      this.form.rg = ""
-      this.form.cpf = ""
-      this.form.cns = ""
-      this.form.nacionalidade = ""
-      this.form.sexo = ""
-      this.form.dataIdentificacao = ""
+      this.form.nomePaciente = "";
+      this.form.nomeMae = "";
+      this.form.dataNascimento = "";
+      this.form.rg = "";
+      this.form.cpf = "";
+      this.form.cns = "";
+      this.form.nacionalidade = "";
+      this.form.sexo = "";
     },
 
     validarCamposObrigatorios(): boolean {
-      if (!this.form.dataSaida) {
+      if (!this.form.dataIdentificacao) {
         this.Notificacao.push({
           type: "danger",
           message: "Data de saída é obrigatório!",
-        });
-      }
-      if (!this.form.horaSaida) {
-        this.Notificacao.push({
-          type: "danger",
-          message: "Hora de saída é obrigatório!",
-        });
-      }
-      if (!this.form.formaSaida) {
-        this.Notificacao.push({
-          type: "danger",
-          message: "Saída Por é obrigatório!",
         });
       }
       if (!this.form.statusRegistro) {
@@ -334,8 +280,7 @@ export default Vue.extend({
           !this.form.cpf ||
           !this.form.cns ||
           !this.form.nacionalidade ||
-          !this.form.sexo ||
-          !this.form.dataIdentificacao)
+          !this.form.sexo)
       ) {
         //identificado
         this.Notificacao.push({
