@@ -289,9 +289,11 @@ export default Vue.extend({
     },
 
     submit():void {
-      if (this.validarCamposObrigatorios()) {
+      /*if (this.validarCamposObrigatorios()) {
         this.insereRegistro(this.form)
-      }
+        this.$router.push("/listarRegistroEntrada");
+      }*/
+      this.$router.push("/listaRegistroEntrada");
     },
 
     voltar(): void {
