@@ -1,7 +1,8 @@
 <template>
-  <div class="header px-4">
+  <div class="sticky-top">
+    <div class="header px-4">
       <slot></slot>
-      <b-dropdown class="dropdown" variant="dark">
+      <b-dropdown class="dropdown" size="sm" variant="outline-light">
           <template #button-content>
             <span>
               Nome do usuario
@@ -12,17 +13,22 @@
             Logout
           </b-dropdown-item>
       </b-dropdown>
+    </div>
+    <div class="breadcumb">
+      {{this.$route.name}}
+    </div>
   </div>
 </template>
 <script lang="ts">
 import Vue from "vue";
+
 export default Vue.extend({
-  
+
 });
 </script>
 <style scoped>
-.header {
-  background-color: #293258;
+.header{
+  background-color: #1b2038;
   color: white;
   min-height: 50px;
   display: flex;
@@ -31,6 +37,12 @@ export default Vue.extend({
 .dropdown{
   float: right;
   right: 15px;
-  position: fixed;
+  position: absolute;
+}
+.breadcumb{
+  background-color: #1b2038;
+  color: white;
+  padding: 1px 2%;
+  font-style: italic;
 }
 </style>

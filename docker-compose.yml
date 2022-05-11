@@ -1,0 +1,11 @@
+version: '3.7'
+
+services:
+
+  spin:
+    image: nginx:latest
+    container_name: spin
+    ports:
+      - '8080:80'
+    volumes:
+      - './dist/:/usr/share/nginx/html'

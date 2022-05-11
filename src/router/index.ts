@@ -5,19 +5,15 @@ import HomeView from '../views/HomeView.vue'
 Vue.use(VueRouter)
 
 const routes: Array<RouteConfig> = [
-  {
-    path: '/',
-    name: 'Home',
-    component: HomeView
-  },
-  {
-    path: '/about',
-    name: 'About',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
-  }
+  { path: '/', name: 'Home', component: HomeView },
+  { path: '/registroEntrada', name: 'Registro de Entrada', component: () => import('../views/Entrada/FormRegistro.vue') },
+  { path: '/registroSaida', name: 'Registro de Saída', component: () => import('../views/Saida/FormRegistro.vue') },
+  { path: '/registroIdentificadoInternado', name: 'Registro de Paciente Internado e Identificado', component: () => import('../views/Entrada/Internado/FormRegistro.vue') },
+  { path: '/listaRegistroEntrada', name: 'Lista de Registro de Entrada', component: () => import('../views/Entrada/ListaRegistro.vue') },
+  { path: '/pacientes', name: 'Pacientes', component: () => import('../views/Pacientes/Cadastro.vue') },
+  { path: '/pacientes/consulta', name: 'Consulta de paciente', component: () => import('../views/Pacientes/Consulta.vue') },
+  { path: '/caracteristicas', name: 'Características', component: () => import('../views/Caracteristicas/CadastroCaracteristica.vue') },
+  { path: '/usuarios', name: 'Usuários', component: () => import(/* webpackChunkName: "about" */ '../views/Usuarios/CadastroUsuario.vue') },
 ]
 
 const router = new VueRouter({
