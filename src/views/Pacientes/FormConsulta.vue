@@ -1,13 +1,13 @@
 <template>
   <div class="container">
-    <b-form class="row">
+     <b-form class="row">
       <b-form-group
         v-for="(c, index) in caracteristicas"
         :key="index"
         :label="c.categoria"
         class="font col-sm-3 col-md-3 col-lg-3"
       >
-        <b-form-select size="sm" v-model="form.caracteristicas[c.label]">
+        <b-form-select size="sm" v-model="form.caracteristicas[c.label]" class="selectCaracteristicas">
           <b-form-select-option :value="t" v-for="t in c.tipos" :key="t">
             {{ t }}
           </b-form-select-option>
@@ -47,7 +47,7 @@
       >
         <b-form-input
           size="sm"
-          type="text"
+          type="number"
           v-model="form.idadeAproximada"
         ></b-form-input>
       </b-form-group>
@@ -66,40 +66,17 @@
         </b-form-checkbox-group>
       </b-form-group>
 
-      <b-form-group
-        label="Sinais particulares:"
-        description=" (tatuagem, cicatriz, marcas etc.)"
+      <b-form-group v-show="exibirPalavrasChave"
+        label="Palavras-chave:"
+        description=" (tatuagem, cicatriz, marcas, acessórios que usava, alguma deficiência etc.)"
         class="font col-sm-8 col-md-8 col-lg-8"
       >
         <b-form-input
           size="sm"
           type="text"
-          v-model="form.sinaisParticulares"
+          v-model="form.palavasChave"
         ></b-form-input>
-      </b-form-group>
-
-      <b-form-group
-        label="Acessórios utilizados:"
-        description="(anel, cordão, relógio etc)"
-        class="font col-sm-8 col-md-8 col-lg-8"
-      >
-        <b-form-input
-          size="sm"
-          type="text"
-          v-model="form.acessoriosUtilizados"
-        ></b-form-input>
-      </b-form-group>
-
-      <b-form-group
-        label="Deficiência, amputações e/ou deformações? Se sim, qual(is)?"
-        class="font col-sm-8 col-md-8 col-lg-8"
-      >
-        <b-form-input
-          size="sm"
-          type="text"
-          v-model="form.deficiencia"
-        ></b-form-input>
-      </b-form-group>
+      </b-form-group>      
       <br />
     </b-form>
     <br />
@@ -107,7 +84,7 @@
       <b-button class="mr-2" variant="secondary" @click="voltar()"
         >Voltar</b-button
       >
-      <b-button type="submit" variant="primary">Consultar</b-button>
+      <b-button type="button" @click="submit" variant="primary">Consultar</b-button>
     </div>
 	<br />
 	<br />
@@ -116,8 +93,10 @@
 <script lang="ts">
 import Vue from "vue";
 import { mapGetters } from "vuex";
+import { mask } from "vue-the-mask";
 import { CaracteristicaSeeder } from "@/type/caracteristicas";
 export default Vue.extend({
+  directives: { mask },
   data() {
     return {
       form: {
@@ -127,17 +106,21 @@ export default Vue.extend({
         idadeAproximada: "" as string,
         barba: "" as string,
         bigode: "" as string,
-        sinaisParticulares: "" as string,
-        acessoriosUtilizados: "" as string,
-        deficiencia: "" as string,
+        palavasChave: "" as string
       },
       caracteristicas: CaracteristicaSeeder,
+      exibirPalavrasChave: false as boolean
     };
   },
   computed: {
     ...mapGetters("caracteristicas", ["getTeste"]),
+
   },
   methods: {
+    submit(): void {
+        this.exibirPalavrasChave = true
+        console.log(JSON.stringify(this.form))
+    },
     voltar(): void {
       this.$router.push("/");
     },
