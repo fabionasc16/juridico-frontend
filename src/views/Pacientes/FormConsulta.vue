@@ -117,12 +117,10 @@ export default Vue.extend({
 
   },
   methods: {
-
     submit(): void {
         this.exibirPalavrasChave = true
         console.log(JSON.stringify(this.form))
     },
-
     voltar(): void {
       this.$router.push("/");
     },
