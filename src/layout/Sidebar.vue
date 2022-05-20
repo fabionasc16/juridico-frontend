@@ -2,7 +2,8 @@
     <div class="sticky-top">
         <!-- Identificação do sistema -->
         <div class="logo text-center">
-            <h3>Ticados</h3>
+            <h3>SAPEJ</h3>
+        <!-- <h3>Sistema de Acompanhamento dos Processos Judiciais</h3> -->
         </div>
         <!-- Listagem das rotas -->
         <nav class="listagem pt-5">

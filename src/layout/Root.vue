@@ -7,9 +7,9 @@
             <div class="content" :class="contentClass">
                 <div class="content">
                     <content-header>
-                       <b-btn class="d-none d-lg-block" variant="primary" @click="retraido = !retraido">
-                           ...
-                       </b-btn>
+                        <b-btn class="d-none d-lg-block" variant="primary" @click="retraido = !retraido">
+                            ...
+                        </b-btn>
                         <b-nav class="listagem" :class="menuHeaderClass">
                             <router-link class="ml-2 px-3" v-for="(r,index) in commonMenus" :key="index" :to="r.path">
                                 {{r.name}}  

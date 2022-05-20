@@ -6,7 +6,7 @@
     />
 
     <b-container>
-           <notifications :notifications="this.Notificacao"></notifications>
+          <notifications :notifications="this.Notificacao"></notifications>
     </b-container>
     
   </div>

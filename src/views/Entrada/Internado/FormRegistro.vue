@@ -31,7 +31,7 @@
                 ></b-form-input>
               </b-form-group>     
 
-               <b-form-group
+              <b-form-group
                 label="Status:"
                 class="font col-sm-3 col-md-3 col-lg-3"
               >

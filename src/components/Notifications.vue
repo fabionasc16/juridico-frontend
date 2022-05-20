@@ -1,10 +1,10 @@
 <template>
-  <div>
-        <div v-for="notification in notifications" :key="notification.message" 
+    <div>
+        <div v-for="notification in notifications" :key="notification.message"
             :class="getNotificationClass(notification.type)">
             {{ notification.message }}
         </div>
-  </div>
+    </div>
 </template>
 
 <script lang="ts">
@@ -13,14 +13,14 @@ import Vue from "vue";
 
 export default Vue.extend({
 
-    props:{
+    props: {
         notifications: Array
     },
 
-    methods:{
-        getNotificationClass(notification:string): string {
+    methods: {
+        getNotificationClass(notification: string): string {
             return 'alert alert-' + notification
-        }  
+        }
     }
 
 });
@@ -28,5 +28,4 @@ export default Vue.extend({
 </script>
 
 <style>
-
 </style>

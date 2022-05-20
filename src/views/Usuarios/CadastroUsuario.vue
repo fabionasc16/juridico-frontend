@@ -1,355 +1,181 @@
 <template>
   <div>
-     <header-page :titulo="'Cadastro de usuários'" :descricao="'Cadastre-se no sistema preenchendo o formulário'"/> 
-      <b-container>
-        <div class="row">
-          <div class="col-12">
-            <b-form @submit.prevent="submit">
-              <b-form-group
-                class="titulo"
-                label="Informações pessoais"
-                label-size="lg"
-              >
-                <hr />
-              </b-form-group>
+    <header-page :titulo="'Usuários'" :descricao="'Cadastro, Consulta, Edição'" />
+    <b-container>
+      <div class="row">
 
-              <div class="row">
-                <b-form-group
-                  label="Primeiro nome:"
-                  class="font col-sm-6 col-md-6 col-lg-6"
-                >
-                  <b-form-input
-                    :placeholder="'Primeiro nome'"
-                    type="text"
-                    v-model="form.priNome"
-                  ></b-form-input>
-                </b-form-group>
-              </div>
+        <b-form-group class="titulo" label="Consulta de Usuário" label-size="lg">
+          <hr />
+        </b-form-group>
 
-              <div class="row">
-                <b-form-group
-                  label="Nome completo:"
-                  class="font col-sm-6 col-md-6 col-lg-6"
-                >
-                  <b-form-input
-                    :placeholder="'Nome completo'"
-                    type="text"
-                    v-model="form.nomeUsuario"
-                  ></b-form-input>
-                </b-form-group>
-
-                <b-form-group
-                  label="Nome da mãe (se aplicável):"
-                  class="font col-sm-6 col-md-6 col-lg-6"
-                >
-                  <b-form-input
-                    :placeholder="'Nome completo da mãe'"
-                    type="text"
-                    v-model="form.nomeMae"
-                  ></b-form-input>
-                </b-form-group>
-
-                <b-form-group
-                  label="Nome do pai (se aplicável):"
-                  class="font col-sm-6 col-md-6 col-lg-6"
-                >
-                  <b-form-input
-                    :placeholder="'Nome completo do pai'"
-                    type="text"
-                    v-model="form.nomePai"
-                  ></b-form-input>
-                </b-form-group>
-
-                <b-form-group
-                  label="Data de nascimento:"
-                  class="font col-sm-3 col-md-3 col-lg-3"
-                >
-                  <b-form-input
-                    type="date"
-                    v-model="form.dataNascimento"
-                  ></b-form-input>
-                </b-form-group>
-
-                <b-form-group
-                  label="Estado civil:"
-                  class="font col-sm-3 col-md-3 col-lg-3"
-                >
-                  <b-form-select size="sm" v-model="form.estadoCivil">
-                    <b-form-select-option value="solteiro"
-                      >Solteiro</b-form-select-option
-                    >
-                    <b-form-select-option value="casado"
-                      >Casado</b-form-select-option
-                    >
-                    <b-form-select-option value="separado"
-                      >Separado</b-form-select-option
-                    >
-                    <b-form-select-option value="divorciado"
-                      >Divorciado</b-form-select-option
-                    >
-                    <b-form-select-option value="viuvo"
-                      >Viúvo</b-form-select-option
-                    >
-                  </b-form-select>
-                </b-form-group>
-
-                <b-form-group
-                  label="Sexo:"
-                  class="font col-sm-3 col-md-3 col-lg-3"
-                >
-                  <b-form-select size="sm" v-model="form.sexo">
-                    <b-form-select-option value="masculino"
-                      >Masculino</b-form-select-option
-                    >
-                    <b-form-select-option value="feminino"
-                      >Feminino</b-form-select-option
-                    >
-                    <b-form-select-option value="não_especificado"
-                      >Não especificado</b-form-select-option
-                    >
-                  </b-form-select>
-                </b-form-group>
-
-                <b-form-group
-                  label="Nacionalidade:"
-                  class="font col-sm-3 col-md-3 col-lg-3"
-                >
-                  <b-form-select v-model="form.nacionalidade">
-                    <b-form-select-option value="brasileiro"
-                      >Brasileira</b-form-select-option
-                    >
-                    <b-form-select-option value="estrangeiro"
-                      >Estrangeira</b-form-select-option
-                    >
-                  </b-form-select>
-                </b-form-group>
-
-                <b-form-group
-                  label="Raça/Etnia:"
-                  class="font col-sm-3 col-md-3 col-lg-3"
-                >
-                  <b-form-select size="sm" v-model="form.raca">
-                    <b-form-select-option value=""
-                      >Amarela (asiática)</b-form-select-option
-                    >
-                    <b-form-select-option value="">Branca</b-form-select-option>
-                    <b-form-select-option value="">Indígena</b-form-select-option>
-                    <b-form-select-option value="">Negra</b-form-select-option>
-                    <b-form-select-option value="">Parda</b-form-select-option>
-                  </b-form-select>
-                </b-form-group>
-              </div>
-
-              <div class="row">
-                <b-form-group
-                  label="CPF:"
-                  class="font col-sm-3 col-md-3 col-lg-3"
-                >
-                  <b-form-input
-                    :placeholder="'Exemplo: 000.000.000-00'"
-                    type="text"
-                    v-model="form.cpf"
-                    v-mask="'###.###.###-##'"
-                  ></b-form-input>
-                </b-form-group>
-
-                <b-form-group label="RG:" class="font col-sm-3 col-md-3 col-lg-3">
-                  <b-form-input
-                    :placeholder="'Exemplo: 0000000-0'"
-                    type="text"
-                    v-model="form.rg"
-                  ></b-form-input>
-                </b-form-group>
-              </div>
-
-              <b-form-group class="titulo" label="Endereço" label-size="lg">
-                <hr />
-              </b-form-group>
-
-              <div class="row">
-                <b-form-group
-                  label="CEP:"
-                  class="font col-sm-3 col-md-3 col-lg-3"
-                >
-                  <b-form-input
-                    id="cep"
-                    :placeholder="'Exemplo: 00000-000'"
-                    type="text"
-                    v-model="form.cep"
-                    v-mask="'#####-###'"
-                  ></b-form-input>
-                </b-form-group>
-              </div>
-
-              <div class="row">
-                <b-form-group
-                  label="Logradouro:"
-                  class="font col-sm-6 col-md-6 col-lg-6"
-                >
-                  <b-form-input
-                    id="logradouro"
-                    :placeholder="'Exemplo: Avenida Boulevard'"
-                    type="text"
-                    v-model="form.logradouro"
-                  ></b-form-input>
-                </b-form-group>
-
-                <b-form-group
-                  label="Número:"
-                  class="font col-sm-3 col-md-3 col-lg-3"
-                >
-                  <b-form-input
-                    id="numero"
-                    :placeholder="'Exemplo: 35A'"
-                    type="text"
-                    v-model="form.numero"
-                  ></b-form-input>
-                </b-form-group>
-
-                <b-form-group
-                  label="Bairro:"
-                  class="font col-sm-3 col-md-3 col-lg-3"
-                >
-                  <b-form-input
-                    id="bairro"
-                    :placeholder="'Exemplo: Alvorada'"
-                    type="text"
-                    v-model="form.bairro"
-                  ></b-form-input>
-                </b-form-group>
-
-                <b-form-group
-                  label="Município:"
-                  class="font col-sm-4 col-md-4 col-lg-4"
-                >
-                  <b-form-input
-                    id="municipio"
-                    :placeholder="'Exemplo: Manaus'"
-                    type="text"
-                    v-model="form.municipio"
-                  ></b-form-input>
-                </b-form-group>
-
-                <b-form-group
-                  label="Estado:"
-                  class="font col-sm-4 col-md-4 col-lg-4"
-                >
-                  <b-form-select id="estado" size="sm" v-model="form.estado">
-                    <b-form-select-option value="AC">Acre</b-form-select-option>
-                    <b-form-select-option value="AL"
-                      >Alagoas</b-form-select-option
-                    >
-                    <b-form-select-option value="AP">Amapá</b-form-select-option>
-                    <b-form-select-option value="AM"
-                      >Amazonas</b-form-select-option
-                    >
-                    <b-form-select-option value="BA">Bahia</b-form-select-option>
-                    <b-form-select-option value="CE">Ceará</b-form-select-option>
-                    <b-form-select-option value="DF"
-                      >Distrito Federal</b-form-select-option
-                    >
-                    <b-form-select-option value="ES"
-                      >Espírito Santo</b-form-select-option
-                    >
-                    <b-form-select-option value="GO">Goiás</b-form-select-option>
-                    <b-form-select-option value="MA"
-                      >Maranhão</b-form-select-option
-                    >
-                    <b-form-select-option value="MT"
-                      >Mato Grosso</b-form-select-option
-                    >
-                    <b-form-select-option value="MS"
-                      >Mato Grosso do Sul</b-form-select-option
-                    >
-                    <b-form-select-option value="MG"
-                      >Minas Gerais</b-form-select-option
-                    >
-                    <b-form-select-option value="PA">Pará</b-form-select-option>
-                    <b-form-select-option value="PB"
-                      >Paraíba</b-form-select-option
-                    >
-                    <b-form-select-option value="PR">Paraná</b-form-select-option>
-                    <b-form-select-option value="PE"
-                      >Pernambuco</b-form-select-option
-                    >
-                    <b-form-select-option value="PI">Piauí</b-form-select-option>
-                    <b-form-select-option value="RJ"
-                      >Rio de Janeiro</b-form-select-option
-                    >
-                    <b-form-select-option value="RN"
-                      >Rio Grande do Norte</b-form-select-option
-                    >
-                    <b-form-select-option value="RS"
-                      >Rio Grande do Sul</b-form-select-option
-                    >
-                    <b-form-select-option value="RO"
-                      >Rondônia</b-form-select-option
-                    >
-                    <b-form-select-option value="RR"
-                      >Roraima</b-form-select-option
-                    >
-                    <b-form-select-option value="SC"
-                      >Santa Catarina</b-form-select-option
-                    >
-                    <b-form-select-option value="SP"
-                      >São Paulo</b-form-select-option
-                    >
-                    <b-form-select-option value="SE"
-                      >Sergipe</b-form-select-option
-                    >
-                    <b-form-select-option value="TO"
-                      >Tocantins</b-form-select-option
-                    >
-                  </b-form-select>
-                </b-form-group>
-              </div>
-              <br />
-              <div class="py-2">
-                <b-button class="mr-2" variant="secondary" @click="voltar()"
-                  >Voltar</b-button
-                >
-                <b-button type="submit" variant="success">Salvar</b-button>
-              </div>
-            </b-form>
+        <div class="row"> <!-- 1ª LINHA (CPF + NOME + BOTÃO) -->
+          <div class="col-3"> <!-- (CPF) -->
+            <b-form-group label="CPF:" class="font">
+              <b-form-input :placeholder="'Digite seu CPF '" type="text" v-model="form.cpfUsuario"
+                v-mask="'###.###.###-##'"></b-form-input>
+            </b-form-group>
+          </div>
+          <div class="col-4"> <!-- (NOME) -->
+            <b-form-group label="Nome completo:" class="font">
+              <b-form-input :placeholder="'Digite seu Nome Completo'" type="text" v-model="form.nomeUsuario">
+              </b-form-input>
+            </b-form-group>
+          </div>
+          <div class="col-5">  <!-- (BOTÃO) -->
+            <div class="justify-content-center">
+              <br/>
+                <b-icon-search type="button" @click="submit" font-scale="2"></b-icon-search>
+            </div>
           </div>
         </div>
 
-      </b-container>
+        <b-form-group class="titulo" label="Usuários Cadastrados" label-size="lg">
+          <hr />
+        </b-form-group>
+
+        <div class="card"> <!-- CARD DA TABELA DE USUÁRIOS-->
+          <div class="card-header" align="right"> <!-- CABEÇALHO DA TABELA (Espaço reservado para incluir ícones -->
+                <b-button v-b-modal.modal-cadastro-usuario  @click="show=true" class="mr-3" type="submit" variant="primary">Cadastrar</b-button>
+          </div>
+          <div class="card-body">
+            <div>
+              <!-- TABELA -->
+              <b-table small striped hover responsive sticky-header head-variant="dark" type="table" :items="items"
+                :fields="fields"></b-table>
+            </div>
+          </div>
+        </div>
+        <hr />
+        <!-- MODAL -->
+        <b-modal id="modal-cadastro-usuario" size="lg" centered title="Cadastro de Usuários">
+          <div class="card"><!-- TELA DE CADASTRO -->
+            <div class="col-12">
+              <b-form @submit.prevent="submit">
+
+                <b-form-group class="titulo" label="Informações pessoais" label-size="lg">
+                  <hr />
+                </b-form-group>
+
+                <div class="row">
+                  <!-- 1ª LINHA (CPF + NOME) -->
+                  <b-form-group label="CPF:" class="font col-sm-5 col-md-5 col-lg-5">
+                    <b-form-input :placeholder="'Digite seu CPF '" type="text" v-model="form.cpfUsuario"
+                      v-mask="'###.###.###-##'"></b-form-input>
+                  </b-form-group>
+
+                  <b-form-group label="Nome completo:" class="font col-sm-7 col-md-7 col-lg-7">
+                    <b-form-input :placeholder="'Digite seu Nome Completo'" type="text" v-model="form.nomeUsuario">
+                    </b-form-input>
+                  </b-form-group>
+                </div>
+                <div class="row">
+                  <!-- 2ª LINHA (MATRÍCULA + CARGO) -->
+                  <b-form-group label="Matrícula:" class="font col-sm-5 col-md-5 col-lg-5">
+                    <b-form-input :placeholder="'Digite sua Matrícula'" type="text" v-model="form.matriculaUsuario"
+                      v-mask="'###.###.###-##'"></b-form-input>
+                  </b-form-group>
+
+                  <b-form-group label="Cargo:" class="font col-sm-7 col-md-7 col-lg-7">
+                    <b-form-input :placeholder="'Digite seu Cargo'" type="text" v-model="form.cargoUsuario">
+                    </b-form-input>
+                  </b-form-group>
+                </div>
+
+                <b-form-group class="titulo" label="Acesso ao Sistema" label-size="lg">
+                  <hr />
+                </b-form-group>
+
+                <div class="row"><!-- (LOGIN + SENHA + SENHA) -->
+                  <b-form-group label="Login:" class="font col-sm-4 col-md-4 col-lg-4">
+                    <b-form-input :placeholder="'Login = CPF'" type="text" v-model="form.loginUsuario"></b-form-input>
+                  </b-form-group>
+
+                  <b-form-group label="Senha:" class="font col-sm-3 col-md-3 col-lg-3">
+                    <b-form-input :placeholder="'Digite sua Senha'" type="text" v-model="form.senhaUsuario">
+                    </b-form-input>
+                  </b-form-group>
+
+                  <b-form-group label="Repita a Senha:" class="font col-sm-3 col-md-3 col-lg-3">
+                    <b-form-input :placeholder="'Digite a Senha novamente'" type="text" v-model="form.senhaUsuario">
+                    </b-form-input>
+                  </b-form-group>
+                </div>
+              </b-form>
+            </div>
+          </div>
+
+          <template #modal-footer> <!-- MODAL FOOTER -->
+            <div class="py-2"> <!-- BOTÃO (LOGIN + SENHA + SENHA) -->
+              <b-button class="mr-2" variant="secondary" @click="show=false">Voltar</b-button>
+              <b-button type="submit" variant="success">Salvar</b-button>
+            </div>
+          </template>
+        </b-modal>
+        <!-- //modal -->
+
+      </div>
+    </b-container>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
 import axios from "axios";
-import HeaderPage from '@/components/HeaderPage.vue'
+import HeaderPage from '@/components/HeaderPage.vue';
+import Notifications from "@/components/Notifications.vue";
+import { Notificacao } from "@/type/notificacao";
 import { mask } from "vue-the-mask";
+import { BIconSearch} from 'bootstrap-vue';
+
 
 export default Vue.extend({
   directives: { mask },
   data() {
     return {
+      show: false as boolean,
       form: {
-        priNome: "" as string,
+        cpfUsuario: "" as string,
         nomeUsuario: "" as string,
-        nomeMae: "" as string,
-        nomePai: "" as string,
-        sexo: [] as Array<string>,
-        estadoCivil: [] as Array<string>,
-        raca: [] as Array<string>,
-        dataNascimento: new Date() as Date,
-        nacionalidade: [] as Array<string>,
-        rg: "" as string,
-        cpf: "" as string,
-        cep: "" as string,
-        logradouro: "" as string,
-        numero: "" as string,
-        bairro: "" as string,
-        municipio: "" as string,
-        estado: [] as Array<string>,
+        matriculaUsuario: "" as string,
+        cargoUsuario: "" as string,
+        loginUsuario: "" as string,
+        senhaUsuario: "" as string,
       },
+      fields: [
+        {
+          key: 'cpfUsuario',
+          label: 'CPF',
+          sortable: true
+        },
+        {
+          key: 'nomeUsuario',
+          label: 'Nome Completo',
+          sortable: true
+        },
+        {
+          key: 'matriculaUsuario',
+          label: 'Matrícula',
+          sortable: true,
+        },
+        {
+          key: 'cargoUsuario',
+          label: 'Cargo',
+          sortable: true,
+        },
+      ],
+      items: [
+        { isActive: true, cpfUsuario: "123.145.147-11", nomeUsuario: "Thaís Condida", matriculaUsuario: "12345-A", cargoUsuario: 'Advogado' },
+        { isActive: true, cpfUsuario: "154.478.459-89", nomeUsuario: "Chico Cunha", matriculaUsuario: "54321-A", cargoUsuario: 'Auxiliar' },
+        { isActive: true, cpfUsuario: "521.845.987.-14", nomeUsuario: "Pacífico Armando Guerra", matriculaUsuario: "12345-A", cargoUsuario: 'Estagiário' },
+        { isActive: true, cpfUsuario: "458.987.589-99", nomeUsuario: "Um Dois Três de Oliveira Quatro", matriculaUsuario: "12345-A", cargoUsuario: 'Diretor' },
+        { isActive: true, cpfUsuario: "154.623.352-13", nomeUsuario: "Vicente Mais ou  Menos de Souza", matriculaUsuario: "12345-A", cargoUsuario: 'Gerente' },
+        { isActive: true, cpfUsuario: "225.112.002-09", nomeUsuario: "Deyde Costa", matriculaUsuario: "12345-A", cargoUsuario: 'Advogada' },
+        { isActive: true, cpfUsuario: "007.007.007-07", nomeUsuario: "James Bond", matriculaUsuario: "007-A", cargoUsuario: 'Agente Secreto' }
+
+      ]
     };
   },
-  mounted() {},
+  mounted() { },
   methods: {
     submit() {
       alert("enviar");
@@ -358,8 +184,10 @@ export default Vue.extend({
       this.$router.push("/");
     }
   },
-  components:{
-    HeaderPage
+  components: {
+    HeaderPage,
+    Notifications,
+    BIconSearch
   }
 });
 </script>
@@ -368,17 +196,21 @@ export default Vue.extend({
 .root .row {
   min-height: 0vh;
 }
+
 .row {
   min-height: 0vh;
 }
+
 .font {
   font-family: "Mulish", sans-serif;
 }
+
 .titulo {
   color: #293258;
   margin-top: 20px;
   font-family: "Mulish", sans-serif;
 }
+
 .custom-select-sm {
   height: calc(2em + 0.5rem + 2px);
 }

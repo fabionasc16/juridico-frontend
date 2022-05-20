@@ -1,8 +1,8 @@
 <template>
   <div>
     <header-page
-      :titulo="'Registro de Entrada'"
-      descricao="Adicione novos pacientes ao sistema"
+      :titulo="'Entrada de Processos'"
+      descricao="Adicione o processo no sistema"
     />
 
     <b-container>
@@ -10,210 +10,148 @@
         <div class="col-12">
           <b-form>
             <notifications :notifications="this.Notificacao"></notifications>
-            <b-form-group
-              class="titulo"
-              label="Informações de entrada do paciente"
-              label-size="lg"
-            >
-              <hr />
+            <b-form-group class="titulo" label="Informações de entrada do processo" label-size="lg">
+              <hr/>
             </b-form-group>
 
             <div class="row">
-              <b-form-group
-                label="Número do Prontuário:"
-                class="font col-sm-3 col-md-3 col-lg-3"
-              >
-                <b-form-input
-                  type="text"
-                  v-model="form.numProntuario"
-                ></b-form-input>
+              <b-form-group label="Nº Processo:" class="font col-sm-3 col-md-3 col-lg-3">
+                <b-form-input type="text" v-model="form.numProcesso"></b-form-input>
               </b-form-group>
 
-              <b-form-group
-                label="Status:"
-                class="font col-sm-3 col-md-3 col-lg-3"
-              >
-                <b-form-select
-                  size="sm"
-                  v-model="form.statusRegistro"
-                  disabled
-                  style="color: blue"
-                >
-                  <b-form-select-option value="1"
-                    >Não Identificado</b-form-select-option
-                  >
+              <b-form-group label="Tipo do Processo:" class="font col-sm-3 col-md-3 col-lg-3">
+                <b-form-select v-model="form.tipoProcesso">
+                  <b-form-select-option value="null">-- Selecione --</b-form-select-option>
+                  <b-form-select-option value="administrativo">Administrativo</b-form-select-option>
+                  <b-form-select-option value="extraJudicial">Extra-Judicial</b-form-select-option>
+                  <b-form-select-option value="judicial">Judicial</b-form-select-option>
+                  <b-form-select-option value="orgaoControle">Órgãos de Controle</b-form-select-option>
                 </b-form-select>
+              </b-form-group>
+
+              <b-form-group label="Monitora Prazo:" class="font col-sm-3 col-md-3 col-lg-3">
+                <b-form-select v-model="form.monitoraPrazo" @change="exibirCampoPrazo()">
+                  <b-form-select-option value="null">-- Selecione --</b-form-select-option>
+                  <b-form-select-option value="sim">Sim</b-form-select-option>
+                  <b-form-select-option value="nao">Não</b-form-select-option>
+                </b-form-select>
+              </b-form-group>
+
+              <b-form-group label="Prazo total:" class="font col-sm-3 col-md-3 col-lg-3" v-show="exibirRegistroPrazo">
+                <b-form-input type="text" v-model="form.qtdDiasPrazo" required></b-form-input>
               </b-form-group>
             </div>
 
             <div class="row">
-              <b-form-group
-                label="Data de entrada na unidade:"
-                class="font col-sm-3 col-md-3 col-lg-3"
-              >
-                <b-form-input
-                  type="date"
-                  v-model="form.dataEntrada"
-                ></b-form-input>
-              </b-form-group>
-
-              <b-form-group
-                label="Hora de entrada:"
-                class="font col-sm-2 col-md-2 col-lg-2"
-              >
-                <b-form-input
-                  type="time"
-                  v-model="form.horaEntrada"
-                ></b-form-input>
-              </b-form-group>
-
-              <b-form-group
-                label="Entrada através de:"
-                class="font col-sm-3 col-md-3 col-lg-3"
-              >
-                <b-form-select
-                  v-model="form.entradaAtraves"
-                  @change="exibirCampo()"
-                >
-                  <b-form-select-option value="null"
-                    >-- Selecione --</b-form-select-option
-                  >
-                  <b-form-select-option value="terceiros"
-                    >Terceiros</b-form-select-option
-                  >
-                  <b-form-select-option value="meios_proprios"
-                    >Meios próprios</b-form-select-option
-                  >
-                  <b-form-select-option value="samu">SAMU</b-form-select-option>
-                  <b-form-select-option value="policia"
-                    >Polícia</b-form-select-option
-                  >
+              <b-form-group label="Órgão Demandante:" class="font col-sm-3 col-md-3 col-lg-3">
+                <b-form-select size="sm" v-model="form.orgaoDemandante">
+                  <b-form-select-option value="null">-- Selecione --</b-form-select-option>
+                  <b-form-select-option value="ministerioPublico">Ministerio Publico</b-form-select-option>
+                  <b-form-select-option value="tribunalContas">Tribunal de Contas</b-form-select-option>
                 </b-form-select>
               </b-form-group>
 
-              <b-form-group
-                label="Registro No.:"
-                class="font col-sm-3 col-md-3 col-lg-3"
-                v-show="exibirRegistro"
-              >
-                <b-form-input
-                  type="text"
-                  v-model="form.numRegistroExterno"
-                  required
-                ></b-form-input>
+              <b-form-group label="Data do Processo:" class="font col-sm-3 col-md-3 col-lg-3">
+                <b-form-input type="date" v-model="form.dataProcesso"></b-form-input>
+              </b-form-group>
+
+              <b-form-group label="Data Recebimento:" class="font col-sm-3 col-md-3 col-lg-3">
+                <b-form-input type="date" v-model="form.dataRecebimento"></b-form-input>
+              </b-form-group>
+
+              <b-form-group label="Hora Recebimento:" class="font col-sm-3 col-md-3 col-lg-3">
+                <b-form-input type="time" v-model="form.horaRecebimento"></b-form-input>
               </b-form-group>
             </div>
 
             <div class="row">
-              <b-form-group
-                label="Sexo:"
-                class="font col-sm-3 col-md-3 col-lg-3"
-              >
+              <b-form-group label="Assunto:" class="font col-sm-7 col-md-7 col-lg-7">
+                <b-form-input type="text" v-model="form.assunto"></b-form-input>
+              </b-form-group>
+
+              <b-form-group label="Classificação:" class="font col-sm-5 col-md-5 col-lg-5">
                 <b-form-select size="sm" v-model="form.sexo">
-                  <b-form-select-option value="masculino"
-                    >Masculino</b-form-select-option
-                  >
-                  <b-form-select-option value="feminino"
-                    >Feminino</b-form-select-option
-                  >
-                  <b-form-select-option value="não_especificado"
-                    >Não especificado</b-form-select-option
-                  >
+                  <b-form-select-option value="class1">Classificação 1</b-form-select-option>
+                  <b-form-select-option value="class2">Classificação 2</b-form-select-option>
+                  <b-form-select-option value="class3">Classificação 3</b-form-select-option>
                 </b-form-select>
               </b-form-group>
             </div>
 
             <div class="row">
-              <b-form-group
-                label="Vestimentas que usava:"
-                class="font col-sm-8 col-md-8 col-lg-8"
-              >
-                <b-form-input
-                  type="text"
-                  v-model="form.vestimentas"
-                ></b-form-input>
-              </b-form-group>
-            </div>
+              <div class="col-8">
+                <div class="row">
+                  <b-form-group label="Objeto:" class="font col-sm-12 col-md-12 col-lg-12">
+                    <b-form-textarea rows="2" max-rows="2" v-model="form.objeto"></b-form-textarea>
+                  </b-form-group>
+                </div>
+                <div class="row">
+                  <b-form-group label="Advogado Responsável:" class="font col-sm-12 col-md-12 col-lg-12">
+                    <b-form-input type="text" v-model="form.advogadoResponsavel" required></b-form-input>
+                  </b-form-group>
+                </div>
+                <div class="row">
+                  <b-form-group label="Observação:" class="font col-sm-12 col-md-12 col-lg-12">
+                    <b-form-textarea rows="4" max-rows="4" v-model="form.observacao"></b-form-textarea>
+                  </b-form-group>
+                </div>
 
-            <div class="row">
-              <b-form-group
-                label="Condições em que se encontrava:"
-                class="font col-sm-8 col-md-8 col-lg-8"
-              >
-                <b-form-textarea
-                  rows="3"
-                  max-rows="6"
-                  v-model="form.condicoesEncontrada"
-                ></b-form-textarea>
-              </b-form-group>
-            </div>
+                <div class="py-2">
+                  <b-button class="mr-2" variant="secondary" @click="voltar()">Voltar</b-button>
+                  <b-button type="button" variant="success" @click="submit">Salvar</b-button>
+                </div>
+              </div>
 
-            <b-form-group
-              class="titulo"
-              label="Pessoa de Contato:"
-              label-size="lg"
-            >
-              <hr />
-            </b-form-group>
+<!--
+                  <b-form-group label="Requer SIGED?" class="font col-sm-12 col-md-12 col-lg-12">
+                    <b-form-select v-model="form.requerSIGED" @change="exibirCampoSIGED()">
+                      <b-form-select-option value="null">-- Selecione --</b-form-select-option>
+                      <b-form-select-option value="sim">Sim</b-form-select-option>
+                      <b-form-select-option value="nao">Não</b-form-select-option>
+                    </b-form-select>
+                  </b-form-group>
+-->
 
-            <div class="row">
-              <b-form-group
-                label="Nome:"
-                class="font col-sm-6 col-md-6 col-lg-6"
-              >
-                <b-form-input
-                  type="text"
-                  v-model="form.nomeContato"
-                ></b-form-input>
-              </b-form-group>
+              <div class="col-4">
+                <div class="row">
+                  <b-form-checkbox v-model="form.requerSIGED" @change="exibirCampoSIGED()" switch class="font col-sm-2 col-md-2 col-lg-2">Requer SIGED
+                  </b-form-checkbox>
 
-              <b-form-group
-                label="Grau de parentesco:"
-                class="font col-sm-3 col-md-3 col-lg-3"
-              >
-                <b-form-select size="sm" v-model="form.grauParentescoSelected" >
-                  <b-form-select-option
-                    v-for="option in optionsGrauParentesco"
-                    :value="option.value" :key="option.value"
-                  >
-                    {{ option.texto }}
-                  </b-form-select-option>
-                </b-form-select>
-              </b-form-group>
-            </div>
-            <div class="row">
-              <b-form-group
-                label="Telefone:"
-                class="font col-sm-3 col-md-3 col-lg-3"
-              >
-                <b-form-input
-                  type="text"
-                  v-model="form.telefoneContato"
-                  :placeholder="'Exemplo: (99)9999-9999'"
-                  v-mask="'(##)#####-####'"
-                ></b-form-input>
-              </b-form-group>
+                  <b-form-group label="Nº SIGED" class="ml-4 font col-sm-9 col-md-9 col-lg-9" v-show="exibirRegistroSIGED">
+                    <b-form-input type="text" v-model="form.nSIGED" required></b-form-input>
+                  </b-form-group>
+                </div>
+                <div class="row">
+                  <b-form-group class="titulo col-sm-12 col-md-12 col-lg-12" label="Dados do SIGED:" label-size="lg">
+                    <hr/>
+                  </b-form-group>
+                  <div class="col-12">
+                    <div class="row">
+                      <b-form-group label="Data Cad. SIGED:" class="font col-sm-6 col-md-6 col-lg-6">
+                        <b-form-input :placeholder="'12/05/2020'" type="date" v-model="form.dataCadSIGED"></b-form-input>
+                      </b-form-group>
 
-              <b-form-group
-                label="CPF:"
-                class="font col-sm-3 col-md-3 col-lg-3"
-              >
-                <b-form-input
-                  :placeholder="'Exemplo: 000.000.000-00'"
-                  type="text"
-                  v-model="form.cpfContato"
-                  v-mask="'###.###.###-##'"
-                ></b-form-input>
-              </b-form-group>
-            </div>
+                      <b-form-group label="Permanência:" class="font col-sm-6 col-md-6 col-lg-6">
+                        <b-form-input :placeholder="'57'" type="text" v-model="form.permanencia"></b-form-input>
+                      </b-form-group>
+                    </div>
+                    <div class="row">
+                      <b-form-group label="Caixa Atual:" class="font col-sm-6 col-md-6 col-lg-6">
+                        <b-form-input :placeholder="'Jurídico'" type="text" v-model="form.caixaAtual"></b-form-input>
+                      </b-form-group>
 
-            <div class="py-2">
-              <b-button class="mr-2" variant="secondary" @click="voltar()"
-                >Voltar</b-button
-              >
-              <b-button type="button" variant="success" @click="submit"
-                >Salvar</b-button
-              >
+                      <b-form-group label="Tramitação:" class="font col-sm-6 col-md-6 col-lg-6">
+                        <b-form-input :placeholder="'Em andamento'" type="text" v-model="form.caixaAtual"></b-form-input>
+                      </b-form-group>
+                    </div>
+  <!--
+                    <div class="row">
+                        <b-button type="button" variant="info" @click="modalDetalhes">Detalhes</b-button>
+                    </div>
+  -->
+                  </div>
+                </div>
+              </div>
             </div>
           </b-form>
         </div>
@@ -232,6 +170,7 @@ import { GrauParentescoSeeder } from "@/type/parentesco";
 import { mapActions } from 'vuex'
 
 
+
 export default Vue.extend({
   directives: { mask },
   components: {
@@ -246,6 +185,9 @@ export default Vue.extend({
         dataEntrada: "" as string,
         horaEntrada: "" as string,
         entradaAtraves: "" as string,
+        requerSIGED: false as boolean,
+        monitoraPrazo: "" as string,
+        qtdDiasPrazo: "" as string,
         numRegistroExterno: "" as string,
         sexo: "" as string,
         vestimentas: "" as string,
@@ -255,7 +197,8 @@ export default Vue.extend({
         cpfContato: "" as string,
         grauParentescoSelected: "" as string,
       },
-      exibirRegistro: false as boolean,
+      exibirRegistroPrazo: false as boolean,
+      exibirRegistroSIGED: false as boolean,
       Notificacao: [] as Array<Notificacao>,
       optionsGrauParentesco: GrauParentescoSeeder,
     };
@@ -276,17 +219,31 @@ export default Vue.extend({
       let year = hoje.getFullYear();
       return year + "-" + month + "-" + day;
     },
-    exibirCampo(): void {
+    exibirCampoPrazo(): void {
       this.form.numRegistroExterno = "";
       if (
-        this.form.entradaAtraves == "samu" ||
-        this.form.entradaAtraves == "policia"
+        this.form.monitoraPrazo == "sim"
       ) {
-        this.exibirRegistro = true;
+        this.exibirRegistroPrazo = true;
       } else {
-        this.exibirRegistro = false;
+        this.exibirRegistroPrazo = false;
       }
     },
+    exibirCampoSIGED(): void {
+      this.form.numRegistroExterno = "";
+      if (
+        this.form.requerSIGED === true
+      ) {
+        this.exibirRegistroSIGED = true;
+      } else {
+        this.exibirRegistroSIGED = false;
+      }
+    },
+    // exibirCampoSIGED(): void {
+    //   this.form.numRegistroExterno = "";
+    //   this.form.requerSIGED = !this.form.requerSIGED
+      
+    // },
 
     submit():void {
       /*if (this.validarCamposObrigatorios()) {
