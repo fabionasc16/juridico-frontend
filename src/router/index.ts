@@ -16,6 +16,7 @@ const routes: Array<RouteConfig> = [
   { path: '/processos', name: 'Cadastro de Processos', component: () => import('../views/Processos/CadastroProcesso.vue') },
   { path: '/processos/consulta', name: 'Consulta de Processos', component: () => import('../views/Processos/Consulta.vue') },
   { path: '/caracteristicas', name: 'Características', component: () => import('../views/Caracteristicas/CadastroCaracteristica.vue') },
+  { path: '/dash', name: 'Dash', component: () => import('../views/Dashboard/Graficos.vue') },
 ]
 
 const router = new VueRouter({

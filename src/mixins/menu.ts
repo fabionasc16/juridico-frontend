@@ -19,6 +19,10 @@ const menusMixin = {
 				name: "Usuários",
 				path: "/usuarios"
 			},
+			{
+				name: "Dash",
+				path: "/dash"
+			},
 			] as Array<RouteConfig>
 		}
 	},
