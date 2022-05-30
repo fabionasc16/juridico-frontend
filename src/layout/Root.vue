@@ -4,7 +4,7 @@
             <div class="sidebar" :class="sidebarClass">
                 <sidebar />
             </div>
-            <div class="content" :class="contentClass">
+            <div class="content px-0" :class="contentClass">
                 <div class="content">
                     <content-header>
                         <b-btn class="d-none d-lg-block" variant="primary" @click="retraido = !retraido">

@@ -6,73 +6,57 @@
           <hr />
         </b-form-group>
 
-        <!-- 1ª LINHA (CPF + NOME + BOTÃO) -->
-        <div class="row">
-          <!-- (CPF) -->
-          <div class="col-3">
+        <div class="row"> <!-- 1ª LINHA (CPF + NOME + BOTÃO) -->
+          <div class="col-3"> <!-- (CPF) -->
             <b-form-group label="CPF:" class="font">
               <b-form-input :placeholder="'Digite seu CPF '" type="text" v-model="form.cpfUsuario"
                 v-mask="'###.###.###-##'"></b-form-input>
             </b-form-group>
           </div>
-            <!-- (NOME) -->
-          <div class="col-4">
+          <div class="col-4"> <!-- (NOME) -->
             <b-form-group label="Nome completo:" class="font">
               <b-form-input :placeholder="'Digite seu Nome Completo'" type="text" v-model="form.nomeUsuario">
               </b-form-input>
             </b-form-group>
           </div>
-            <!-- (BOTÃO) -->
-          <div class="col-5">
+          <div class="col-5">  <!-- (BOTÃO) -->
             <b-form-group label="Consultar" class="font text-white">
-              <b-icon-search v-b-tooltip.hover.topleft="'Consultar'" type="button" @click="submit" font-scale="2"
-                style="color: gray;"></b-icon-search>
+              <b-icon-search v-b-tooltip.hover.topleft="'Consultar'" type="button" @click="submit" font-scale="2" style="color: gray;"></b-icon-search>
             </b-form-group>
           </div>
         </div>
 
-          <!-- CARD DA TABELA DE USUÁRIOS-->
-        <div class="card p-0 m-0">
-          <!-- CABEÇALHO DA TABELA (Espaço reservado para incluir ícones) -->
-          <div class="card-header" align="right">
+        <div class="card p-0 m-0"> <!-- CARD DA TABELA DE USUÁRIOS-->
+          <div class="card-header" align="right"> <!-- CABEÇALHO DA TABELA (Espaço reservado para incluir ícones) -->
             <div class="row">
-              <!-- TÍTULO -->
-              <div class="col-1" align="center">
-                <b-icon-person-plus v-b-modal.modal-cadastro-usuario v-b-tooltip.hover.topleft="'Adicionar Usuário'"
-                  font-scale="2" class="text-blue" label="Usuários Cadastrados"></b-icon-person-plus>
+              <div class="col-1" align="center"> <!-- TÍTULO -->
+                <b-icon-person-plus v-b-modal.modal-cadastro-usuario v-b-tooltip.hover.topleft="'Adicionar Usuário'" font-scale="2" class="text-blue" label="Usuários Cadastrados"></b-icon-person-plus>
               </div>
               <div class="col-10 mt-1" align="start">
                 <div class="row position-relative">
                   <h5>Usuários Cadastrados</h5>
                 </div>
               </div>
-              <!-- ÍCONE Plus-Circle -->
-              <div class="col-1 position-relative" align="center">
+              <div class="col-1 position-relative" align="center"> <!-- ÍCONE Plus-Circle -->
                 <b-form-group label="" class="btn text-primary position-absolute top-50 start-50 translate-middle">
-                  <b-icon-plus-circle v-b-modal.modal-cadastro-usuario v-b-tooltip.hover.topleft="'Adicionar Usuário'"
-                    font-scale="2"></b-icon-plus-circle>
+                  <b-icon-plus-circle v-b-modal.modal-cadastro-usuario v-b-tooltip.hover.topleft="'Adicionar Usuário'" font-scale="2"></b-icon-plus-circle>
                 </b-form-group>
               </div>
             </div>
           </div>
-          <!-- TABELA -->
-          <div>
-            <b-table-lite small striped hover responsive class="m-0" head-variant="dark" :sticky-header="stickyHeader"
-              :no-border-collapse="noCollapse" :items="items" :fields="fields"></b-table-lite>
+          <div> <!-- TABELA -->
+            <b-table-lite small striped hover responsive class="m-0" head-variant="dark" :sticky-header="stickyHeader" :no-border-collapse="noCollapse" :items="items" :fields="fields"></b-table-lite>
           </div>
-          <!-- RODAPÉ DA TABELA (Espaço reservado para incluir ícones) -->
-          <div class="card-footer m-0 px-1 pt-1">
-            <!-- PAGINAÇÃO -->
-            <div class="col-12 m-0 px-1 pt-1">
-              <b-pagination pills align="right" size="sm" v-model="currentPage" :total-rows="rows"></b-pagination>
-            </div>
+          <div class="card-footer m-0 px-1 pt-1"> <!-- RODAPÉ DA TABELA (Espaço reservado para incluir ícones) -->
+              <div class="col-12 m-0 px-1 pt-1"> <!-- PAGINAÇÃO -->
+                <b-pagination pills align="right" size="sm" v-model="currentPage" :total-rows="rows"></b-pagination>
+              </div>
           </div>
         </div>
 
         <!-- MODAL -->
         <b-modal id="modal-cadastro-usuario" size="lg" centered title="Cadastro de Usuários">
-          <!-- TELA DE CADASTRO -->
-          <div class="card">
+          <div class="card"><!-- TELA DE CADASTRO -->
             <div class="col-12">
               <b-form @submit.prevent="submit">
 
@@ -80,8 +64,8 @@
                   <hr />
                 </b-form-group>
 
-                <!-- 1ª LINHA (CPF + NOME) -->
                 <div class="row">
+                  <!-- 1ª LINHA (CPF + NOME) -->
                   <b-form-group label="CPF:" class="font col-sm-5 col-md-5 col-lg-5">
                     <b-form-input :placeholder="'Digite seu CPF '" type="text" v-model="form.cpfUsuario"
                       v-mask="'###.###.###-##'"></b-form-input>
@@ -92,8 +76,8 @@
                     </b-form-input>
                   </b-form-group>
                 </div>
-                <!-- 2ª LINHA (MATRÍCULA + CARGO) -->
                 <div class="row">
+                  <!-- 2ª LINHA (MATRÍCULA + CARGO) -->
                   <b-form-group label="Matrícula:" class="font col-sm-5 col-md-5 col-lg-5">
                     <b-form-input :placeholder="'Digite sua Matrícula'" type="text" v-model="form.matriculaUsuario"
                       v-mask="'###.###.###-##'"></b-form-input>
@@ -109,8 +93,7 @@
                   <hr />
                 </b-form-group>
 
-                <!-- (LOGIN + SENHA + SENHA) -->
-                <div class="row">
+                <div class="row"><!-- (LOGIN + SENHA + SENHA) -->
                   <b-form-group label="Login:" class="font col-sm-4 col-md-4 col-lg-4">
                     <b-form-input :placeholder="'Login = CPF'" type="text" v-model="form.loginUsuario"></b-form-input>
                   </b-form-group>
@@ -129,11 +112,9 @@
             </div>
           </div>
 
-          <!-- MODAL FOOTER -->
-          <template #modal-footer>
-            <!-- BOTÃO (LOGIN + SENHA + SENHA) -->
-            <div class="py-2">
-              <b-button class="mr-2" variant="secondary" @click="show = false">Voltar</b-button>
+          <template #modal-footer> <!-- MODAL FOOTER -->
+            <div class="py-2"> <!-- BOTÃO (LOGIN + SENHA + SENHA) -->
+              <b-button class="mr-2" variant="secondary" @click="show=false">Voltar</b-button>
               <b-button type="submit" variant="success">Salvar</b-button>
             </div>
           </template>
@@ -151,7 +132,7 @@ import HeaderPage from '@/components/HeaderPage.vue';
 import Notifications from "@/components/Notifications.vue";
 import { Notificacao } from "@/type/notificacao";
 import { mask } from "vue-the-mask";
-import { BIconSearch, BIconPlusCircle, BIconPersonPlus } from 'bootstrap-vue';
+import { BIconSearch, BIconPlusCircle, BIconPersonPlus} from 'bootstrap-vue';
 
 
 export default Vue.extend({

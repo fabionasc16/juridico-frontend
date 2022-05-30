@@ -1,9 +1,13 @@
 <template>
-  <div id="app" style="width: 400px">
-  
+<div>
+  <h3 align="center">Gráfico de Colunas</h3>
+  <button class="float-right" @click="goTo('/dashboard')" v-show="!locationDash">Dashboard</button>
+  <div id="app2" style="width: 90%;">
     <BarChart v-bind="barChartProps" />
     <img style="width: 300px" v-if="imgData" :src="imgData" />
   </div>
+</div>
+
 </template>
 
 <script>
@@ -11,7 +15,6 @@ import Vue from "vue";
 import VueCompositionAPI from '@vue/composition-api'
 
 Vue.use(VueCompositionAPI)
-
 
 import { Chart, registerables } from 'chart.js';
 import { BarChart, useBarChart } from "vue-chart-3";
@@ -24,11 +27,19 @@ Chart.register(...registerables);
 
 export default defineComponent({
   name: "App",
+  props: {
+    locationDash: Boolean
+  },
   components: {
     BarChart,
   },
+  methods:{
+      goTo(caminho){
+          this.$router.push(caminho)
+      }
+  },
   setup() {
-    const data = ref([30, 40, 60, 70, 5]);
+    const data = ref([50, 40, 65, 55, 25, 0, 0, 0, 0, 0, 0, 0]);
     const legendTop = ref(true);
     const imgData = ref(null);
 
@@ -41,16 +52,12 @@ export default defineComponent({
     }));
 
     const chartData = computed(() => ({
-      labels: ["Paris", "Nîmes", "Toulon", "Perpignan", "Autre"],
+      labels: ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"],
       datasets: [
         {
           data: data.value,
           backgroundColor: [
-            "#77CEFF",
-            "#0079AF",
-            "#123E6B",
-            "#97B0C4",
-            "#A5C8ED",
+            "#A3A500",
           ],
         },
       ],
@@ -61,8 +68,7 @@ export default defineComponent({
       options,
     });
 
-  
-    return { barChartProps, barChartRef, imgData };
+return { barChartProps, barChartRef, imgData };
   },
 });
 </script>

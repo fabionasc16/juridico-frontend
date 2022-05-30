@@ -1,5 +1,5 @@
 <template>
-  <div class="sticky-top">
+  <div class="sticky-top" style="width: 100%;">
     <div class="header px-4">
       <slot></slot>
       <b-dropdown class="dropdown" size="sm" variant="outline-light">
@@ -31,6 +31,7 @@ export default Vue.extend({
   background-color: #1b2038;
   color: white;
   min-height: 50px;
+  width: 100%;
   display: flex;
   align-items: center;
 }
