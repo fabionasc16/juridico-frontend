@@ -755,8 +755,8 @@
         </b-modal>
         <!-- TRAMITAÇÕES DO PROCESSO -->
         <b-modal id="modal-tramitacoes-processo" size="lg" centered title="Tramitações do Processo">
-          <MTramitacoesProcesso>
-          </MTramitacoesProcesso>
+          <ModalTramitacoesProcesso>
+          </ModalTramitacoesProcesso>
         </b-modal>
         <!-- //modal -->
 
@@ -769,7 +769,7 @@
 import Vue from "vue";
 import axios from "axios";
 import HeaderPage from '@/components/HeaderPage.vue';
-import MTramitacoesProcesso from './Modais/MTramitacoesProcesso.vue';
+import ModalTramitacoesProcesso from './Modais/ModalTramitacoesProcesso.vue';
 import { mask } from "vue-the-mask";
 import Notifications from "@/components/Notifications.vue";
 import { Notificacao } from "@/type/notificacao";
@@ -948,7 +948,7 @@ export default Vue.extend({
   },
   components: {
     HeaderPage,
-    MTramitacoesProcesso,
+    ModalTramitacoesProcesso,
     BIconSearch,
     BIconJournalPlus,
     BIconPlusCircle,
