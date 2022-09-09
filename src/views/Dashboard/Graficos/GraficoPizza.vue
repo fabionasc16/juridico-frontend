@@ -1,36 +1,51 @@
 <template>
-  <div>
-    <h3 align="center">Gráfico de Pizza</h3>  
-    <button class="float-right" @click="goTo('/dashboard')" v-show="!locationDash">Dashboard</button>
+  <b-container fluid>
+    <!-- CABEÇALHO -->
+    <div class="row">
+        <!-- TÍTULO -->
+        <div class="col-10">
+          <div align="left">
+              <b-form-group class="m-0" label="Gráfico de Linha" label-size="lg"></b-form-group>
+          </div>
+        </div>
+        <div class="col-2">
+          <div align="center">
+            <button @click="goTo('/dashboard')" v-show="!locationDash">Dashboard</button>
+          </div>
+        </div>
+        <hr />
+    </div>
+
+    <!-- GRÁFICO -->
     <div id="app2" style="width: 90%;">
       <PieChart :chartData="testData" />
       <img style="width: 300px" v-if="imgData" :src="imgData" />
     </div>
-  </div>
-
+  </b-container>
 </template>
 
-<script>
+<script lang="ts">
 import Vue from "vue";
 import VueCompositionAPI from '@vue/composition-api'
-
-Vue.use(VueCompositionAPI)
-
-
 import { Chart, registerables } from 'chart.js';
 import { PieChart } from "vue-chart-3";
 import { ref, computed, defineComponent } from "@vue/composition-api";
 import { shuffle } from "lodash";
-
+Vue.use(VueCompositionAPI)
 Chart.register(...registerables);
 
 //export default Vue.extend({
 
 export default defineComponent({
   name: "App",
+  data() {
+    return {
+      caminho: false,
+    };
+  },
   components: {
     PieChart,
-  },
+  }, 
   props: {
     locationDash: Boolean
   },

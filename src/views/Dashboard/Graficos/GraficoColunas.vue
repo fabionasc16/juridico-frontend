@@ -1,16 +1,31 @@
 <template>
-<div>
-  <h3 align="center">Gráfico de Colunas</h3>
-  <button class="float-right" @click="goTo('/dashboard')" v-show="!locationDash">Dashboard</button>
-  <div id="app2" style="width: 90%;">
-    <BarChart v-bind="barChartProps" />
-    <img style="width: 300px" v-if="imgData" :src="imgData" />
-  </div>
-</div>
+  <b-container fluid>
+    <!-- CABEÇALHO -->
+    <div class="row">
+        <!-- TÍTULO -->
+        <div class="col-10">
+          <div align="left">
+              <b-form-group class="m-0" label="Gráfico de Linha" label-size="lg"></b-form-group>
+          </div>
+        </div>
+        <div class="col-2">
+          <div align="center">
+            <button @click="goTo('/dashboard')" v-show="!locationDash">Dashboard</button>
+          </div>
+        </div>
+        <hr />
+    </div>
+    
+    <!-- GRÁFICO -->
+    <div id="app2" style="width: 90%;">
+      <BarChart v-bind="barChartProps" />
+      <img style="width: 300px" v-if="imgData" :src="imgData" />
+    </div>
+  </b-container>
 
 </template>
 
-<script>
+<script lang="ts">
 import Vue from "vue";
 import VueCompositionAPI from '@vue/composition-api'
 
@@ -40,6 +55,7 @@ export default defineComponent({
   },
   setup() {
     const data = ref([50, 40, 65, 55, 25, 0, 0, 0, 0, 0, 0, 0]);
+    const data2 = ref([5, 40, 65, 55, 25, 0, 0, 0, 0, 0, 0, 0]);
     const legendTop = ref(true);
     const imgData = ref(null);
 
@@ -56,6 +72,12 @@ export default defineComponent({
       datasets: [
         {
           data: data.value,
+          backgroundColor: [
+            "#A3A500",
+          ],
+        },
+        {
+          data: data2.value,
           backgroundColor: [
             "#A3A500",
           ],

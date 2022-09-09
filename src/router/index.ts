@@ -5,18 +5,14 @@ import HomeView from '../views/HomeView.vue'
 Vue.use(VueRouter)
 
 const routes: Array<RouteConfig> = [
-  { path: '/', name: 'Home', component: HomeView },
-  { path: '/processos', name: 'Processos', component: () => import('../views/Processos/CadastroProcesso.vue') },
-  { path: '/usuarios', name: 'Usuários', component: () => import(/* webpackChunkName: "about" */ '../views/Usuarios/CadastroUsuario.vue') },
-  { path: '/usuarios2', name: 'Página de Usuários', component: () => import(/* webpackChunkName: "about" */ '../views/Usuarios/CadastroUsuario2.vue') },
-  { path: '/processos', name: 'Processos', component: () => import('../views/Processos/CadastroProcesso.vue') },
-  { path: '/processos2', name: 'Processos 2', component: () => import('../views/Processos/CadastroProcesso2.vue') },
-  { path: '/processos3', name: 'Processos 3', component: () => import('../views/Processos/CadastroProcesso3.vue') },
+  { path: '/', name: 'Home', component: () => import('../views/PaginaInicial.vue') },
+  { path: '/usuarios', name: 'Usuários', component: () => import(/* webpackChunkName: "about" */ '../views/Usuarios/Usuarios.vue') },
+  { path: '/processos', name: 'Processos', component: () => import('../views/Processos/Processos.vue') },
   { path: '/dashboard', name: 'Dashboard', component: () => import('../views/Dashboard/Dashboard.vue') },
-  { path: '/graficoColunas', name: 'Gráfico de Colunas', component: () => import('../views/Dashboard/GraficoColunas.vue') },
-  { path: '/graficoLinha', name: 'Gráfico de Linha', component: () => import('../views/Dashboard/GraficoLinha.vue') },
-  { path: '/graficoLinhas', name: 'Gráfico de Linhas', component: () => import('../views/Dashboard/GraficoLinhas.vue') },
-  { path: '/graficoPizza', name: 'Gráfico de Pizza', component: () => import('../views/Dashboard/GraficoPizza.vue') },
+  { path: '/graficoColunas', name: 'Gráfico de Colunas', component: () => import('../views/Dashboard/Graficos/GraficoColunas.vue') },
+  { path: '/graficoLinha', name: 'Gráfico de Linha', component: () => import('../views/Dashboard/Graficos/GraficoLinha.vue') },
+  { path: '/graficoLinhas', name: 'Gráfico de Linhas', component: () => import('../views/Dashboard/Graficos/GraficoLinhas.vue') },
+  { path: '/graficoPizza', name: 'Gráfico de Pizza', component: () => import('../views/Dashboard/Graficos/GraficoPizza.vue') },
 ]
 
 const router = new VueRouter({

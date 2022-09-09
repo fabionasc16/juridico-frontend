@@ -1,23 +1,37 @@
 <template>
-  <div>
-    <h3 align="center">Gráfico de Linhas</h3>  
-    <button class="float-right" @click="goTo('/dashboard')" v-show="!locationDash">Dashboard</button>
+  <b-container fluid>
+    <!-- CABEÇALHO -->
+    <div class="row">
+        <!-- TÍTULO -->
+        <div class="col-10">
+          <div align="left">
+              <b-form-group class="m-0" label="Gráfico de Linha" label-size="lg"></b-form-group>
+          </div>
+        </div>
+        <div class="col-2">
+          <div align="center">
+            <button @click="goTo('/dashboard')" v-show="!locationDash">Dashboard</button>
+          </div>
+        </div>
+        <hr />
+    </div>
+
+    <!-- GRÁFICO -->
     <div id="app2" style="width: 90%;">
       <LineChart v-bind="lineChartProps" />
       <img style="width: 300px" v-if="imgData" :src="imgData" />
     </div>
-</div>
-
+  </b-container>
 </template>
 
-<script>
+<script lang="ts">
 import Vue from "vue";
 import VueCompositionAPI from '@vue/composition-api'
 
 Vue.use(VueCompositionAPI)
 
-import { Chart, registerables } from 'chart.js';
-import { LineChart, useLineChart } from "vue-chart-3";
+import { Chart, ChartData, ChartOptions, registerables } from 'chart.js';
+import { LineChart, useLineChart} from "vue-chart-3";
 import { ref, computed, defineComponent } from "@vue/composition-api";
 import { shuffle } from "lodash";
 
@@ -39,45 +53,42 @@ export default defineComponent({
       }
   },
   setup() {
-    const data = ref([50, 40, 65, 55, 25, 0, 0, 0, 0, 0, 0, 0]);
-    const data2 = ref([30, 65, 55, 25, 65, 55, 25, 0, 0, 0, 0]);
     const legendTop = ref(true);
     const imgData = ref(null);
 
-    const options = computed(() => ({
-      scales: {
-        y: {
-          beginAtZero: true,
-        },
-      },
-    }));
-
-    const chartData = computed(() => ({
+    const getData = computed<ChartData<"line">>(() => ({
       labels: ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"],
       datasets: [
         {
-          data: data.value,
           label: "Linha 1",
-          backgroundColor: [
-            "#A3A500",
-          ],
+          data: [50, 40, 65, 55, 25, 10, 20, 40, 10, 10, 80, 90],
+          fill: false,
+          backgroundColor: "#A3A500",
         },
         {
-          data: data2.value,
           label: "Linha 2",
-          backgroundColor: [
-            "#000000",
-          ],
+          data: [30, 65, 55, 25, 65, 55, 25, 40, 50, 70, 80],
+          fill: false,
+          backgroundColor: "#000000",
         },
       ],
     }));
 
-    const { lineChartProps, lineChartRef } = useLineChart({
-      chartData,
+    const options = computed<ChartOptions<"line">>(() => ({
+      plugins: {
+        legend: {
+          display: false,
+        },
+      },
+    }));
+
+
+    const { lineChartProps } = useLineChart({ 
       options,
+      chartData: getData,
     });
 
-return { lineChartProps, lineChartRef, imgData };
+    return { getData, lineChartProps, imgData };
   },
 });
 </script>

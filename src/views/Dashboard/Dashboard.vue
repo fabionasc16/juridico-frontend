@@ -7,7 +7,7 @@
                 <b-form-group class="titulo m-0" label="Acompanhamento de Processos" label-size="lg"></b-form-group>
             </div>
             <!-- DATA HORA -->
-            <div class="col-3">
+            <div class="col-3" align="center">
                 <button v-b-tooltip.hover.bottom title="Atualizar Dashboard">
                     <div align="center">
                         <b-icon-watch> </b-icon-watch>
@@ -15,12 +15,22 @@
                     </div>
                 </button>
             </div>
+            <!-- ATIVA FILTRO -->
+            <div class="col-1" align="center">
+                <!-- ÍCONE DA LUPA -->
+                <div class="row  d-flex flex-column justify-content-center align-items-center">
+                    <b-input-group v-b-tooltip.hover.bottomleft="'Ativar Filtros'" class="p0m0" variant="dark">
+                        <b-icon-search></b-icon-search>
+                        <b-form-checkbox v-model="form.filtrosDash" @change="ativaFiltrosDash()" switch class="font text-end ml-2"></b-form-checkbox>
+                    </b-input-group>
+                </div>
+            </div>
             <hr />
         </div>
         <!-- FILTROS -->
-        <div class="row">
-            <!-- 1ª LINHA (3 CAIXAS) -->
-            <div class="col-10">
+        <div class="row" v-show="ativarFiltrosDash">
+            <div class="col">
+                <!-- 1ª LINHA (3 CAIXAS) -->
                 <div class="row">
                     <b-form-group label="Responsável:" class="font col-sm-3 col-md-3 col-lg-3">
                         <b-form-select size="sm">
@@ -101,12 +111,10 @@
                 </div>
             </div>
             <!-- ÍCONE DA LUPA -->
-            <div class="col-2">
-                <div class="justify-content-center">
-                    <b-form-group label="Consultar" class="font text-white">
-                        <b-icon-search v-b-tooltip.hover.topleft="'Consultar'" type="button" font-scale="2" style="color: gray;"></b-icon-search>
-                    </b-form-group>
-                </div>
+            <div class="col-1 btn d-flex flex-column justify-content-center align-items-center" style="color: gray;">
+                <b-form-group class="font h3">
+                        <b-icon-search v-b-tooltip.hover.topleft="'Consultar'"></b-icon-search>
+                </b-form-group>
             </div>
         </div>
         <!-- DASHBOARD -->
@@ -172,18 +180,27 @@
         </div>
     </b-container>
 </template>
-<script>
-import GraficoColunas from "./GraficoColunas";
-import GraficoLinha from "./GraficoLinha";
-import GraficoLinhas from "./GraficoLinhas";
-import GraficoPizza from "./GraficoPizza";
+<script lang="ts">
+import Vue from "vue";
+import GraficoColunas from "./Graficos/GraficoColunas.vue";
+import GraficoLinha from "./Graficos/GraficoLinha.vue";
+import GraficoLinhas from "./Graficos/GraficoLinhas.vue";
+import GraficoPizza from "./Graficos/GraficoPizza.vue";
 import { BIconWatch, BIconSearch } from 'bootstrap-vue';
 
-export default {
+
+
+export default Vue.extend({
     data() {
         return {
             stickyHeader: true,
             noCollapse: true,
+            caminho: false,
+            ativarFiltrosDash: false,
+            form: {
+                filtrosDash: false,
+            },
+
             fields: [ //NOMES DAS COLUNAS
                 {
                     key: "nProcessoExterno",
@@ -639,9 +656,16 @@ export default {
         BIconSearch,
     },
     methods: {
-        goTo(caminho) {
-            this.$router.push(caminho);
+        goTo(caminho){this.$router.push(caminho)},
+        ativaFiltrosDash(): void {
+            if (
+                this.form.filtrosDash === true
+            ) {
+                this.ativarFiltrosDash = true;
+            } else {
+                this.ativarFiltrosDash = false;
+            }
         },
     },
-};
+});
 </script>
