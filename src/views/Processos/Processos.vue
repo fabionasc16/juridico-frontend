@@ -161,7 +161,7 @@
           </ModalCadastroProcesso>
         </b-modal>
         <!-- DETALHES DO PROCESSO -->
-        <b-modal id="modal-detalhes-processo" size="lg" centered title="Detalhes do Processo">
+        <b-modal id="modal-detalhes-processo" size="lg" centered title="Detalhes do Processo" hide-footer>
           <ModalDetalhesProcesso>
           </ModalDetalhesProcesso>
         </b-modal>

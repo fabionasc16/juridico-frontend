@@ -2,15 +2,23 @@
     <div>
         <!-- CARD DE EDIÇÃO -->
             <div class="col-12">
-                <b-form>
+                <b-form @submit.prevent="submit">
+                                        
+                    <notifications :notifications="Notificacao"></notifications>      
+
+                    <div v-if="alert">
+                        <ReturnMessage :message="Message" :fechaAlert="fechaAlert"></ReturnMessage>
+                    </div>            
+                    
                     <b-form-group class="titulo m-0 p-0" label="Informações de entrada do processo" label-size="lg">
                         <hr />
                     </b-form-group>
 
                     <div class="row">
-                        <b-form-group label="Nº Procedimento:" class="font col-sm-3 col-md-3 col-lg-3">
-                            <b-form-input type="text" v-model="form.nProcedimento"></b-form-input>
-                        </b-form-group>
+                        <b-form-group class="font col-sm-3 col-md-3 col-lg-3">
+                            <label>Nº Procedimento: <span class="text-danger">*</span></label>
+                            <b-form-input type="text" v-model="form.nProcedimento" required></b-form-input>
+                        </b-form-group> 
 
                         <b-form-group label="Nº Expediente:" class="font col-sm-3 col-md-3 col-lg-3">
                             <b-form-input type="text" v-model="form.nExpediente"></b-form-input>
@@ -26,7 +34,8 @@
                             </b-form-select>
                         </b-form-group>
 
-                        <b-form-group label="Prazo total:" class="font col-sm-3 col-md-3 col-lg-3">
+                        <b-form-group class="font col-sm-3 col-md-3 col-lg-3">
+                            <label>Prazo total: <span class="text-danger">*</span></label>
                             <b-form-input type="text" v-model="form.qtdDiasPrazo" required></b-form-input>
                         </b-form-group>
                     </div>
@@ -72,10 +81,15 @@
                                 </b-form-select-option>
                                 <b-form-select-option value="ConselhoTutelar">Conselho Tutelar</b-form-select-option>
                             </b-form-select>
-                        </b-form-group>
-
+                        </b-form-group>                       
+                          
                         <b-form-group label="Data do Processo:" class="font col-sm-3 col-md-3 col-lg-3">
-                            <b-form-input type="date" v-model="form.dataProcesso"></b-form-input>
+                            <b-form-input class="bordered margin-field" type="text" v-model="datas.dataProcessoBR" placeholder="dd/mm/aaaa"
+                                v-mask="'##/##/####'"></b-form-input>
+
+                            <!--<b-form-input type="date" v-model="form.dataProcesso"
+                               pattern="\d\d\d\d-(0[1-9]|1[1-2])-(0[1-9]|[1-2][0-9]|3[0-1])">
+                            </b-form-input>-->
                         </b-form-group>
 
                         <b-form-group label="Data Recebimento:" class="font col-sm-3 col-md-3 col-lg-3">
@@ -146,7 +160,7 @@
 
                                 <b-form-group label="" class="ml-4 mt-2 mb-0 font col-sm-9 col-md-9 col-lg-9"
                                     v-show="exibirRegistroSIGED">
-                                    <b-form-input :placeholder="'Nº SIGED'" type="text" v-model="form.nSIGED" required>
+                                    <b-form-input :placeholder="'Nº SIGED'" type="text" v-model="form.nSIGED">
                                     </b-form-input>
                                 </b-form-group>
                             </div>
@@ -160,8 +174,7 @@
                                         <b-form-group label="Data Processo:" class="font col-sm-6 col-md-6 col-lg-6">
                                             <b-form-input disabled type="date" v-model="form.dataCadSIGED">
                                             </b-form-input>
-                                        </b-form-group>
-
+                                        </b-form-group>      
                                         <b-form-group label="Permanência:" class="font col-sm-6 col-md-6 col-lg-6">
                                             <b-form-input disabled type="text" v-model="form.permanencia">
                                             </b-form-input>
@@ -176,10 +189,17 @@
                                             <b-form-input disabled type="text" v-model="form.tramitacao"></b-form-input>
                                         </b-form-group>
                                     </div>
+
                                 </div>
                             </div>
                         </div>
                     </div>
+
+            <div class="py-2 mt-3" align="right">     
+                <b-button class="mr-3" @click="$bvModal.hide('modal-detalhes-processo')">Fechar</b-button>  
+                <b-button class="bordered" type="submit" variant="success">Salvar</b-button>
+            </div>
+
                 </b-form>
             </div>
 
@@ -192,7 +212,8 @@ import HeaderPage from '@/components/HeaderPage.vue';
 import { mask } from "vue-the-mask";
 import Notifications from "@/components/Notifications.vue";
 import { BIconSearch, BIconPlusCircle, BIconInfoCircle, BIconJournalPlus } from 'bootstrap-vue'
-
+import { Notificacao } from "@/type/notificacao";
+import ReturnMessage from "@/components/ReturnMessage.vue";
 
 export default Vue.extend({
     directives: { mask },
@@ -201,7 +222,14 @@ export default Vue.extend({
             show: false as boolean,
             exibirMaisDetalhes: false as boolean,
             exibirRegistroPrazo: false as boolean,
-            exibirRegistroSIGED: false as boolean,
+            exibirRegistroSIGED: false as boolean,   
+            Notificacao: [] as Array<Notificacao>,
+            Message: [] as Array<Notificacao>,
+            alert: false as boolean,
+            //message: "" as string,
+            datas: {
+                dataProcessoBR: "" as string,
+            },
             form: {
                 nProcedimento: "" as string,
                 nExpediente: "" as string,
@@ -226,12 +254,64 @@ export default Vue.extend({
                 requerSIGED: false as boolean,
                 monitoraPrazo: "" as string,
                 maisDetalhes: false as boolean,
-            },
-        };
-    },
+            }, 
+        }
+    },    
+       
     methods: {
         submit() {
-            alert("enviar");
+            if (this.validarCampos()) {
+            }else{
+                this.adicionarAlert(
+                    "alert",
+                    "Realize as validações exibidas no topo desta página!"
+                );
+            }           
+        },
+        fechaAlert(): void {
+            this.alert = false;
+        },
+        adicionarAlert(tipo: string, mensagem: string): void {
+            this.Message = []        
+            this.Message.push({
+                type: tipo,
+                message: mensagem,
+            });
+            this.alert = true;
+        },
+
+        adicionarNotificacao(tipo: string, mensagem: string): void {
+            this.Notificacao.push({
+                type: tipo,
+                message: mensagem,
+            });
+        },
+        validarCampos(): boolean {
+
+            if (!this.form.nProcedimento) {
+                this.adicionarNotificacao(
+                "danger",
+                "Nº Procedimento é obrigatório!"
+                );
+            }
+
+            if(!this.form.qtdDiasPrazo){
+            }
+
+            if(this.form.requerSIGED === true && !this.form.nSIGED){
+            }
+
+
+            if (this.Notificacao.length > 0) {
+                //ir para o início da página onde aparecem as mensagens
+                window.scrollTo(0, 0);
+                setTimeout(() => {
+                this.Notificacao = [];
+                }, 5000);
+                return false;
+            } else {
+                return true;
+            }
         },
         exibeMaisDetalhes(): void {
             if (
@@ -271,6 +351,7 @@ export default Vue.extend({
         BIconPlusCircle,
         BIconInfoCircle,
         Notifications,
+        ReturnMessage
     }
 });
 </script>
