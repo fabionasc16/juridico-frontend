@@ -2,15 +2,27 @@
     <div>
         <!-- CARD DE EDIÇÃO -->
             <div class="col-12">
-                <b-form>
+                <b-form @submit.prevent="submit">
+                                        
+                    <notifications :notifications="Notificacao"></notifications>      
+
+                    <div v-if="alert">
+                        <ReturnMessage :message="Message" :fechaAlert="fechaAlert"></ReturnMessage>
+                    </div>          
+
+                    <div v-if="loading">
+                        <LoadingSpinner></LoadingSpinner>
+                    </div>
+                    
                     <b-form-group class="titulo m-0 p-0" label="Informações de entrada do processo" label-size="lg">
                         <hr />
                     </b-form-group>
 
                     <div class="row">
-                        <b-form-group label="Nº Procedimento:" class="font col-sm-3 col-md-3 col-lg-3">
-                            <b-form-input type="text" v-model="form.nProcedimento"></b-form-input>
-                        </b-form-group>
+                        <b-form-group class="font col-sm-3 col-md-3 col-lg-3">
+                            <label>Nº Procedimento: <span class="text-danger">*</span></label>
+                            <b-form-input type="text" v-model="form.nProcedimento" required></b-form-input>
+                        </b-form-group> 
 
                         <b-form-group label="Nº Expediente:" class="font col-sm-3 col-md-3 col-lg-3">
                             <b-form-input type="text" v-model="form.nExpediente"></b-form-input>
@@ -18,68 +30,39 @@
 
                         <b-form-group label="Tipo:" class="font col-sm-3 col-md-3 col-lg-3">
                             <b-form-select v-model="form.tipoProcesso">
-                                <b-form-select-option value="null">-- Selecione --</b-form-select-option>
-                                <b-form-select-option value="administrativo">Administrativo</b-form-select-option>
-                                <b-form-select-option value="extraJudicial">Extra-Judicial</b-form-select-option>
-                                <b-form-select-option value="judicial">Judicial</b-form-select-option>
-                                <b-form-select-option value="orgaoControle">Órgãos de Controle</b-form-select-option>
+                                <b-form-select-option value="">-- Selecione --</b-form-select-option>
+                                <b-form-select-option v-for="option in optionsTipoProcesso" :value="option.value"
+                                   :key="option.value"> {{ option.texto }}
+                                </b-form-select-option>                                
                             </b-form-select>
                         </b-form-group>
 
-                        <b-form-group label="Prazo total:" class="font col-sm-3 col-md-3 col-lg-3">
-                            <b-form-input type="text" v-model="form.qtdDiasPrazo" required></b-form-input>
+                        <b-form-group class="font col-sm-3 col-md-3 col-lg-3">
+                            <label>Prazo total: <span class="text-danger">*</span></label>
+                            <b-form-input type="text" v-model="form.qtdDiasPrazo" required
+                            v-mask="'######'"
+                            placeholder="em dias"></b-form-input>
                         </b-form-group>
                     </div>
 
                     <div class="row">
                         <b-form-group label="Órgão Demandante:" class="font col-sm-3 col-md-3 col-lg-3">
                             <b-form-select size="sm" v-model="form.orgaoDemandante">
-                                <b-form-select-option value="null">-- Selecione --</b-form-select-option>
-                                <b-form-select-option value="DPE">DPE</b-form-select-option>
-                                <b-form-select-option value="DelPolicia">Delegacia de Polícia</b-form-select-option>
-                                <b-form-select-option value="FVS">FVS</b-form-select-option>
-                                <b-form-select-option value="SPA">SPA</b-form-select-option>
-                                <b-form-select-option value="TCE">TCE</b-form-select-option>
-                                <b-form-select-option value="MPC">MPC</b-form-select-option>
-                                <b-form-select-option value="MPE">MPE</b-form-select-option>
-                                <b-form-select-option value="MPF">MPF</b-form-select-option>
-                                <b-form-select-option value="MPT">MPT</b-form-select-option>
-                                <b-form-select-option value="TCU">TCU</b-form-select-option>
-                                <b-form-select-option value="Minist.Saude">Ministério da Saúde</b-form-select-option>
-                                <b-form-select-option value="CRM">CRM</b-form-select-option>
-                                <b-form-select-option value="CEMA">CEMA</b-form-select-option>
-                                <b-form-select-option value="DPU">DPU</b-form-select-option>
-                                <b-form-select-option value="CasaCivil">Casa Civil</b-form-select-option>
-                                <b-form-select-option value="ALEAM">ALEAM</b-form-select-option>
-                                <b-form-select-option value="SEINFRA">SEINFRA</b-form-select-option>
-                                <b-form-select-option value="Serv.Social">Serviço Social</b-form-select-option>
-                                <b-form-select-option value="SEJUSC">SEJUSC</b-form-select-option>
-                                <b-form-select-option value="SESAI">SESAI</b-form-select-option>
-                                <b-form-select-option value="HPSPlataoAraujo">HPS Platão Araújo</b-form-select-option>
-                                <b-form-select-option value="HPS28Agosto">HPS 28 de Agosto</b-form-select-option>
-                                <b-form-select-option value="PGE">PGE</b-form-select-option>
-                                <b-form-select-option value="CGE">CGE</b-form-select-option>
-                                <b-form-select-option value="CGJ">CGJ</b-form-select-option>
-                                <b-form-select-option value="CGU">CGU</b-form-select-option>
-                                <b-form-select-option value="ALEAMcpiSaude">ALEAM - CPI da Saúde</b-form-select-option>
-                                <b-form-select-option value="PeticaoADV">Petição Advogado</b-form-select-option>
-                                <b-form-select-option value="CamaraDepFed">Camara dos Deputados Federais
+                                <b-form-select-option value="">-- Selecione --</b-form-select-option>
+                                 <b-form-select-option v-for="option in optionsOrgaos" :value="option.value"
+                                   :key="option.value"> {{ option.texto }}
                                 </b-form-select-option>
-                                <b-form-select-option value="PolFed">Polícia Federal</b-form-select-option>
-                                <b-form-select-option value="ComiteCriseCOVID">Comitê de Crise - COVID 19
-                                </b-form-select-option>
-                                <b-form-select-option value="CamaraMunManaus">Câmara Municipal de Manaus
-                                </b-form-select-option>
-                                <b-form-select-option value="ConselhoTutelar">Conselho Tutelar</b-form-select-option>
                             </b-form-select>
-                        </b-form-group>
-
+                        </b-form-group>                       
+                          
                         <b-form-group label="Data do Processo:" class="font col-sm-3 col-md-3 col-lg-3">
-                            <b-form-input type="date" v-model="form.dataProcesso"></b-form-input>
+                            <b-form-input class="bordered margin-field" type="text" v-model="datas.dataProcessoBR" placeholder="dd/mm/aaaa"
+                                v-mask="'##/##/####'"></b-form-input>                          
                         </b-form-group>
 
                         <b-form-group label="Data Recebimento:" class="font col-sm-3 col-md-3 col-lg-3">
-                            <b-form-input type="date" v-model="form.dataRecebimento"></b-form-input>
+                            <b-form-input class="bordered margin-field" type="text" v-model="datas.dataRecebimentoBR" placeholder="dd/mm/aaaa"
+                                v-mask="'##/##/####'"></b-form-input>                          
                         </b-form-group>
 
                         <b-form-group label="Hora Recebimento:" class="font col-sm-3 col-md-3 col-lg-3">
@@ -93,10 +76,11 @@
                         </b-form-group>
 
                         <b-form-group label="Classificação:" class="font col-sm-5 col-md-5 col-lg-5">
-                            <b-form-select size="sm" v-model="form.classificacao">
-                                <b-form-select-option value="class1">Classificação 1</b-form-select-option>
-                                <b-form-select-option value="class2">Classificação 2</b-form-select-option>
-                                <b-form-select-option value="class3">Classificação 3</b-form-select-option>
+                            <b-form-select size="sm" v-model="form.classificacao">                               
+                                 <b-form-select-option value="">-- Selecione --</b-form-select-option>
+                                 <b-form-select-option v-for="option in optionsClassificacao" :value="option.value"
+                                   :key="option.value"> {{ option.texto }}
+                                </b-form-select-option>
                             </b-form-select>
                         </b-form-group>
                     </div>
@@ -111,22 +95,10 @@
                             <div class="row">
                                 <b-form-group label="Responsável:" class="font col-sm-12 col-md-12 col-lg-12">
                                     <b-form-select size="sm" v-model="form.responsavel">
-                                        <b-form-select-option value="resp.Heleno">Heleno</b-form-select-option>
-                                        <b-form-select-option value="resp.Viviane">Viviane</b-form-select-option>
-                                        <b-form-select-option value="resp.Natacha">Natacha</b-form-select-option>
-                                        <b-form-select-option value="resp.Alice">Alice</b-form-select-option>
-                                        <b-form-select-option value="resp.Milena">Milena</b-form-select-option>
-                                        <b-form-select-option value="resp.Fabrício">Fabrício</b-form-select-option>
-                                        <b-form-select-option value="resp.Davi">Davi</b-form-select-option>
-                                        <b-form-select-option value="resp.Lara">Lara</b-form-select-option>
-                                        <b-form-select-option value="resp.Joao">João</b-form-select-option>
-                                        <b-form-select-option value="resp.Jessica">Jéssica</b-form-select-option>
-                                        <b-form-select-option value="resp.Carlos">Carlos</b-form-select-option>
-                                        <b-form-select-option value="resp.CamilaNogueira">Camila Nogueira
+                                        <b-form-select-option value="">-- Selecione --</b-form-select-option>
+                                        <b-form-select-option v-for="option in optionsResponsavel" :value="option.value"
+                                        :key="option.value"> {{ option.texto }}
                                         </b-form-select-option>
-                                        <b-form-select-option value="resp.Karol">Karol</b-form-select-option>
-                                        <b-form-select-option value="resp.Louise">Louise</b-form-select-option>
-                                        <b-form-select-option value="resp.Sabrina">Sabrina</b-form-select-option>
                                     </b-form-select>
                                 </b-form-group>
                             </div>
@@ -146,7 +118,7 @@
 
                                 <b-form-group label="" class="ml-4 mt-2 mb-0 font col-sm-9 col-md-9 col-lg-9"
                                     v-show="exibirRegistroSIGED">
-                                    <b-form-input :placeholder="'Nº SIGED'" type="text" v-model="form.nSIGED" required>
+                                    <b-form-input :placeholder="'Nº SIGED'" type="text" v-model="form.nSIGED">
                                     </b-form-input>
                                 </b-form-group>
                             </div>
@@ -158,10 +130,9 @@
                                 <div class="col-12">
                                     <div class="row">
                                         <b-form-group label="Data Processo:" class="font col-sm-6 col-md-6 col-lg-6">
-                                            <b-form-input disabled type="date" v-model="form.dataCadSIGED">
+                                            <b-form-input disabled v-model="form.dataCadSIGED" placeholder="dd/mm/aaaa">
                                             </b-form-input>
-                                        </b-form-group>
-
+                                        </b-form-group>      
                                         <b-form-group label="Permanência:" class="font col-sm-6 col-md-6 col-lg-6">
                                             <b-form-input disabled type="text" v-model="form.permanencia">
                                             </b-form-input>
@@ -176,10 +147,17 @@
                                             <b-form-input disabled type="text" v-model="form.tramitacao"></b-form-input>
                                         </b-form-group>
                                     </div>
+
                                 </div>
                             </div>
                         </div>
                     </div>
+
+            <div class="py-2 mt-3" align="right">     
+                <b-button class="mr-3" @click="$bvModal.hide('modal-detalhes-processo')">Fechar</b-button>  
+                <b-button class="bordered" type="submit" variant="success">Salvar</b-button>
+            </div>
+
                 </b-form>
             </div>
 
@@ -192,17 +170,51 @@ import HeaderPage from '@/components/HeaderPage.vue';
 import { mask } from "vue-the-mask";
 import Notifications from "@/components/Notifications.vue";
 import { BIconSearch, BIconPlusCircle, BIconInfoCircle, BIconJournalPlus } from 'bootstrap-vue'
-
+import { Notificacao } from "@/type/notificacao";
+import ReturnMessage from "@/components/ReturnMessage.vue";
+import dataMixin from "@/mixins/dataMixin";
+import RestApiService from "@/services/rest/service";
+import LoadingSpinner from "@/components/LoadingSpinner.vue";
+import { TipoProcessoSeeder } from "@/type/tipoProcesso";
+import { OrgaosSeeder } from "@/type/orgaos";
+import { ClassificacaoSeeder } from "@/type/classificacao";
+import { ResponsavelSeeder } from "@/type/responsavel";
 
 export default Vue.extend({
     directives: { mask },
+    components: {
+        HeaderPage,
+        BIconSearch,
+        BIconJournalPlus,
+        BIconPlusCircle,
+        BIconInfoCircle,
+        Notifications,
+        ReturnMessage,
+        LoadingSpinner
+    },
+    mixins: [        
+        dataMixin,
+    ],
+    props: ["id"],
     data() {
         return {
             show: false as boolean,
             exibirMaisDetalhes: false as boolean,
             exibirRegistroPrazo: false as boolean,
-            exibirRegistroSIGED: false as boolean,
-            form: {
+            exibirRegistroSIGED: false as boolean,   
+            Notificacao: [] as Array<Notificacao>,
+            Message: [] as Array<Notificacao>,
+            loading: false as boolean,
+            alert: false as boolean,  
+            optionsTipoProcesso: TipoProcessoSeeder,   
+            optionsOrgaos: OrgaosSeeder, 
+            optionsClassificacao: ClassificacaoSeeder,   
+            optionsResponsavel: ResponsavelSeeder,        
+            datas: {
+                dataProcessoBR: "" as string,
+                dataRecebimentoBR: "" as string,
+            },
+            form: {                
                 nProcedimento: "" as string,
                 nExpediente: "" as string,
                 assunto: "" as string,
@@ -226,13 +238,214 @@ export default Vue.extend({
                 requerSIGED: false as boolean,
                 monitoraPrazo: "" as string,
                 maisDetalhes: false as boolean,
-            },
-        };
-    },
+            }, 
+        }
+    },  
+
+    mounted() {
+            const path = this.$route.path;
+            const acao = "/editar";
+
+            if (path.includes(acao)) {
+                this.carregarDados();            
+            }
+    },  
+       
     methods: {
         submit() {
-            alert("enviar");
+            let acao = this.id ? "put" : "post"
+            let url = this.id ? "processo/update" : "processo";
+
+            if (this.validarCampos()) {            
+
+              //formatar datas para salvar no banco de dados  
+              this.formatDatasBrToEn()  
+              
+              console.log(JSON.stringify(this.form))
+
+              
+              this.loading = true  
+
+              RestApiService.salvar(url, this.form, acao)
+                .then((res) => {
+                    if (acao == "put") {
+                        this.adicionarAlert(
+                            "success",
+                            "Atualização realizada com sucesso!"
+                        );
+                    } else {
+                        this.adicionarAlert(
+                            "success",
+                            "Cadastro realizado com sucesso!"
+                        );
+                    }                   
+                }) 
+                .catch((e) => {
+                        if (e.message === "Network Error") {
+                            this.adicionarAlert(
+                            "alert",
+                            "Sem conexão de rede. Verifique sua conexão!"
+                            );
+                        } else if (
+                            e &&
+                            e.response &&
+                            e.response.data &&
+                            e.response.data.message
+                        ) {
+                            this.adicionarAlert(
+                            "alert",
+                            e.response.data.message
+                            );                       
+                        } else {
+                            this.adicionarAlert(
+                            "alert",
+                            "Houve um erro ao salvar. Verifique o formulário e tente novamente!"
+                            );                      
+                        }              
+                })
+                .finally(() => {
+                    this.loading = false;
+                });
+
+            }else{
+                this.adicionarAlert(
+                    "alert",
+                    "Realize as validações exibidas no topo desta página!"
+                );
+            }           
         },
+ 
+        carregarDados(): void {
+            this.loading = true;
+
+            RestApiService.get("processo/listid", this.id)
+                .then((res: any) => {
+              
+                this.form.nProcedimento = res.data.nProcedimento
+                this.form.nExpediente = res.data.nExpediente
+                this.form.assunto = res.data.assunto
+                this.form.caixaSIGED = res.data.caixaSIGED
+                this.form.tipoProcesso = res.data.tipoProcesso
+                this.form.status = res.data.status
+                this.form.orgaoDemandante = res.data.orgaoDemandante
+                this.form.classificacao = res.data.classificacao
+                this.form.qtdDiasPrazo = res.data.qtdDiasPrazo
+                this.form.dataProcesso = res.data.dataProcesso
+                this.form.dataRecebimento = res.data.dataRecebimento
+                this.form.horaRecebimento = res.data.horaRecebimento
+                this.form.objeto = res.data.objeto
+                this.form.responsavel = res.data.responsavel
+                this.form.observacao = res.data.observacao
+                this.form.nSIGED = res.data.nSIGED
+                this.form.dataCadSIGED = res.data.dataCadSIGED
+                this.form.permanencia = res.data.permanencia
+                this.form.caixaAtual = res.data.caixaAtual
+                this.form.tramitacao = res.data.tramitacao
+                this.form.requerSIGED = res.data.requerSIGED
+                this.form.monitoraPrazo = res.data.monitoraPrazo
+                this.form.maisDetalhes = res.data.maisDetalhes
+
+                //formatar datas para formato br
+                this.formatDatasEnToBr()
+
+            })
+            .catch((e) => {
+                this.adicionarAlert(
+                    "alert",
+                    "Houve um erro ao carregar os dados do paciente. Tente novamente!"
+                );
+          
+            })
+            .finally(() => {
+                this.loading = false;
+            });
+        },
+
+        fechaAlert(): void {
+            this.alert = false;
+        },
+
+        adicionarAlert(tipo: string, mensagem: string): void {
+            this.Message = []        
+            this.Message.push({
+                type: tipo,
+                message: mensagem,
+            });
+            this.alert = true;
+        },
+
+        adicionarNotificacao(tipo: string, mensagem: string): void {
+            this.Notificacao.push({
+                type: tipo,
+                message: mensagem,
+            });
+        },
+
+        formatDatasBrToEn() {
+            this.form.dataProcesso = this.datas.dataProcessoBR ? 
+                   dataMixin.methods.dataFormatEn(this.datas.dataProcessoBR) : "";
+
+            this.form.dataRecebimento = this.datas.dataRecebimentoBR ? 
+                   dataMixin.methods.dataFormatEn(this.datas.dataRecebimentoBR) : ""; 
+        },
+
+        formatDatasEnToBr() {
+            this.datas.dataProcessoBR = this.form.dataProcesso ? 
+                   dataMixin.methods.dataFormatEn(this.form.dataProcesso) : "";
+
+            this.datas.dataRecebimentoBR = this.form.dataRecebimento ? 
+                   dataMixin.methods.dataFormatEn(this.form.dataRecebimento) : "";
+        },
+        
+        validarCampos(): boolean {
+
+            if (!this.form.nProcedimento) {
+                this.adicionarNotificacao(
+                "danger",
+                "Nº Procedimento é obrigatório!"
+                );
+            }
+
+            if(!this.form.qtdDiasPrazo){
+                this.adicionarNotificacao(
+                "danger",
+                "Prazo Total é obrigatório!"
+                );
+            }
+
+            if(this.form.requerSIGED === true && !this.form.nSIGED){
+                this.adicionarNotificacao(
+                "danger",
+                "Nº SIGED é obrigatório quando o campo 'Requer SIGED' for selecionado!"
+                );
+            }
+
+            if(this.datas.dataProcessoBR && !dataMixin.methods.validarData(this.datas.dataProcessoBR) ) {
+                this.adicionarNotificacao(
+                "danger",
+                "Data do Processo informada é inválida!"
+                );
+            }
+
+            if(this.datas.dataRecebimentoBR && !dataMixin.methods.validarData(this.datas.dataRecebimentoBR) ) {
+                this.adicionarNotificacao(
+                "danger",
+                "Data do Recebimento informada é inválida!"
+                );
+            }
+
+            if (this.Notificacao.length > 0) {
+                //ir para o início da página onde aparecem as mensagens
+                window.scrollTo(0, 0);
+                setTimeout(() => {
+                this.Notificacao = [];
+                }, 5000);
+                return false;
+            } else {
+                return true;
+            }
+        },
+
         exibeMaisDetalhes(): void {
             if (
                 this.form.maisDetalhes === true
@@ -264,14 +477,7 @@ export default Vue.extend({
             this.$router.push("/");
         }
     },
-    components: {
-        HeaderPage,
-        BIconSearch,
-        BIconJournalPlus,
-        BIconPlusCircle,
-        BIconInfoCircle,
-        Notifications,
-    }
+   
 });
 </script>
 

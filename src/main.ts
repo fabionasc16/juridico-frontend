@@ -9,7 +9,6 @@ import 'axios'
 import HighchartsVue from 'highcharts-vue'
 
 
-
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 
