@@ -7,10 +7,13 @@ import store from './store'
 import 'animate.css'
 import 'axios'
 import HighchartsVue from 'highcharts-vue'
+import vSelect from 'vue-select'
 
+Vue.component('v-select', vSelect)
 
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
+import 'vue-select/dist/vue-select.css';
 
 Vue.config.productionTip = false
 new Vue({

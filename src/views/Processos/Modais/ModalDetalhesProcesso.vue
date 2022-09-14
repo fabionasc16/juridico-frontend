@@ -94,12 +94,14 @@
                             </div>
                             <div class="row">
                                 <b-form-group label="Responsável:" class="font col-sm-12 col-md-12 col-lg-12">
-                                    <b-form-select size="sm" v-model="form.responsavel">
+                                    <!--<b-form-select size="sm" v-model="form.responsavel">
                                         <b-form-select-option value="">-- Selecione --</b-form-select-option>
                                         <b-form-select-option v-for="option in optionsResponsavel" :value="option.value"
                                         :key="option.value"> {{ option.texto }}
                                         </b-form-select-option>
-                                    </b-form-select>
+                                    </b-form-select>-->
+                                    <v-select style="font-size: 0.85rem" :options="optionsResponsavel" class="font" label="texto"
+                                        v-model="responsavelSelecionado"/>
                                 </b-form-group>
                             </div>
                             <div class="row">
@@ -190,7 +192,7 @@ export default Vue.extend({
         BIconInfoCircle,
         Notifications,
         ReturnMessage,
-        LoadingSpinner
+        LoadingSpinner,
     },
     mixins: [        
         dataMixin,
@@ -209,7 +211,11 @@ export default Vue.extend({
             optionsTipoProcesso: TipoProcessoSeeder,   
             optionsOrgaos: OrgaosSeeder, 
             optionsClassificacao: ClassificacaoSeeder,   
-            optionsResponsavel: ResponsavelSeeder,        
+            optionsResponsavel: ResponsavelSeeder,    
+            responsavelSelecionado: {
+                    texto: "Selecione um responsável" as string,
+                    value: "" as string,
+            },    
             datas: {
                 dataProcessoBR: "" as string,
                 dataRecebimentoBR: "" as string,
@@ -255,14 +261,16 @@ export default Vue.extend({
         submit() {
             let acao = this.id ? "put" : "post"
             let url = this.id ? "processo/update" : "processo";
+            
+            //pegar o id do responsavel selecionado   
+            this.form.responsavel = this.responsavelSelecionado.value   
 
             if (this.validarCampos()) {            
 
               //formatar datas para salvar no banco de dados  
               this.formatDatasBrToEn()  
-              
-              console.log(JSON.stringify(this.form))
 
+              console.log(JSON.stringify(this.form))
               
               this.loading = true  
 
