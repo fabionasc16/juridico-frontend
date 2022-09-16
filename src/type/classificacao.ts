@@ -4,8 +4,7 @@ export type Classificacao = {
 };
 
 export const ClassificacaoSeeder: Array<Classificacao> = [
-    { texto: "Classificação 1", value: "class1" },
-    { texto: "Classificação 2", value: "class2" },
-    { texto: "Classificação 3", value: "class3" },
-
+    { texto: "Normal", value: "1" },
+    { texto: "Próximo à expiração", value: "2" },
+    { texto: "Expirado", value: "3" },   
 ];
