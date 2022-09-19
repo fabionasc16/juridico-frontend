@@ -114,6 +114,16 @@
                 <b-badge :variant="colorStatusProcesso(data.item.statusProcesso)">{{data.item.statusProcesso}}</b-badge>
               </template>
 
+              <template v-slot:cell(diasRestantes)="data">
+                <b-badge :variant="colorDiasRestantes(data.item.diasRestantes)">
+                   {{data.item.diasRestantes}} dias <br>({{statusDiasRestantes(data.item.diasRestantes)}})
+                </b-badge>
+              </template>
+
+              <template v-slot:cell(qtdReiteracao)="data">  
+                  <b-badge variant="light">{{data.item.qtdReiteracao}} </b-badge>             
+              </template>
+             
               <!-- BOTÕES DE AÇÕES -->
               <template v-slot:cell(botaoAction)="data">
 
@@ -295,63 +305,63 @@ export default Vue.extend({
           sortable: true,
         },  
         {
-          key: 'statusPrazo',
-          label: 'Prazo',
+          key: 'prazo',
+          label: 'Prazo (Dias Úteis)',
           sortable: true,
         },  
         {
           key: 'diasRestantes',
-          label: 'Dias Restantes',
+          label: 'Dias Restantes (Corridos)',
           sortable: true,
         }, 
         {
-          key: 'qtdeReiteracao',
+          key: 'qtdReiteracao',
           label: 'Reiteração',
           sortable: true,
         }, 
 
       ],
       items: [    //DADOS DA TABELA
-        { isActive: true, nProcessoExterno: "111111/1111-11", nProcessoSIGED: "111111/1111-11", tipoProcesso: 'Judicial', statusProcesso: 'Cadastrado', assunto: 'Processo', orgaoDemandante: 'Ministério Público', classificacao: 'Classificado', diasRestantes: '4', caixaSIGED: 'JURÍDICO' },
-        { isActive: true, nProcessoExterno: "222222/2222-22", nProcessoSIGED: "222222/2222-22", tipoProcesso: 'Extra-Judicial', statusProcesso: 'Respondendo', assunto: 'Processo', orgaoDemandante: 'Ministério Público', classificacao: 'Classificado', diasRestantes: '3', caixaSIGED: 'RH' },
-        { isActive: true, nProcessoExterno: "333333/3333-33", nProcessoSIGED: "333333/3333-33", tipoProcesso: 'ASDF', statusProcesso: 'Arquivado', assunto: 'Processo', orgaoDemandante: 'Ministério Público', classificacao: 'Classificado', diasRestantes: '2', caixaSIGED: 'DETIN' },
-        { isActive: true, nProcessoExterno: "444444/4444-44", nProcessoSIGED: "444444/4444-44", tipoProcesso: 'Extra-Judicial', statusProcesso: 'Distribuído', assunto: 'Processo', orgaoDemandante: 'Ministério Público', classificacao: 'Classificado', diasRestantes: '10', caixaSIGED: 'RH' },
-        { isActive: true, nProcessoExterno: "555555/5555-55", nProcessoSIGED: "555555/5555-55", tipoProcesso: 'ASDF', statusProcesso: 'Distribuído', assunto: 'Processo', orgaoDemandante: 'Ministério Público', classificacao: 'Classificado', diasRestantes: '0', caixaSIGED: 'DETIN' },
-        { isActive: true, nProcessoExterno: "666666/6666-66", nProcessoSIGED: "666666/6666-66", tipoProcesso: 'Extra-Judicial', statusProcesso: 'Tramitando', assunto: 'Processo', orgaoDemandante: 'Ministério Público', classificacao: 'Classificado', diasRestantes: '4', caixaSIGED: 'RH' },
-        { isActive: true, nProcessoExterno: "777777/7777-77", nProcessoSIGED: "777777/7777-77", tipoProcesso: 'ASDF', statusProcesso: 'Cadastrado', assunto: 'Processo', orgaoDemandante: 'Ministério Público', classificacao: 'Classificado', diasRestantes: '-1', caixaSIGED: 'DETIN' },
-        { isActive: true, nProcessoExterno: "888888/8888-88", nProcessoSIGED: "888888/8888-88", tipoProcesso: 'Extra-Judicial', statusProcesso: 'Cadastrado', assunto: 'Processo', orgaoDemandante: 'Ministério Público', classificacao: 'Classificado', diasRestantes: '4', caixaSIGED: 'RH' },
-        { isActive: true, nProcessoExterno: "999999/9999-99", nProcessoSIGED: "999999/9999-99", tipoProcesso: 'ASDF', statusProcesso: 'Cadastrado', assunto: 'Processo', orgaoDemandante: 'Ministério Público', classificacao: 'Classificado', diasRestantes: '3', caixaSIGED: 'DETIN' },
-        { isActive: true, nProcessoExterno: "123456/7890-12", nProcessoSIGED: "123456/7890-12", tipoProcesso: 'Extra-Judicial', statusProcesso: 'Cadastrado', assunto: 'Processo', orgaoDemandante: 'Ministério Público', classificacao: 'Classificado', diasRestantes: '2', caixaSIGED: 'RH' },
-        { isActive: true, nProcessoExterno: "154875/8754-87", nProcessoSIGED: "154875/8754-87", tipoProcesso: 'ASDF', statusProcesso: 'Cadastrado', assunto: 'Processo', orgaoDemandante: 'Ministério Público', classificacao: 'Classificado', diasRestantes: '4', caixaSIGED: 'DETIN' },
-        { isActive: true, nProcessoExterno: "789456/2022-01", nProcessoSIGED: "789456/2022-01", tipoProcesso: 'Extra-Judicial', statusProcesso: 'Cadastrado', assunto: 'Processo', orgaoDemandante: 'Ministério Público', classificacao: 'Classificado', diasRestantes: '4', caixaSIGED: 'RH' },
-        { isActive: true, nProcessoExterno: "754812/2020-10", nProcessoSIGED: "754812/2020-10", tipoProcesso: 'ASDF', statusProcesso: 'Cadastrado', assunto: 'Processo', orgaoDemandante: 'Ministério Público', classificacao: 'Classificado', diasRestantes: '4', caixaSIGED: 'DETIN' },
-        { isActive: true, nProcessoExterno: "111111/1111-11", nProcessoSIGED: "111111/1111-11", tipoProcesso: 'Judicial', statusProcesso: 'Cadastrado', assunto: 'Processo', orgaoDemandante: 'Ministério Público', classificacao: 'Classificado', diasRestantes: '4', caixaSIGED: 'JURÍDICO' },
-        { isActive: true, nProcessoExterno: "222222/2222-22", nProcessoSIGED: "222222/2222-22", tipoProcesso: 'Extra-Judicial', statusProcesso: 'Cadastrado', assunto: 'Processo', orgaoDemandante: 'Ministério Público', classificacao: 'Classificado', diasRestantes: '4', caixaSIGED: 'RH' },
-        { isActive: true, nProcessoExterno: "333333/3333-33", nProcessoSIGED: "333333/3333-33", tipoProcesso: 'ASDF', statusProcesso: 'Cadastrado', assunto: 'Processo', orgaoDemandante: 'Ministério Público', classificacao: 'Classificado', diasRestantes: '4', caixaSIGED: 'DETIN' },
-        { isActive: true, nProcessoExterno: "444444/4444-44", nProcessoSIGED: "444444/4444-44", tipoProcesso: 'Extra-Judicial', statusProcesso: 'Cadastrado', assunto: 'Processo', orgaoDemandante: 'Ministério Público', classificacao: 'Classificado', diasRestantes: '4', caixaSIGED: 'RH' },
-        { isActive: true, nProcessoExterno: "555555/5555-55", nProcessoSIGED: "555555/5555-55", tipoProcesso: 'ASDF', statusProcesso: 'Cadastrado', assunto: 'Processo', orgaoDemandante: 'Ministério Público', classificacao: 'Classificado', diasRestantes: '4', caixaSIGED: 'DETIN' },
-        { isActive: true, nProcessoExterno: "666666/6666-66", nProcessoSIGED: "666666/6666-66", tipoProcesso: 'Extra-Judicial', statusProcesso: 'Cadastrado', assunto: 'Processo', orgaoDemandante: 'Ministério Público', classificacao: 'Classificado', diasRestantes: '4', caixaSIGED: 'RH' },
-        { isActive: true, nProcessoExterno: "777777/7777-77", nProcessoSIGED: "777777/7777-77", tipoProcesso: 'ASDF', statusProcesso: 'Cadastrado', assunto: 'Processo', orgaoDemandante: 'Ministério Público', classificacao: 'Classificado', diasRestantes: '4', caixaSIGED: 'DETIN' },
-        { isActive: true, nProcessoExterno: "888888/8888-88", nProcessoSIGED: "888888/8888-88", tipoProcesso: 'Extra-Judicial', statusProcesso: 'Cadastrado', assunto: 'Processo', orgaoDemandante: 'Ministério Público', classificacao: 'Classificado', diasRestantes: '4', caixaSIGED: 'RH' },
-        { isActive: true, nProcessoExterno: "999999/9999-99", nProcessoSIGED: "999999/9999-99", tipoProcesso: 'ASDF', statusProcesso: 'Cadastrado', assunto: 'Processo', orgaoDemandante: 'Ministério Público', classificacao: 'Classificado', diasRestantes: '4', caixaSIGED: 'DETIN' },
-        { isActive: true, nProcessoExterno: "123456/7890-12", nProcessoSIGED: "123456/7890-12", tipoProcesso: 'Extra-Judicial', statusProcesso: 'Cadastrado', assunto: 'Processo', orgaoDemandante: 'Ministério Público', classificacao: 'Classificado', diasRestantes: '4', caixaSIGED: 'RH' },
-        { isActive: true, nProcessoExterno: "154875/8754-87", nProcessoSIGED: "154875/8754-87", tipoProcesso: 'ASDF', statusProcesso: 'Cadastrado', assunto: 'Processo', orgaoDemandante: 'Ministério Público', classificacao: 'Classificado', diasRestantes: '4', caixaSIGED: 'DETIN' },
-        { isActive: true, nProcessoExterno: "789456/2022-01", nProcessoSIGED: "789456/2022-01", tipoProcesso: 'Extra-Judicial', statusProcesso: 'Cadastrado', assunto: 'Processo', orgaoDemandante: 'Ministério Público', classificacao: 'Classificado', diasRestantes: '4', caixaSIGED: 'RH' },
-        { isActive: true, nProcessoExterno: "754812/2020-10", nProcessoSIGED: "754812/2020-10", tipoProcesso: 'ASDF', statusProcesso: 'Cadastrado', assunto: 'Processo', orgaoDemandante: 'Ministério Público', classificacao: 'Classificado', diasRestantes: '4', caixaSIGED: 'DETIN' },
-        { isActive: true, nProcessoExterno: "111111/1111-11", nProcessoSIGED: "111111/1111-11", tipoProcesso: 'Judicial', statusProcesso: 'Cadastrado', assunto: 'Processo', orgaoDemandante: 'Ministério Público', classificacao: 'Classificado', diasRestantes: '4', caixaSIGED: 'JURÍDICO' },
-        { isActive: true, nProcessoExterno: "222222/2222-22", nProcessoSIGED: "222222/2222-22", tipoProcesso: 'Extra-Judicial', statusProcesso: 'Cadastrado', assunto: 'Processo', orgaoDemandante: 'Ministério Público', classificacao: 'Classificado', diasRestantes: '4', caixaSIGED: 'RH' },
-        { isActive: true, nProcessoExterno: "333333/3333-33", nProcessoSIGED: "333333/3333-33", tipoProcesso: 'ASDF', statusProcesso: 'Cadastrado', assunto: 'Processo', orgaoDemandante: 'Ministério Público', classificacao: 'Classificado', diasRestantes: '4', caixaSIGED: 'DETIN' },
-        { isActive: true, nProcessoExterno: "444444/4444-44", nProcessoSIGED: "444444/4444-44", tipoProcesso: 'Extra-Judicial', statusProcesso: 'Cadastrado', assunto: 'Processo', orgaoDemandante: 'Ministério Público', classificacao: 'Classificado', diasRestantes: '4', caixaSIGED: 'RH' },
-        { isActive: true, nProcessoExterno: "555555/5555-55", nProcessoSIGED: "555555/5555-55", tipoProcesso: 'ASDF', statusProcesso: 'Cadastrado', assunto: 'Processo', orgaoDemandante: 'Ministério Público', classificacao: 'Classificado', diasRestantes: '4', caixaSIGED: 'DETIN' },
-        { isActive: true, nProcessoExterno: "666666/6666-66", nProcessoSIGED: "666666/6666-66", tipoProcesso: 'Extra-Judicial', statusProcesso: 'Cadastrado', assunto: 'Processo', orgaoDemandante: 'Ministério Público', classificacao: 'Classificado', diasRestantes: '4', caixaSIGED: 'RH' },
-        { isActive: true, nProcessoExterno: "777777/7777-77", nProcessoSIGED: "777777/7777-77", tipoProcesso: 'ASDF', statusProcesso: 'Cadastrado', assunto: 'Processo', orgaoDemandante: 'Ministério Público', classificacao: 'Classificado', diasRestantes: '4', caixaSIGED: 'DETIN' },
-        { isActive: true, nProcessoExterno: "888888/8888-88", nProcessoSIGED: "888888/8888-88", tipoProcesso: 'Extra-Judicial', statusProcesso: 'Cadastrado', assunto: 'Processo', orgaoDemandante: 'Ministério Público', classificacao: 'Classificado', diasRestantes: '4', caixaSIGED: 'RH' },
-        { isActive: true, nProcessoExterno: "999999/9999-99", nProcessoSIGED: "999999/9999-99", tipoProcesso: 'ASDF', statusProcesso: 'Cadastrado', assunto: 'Processo', orgaoDemandante: 'Ministério Público', classificacao: 'Classificado', diasRestantes: '4', caixaSIGED: 'DETIN' },
-        { isActive: true, nProcessoExterno: "123456/7890-12", nProcessoSIGED: "123456/7890-12", tipoProcesso: 'Extra-Judicial', statusProcesso: 'Cadastrado', assunto: 'Processo', orgaoDemandante: 'Ministério Público', classificacao: 'Classificado', diasRestantes: '4', caixaSIGED: 'RH' },
-        { isActive: true, nProcessoExterno: "154875/8754-87", nProcessoSIGED: "154875/8754-87", tipoProcesso: 'ASDF', statusProcesso: 'Cadastrado', assunto: 'Processo', orgaoDemandante: 'Ministério Público', classificacao: 'Classificado', diasRestantes: '4', caixaSIGED: 'DETIN' },
-        { isActive: true, nProcessoExterno: "789456/2022-01", nProcessoSIGED: "789456/2022-01", tipoProcesso: 'Extra-Judicial', statusProcesso: 'Cadastrado', assunto: 'Processo', orgaoDemandante: 'Ministério Público', classificacao: 'Classificado', diasRestantes: '4', caixaSIGED: 'RH' },
-        { isActive: true, nProcessoExterno: "754812/2020-10", nProcessoSIGED: "754812/2020-10", tipoProcesso: 'ASDF', statusProcesso: 'Cadastrado', assunto: 'Processo', orgaoDemandante: 'Ministério Público', classificacao: 'Classificado', diasRestantes: '4', caixaSIGED: 'DETIN' },
-        { isActive: true, nProcessoExterno: "017101/2019-20", nProcessoSIGED: "017101/2019-20", tipoProcesso: 'zxcv', statusProcesso: 'Cadastrado', assunto: 'Processo', orgaoDemandante: 'Ministério Público', classificacao: 'Classificado', diasRestantes: '4', caixaSIGED: 'COMPRAS' }
+        { isActive: true, nProcessoExterno: "111111/1111-11", nProcessoSIGED: "111111/1111-11", tipoProcesso: 'Judicial', statusProcesso: 'Cadastrado', assunto: 'Processo', orgaoDemandante: 'Ministério Público', classificacao: 'Classificado', prazo: '10', diasRestantes: '4', caixaSIGED: 'JURÍDICO', qtdReiteracao: '1' },
+        { isActive: true, nProcessoExterno: "222222/2222-22", nProcessoSIGED: "222222/2222-22", tipoProcesso: 'Extra-Judicial', statusProcesso: 'Respondendo', assunto: 'Processo', orgaoDemandante: 'Ministério Público', classificacao: 'Classificado', prazo: '10', diasRestantes: '3', caixaSIGED: 'RH', qtdReiteracao: '2' },
+        { isActive: true, nProcessoExterno: "333333/3333-33", nProcessoSIGED: "333333/3333-33", tipoProcesso: 'ASDF', statusProcesso: 'Arquivado', assunto: 'Processo', orgaoDemandante: 'Ministério Público', classificacao: 'Classificado',  prazo: '10', diasRestantes: '2', caixaSIGED: 'DETIN', qtdReiteracao: '5' },
+        { isActive: true, nProcessoExterno: "444444/4444-44", nProcessoSIGED: "444444/4444-44", tipoProcesso: 'Extra-Judicial', statusProcesso: 'Distribuído', assunto: 'Processo', orgaoDemandante: 'Ministério Público', classificacao: 'Classificado',  prazo: '10', diasRestantes: '10', caixaSIGED: 'RH', qtdReiteracao: '0' },
+        { isActive: true, nProcessoExterno: "555555/5555-55", nProcessoSIGED: "555555/5555-55", tipoProcesso: 'ASDF', statusProcesso: 'Distribuído', assunto: 'Processo', orgaoDemandante: 'Ministério Público', classificacao: 'Classificado',  prazo: '10', diasRestantes: '0', caixaSIGED: 'DETIN', qtdReiteracao: '0' },
+        { isActive: true, nProcessoExterno: "666666/6666-66", nProcessoSIGED: "666666/6666-66", tipoProcesso: 'Extra-Judicial', statusProcesso: 'Tramitando', assunto: 'Processo', orgaoDemandante: 'Ministério Público', classificacao: 'Classificado',  prazo: '10', diasRestantes: '4', caixaSIGED: 'RH', qtdReiteracao: '0' },
+        { isActive: true, nProcessoExterno: "777777/7777-77", nProcessoSIGED: "777777/7777-77", tipoProcesso: 'ASDF', statusProcesso: 'Cadastrado', assunto: 'Processo', orgaoDemandante: 'Ministério Público', classificacao: 'Classificado',  prazo: '10', diasRestantes: '-1', caixaSIGED: 'DETIN', qtdReiteracao: '0' },
+        { isActive: true, nProcessoExterno: "888888/8888-88", nProcessoSIGED: "888888/8888-88", tipoProcesso: 'Extra-Judicial', statusProcesso: 'Cadastrado', assunto: 'Processo', orgaoDemandante: 'Ministério Público', classificacao: 'Classificado',  prazo: '10', diasRestantes: '4', caixaSIGED: 'RH', qtdReiteracao: '0' },
+        { isActive: true, nProcessoExterno: "999999/9999-99", nProcessoSIGED: "999999/9999-99", tipoProcesso: 'ASDF', statusProcesso: 'Cadastrado', assunto: 'Processo', orgaoDemandante: 'Ministério Público', classificacao: 'Classificado',  prazo: '10', diasRestantes: '3', caixaSIGED: 'DETIN', qtdReiteracao: '0' },
+        { isActive: true, nProcessoExterno: "123456/7890-12", nProcessoSIGED: "123456/7890-12", tipoProcesso: 'Extra-Judicial', statusProcesso: 'Cadastrado', assunto: 'Processo', orgaoDemandante: 'Ministério Público', classificacao: 'Classificado',  prazo: '10', diasRestantes: '2', caixaSIGED: 'RH', qtdReiteracao: '0' },
+        { isActive: true, nProcessoExterno: "154875/8754-87", nProcessoSIGED: "154875/8754-87", tipoProcesso: 'ASDF', statusProcesso: 'Cadastrado', assunto: 'Processo', orgaoDemandante: 'Ministério Público', classificacao: 'Classificado',  prazo: '10', diasRestantes: '4', caixaSIGED: 'DETIN', qtdReiteracao: '0' },
+        { isActive: true, nProcessoExterno: "789456/2022-01", nProcessoSIGED: "789456/2022-01", tipoProcesso: 'Extra-Judicial', statusProcesso: 'Cadastrado', assunto: 'Processo', orgaoDemandante: 'Ministério Público', classificacao: 'Classificado',  prazo: '10', diasRestantes: '4', caixaSIGED: 'RH', qtdReiteracao: '0' },
+        { isActive: true, nProcessoExterno: "754812/2020-10", nProcessoSIGED: "754812/2020-10", tipoProcesso: 'ASDF', statusProcesso: 'Cadastrado', assunto: 'Processo', orgaoDemandante: 'Ministério Público', classificacao: 'Classificado',  prazo: '10', diasRestantes: '4', caixaSIGED: 'DETIN', qtdReiteracao: '0' },
+        { isActive: true, nProcessoExterno: "111111/1111-11", nProcessoSIGED: "111111/1111-11", tipoProcesso: 'Judicial', statusProcesso: 'Cadastrado', assunto: 'Processo', orgaoDemandante: 'Ministério Público', classificacao: 'Classificado',  prazo: '10', diasRestantes: '4', caixaSIGED: 'JURÍDICO', qtdReiteracao: '0' },
+        { isActive: true, nProcessoExterno: "222222/2222-22", nProcessoSIGED: "222222/2222-22", tipoProcesso: 'Extra-Judicial', statusProcesso: 'Cadastrado', assunto: 'Processo', orgaoDemandante: 'Ministério Público', classificacao: 'Classificado',  prazo: '10', diasRestantes: '4', caixaSIGED: 'RH', qtdReiteracao: '0' },
+        { isActive: true, nProcessoExterno: "333333/3333-33", nProcessoSIGED: "333333/3333-33", tipoProcesso: 'ASDF', statusProcesso: 'Cadastrado', assunto: 'Processo', orgaoDemandante: 'Ministério Público', classificacao: 'Classificado',  prazo: '10', diasRestantes: '4', caixaSIGED: 'DETIN', qtdReiteracao: '0' },
+        { isActive: true, nProcessoExterno: "444444/4444-44", nProcessoSIGED: "444444/4444-44", tipoProcesso: 'Extra-Judicial', statusProcesso: 'Cadastrado', assunto: 'Processo', orgaoDemandante: 'Ministério Público', classificacao: 'Classificado', prazo: '10', diasRestantes: '4', caixaSIGED: 'RH', qtdReiteracao: '0' },
+        { isActive: true, nProcessoExterno: "555555/5555-55", nProcessoSIGED: "555555/5555-55", tipoProcesso: 'ASDF', statusProcesso: 'Cadastrado', assunto: 'Processo', orgaoDemandante: 'Ministério Público', classificacao: 'Classificado',  prazo: '10', diasRestantes: '4', caixaSIGED: 'DETIN', qtdReiteracao: '0' },
+        { isActive: true, nProcessoExterno: "666666/6666-66", nProcessoSIGED: "666666/6666-66", tipoProcesso: 'Extra-Judicial', statusProcesso: 'Cadastrado', assunto: 'Processo', orgaoDemandante: 'Ministério Público', classificacao: 'Classificado',  prazo: '10', diasRestantes: '4', caixaSIGED: 'RH', qtdReiteracao: '0' },
+        { isActive: true, nProcessoExterno: "777777/7777-77", nProcessoSIGED: "777777/7777-77", tipoProcesso: 'ASDF', statusProcesso: 'Cadastrado', assunto: 'Processo', orgaoDemandante: 'Ministério Público', classificacao: 'Classificado',  prazo: '10', diasRestantes: '4', caixaSIGED: 'DETIN', qtdReiteracao: '0' },
+        { isActive: true, nProcessoExterno: "888888/8888-88", nProcessoSIGED: "888888/8888-88", tipoProcesso: 'Extra-Judicial', statusProcesso: 'Cadastrado', assunto: 'Processo', orgaoDemandante: 'Ministério Público', classificacao: 'Classificado',  prazo: '10', diasRestantes: '4', caixaSIGED: 'RH', qtdReiteracao: '0' },
+        { isActive: true, nProcessoExterno: "999999/9999-99", nProcessoSIGED: "999999/9999-99", tipoProcesso: 'ASDF', statusProcesso: 'Cadastrado', assunto: 'Processo', orgaoDemandante: 'Ministério Público', classificacao: 'Classificado',  prazo: '10', diasRestantes: '4', caixaSIGED: 'DETIN', qtdReiteracao: '0' },
+        { isActive: true, nProcessoExterno: "123456/7890-12", nProcessoSIGED: "123456/7890-12", tipoProcesso: 'Extra-Judicial', statusProcesso: 'Cadastrado', assunto: 'Processo', orgaoDemandante: 'Ministério Público', classificacao: 'Classificado',  prazo: '10', diasRestantes: '4', caixaSIGED: 'RH', qtdReiteracao: '0' },
+        { isActive: true, nProcessoExterno: "154875/8754-87", nProcessoSIGED: "154875/8754-87", tipoProcesso: 'ASDF', statusProcesso: 'Cadastrado', assunto: 'Processo', orgaoDemandante: 'Ministério Público', classificacao: 'Classificado',  prazo: '10', diasRestantes: '4', caixaSIGED: 'DETIN', qtdReiteracao: '0' },
+        { isActive: true, nProcessoExterno: "789456/2022-01", nProcessoSIGED: "789456/2022-01", tipoProcesso: 'Extra-Judicial', statusProcesso: 'Cadastrado', assunto: 'Processo', orgaoDemandante: 'Ministério Público', classificacao: 'Classificado',  prazo: '10', diasRestantes: '4', caixaSIGED: 'RH', qtdReiteracao: '0' },
+        { isActive: true, nProcessoExterno: "754812/2020-10", nProcessoSIGED: "754812/2020-10", tipoProcesso: 'ASDF', statusProcesso: 'Cadastrado', assunto: 'Processo', orgaoDemandante: 'Ministério Público', classificacao: 'Classificado',  prazo: '10', diasRestantes: '4', caixaSIGED: 'DETIN', qtdReiteracao: '0' },
+        { isActive: true, nProcessoExterno: "111111/1111-11", nProcessoSIGED: "111111/1111-11", tipoProcesso: 'Judicial', statusProcesso: 'Cadastrado', assunto: 'Processo', orgaoDemandante: 'Ministério Público', classificacao: 'Classificado',  prazo: '10', diasRestantes: '4', caixaSIGED: 'JURÍDICO', qtdReiteracao: '0' },
+        { isActive: true, nProcessoExterno: "222222/2222-22", nProcessoSIGED: "222222/2222-22", tipoProcesso: 'Extra-Judicial', statusProcesso: 'Cadastrado', assunto: 'Processo', orgaoDemandante: 'Ministério Público', classificacao: 'Classificado',  prazo: '10', diasRestantes: '4', caixaSIGED: 'RH', qtdReiteracao: '0' },
+        { isActive: true, nProcessoExterno: "333333/3333-33", nProcessoSIGED: "333333/3333-33", tipoProcesso: 'ASDF', statusProcesso: 'Cadastrado', assunto: 'Processo', orgaoDemandante: 'Ministério Público', classificacao: 'Classificado', prazo: '10', diasRestantes: '4', caixaSIGED: 'DETIN', qtdReiteracao: '0' },
+        { isActive: true, nProcessoExterno: "444444/4444-44", nProcessoSIGED: "444444/4444-44", tipoProcesso: 'Extra-Judicial', statusProcesso: 'Cadastrado', assunto: 'Processo', orgaoDemandante: 'Ministério Público', classificacao: 'Classificado', prazo: '10', diasRestantes: '4', caixaSIGED: 'RH', qtdReiteracao: '0' },
+        { isActive: true, nProcessoExterno: "555555/5555-55", nProcessoSIGED: "555555/5555-55", tipoProcesso: 'ASDF', statusProcesso: 'Cadastrado', assunto: 'Processo', orgaoDemandante: 'Ministério Público', classificacao: 'Classificado',  prazo: '10', diasRestantes: '4', caixaSIGED: 'DETIN', qtdReiteracao: '0' },
+        { isActive: true, nProcessoExterno: "666666/6666-66", nProcessoSIGED: "666666/6666-66", tipoProcesso: 'Extra-Judicial', statusProcesso: 'Cadastrado', assunto: 'Processo', orgaoDemandante: 'Ministério Público', classificacao: 'Classificado',  prazo: '10', diasRestantes: '4', caixaSIGED: 'RH', qtdReiteracao: '0' },
+        { isActive: true, nProcessoExterno: "777777/7777-77", nProcessoSIGED: "777777/7777-77", tipoProcesso: 'ASDF', statusProcesso: 'Cadastrado', assunto: 'Processo', orgaoDemandante: 'Ministério Público', classificacao: 'Classificado', prazo: '10', diasRestantes: '4', caixaSIGED: 'DETIN', qtdReiteracao: '0' },
+        { isActive: true, nProcessoExterno: "888888/8888-88", nProcessoSIGED: "888888/8888-88", tipoProcesso: 'Extra-Judicial', statusProcesso: 'Cadastrado', assunto: 'Processo', orgaoDemandante: 'Ministério Público', classificacao: 'Classificado',  prazo: '10', diasRestantes: '4', caixaSIGED: 'RH', qtdReiteracao: '0' },
+        { isActive: true, nProcessoExterno: "999999/9999-99", nProcessoSIGED: "999999/9999-99", tipoProcesso: 'ASDF', statusProcesso: 'Cadastrado', assunto: 'Processo', orgaoDemandante: 'Ministério Público', classificacao: 'Classificado',  prazo: '10', diasRestantes: '4', caixaSIGED: 'DETIN', qtdReiteracao: '0' },
+        { isActive: true, nProcessoExterno: "123456/7890-12", nProcessoSIGED: "123456/7890-12", tipoProcesso: 'Extra-Judicial', statusProcesso: 'Cadastrado', assunto: 'Processo', orgaoDemandante: 'Ministério Público', classificacao: 'Classificado',  prazo: '10', diasRestantes: '4', caixaSIGED: 'RH', qtdReiteracao: '0' },
+        { isActive: true, nProcessoExterno: "154875/8754-87", nProcessoSIGED: "154875/8754-87", tipoProcesso: 'ASDF', statusProcesso: 'Cadastrado', assunto: 'Processo', orgaoDemandante: 'Ministério Público', classificacao: 'Classificado', prazo: '10', diasRestantes: '4', caixaSIGED: 'DETIN', qtdReiteracao: '0' },
+        { isActive: true, nProcessoExterno: "789456/2022-01", nProcessoSIGED: "789456/2022-01", tipoProcesso: 'Extra-Judicial', statusProcesso: 'Cadastrado', assunto: 'Processo', orgaoDemandante: 'Ministério Público', classificacao: 'Classificado', prazo: '10', diasRestantes: '4', caixaSIGED: 'RH', qtdReiteracao: '0' },
+        { isActive: true, nProcessoExterno: "754812/2020-10", nProcessoSIGED: "754812/2020-10", tipoProcesso: 'ASDF', statusProcesso: 'Cadastrado', assunto: 'Processo', orgaoDemandante: 'Ministério Público', classificacao: 'Classificado', prazo: '10', diasRestantes: '4', caixaSIGED: 'DETIN', qtdReiteracao: '0' },
+        { isActive: true, nProcessoExterno: "017101/2019-20", nProcessoSIGED: "017101/2019-20", tipoProcesso: 'zxcv', statusProcesso: 'Cadastrado', assunto: 'Processo', orgaoDemandante: 'Ministério Público', classificacao: 'Classificado',  prazo: '10', diasRestantes: '4', caixaSIGED: 'COMPRAS', qtdReiteracao: '0' }
       ]
     };
   },
@@ -362,31 +372,58 @@ export default Vue.extend({
     submit() {
       alert("enviar");
     },
-    colorStatusPrazo(prazo: any) : string {
-      if(prazo >=1 && prazo < 4) {
-          return 'warning'
-        }
+    //dias corridos
+    colorDiasRestantes(prazo: any) : any {
 
-      return ''
+            if(prazo < 0) {
+              return "dark"
+            }
+
+            if(prazo >= 0 && prazo <= 3) {
+              return "danger"
+            }
+
+            if(prazo >= 4 && prazo <= 5 ) {
+              return "warning"
+            }
+
+            if(prazo >= 6) {
+              return "success"
+            }
+  
+            return ""
+            
     },
-    colorStatusProcesso(status: string) : string {
-        if(status == 'Tramitando') {
-          return 'warning'
-        }
+    statusDiasRestantes(prazo: any) : any {
 
-        if(status == 'Distribuído') {
-          return 'info'
-        }
+            if(prazo < 0) {
+              return "Expirado"
+            }
 
-        if(status == 'Arquivado') {
-          return 'dark'
-        }
+            if(prazo >= 0 && prazo <= 3) {
+              return "A Expirar"
+            }
 
-        if(status == 'Respondendo') {
-          return 'primary'
-        }
+            if(prazo >= 4 && prazo <= 5 ) {
+              return "Próximo a expirar"
+            }
 
-        return ''
+            if(prazo >= 6) {
+              return "Dentro do Prazo"
+            }
+  
+            return ""
+            
+    },
+    colorStatusProcesso(status: string) : any {
+
+          switch(status){
+                case "Tramitando": return "warning"; break;
+                case "Distribuído": return "info"; break;
+                case "Arquivado": return "dark"; break;
+                case "Respondendo": return "primary"; break;
+                default: ""; break;
+          }        
     },
     exibeMaisDetalhes(): void {
       if (
