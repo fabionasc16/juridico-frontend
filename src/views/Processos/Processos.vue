@@ -7,14 +7,12 @@
         </b-form-group>
 
         <!-- FORMULÁRIO DE CONSULTA DO PROCESSO -->
-        <b-form>
+        <b-form  @submit.prevent="submit">
           <!-- 1ª LINHA (3 CAIXAS + ÍCONE) -->
           <div class="row">
             <!-- 1ª LINHA (3 CAIXAS) -->
             <div class="col-10">
-              <div class="row">
-
-            
+              <div class="row">            
 
                 <b-form-group append="m" class="font col-sm-3 col-md-3 col-lg-3">
                    
@@ -23,7 +21,8 @@
                     <label v-else>Nº SIGED:</label>                       
                   </b-form-checkbox>                            
 
-                  <b-form-input size="md" type="text" v-model="form.nProcesso" v-mask="'######/####-##'" autofocus></b-form-input>
+                  <b-form-input v-if="checkedProcessoSiged" size="md" type="text" v-model="form.numProcedimento" v-mask="'######/####-##'" autofocus></b-form-input>
+                  <b-form-input v-else size="md" type="text" v-model="form.numProcessoSIGED" v-mask="'######/####-##'" autofocus></b-form-input>
                 </b-form-group>
 
                 <b-form-group label="Assunto:" append="m" class="font col-sm-5 col-md-5 col-lg-5">
@@ -41,9 +40,14 @@
             <!-- ÍCONE DA LUPA -->
             <div class="col-2 justify-content-center">
               <b-form-group label="Consultar" class="font text-white">
-                <div class="h2" type="button" style="color: gray;" @click="submit">
+  
+                <b-button class="h2" type="submit">
                   <b-icon-search v-b-tooltip.hover.topleft="'Consultar'"></b-icon-search>
-                </div>
+                </b-button>
+
+                <!--<div class="h2" type="button" style="color: gray;" @click="submit">
+                    <b-icon-search v-b-tooltip.hover.topleft="'Consultar'"></b-icon-search>
+                </div>-->
               </b-form-group>
             </div>
           </div>
@@ -320,12 +324,23 @@ export default Vue.extend({
   },
   mounted() {
     this.totalRows = this.items.length
-   
-  
+     
   },
   methods: {
     submit() {
       alert("enviar");
+
+      //pegar o id dos options   
+      this.form.idTipoProcesso = this.tipoProcessoSelecionado.value
+      this.form.statusProcesso = this.statusProcessoSelecionado.value
+      this.form.statusPrazo    = this.statusPrazoSelecionado.value
+      this.form.idOrgaoDemandante = this.orgaoDemandanteSelecionado.value
+      this.form.idClassificacao   = this.classificacaoSelecionada.value
+      this.form.idResponsavel   = this.responsavelSelecionado.value
+      this.form.idAssunto       = this.assuntoSelecionado.value
+      this.form.caixaAtualSIGED = this.caixaSigedSelecionada.value
+
+      console.log(JSON.stringify(this.form))
     },
     //dias corridos
     colorDiasRestantes(prazo: any) : any {
