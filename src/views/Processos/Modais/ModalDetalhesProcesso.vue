@@ -19,14 +19,11 @@
                     </b-form-group>
 
                     <div class="row">
-                        <b-form-group class="font col-sm-3 col-md-3 col-lg-3">
+                        <b-form-group class="font col-sm-5 col-md-5 col-lg-5">
                             <label>Nº Procedimento: <span class="text-danger">*</span></label>
-                            <b-form-input type="text" v-model="form.nProcedimento" required></b-form-input>
+                            <b-form-input type="text" v-model="form.nProcedimento" required
+                             placeholder="Procedimento/Expediente"></b-form-input>                             
                         </b-form-group> 
-
-                        <b-form-group label="Nº Expediente:" class="font col-sm-3 col-md-3 col-lg-3">
-                            <b-form-input type="text" v-model="form.nExpediente"></b-form-input>
-                        </b-form-group>
 
                         <b-form-group label="Tipo:" class="font col-sm-3 col-md-3 col-lg-3">
                             <b-form-select v-model="form.tipoProcesso">
@@ -41,12 +38,12 @@
                             <label>Prazo total: <span class="text-danger">*</span></label>
                             <b-form-input type="text" v-model="form.qtdDiasPrazo" required
                             v-mask="'######'"
-                            placeholder="em dias"></b-form-input>
+                            placeholder="em dias úteis"></b-form-input>
                         </b-form-group>
                     </div>
 
                     <div class="row">
-                        <b-form-group label="Órgão Demandante:" class="font col-sm-3 col-md-3 col-lg-3">
+                        <b-form-group label="Órgão Demandante:" class="font col-sm-5 col-md-5 col-lg-5">
                             <b-form-select size="sm" v-model="form.orgaoDemandante">
                                 <b-form-select-option value="">-- Selecione --</b-form-select-option>
                                  <b-form-select-option v-for="option in optionsOrgaos" :value="option.value"
@@ -68,6 +65,12 @@
                         <b-form-group label="Hora Recebimento:" class="font col-sm-3 col-md-3 col-lg-3">
                             <b-form-input type="time" v-model="form.horaRecebimento"></b-form-input>
                         </b-form-group>
+
+                        <b-form-group label="Data Final Limite:" class="font col-sm-3 col-md-3 col-lg-3">
+                            <b-form-input class="bordered margin-field" type="text" v-model="datas.dataLimiteBR" placeholder="dd/mm/aaaa"
+                                v-mask="'##/##/####'"></b-form-input>                          
+                        </b-form-group>
+
                     </div>
 
                     <div class="row">
@@ -94,12 +97,14 @@
                             </div>
                             <div class="row">
                                 <b-form-group label="Responsável:" class="font col-sm-12 col-md-12 col-lg-12">
-                                    <b-form-select size="sm" v-model="form.responsavel">
+                                    <!--<b-form-select size="sm" v-model="form.responsavel">
                                         <b-form-select-option value="">-- Selecione --</b-form-select-option>
                                         <b-form-select-option v-for="option in optionsResponsavel" :value="option.value"
                                         :key="option.value"> {{ option.texto }}
                                         </b-form-select-option>
-                                    </b-form-select>
+                                    </b-form-select>-->
+                                    <v-select style="font-size: 0.85rem" :options="optionsResponsavel" class="font" label="texto"
+                                        v-model="responsavelSelecionado"/>
                                 </b-form-group>
                             </div>
                             <div class="row">
@@ -190,7 +195,7 @@ export default Vue.extend({
         BIconInfoCircle,
         Notifications,
         ReturnMessage,
-        LoadingSpinner
+        LoadingSpinner,
     },
     mixins: [        
         dataMixin,
@@ -209,7 +214,11 @@ export default Vue.extend({
             optionsTipoProcesso: TipoProcessoSeeder,   
             optionsOrgaos: OrgaosSeeder, 
             optionsClassificacao: ClassificacaoSeeder,   
-            optionsResponsavel: ResponsavelSeeder,        
+            optionsResponsavel: ResponsavelSeeder,    
+            responsavelSelecionado: {
+                    texto: "Selecione um responsável" as string,
+                    value: "" as string,
+            },    
             datas: {
                 dataProcessoBR: "" as string,
                 dataRecebimentoBR: "" as string,
@@ -255,14 +264,16 @@ export default Vue.extend({
         submit() {
             let acao = this.id ? "put" : "post"
             let url = this.id ? "processo/update" : "processo";
+            
+            //pegar o id do responsavel selecionado   
+            this.form.responsavel = this.responsavelSelecionado.value   
 
             if (this.validarCampos()) {            
 
               //formatar datas para salvar no banco de dados  
               this.formatDatasBrToEn()  
-              
-              console.log(JSON.stringify(this.form))
 
+              console.log(JSON.stringify(this.form))
               
               this.loading = true  
 

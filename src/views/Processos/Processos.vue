@@ -7,44 +7,60 @@
         </b-form-group>
 
         <!-- FORMULÁRIO DE CONSULTA DO PROCESSO -->
-        <b-form>
+        <b-form  @submit.prevent="submit">
           <!-- 1ª LINHA (3 CAIXAS + ÍCONE) -->
           <div class="row">
             <!-- 1ª LINHA (3 CAIXAS) -->
             <div class="col-10">
-              <div class="row">
-                <b-form-group label="Nº Processo:" append="m" class="font col-sm-3 col-md-3 col-lg-3">
-                  <b-form-input size="md" type="text" v-model="form.nProcesso" v-mask="'######/####-##'"></b-form-input>
+              <div class="row">            
+
+                <b-form-group append="m" class="font col-sm-3 col-md-3 col-lg-3">
+                   
+                  <b-form-checkbox switch class="font" v-model="checkedProcessoSiged">                      
+                    <label v-if="checkedProcessoSiged">Nº Procedimento:</label> 
+                    <label v-else>Nº SIGED:</label>                       
+                  </b-form-checkbox>                            
+
+                  <b-form-input v-if="checkedProcessoSiged" size="md" type="text" v-model="form.numProcedimento" v-mask="'######/####-##'" autofocus></b-form-input>
+                  <b-form-input v-else size="md" type="text" v-model="form.numProcessoSIGED" v-mask="'######/####-##'" autofocus></b-form-input>
                 </b-form-group>
 
                 <b-form-group label="Assunto:" append="m" class="font col-sm-5 col-md-5 col-lg-5">
-                  <b-form-input size="md" type="text" v-model="form.assunto" v-mask=""></b-form-input>
+                  <v-select style="font-size: 0.85rem" :options="optionsAssunto" class="font" label="texto"
+                                        v-model="assuntoSelecionado"/>                  
                 </b-form-group>
 
                 <b-form-group label="Caixa SIGED:" append="m" class="font col-sm-4 col-md-4 col-lg-4">
-                  <b-form-input size="md" type="text" v-model="form.caixaSIGED" v-mask=""></b-form-input>
+                  <v-select style="font-size: 0.85rem" :options="optionsCaixa" class="font" label="texto"
+                                        v-model="caixaSigedSelecionada"/>
+                  <!--<b-form-input size="md" type="text" v-model="form.caixaSIGED" v-mask=""></b-form-input>-->                 
                 </b-form-group>
               </div>
             </div>
             <!-- ÍCONE DA LUPA -->
             <div class="col-2 justify-content-center">
               <b-form-group label="Consultar" class="font text-white">
-                <div class="h2" type="button" style="color: gray;" @click="submit">
+  
+                <b-button class="h2" type="submit">
                   <b-icon-search v-b-tooltip.hover.topleft="'Consultar'"></b-icon-search>
-                </div>
+                </b-button>
+
+                <!--<div class="h2" type="button" style="color: gray;" @click="submit">
+                    <b-icon-search v-b-tooltip.hover.topleft="'Consultar'"></b-icon-search>
+                </div>-->
               </b-form-group>
             </div>
           </div>
 
           <!-- 2ª LINHA (2 BOTÕES) -->
           <div class="row" align-h="between">
-            <div class="col-6">
+            <!--<div class="col-6">
               <b-form-checkbox switch class="font">
                 Consultar Nº de Processo Externo
               </b-form-checkbox>
-            </div>
-            <div class="col-6">
-              <b-form-checkbox v-model="form.maisDetalhes" @change="exibeMaisDetalhes()" switch class="font text-end">
+            </div>-->
+            <div class="col-11 mb-3">
+              <b-form-checkbox v-model="maisDetalhes" @change="exibeMaisDetalhes()" switch class="font text-end">
                 + Filtros
               </b-form-checkbox>
             </div>
@@ -55,23 +71,39 @@
             <div class="col-12">
               <div class="row">
                 <b-form-group label="Tipo do Processo:" append="m" class="font col-sm-3 col-md-3 col-lg-3"
-                  v-show="exibirMaisDetalhes">
-                  <b-form-input size="md" type="text" v-model="form.tipoProcesso" v-mask=""></b-form-input>
+                  v-show="exibirMaisDetalhes">                
+                  <v-select style="font-size: 0.85rem" :options="optionsTipoProcesso" class="font" label="texto"
+                                        v-model="tipoProcessoSelecionado"/>
                 </b-form-group>
 
-                <b-form-group label="Status:" append="m" class="font col-sm-3 col-md-3 col-lg-3"
-                  v-show="exibirMaisDetalhes">
-                  <b-form-input size="md" type="text" v-model="form.status" v-mask=""></b-form-input>
+                <b-form-group label="Status Processo:" append="m" class="font col-sm-3 col-md-3 col-lg-3"
+                  v-show="exibirMaisDetalhes">                 
+                  <v-select style="font-size: 0.85rem" :options="optionsStatusProcesso" class="font" label="texto"
+                                        v-model="statusProcessoSelecionado"/>
+                </b-form-group>
+
+                 <b-form-group label="Status Prazo:" append="m" class="font col-sm-3 col-md-3 col-lg-3"
+                  v-show="exibirMaisDetalhes">               
+                  <v-select style="font-size: 0.85rem" :options="optionsStatusPrazo" class="font" label="texto"
+                                        v-model="statusPrazoSelecionado"/>
                 </b-form-group>
 
                 <b-form-group label="Órgão Demandante:" append="m" class="font col-sm-3 col-md-3 col-lg-3"
                   v-show="exibirMaisDetalhes">
-                  <b-form-input size="md" type="text" v-model="form.orgaoDemandante" v-mask=""></b-form-input>
+                   <v-select style="font-size: 0.85rem" :options="optionsOrgaoDemandante" class="font" label="texto"
+                                        v-model="orgaoDemandanteSelecionado"/>            
                 </b-form-group>
 
                 <b-form-group label="Classificação:" append="m" class="font col-sm-3 col-md-3 col-lg-3"
                   v-show="exibirMaisDetalhes">
-                  <b-form-input size="md" type="text" v-model="form.classificacao" v-mask=""></b-form-input>
+                  <v-select style="font-size: 0.85rem" :options="optionsClassificacao" class="font" label="texto"
+                                        v-model="classificacaoSelecionada"/>  
+                </b-form-group>
+
+                 <b-form-group label="Responsável:" append="m" class="font col-sm-3 col-md-3 col-lg-3"
+                  v-show="exibirMaisDetalhes">
+                  <v-select style="font-size: 0.85rem" :options="optionsResponsavel" class="font" label="texto"
+                                        v-model="responsavelSelecionado"/>  
                 </b-form-group>
               </div>
             </div>
@@ -110,7 +142,21 @@
               :per-page="perPage" :sticky-header="stickyHeader" :no-border-collapse="noCollapse" :items="items"
               :fields="fields">
 
-              <!-- BOTÕES DA ÚLTIMA COLUNA -->
+              <template v-slot:cell(statusProcesso)="data">
+                <b-badge :variant="colorStatusProcesso(data.item.statusProcesso)">{{data.item.statusProcesso}}</b-badge>
+              </template>
+
+              <template v-slot:cell(diasRestantes)="data">
+                <b-badge :variant="colorDiasRestantes(data.item.diasRestantes)">
+                   {{data.item.diasRestantes}} dias <br>({{statusDiasRestantes(data.item.diasRestantes)}})
+                </b-badge>
+              </template>
+
+              <template v-slot:cell(qtdReiteracao)="data">  
+                  <b-badge variant="light">{{data.item.qtdReiteracao}} </b-badge>             
+              </template>
+             
+              <!-- BOTÕES DE AÇÕES -->
               <template v-slot:cell(botaoAction)="data">
 
                 <!-- BOTÃO DROPDOWN -->
@@ -120,10 +166,7 @@
                     &#x2261;<span class="sr-only"></span>
                   </template>
 
-                  <!-- ITENS DO DROPDOWN -->
-                  <b-list-group-item block class="btn-light text-dark btn-outline-success m-0 p-1">
-                    Finalizar
-                  </b-list-group-item>
+                  <!-- ITENS DO DROPDOWN -->                
                   <b-list-group-item block v-b-modal.modal-detalhes-processo class="btn-light btn-outline-dark m-0 p-1">
                     Detalhar
                   </b-list-group-item>
@@ -135,6 +178,9 @@
                   </b-list-group-item>
                   <b-list-group-item block v-b-modal.modal-duplicar-processo class="btn-light btn-outline-dark m-0 p-1">
                     Duplicar
+                  </b-list-group-item>
+                  <b-list-group-item block class="btn-light text-dark btn-outline-success m-0 p-1">
+                    Arquivar
                   </b-list-group-item>
                   <b-list-group-item block class="btn-light text-dark btn-outline-danger m-0 p-1">
                     Excluir
@@ -189,7 +235,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import axios from "axios";
+//import axios from "axios";
 import HeaderPage from '@/components/HeaderPage.vue';
 import ModalTramitacoesProcesso from './Modais/ModalTramitacoesProcesso.vue';
 import ModalCadastroProcesso from './Modais/ModalCadastroProcesso.vue';
@@ -199,10 +245,20 @@ import ModalDuplicarProcesso from './Modais/ModalDuplicarProcesso.vue';
 import { mask } from "vue-the-mask";
 import Notifications from "@/components/Notifications.vue";
 import { Notificacao } from "@/type/notificacao";
-import { GrauParentescoSeeder } from "@/type/parentesco";
-import { mapActions } from 'vuex';
+//import { GrauParentescoSeeder } from "@/type/parentesco";
+//import { mapActions } from 'vuex';
+import { Processo } from '@/type/processo';
+import { TableProcessoSeeder } from '@/type/tableProcesso';
 import { BIconSearch, BIconPlusCircle, BIconInfoCircle, BIconJournalText } from 'bootstrap-vue'
-
+import { TipoProcessoSeeder } from "@/type/tipoProcesso";
+import { StatusProcessoSeeder } from "@/type/statusProcesso";
+import { StatusPrazoSeeder } from "@/type/statusPrazo";
+import { OrgaosSeeder } from "@/type/orgaos";
+import { ClassificacaoSeeder } from "@/type/classificacao";
+import { ResponsavelSeeder } from "@/type/responsavel";
+import { AssuntoSeeder } from "@/type/assunto";
+import { CaixaSigedSeeder } from "@/type/caixaSiged";
+import { FieldsTableProcesso } from "@/type/tableProcesso";
 
 export default Vue.extend({
   directives: { mask },
@@ -219,139 +275,136 @@ export default Vue.extend({
       totalRows: 1,
       perPage: 5,
       pageOptions: [5, 10, 15, { value: 100, text: "Show a lot" }],
-      form: {
-        nProcesso: "" as string,
-        nProcedimento: "" as string,
-        assunto: "" as string,
-        caixaSIGED: "" as string,
-        tipoProcesso: "" as string,
-        status: "" as string,
-        orgaoDemandante: "" as string,
-        classificacao: "" as string,
-        qtdDiasPrazo: "" as string,
-        dataProcesso: "" as string,
-        dataRecebimento: "" as string,
-        horaRecebimento: "" as string,
-        objeto: "" as string,
-        responsavel: "" as string,
-        observacao: "" as string,
-        nSIGED: "" as string,
-        dataCadSIGED: "" as string,
-        permanencia: "" as string,
-        caixaAtual: "" as string,
-        tramitacao: "" as string,
-        requerSIGED: false as boolean,
-        monitoraPrazo: "" as string,
-        maisDetalhes: false as boolean,
+      form: {} as Processo,
+      checkedProcessoSiged: false as boolean,
+      maisDetalhes: false as boolean,
+      fields: FieldsTableProcesso, //nome das colunas da tabela
+      items: TableProcessoSeeder, // lista de processos
+      optionsTipoProcesso: TipoProcessoSeeder,
+      optionsStatusProcesso: StatusProcessoSeeder,
+      optionsStatusPrazo: StatusPrazoSeeder,
+      optionsOrgaoDemandante: OrgaosSeeder, 
+      optionsClassificacao: ClassificacaoSeeder, 
+      optionsResponsavel: ResponsavelSeeder, 
+      optionsAssunto: AssuntoSeeder, 
+      optionsCaixa: CaixaSigedSeeder,  
+      tipoProcessoSelecionado: {
+        texto: "Selecione um tipo de processo" as string,
+        value: "" as string,
       },
-      fields: [   //NOMES DAS COLUNAS
-        {
-          key: 'nProcessoExterno',
-          label: 'Nº Externo',
-          sortable: true
-        },
-        {
-          key: 'nProcessoSIGED',
-          label: 'Nº SIGED',
-          sortable: true
-        },
-        {
-          key: 'tipoProcesso',
-          label: 'Tipo Processo',
-          sortable: true,
-        },
-        {
-          key: 'status',
-          label: 'status',
-          sortable: true,
-        },
-        {
-          key: 'assunto',
-          label: 'Assunto',
-          sortable: true,
-        },
-        {
-          key: 'orgaoDemandante',
-          label: 'Órgão Demandante',
-          sortable: true,
-        },
-        {
-          key: 'classificacao',
-          label: 'Classificação',
-          sortable: true,
-        },
-        {
-          key: 'caixaSIGED',
-          label: 'Caixa SIGED',
-          sortable: true,
-        },
-        {
-          key: 'botaoAction',
-          label: 'Ações',
-          sortable: false,
-        },
-      ],
-      items: [    //DADOS DA TABELA
-        { isActive: true, nProcessoExterno: "111111/1111-11", nProcessoSIGED: "111111/1111-11", tipoProcesso: 'Judicial', status: 'Cadastrado', assunto: 'Processo', orgaoDemandante: 'Ministério Público', classificacao: 'Classificado', caixaSIGED: 'JURÍDICO' },
-        { isActive: true, nProcessoExterno: "222222/2222-22", nProcessoSIGED: "222222/2222-22", tipoProcesso: 'Extra-Judicial', status: 'Cadastrado', assunto: 'Processo', orgaoDemandante: 'Ministério Público', classificacao: 'Classificado', caixaSIGED: 'RH' },
-        { isActive: true, nProcessoExterno: "333333/3333-33", nProcessoSIGED: "333333/3333-33", tipoProcesso: 'ASDF', status: 'Cadastrado', assunto: 'Processo', orgaoDemandante: 'Ministério Público', classificacao: 'Classificado', caixaSIGED: 'DETIN' },
-        { isActive: true, nProcessoExterno: "444444/4444-44", nProcessoSIGED: "444444/4444-44", tipoProcesso: 'Extra-Judicial', status: 'Cadastrado', assunto: 'Processo', orgaoDemandante: 'Ministério Público', classificacao: 'Classificado', caixaSIGED: 'RH' },
-        { isActive: true, nProcessoExterno: "555555/5555-55", nProcessoSIGED: "555555/5555-55", tipoProcesso: 'ASDF', status: 'Cadastrado', assunto: 'Processo', orgaoDemandante: 'Ministério Público', classificacao: 'Classificado', caixaSIGED: 'DETIN' },
-        { isActive: true, nProcessoExterno: "666666/6666-66", nProcessoSIGED: "666666/6666-66", tipoProcesso: 'Extra-Judicial', status: 'Cadastrado', assunto: 'Processo', orgaoDemandante: 'Ministério Público', classificacao: 'Classificado', caixaSIGED: 'RH' },
-        { isActive: true, nProcessoExterno: "777777/7777-77", nProcessoSIGED: "777777/7777-77", tipoProcesso: 'ASDF', status: 'Cadastrado', assunto: 'Processo', orgaoDemandante: 'Ministério Público', classificacao: 'Classificado', caixaSIGED: 'DETIN' },
-        { isActive: true, nProcessoExterno: "888888/8888-88", nProcessoSIGED: "888888/8888-88", tipoProcesso: 'Extra-Judicial', status: 'Cadastrado', assunto: 'Processo', orgaoDemandante: 'Ministério Público', classificacao: 'Classificado', caixaSIGED: 'RH' },
-        { isActive: true, nProcessoExterno: "999999/9999-99", nProcessoSIGED: "999999/9999-99", tipoProcesso: 'ASDF', status: 'Cadastrado', assunto: 'Processo', orgaoDemandante: 'Ministério Público', classificacao: 'Classificado', caixaSIGED: 'DETIN' },
-        { isActive: true, nProcessoExterno: "123456/7890-12", nProcessoSIGED: "123456/7890-12", tipoProcesso: 'Extra-Judicial', status: 'Cadastrado', assunto: 'Processo', orgaoDemandante: 'Ministério Público', classificacao: 'Classificado', caixaSIGED: 'RH' },
-        { isActive: true, nProcessoExterno: "154875/8754-87", nProcessoSIGED: "154875/8754-87", tipoProcesso: 'ASDF', status: 'Cadastrado', assunto: 'Processo', orgaoDemandante: 'Ministério Público', classificacao: 'Classificado', caixaSIGED: 'DETIN' },
-        { isActive: true, nProcessoExterno: "789456/2022-01", nProcessoSIGED: "789456/2022-01", tipoProcesso: 'Extra-Judicial', status: 'Cadastrado', assunto: 'Processo', orgaoDemandante: 'Ministério Público', classificacao: 'Classificado', caixaSIGED: 'RH' },
-        { isActive: true, nProcessoExterno: "754812/2020-10", nProcessoSIGED: "754812/2020-10", tipoProcesso: 'ASDF', status: 'Cadastrado', assunto: 'Processo', orgaoDemandante: 'Ministério Público', classificacao: 'Classificado', caixaSIGED: 'DETIN' },
-        { isActive: true, nProcessoExterno: "111111/1111-11", nProcessoSIGED: "111111/1111-11", tipoProcesso: 'Judicial', status: 'Cadastrado', assunto: 'Processo', orgaoDemandante: 'Ministério Público', classificacao: 'Classificado', caixaSIGED: 'JURÍDICO' },
-        { isActive: true, nProcessoExterno: "222222/2222-22", nProcessoSIGED: "222222/2222-22", tipoProcesso: 'Extra-Judicial', status: 'Cadastrado', assunto: 'Processo', orgaoDemandante: 'Ministério Público', classificacao: 'Classificado', caixaSIGED: 'RH' },
-        { isActive: true, nProcessoExterno: "333333/3333-33", nProcessoSIGED: "333333/3333-33", tipoProcesso: 'ASDF', status: 'Cadastrado', assunto: 'Processo', orgaoDemandante: 'Ministério Público', classificacao: 'Classificado', caixaSIGED: 'DETIN' },
-        { isActive: true, nProcessoExterno: "444444/4444-44", nProcessoSIGED: "444444/4444-44", tipoProcesso: 'Extra-Judicial', status: 'Cadastrado', assunto: 'Processo', orgaoDemandante: 'Ministério Público', classificacao: 'Classificado', caixaSIGED: 'RH' },
-        { isActive: true, nProcessoExterno: "555555/5555-55", nProcessoSIGED: "555555/5555-55", tipoProcesso: 'ASDF', status: 'Cadastrado', assunto: 'Processo', orgaoDemandante: 'Ministério Público', classificacao: 'Classificado', caixaSIGED: 'DETIN' },
-        { isActive: true, nProcessoExterno: "666666/6666-66", nProcessoSIGED: "666666/6666-66", tipoProcesso: 'Extra-Judicial', status: 'Cadastrado', assunto: 'Processo', orgaoDemandante: 'Ministério Público', classificacao: 'Classificado', caixaSIGED: 'RH' },
-        { isActive: true, nProcessoExterno: "777777/7777-77", nProcessoSIGED: "777777/7777-77", tipoProcesso: 'ASDF', status: 'Cadastrado', assunto: 'Processo', orgaoDemandante: 'Ministério Público', classificacao: 'Classificado', caixaSIGED: 'DETIN' },
-        { isActive: true, nProcessoExterno: "888888/8888-88", nProcessoSIGED: "888888/8888-88", tipoProcesso: 'Extra-Judicial', status: 'Cadastrado', assunto: 'Processo', orgaoDemandante: 'Ministério Público', classificacao: 'Classificado', caixaSIGED: 'RH' },
-        { isActive: true, nProcessoExterno: "999999/9999-99", nProcessoSIGED: "999999/9999-99", tipoProcesso: 'ASDF', status: 'Cadastrado', assunto: 'Processo', orgaoDemandante: 'Ministério Público', classificacao: 'Classificado', caixaSIGED: 'DETIN' },
-        { isActive: true, nProcessoExterno: "123456/7890-12", nProcessoSIGED: "123456/7890-12", tipoProcesso: 'Extra-Judicial', status: 'Cadastrado', assunto: 'Processo', orgaoDemandante: 'Ministério Público', classificacao: 'Classificado', caixaSIGED: 'RH' },
-        { isActive: true, nProcessoExterno: "154875/8754-87", nProcessoSIGED: "154875/8754-87", tipoProcesso: 'ASDF', status: 'Cadastrado', assunto: 'Processo', orgaoDemandante: 'Ministério Público', classificacao: 'Classificado', caixaSIGED: 'DETIN' },
-        { isActive: true, nProcessoExterno: "789456/2022-01", nProcessoSIGED: "789456/2022-01", tipoProcesso: 'Extra-Judicial', status: 'Cadastrado', assunto: 'Processo', orgaoDemandante: 'Ministério Público', classificacao: 'Classificado', caixaSIGED: 'RH' },
-        { isActive: true, nProcessoExterno: "754812/2020-10", nProcessoSIGED: "754812/2020-10", tipoProcesso: 'ASDF', status: 'Cadastrado', assunto: 'Processo', orgaoDemandante: 'Ministério Público', classificacao: 'Classificado', caixaSIGED: 'DETIN' },
-        { isActive: true, nProcessoExterno: "111111/1111-11", nProcessoSIGED: "111111/1111-11", tipoProcesso: 'Judicial', status: 'Cadastrado', assunto: 'Processo', orgaoDemandante: 'Ministério Público', classificacao: 'Classificado', caixaSIGED: 'JURÍDICO' },
-        { isActive: true, nProcessoExterno: "222222/2222-22", nProcessoSIGED: "222222/2222-22", tipoProcesso: 'Extra-Judicial', status: 'Cadastrado', assunto: 'Processo', orgaoDemandante: 'Ministério Público', classificacao: 'Classificado', caixaSIGED: 'RH' },
-        { isActive: true, nProcessoExterno: "333333/3333-33", nProcessoSIGED: "333333/3333-33", tipoProcesso: 'ASDF', status: 'Cadastrado', assunto: 'Processo', orgaoDemandante: 'Ministério Público', classificacao: 'Classificado', caixaSIGED: 'DETIN' },
-        { isActive: true, nProcessoExterno: "444444/4444-44", nProcessoSIGED: "444444/4444-44", tipoProcesso: 'Extra-Judicial', status: 'Cadastrado', assunto: 'Processo', orgaoDemandante: 'Ministério Público', classificacao: 'Classificado', caixaSIGED: 'RH' },
-        { isActive: true, nProcessoExterno: "555555/5555-55", nProcessoSIGED: "555555/5555-55", tipoProcesso: 'ASDF', status: 'Cadastrado', assunto: 'Processo', orgaoDemandante: 'Ministério Público', classificacao: 'Classificado', caixaSIGED: 'DETIN' },
-        { isActive: true, nProcessoExterno: "666666/6666-66", nProcessoSIGED: "666666/6666-66", tipoProcesso: 'Extra-Judicial', status: 'Cadastrado', assunto: 'Processo', orgaoDemandante: 'Ministério Público', classificacao: 'Classificado', caixaSIGED: 'RH' },
-        { isActive: true, nProcessoExterno: "777777/7777-77", nProcessoSIGED: "777777/7777-77", tipoProcesso: 'ASDF', status: 'Cadastrado', assunto: 'Processo', orgaoDemandante: 'Ministério Público', classificacao: 'Classificado', caixaSIGED: 'DETIN' },
-        { isActive: true, nProcessoExterno: "888888/8888-88", nProcessoSIGED: "888888/8888-88", tipoProcesso: 'Extra-Judicial', status: 'Cadastrado', assunto: 'Processo', orgaoDemandante: 'Ministério Público', classificacao: 'Classificado', caixaSIGED: 'RH' },
-        { isActive: true, nProcessoExterno: "999999/9999-99", nProcessoSIGED: "999999/9999-99", tipoProcesso: 'ASDF', status: 'Cadastrado', assunto: 'Processo', orgaoDemandante: 'Ministério Público', classificacao: 'Classificado', caixaSIGED: 'DETIN' },
-        { isActive: true, nProcessoExterno: "123456/7890-12", nProcessoSIGED: "123456/7890-12", tipoProcesso: 'Extra-Judicial', status: 'Cadastrado', assunto: 'Processo', orgaoDemandante: 'Ministério Público', classificacao: 'Classificado', caixaSIGED: 'RH' },
-        { isActive: true, nProcessoExterno: "154875/8754-87", nProcessoSIGED: "154875/8754-87", tipoProcesso: 'ASDF', status: 'Cadastrado', assunto: 'Processo', orgaoDemandante: 'Ministério Público', classificacao: 'Classificado', caixaSIGED: 'DETIN' },
-        { isActive: true, nProcessoExterno: "789456/2022-01", nProcessoSIGED: "789456/2022-01", tipoProcesso: 'Extra-Judicial', status: 'Cadastrado', assunto: 'Processo', orgaoDemandante: 'Ministério Público', classificacao: 'Classificado', caixaSIGED: 'RH' },
-        { isActive: true, nProcessoExterno: "754812/2020-10", nProcessoSIGED: "754812/2020-10", tipoProcesso: 'ASDF', status: 'Cadastrado', assunto: 'Processo', orgaoDemandante: 'Ministério Público', classificacao: 'Classificado', caixaSIGED: 'DETIN' },
-        { isActive: true, nProcessoExterno: "017101/2019-20", nProcessoSIGED: "017101/2019-20", tipoProcesso: 'zxcv', status: 'Cadastrado', assunto: 'Processo', orgaoDemandante: 'Ministério Público', classificacao: 'Classificado', caixaSIGED: 'COMPRAS' }
-      ]
+      statusProcessoSelecionado: {
+        texto: "Selecione status processo" as string,
+        value: "" as string,
+      },
+      statusPrazoSelecionado: {
+        texto: "Selecione status prazo" as string,
+        value: "" as string,
+      },
+      orgaoDemandanteSelecionado: {
+        texto: "Selecione órgão demandante" as string,
+        value: "" as string,
+      },
+      classificacaoSelecionada: {
+        texto: "Selecione uma classificação" as string,
+        value: "" as string,
+      },
+      responsavelSelecionado: {
+        texto: "Selecione um responsável" as string,
+        value: "" as string,
+      },
+      assuntoSelecionado: {
+        texto: "Selecione um assunto" as string,
+        value: "" as string,
+      },
+      caixaSigedSelecionada: {
+        texto: "Selecione caixa SIGED" as string,
+        value: "" as string,
+      },    
     };
   },
   mounted() {
     this.totalRows = this.items.length
+     
   },
   methods: {
     submit() {
       alert("enviar");
+
+      //pegar o id dos options   
+      this.form.idTipoProcesso = this.tipoProcessoSelecionado.value
+      this.form.statusProcesso = this.statusProcessoSelecionado.value
+      this.form.statusPrazo    = this.statusPrazoSelecionado.value
+      this.form.idOrgaoDemandante = this.orgaoDemandanteSelecionado.value
+      this.form.idClassificacao   = this.classificacaoSelecionada.value
+      this.form.idResponsavel   = this.responsavelSelecionado.value
+      this.form.idAssunto       = this.assuntoSelecionado.value
+      this.form.caixaAtualSIGED = this.caixaSigedSelecionada.value
+
+      console.log(JSON.stringify(this.form))
+    },
+    //dias corridos
+    colorDiasRestantes(prazo: any) : any {
+
+            if(prazo < 0) {
+              return "dark"
+            }
+
+            if(prazo >= 0 && prazo < 4) {
+              return "danger"
+            }
+
+            if(prazo >= 4 && prazo < 6 ) {
+              return "warning"
+            }
+
+            if(prazo >= 6) {
+              return "success"
+            }
+  
+            return ""
+            
+    },
+    statusDiasRestantes(prazo: any) : any {
+
+            if(prazo < 0) {
+              return "Expirado"
+            }
+
+            if(prazo >= 0 && prazo <= 3) {
+              return "A Expirar"
+            }
+
+            if(prazo >= 4 && prazo <= 5 ) {
+              return "Próximo a expirar"
+            }
+
+            if(prazo >= 6) {
+              return "Dentro do Prazo"
+            }
+  
+            return ""
+            
+    },
+    colorStatusProcesso(status: string) : any {
+
+          switch(status){
+                case "Tramitando": return "warning"; break;
+                case "Distribuído": return "info"; break;
+                case "Arquivado": return "dark"; break;
+                case "Respondendo": return "primary"; break;
+                default: ""; break;
+          }        
     },
     exibeMaisDetalhes(): void {
       if (
-        this.form.maisDetalhes === true
+        this.maisDetalhes === true
       ) {
         this.exibirMaisDetalhes = true;
       } else {
         this.exibirMaisDetalhes = false;
       }
     },
-    exibirCampoPrazo(): void {
+   /*  exibirCampoPrazo(): void {
       if (
         this.form.monitoraPrazo == "sim"
       ) {
@@ -359,7 +412,7 @@ export default Vue.extend({
       } else {
         this.exibirRegistroPrazo = false;
       }
-    },
+    }, */
     exibirCampoSIGED(): void {
       if (
         this.form.requerSIGED === true
