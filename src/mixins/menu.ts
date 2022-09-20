@@ -8,21 +8,17 @@ const menusMixin = {
 				path: "/"
 			},
 			{
-				name: "Registro de Entrada",
-				path: "/registroEntrada"
-			},			
-			{
-				name: "Consulta de Pacientes",
-				path: "/pacientes/consulta"
+				name: "Dashboard",
+				path: "/dashboard"
 			},
 			{
-				name: "Cadastro de Usuários",
+				name: "Processos",
+				path: "/processos"
+			},
+			{
+				name: "Usuários",
 				path: "/usuarios"
-			},
-			{
-				name: "Cadastro de Características",
-				path: "/caracteristicas"
-			},		
+			}
 			] as Array<RouteConfig>
 		}
 	},

@@ -5,15 +5,14 @@ import HomeView from '../views/HomeView.vue'
 Vue.use(VueRouter)
 
 const routes: Array<RouteConfig> = [
-  { path: '/', name: 'Home', component: HomeView },
-  { path: '/registroEntrada', name: 'Registro de Entrada', component: () => import('../views/Entrada/FormRegistro.vue') },
-  { path: '/registroSaida', name: 'Registro de Saída', component: () => import('../views/Saida/FormRegistro.vue') },
-  { path: '/registroIdentificadoInternado', name: 'Registro de Paciente Internado e Identificado', component: () => import('../views/Entrada/Internado/FormRegistro.vue') },
-  { path: '/listaRegistroEntrada', name: 'Lista de Registro de Entrada', component: () => import('../views/Entrada/ListaRegistro.vue') },
-  { path: '/pacientes', name: 'Pacientes', component: () => import('../views/Pacientes/Cadastro.vue') },
-  { path: '/pacientes/consulta', name: 'Consulta de paciente', component: () => import('../views/Pacientes/Consulta.vue') },
-  { path: '/caracteristicas', name: 'Características', component: () => import('../views/Caracteristicas/CadastroCaracteristica.vue') },
-  { path: '/usuarios', name: 'Usuários', component: () => import(/* webpackChunkName: "about" */ '../views/Usuarios/CadastroUsuario.vue') },
+  { path: '/', name: 'Home', component: () => import('../views/PaginaInicial.vue') },
+  { path: '/usuarios', name: 'Usuários', component: () => import(/* webpackChunkName: "about" */ '../views/Usuarios/Usuarios.vue') },
+  { path: '/processos', name: 'Processos', component: () => import('../views/Processos/Processos.vue') },
+  { path: '/dashboard', name: 'Dashboard', component: () => import('../views/Dashboard/Dashboard.vue') },
+  { path: '/graficoColunas', name: 'Gráfico de Colunas', component: () => import('../views/Dashboard/Graficos/GraficoColunas.vue') },
+  { path: '/graficoLinha', name: 'Gráfico de Linha', component: () => import('../views/Dashboard/Graficos/GraficoLinha.vue') },
+  { path: '/graficoLinhas', name: 'Gráfico de Linhas', component: () => import('../views/Dashboard/Graficos/GraficoLinhas.vue') },
+  { path: '/graficoPizza', name: 'Gráfico de Pizza', component: () => import('../views/Dashboard/Graficos/GraficoPizza.vue') },
 ]
 
 const router = new VueRouter({
