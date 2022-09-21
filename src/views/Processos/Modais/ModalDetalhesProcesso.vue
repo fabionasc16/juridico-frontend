@@ -18,16 +18,14 @@
                         <hr />
                     </b-form-group>
 
-                        <div v-show="!isLoading"> 
-                            <detalhes-processo  ref='formDetalhes' />       
-                        </div>
-                                 
-                     
-                    
-            <div class="py-2 mt-3" align="right">     
-                <b-button class="mr-3" @click="$bvModal.hide('modal-detalhes-processo')">Fechar</b-button>  
-                <b-button class="bordered" type="submit" variant="success">Salvar</b-button>
-            </div>
+                    <div v-show="!isLoading"> 
+                        <detalhes-processo  ref='formDetalhes' />       
+                    </div>                             
+                                         
+                    <div class="py-2 mt-3" align="right">     
+                        <b-button class="mr-3" @click="$bvModal.hide('modal-detalhes-processo')">Fechar</b-button>  
+                        <b-button class="bordered" type="submit" variant="success">Salvar</b-button>
+                    </div>
 
                 </b-form>
             </div>
@@ -47,7 +45,7 @@ import dataMixin from "@/mixins/dataMixin";
 import RestApiService from "@/services/rest/service";
 import LoadingSpinner from "@/components/LoadingSpinner.vue";
 import DetalhesProcesso from "../../../components/DetalhesProcesso.vue";
-
+import { Processo } from '@/type/processo';
 
 
 export default Vue.extend({
@@ -75,55 +73,249 @@ export default Vue.extend({
             Message: [] as Array<Notificacao>,
             loading: false as boolean,
             alert: false as boolean,  
-            formDados: {} as any,
-            //form: {} as Processo,           
-                   
+            formDados: {} as any,  
+            carregarForm: {} as Processo,  
         }
-    },  
-
-   /* methods: {
-        submit() {
-
-             console.log(this.$refs.meuForm);
-            //console.log(this.optionsOrgaos)
-        }
-    }*/
+    },    
 
     mounted() {
         this.isLoading = false
-        console.log(this.$refs.formDetalhes);
+        //pega os dados do componente filho (detalhes do processo)
         this.formDados = this.$refs.formDetalhes
-      /*  this.$nextTick(() => {
-          
-        });*/
-    },
+
+           /* const path = this.$route.path;
+            const acao = "/editar";
+
+            if (path.includes(acao)) {
+                this.carregarDados();            
+            }*/
+
+        this.carregarDados();            
     
-       
+    }, 
+            
     methods: {
         submit() {
             let acao = this.id ? "put" : "post"
             let url = this.id ? "processo/update" : "processo";
 
-            console.log(this.formDados.form)
+            //pegar todos os valores já para armazenar
+            this.formDados.getValues()           
 
-            // console.log(this.$refs.formDetalhes);
+            if (this.validarCampos()) { 
 
-         //    console.log(this.$refs.formDetalhes[`form`]);
+              console.log('JSON: ',JSON.stringify(this.formDados.form))
+              
+              this.loading = true  
             
-          //  this.formDados = this.$refs.formDetalhes
-             
+              RestApiService.salvar(url, this.formDados.form, acao)
+                .then((res) => {
+                    if (acao == "put") {
+                        this.adicionarAlert(
+                            "success",
+                            "Atualização realizada com sucesso!"
+                        );
+                    } else {
+                        this.adicionarAlert(
+                            "success",
+                            "Cadastro realizado com sucesso!"
+                        );
+                    }                   
+                }) 
+                .catch((e) => {
+                        if (e.message === "Network Error") {
+                            this.adicionarAlert(
+                            "alert",
+                            "Sem conexão de rede. Verifique sua conexão!"
+                            );
+                        } else if (
+                            e &&
+                            e.response &&
+                            e.response.data &&
+                            e.response.data.message
+                        ) {
+                            this.adicionarAlert(
+                            "alert",
+                            e.response.data.message
+                            );                       
+                        } else {
+                            this.adicionarAlert(
+                            "alert",
+                            "Houve um erro ao salvar. Verifique o formulário e tente novamente!"
+                            );                      
+                        }              
+                })
+                .finally(() => {
+                    this.loading = false;
+                });
 
-            //pegar o id do responsavel selecionado   
-          //  this.formDados.responsavel = this.formDados.responsavelSelecionado.value   
-
-     //       this.form.responsavel = this.responsavelSelecionado.value   
-
-                  
-
+            }else{
+                this.adicionarAlert(
+                    "alert",
+                    "Realize as validações exibidas no topo desta página!"
+                );
+            }                  
         },
- 
-       
 
+        carregarDados(): void {
+            this.loading = true;
+
+            this.formDados.form.objeto = 'abc'
+            console.log('carregar: ',this.formDados.form )
+            
+            
+            RestApiService.get("processo/listid", this.id)
+                .then((res: any) => {
+
+                this.formDados.form.idProcesso =   res.data.idProcesso 
+                this.formDados.form.numProcedimento = res.data.numProcedimento
+                this.formDados.form.idTipoProcesso =  res.data.idTipoProcesso
+                this.formDados.form.prazoTotal = res.data.prazoTotal
+                this.formDados.form.idOrgaoDemandante = res.data.orgaoSelecionado.value
+                this.formDados.form.dataProcesso = res.data.dataProcesso
+                this.formDados.form.dataRecebimento = res.data.dataRecebimento
+                this.formDados.form.horaRecebimento =  res.data.horaRecebimento
+                this.formDados.form.idAssunto =  res.data.value
+                this.formDados.form.idClassificacao = res.data.idClassificacao
+                this.formDados.form.objeto =  res.data.objeto
+                this.formDados.form.requerSIGED = res.data.requerSIGED
+                this.formDados.form.numProcessoSIGED = res.data.numProcessoSIGED
+                this.formDados.form.dataProcessoSIGED = res.data.dataProcessoSIGED
+                this.formDados.form.permanenciaSIGED = res.data.permanenciaSIGED
+                this.formDados.form.caixaAtualSIGED =  res.data.caixaAtualSIGED
+                this.formDados.form.tramitacaoSIGED =  res.data.tramitacaoSIGED
+                this.formDados.form.idResponsavel = res.data.value
+                this.formDados.form.descricao = res.data.descricao
+                this.formDados.form.dataLimitePrazo =  res.data.dataLimitePrazo
+                this.formDados.form.diasPercorridos =  res.data.diasPercorridos
+                this.formDados.form.diasExpirados = res.data.diasExpirados
+                this.formDados.form.statusPrazo =  res.data.statusPrazo
+                this.formDados.form.statusProcesso = res.data.statusProcesso
+                this.formDados.form.sigiloso = res.data.sigiloso
+                this.formDados.form.observacao = res.data.observacao    
+                
+                //formatar datas para formato br
+                this.formDados.formatDatasEnToBr()
+              
+               // this.form.nProcedimento = res.data.nProcedimento
+                /*this.form.nExpediente = res.data.nExpediente
+                this.form.assunto = res.data.assunto
+                this.form.caixaSIGED = res.data.caixaSIGED
+                this.form.tipoProcesso = res.data.tipoProcesso
+                this.form.status = res.data.status
+                this.form.orgaoDemandante = res.data.orgaoDemandante
+                this.form.classificacao = res.data.classificacao
+                this.form.qtdDiasPrazo = res.data.qtdDiasPrazo
+                this.form.dataProcesso = res.data.dataProcesso
+                this.form.dataRecebimento = res.data.dataRecebimento
+                this.form.horaRecebimento = res.data.horaRecebimento
+                this.form.objeto = res.data.objeto
+                this.form.responsavel = res.data.responsavel
+                this.form.observacao = res.data.observacao
+                this.form.nSIGED = res.data.nSIGED
+                this.form.dataCadSIGED = res.data.dataCadSIGED
+                this.form.permanencia = res.data.permanencia
+                this.form.caixaAtual = res.data.caixaAtual
+                this.form.tramitacao = res.data.tramitacao
+                this.form.requerSIGED = res.data.requerSIGED
+                this.form.monitoraPrazo = res.data.monitoraPrazo
+                this.form.maisDetalhes = res.data.maisDetalhes
+                */
+
+            })
+            .catch((e) => {
+                this.adicionarAlert(
+                    "alert",
+                    "Houve um erro ao carregar os dados do paciente. Tente novamente!"
+                );
+          
+            })
+            .finally(() => {
+                this.loading = false;
+            });
+        },
+
+        validarCampos(): boolean {
+
+            if (!this.formDados.form.numProcedimento) {
+                this.adicionarNotificacao(
+                "danger",
+                "Nº Procedimento é obrigatório!"
+                );
+            }
+
+           if(!this.formDados.form.prazoTotal){
+                this.adicionarNotificacao(
+                "danger",
+                "Prazo Total é obrigatório!"
+                );
+            }
+
+              if(this.formDados.form.requerSIGED === true && !this.formDados.form.numProcessoSIGED){
+                this.adicionarNotificacao(
+                "danger",
+                "Nº SIGED é obrigatório quando o campo 'Requer SIGED' for selecionado!"
+                );
+            }
+         
+            if(!this.formDados.validarDataProcesso()){
+                this.adicionarNotificacao(
+                "danger",
+                "Data do Processo informada é inválida!"
+                );
+            }
+
+            if(!this.formDados.validarDataRecebimento()){
+                this.adicionarNotificacao(
+                "danger",
+                "Data do Recebimento informada é inválida!"
+                );
+            }  
+            
+            if(!this.formDados.validarDataFinalLimite()){
+                this.adicionarNotificacao(
+                "danger",
+                "Data Final Limite informada é inválida!"
+                );
+            }            
+
+            if (this.Notificacao.length > 0) {
+                //ir para o início da página onde aparecem as mensagens
+                window.scrollTo(0, 0);               
+
+                this.adicionarAlert(
+                    "alert",
+                     "Realize as validações exibidas no topo desta página!"
+                );
+
+                setTimeout(() => {
+                this.Notificacao = [];
+                }, 10000);
+                return false;
+            } else {
+                return true;
+            }
+        },
+
+        adicionarAlert(tipo: string, mensagem: string): void {
+            this.Message = []        
+            this.Message.push({
+                type: tipo,
+                message: mensagem,
+            });
+            this.alert = true;
+        },
+
+        adicionarNotificacao(tipo: string, mensagem: string): void {
+            this.Notificacao.push({
+                type: tipo,
+                message: mensagem,
+            });
+        },
+
+        fechaAlert(): void {
+            this.alert = false;
+        },  
        
     },
    
