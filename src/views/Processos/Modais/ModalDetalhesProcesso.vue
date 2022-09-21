@@ -22,11 +22,14 @@
                         <detalhes-processo  ref='formDetalhes' />       
                     </div>                             
                                          
-                    <div class="py-2 mt-3" align="right">     
-                        <b-button class="mr-3" @click="$bvModal.hide('modal-detalhes-processo')">Fechar</b-button>  
+                    <!--<template class="py-2 mt-10" align="right">  -->
+                        
+                    <template>  
+                        <!--<b-button class="mr-3" @click="$bvModal.hide('modal-detalhes-processo')">Fechar</b-button>  -->
                         <b-button class="bordered" type="submit" variant="success">Salvar</b-button>
-                    </div>
+                    </template>
 
+                
                 </b-form>
             </div>
 
@@ -160,8 +163,8 @@ export default Vue.extend({
         carregarDados(): void {
             this.loading = true;
 
-            this.formDados.form.objeto = 'abc'
-            console.log('carregar: ',this.formDados.form )
+            //this.formDados.form.objeto = 'abc'
+            //console.log('carregar: ',this.formDados.form )
             
             
             RestApiService.get("processo/listid", this.id)
@@ -196,38 +199,12 @@ export default Vue.extend({
                 
                 //formatar datas para formato br
                 this.formDados.formatDatasEnToBr()
-              
-               // this.form.nProcedimento = res.data.nProcedimento
-                /*this.form.nExpediente = res.data.nExpediente
-                this.form.assunto = res.data.assunto
-                this.form.caixaSIGED = res.data.caixaSIGED
-                this.form.tipoProcesso = res.data.tipoProcesso
-                this.form.status = res.data.status
-                this.form.orgaoDemandante = res.data.orgaoDemandante
-                this.form.classificacao = res.data.classificacao
-                this.form.qtdDiasPrazo = res.data.qtdDiasPrazo
-                this.form.dataProcesso = res.data.dataProcesso
-                this.form.dataRecebimento = res.data.dataRecebimento
-                this.form.horaRecebimento = res.data.horaRecebimento
-                this.form.objeto = res.data.objeto
-                this.form.responsavel = res.data.responsavel
-                this.form.observacao = res.data.observacao
-                this.form.nSIGED = res.data.nSIGED
-                this.form.dataCadSIGED = res.data.dataCadSIGED
-                this.form.permanencia = res.data.permanencia
-                this.form.caixaAtual = res.data.caixaAtual
-                this.form.tramitacao = res.data.tramitacao
-                this.form.requerSIGED = res.data.requerSIGED
-                this.form.monitoraPrazo = res.data.monitoraPrazo
-                this.form.maisDetalhes = res.data.maisDetalhes
-                */
-
             })
             .catch((e) => {
-                this.adicionarAlert(
+              /*  this.adicionarAlert(
                     "alert",
                     "Houve um erro ao carregar os dados do paciente. Tente novamente!"
-                );
+                );*/
           
             })
             .finally(() => {

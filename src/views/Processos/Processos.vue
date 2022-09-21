@@ -202,13 +202,16 @@
 
         <!-- MODAL -->
         <!-- CADASTRO DO PROCESSO -->
-        <b-modal id="modal-cadastro-processo" size="lg" centered title="Cadastro do Processo">
-          <ModalCadastroProcesso>
-          </ModalCadastroProcesso>
+        <b-modal id="modal-cadastro-processo" size="lg" centered title="Cadastro do Processo" hide-footer>
+          <!--<ModalCadastroProcesso>
+          </ModalCadastroProcesso>-->
+           <ModalDetalhesProcesso >
+           </ModalDetalhesProcesso>
+           <b-button class="bordered" @click="$bvModal.hide('modal-cadastro-processo')">Fechar</b-button>
         </b-modal>
         <!-- DETALHES DO PROCESSO -->
         <b-modal id="modal-detalhes-processo" size="lg" centered title="Detalhes do Processo" hide-footer>
-          <ModalDetalhesProcesso>
+          <ModalDetalhesProcesso >
           </ModalDetalhesProcesso>
         </b-modal>
         <!-- TRAMITAÇÕES DO PROCESSO -->
