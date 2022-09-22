@@ -18,151 +18,19 @@
                         <hr />
                     </b-form-group>
 
-                    <div class="row">
-                        <b-form-group class="font col-sm-5 col-md-5 col-lg-5">
-                            <label>Nº Procedimento: <span class="text-danger">*</span></label>
-                            <b-form-input type="text" v-model="form.nProcedimento" required
-                             placeholder="Procedimento/Expediente"></b-form-input>                             
-                        </b-form-group> 
+                    <div v-show="!isLoading"> 
+                        <detalhes-processo  ref='formDetalhes' />       
+                    </div>                             
+                                         
+                    <!--<template class="py-2 mt-10" align="right">  -->
+                        
+                    <template>  
+                        <!--<b-button class="mr-3" @click="$bvModal.hide('modal-detalhes-processo')">Fechar</b-button>  -->
+                     <!--  <slot name="buttons"></slot>-->
+                       <b-button class="bordered" type="submit" variant="success">Salvar</b-button>
+                    </template>
 
-                        <b-form-group label="Tipo:" class="font col-sm-3 col-md-3 col-lg-3">
-                            <b-form-select v-model="form.tipoProcesso">
-                                <b-form-select-option value="">-- Selecione --</b-form-select-option>
-                                <b-form-select-option v-for="option in optionsTipoProcesso" :value="option.value"
-                                   :key="option.value"> {{ option.texto }}
-                                </b-form-select-option>                                
-                            </b-form-select>
-                        </b-form-group>
-
-                        <b-form-group class="font col-sm-3 col-md-3 col-lg-3">
-                            <label>Prazo total: <span class="text-danger">*</span></label>
-                            <b-form-input type="text" v-model="form.qtdDiasPrazo" required
-                            v-mask="'######'"
-                            placeholder="em dias úteis"></b-form-input>
-                        </b-form-group>
-                    </div>
-
-                    <div class="row">
-                        <b-form-group label="Órgão Demandante:" class="font col-sm-5 col-md-5 col-lg-5">
-                            <b-form-select size="sm" v-model="form.orgaoDemandante">
-                                <b-form-select-option value="">-- Selecione --</b-form-select-option>
-                                 <b-form-select-option v-for="option in optionsOrgaos" :value="option.value"
-                                   :key="option.value"> {{ option.texto }}
-                                </b-form-select-option>
-                            </b-form-select>
-                        </b-form-group>                       
-                          
-                        <b-form-group label="Data do Processo:" class="font col-sm-3 col-md-3 col-lg-3">
-                            <b-form-input class="bordered margin-field" type="text" v-model="datas.dataProcessoBR" placeholder="dd/mm/aaaa"
-                                v-mask="'##/##/####'"></b-form-input>                          
-                        </b-form-group>
-
-                        <b-form-group label="Data Recebimento:" class="font col-sm-3 col-md-3 col-lg-3">
-                            <b-form-input class="bordered margin-field" type="text" v-model="datas.dataRecebimentoBR" placeholder="dd/mm/aaaa"
-                                v-mask="'##/##/####'"></b-form-input>                          
-                        </b-form-group>
-
-                        <b-form-group label="Hora Recebimento:" class="font col-sm-3 col-md-3 col-lg-3">
-                            <b-form-input type="time" v-model="form.horaRecebimento"></b-form-input>
-                        </b-form-group>
-
-                        <b-form-group label="Data Final Limite:" class="font col-sm-3 col-md-3 col-lg-3">
-                            <b-form-input class="bordered margin-field" type="text" v-model="datas.dataLimiteBR" placeholder="dd/mm/aaaa"
-                                v-mask="'##/##/####'"></b-form-input>                          
-                        </b-form-group>
-
-                    </div>
-
-                    <div class="row">
-                        <b-form-group label="Assunto:" class="font col-sm-7 col-md-7 col-lg-7">
-                            <b-form-input type="text" v-model="form.assunto"></b-form-input>
-                        </b-form-group>
-
-                        <b-form-group label="Classificação:" class="font col-sm-5 col-md-5 col-lg-5">
-                            <b-form-select size="sm" v-model="form.classificacao">                               
-                                 <b-form-select-option value="">-- Selecione --</b-form-select-option>
-                                 <b-form-select-option v-for="option in optionsClassificacao" :value="option.value"
-                                   :key="option.value"> {{ option.texto }}
-                                </b-form-select-option>
-                            </b-form-select>
-                        </b-form-group>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-7">
-                            <div class="row">
-                                <b-form-group label="Objeto:" class="font col-sm-12 col-md-12 col-lg-12">
-                                    <b-form-textarea rows="2" max-rows="2" v-model="form.objeto"></b-form-textarea>
-                                </b-form-group>
-                            </div>
-                            <div class="row">
-                                <b-form-group label="Responsável:" class="font col-sm-12 col-md-12 col-lg-12">
-                                    <!--<b-form-select size="sm" v-model="form.responsavel">
-                                        <b-form-select-option value="">-- Selecione --</b-form-select-option>
-                                        <b-form-select-option v-for="option in optionsResponsavel" :value="option.value"
-                                        :key="option.value"> {{ option.texto }}
-                                        </b-form-select-option>
-                                    </b-form-select>-->
-                                    <v-select style="font-size: 0.85rem" :options="optionsResponsavel" class="font" label="texto"
-                                        v-model="responsavelSelecionado"/>
-                                </b-form-group>
-                            </div>
-                            <div class="row">
-                                <b-form-group label="Descrição:" class="font col-sm-12 col-md-12 col-lg-12">
-                                    <b-form-textarea rows="4" max-rows="4" v-model="form.observacao"></b-form-textarea>
-                                </b-form-group>
-                            </div>
-                        </div>
-
-                        <!-- ÁREA DO SIGED -->
-                        <div class="col-5">
-                            <div class="row">
-                                <b-form-checkbox v-model="form.requerSIGED" @change="exibirCampoSIGED()" switch
-                                    class="font col-sm-2 col-md-2 col-lg-2">Requer SIGED
-                                </b-form-checkbox>
-
-                                <b-form-group label="" class="ml-4 mt-2 mb-0 font col-sm-9 col-md-9 col-lg-9"
-                                    v-show="exibirRegistroSIGED">
-                                    <b-form-input :placeholder="'Nº SIGED'" type="text" v-model="form.nSIGED">
-                                    </b-form-input>
-                                </b-form-group>
-                            </div>
-                            <div class="row">
-                                <b-form-group class="titulo col-sm-12 col-md-12 col-lg-12" label="Dados do SIGED:"
-                                    label-size="lg">
-                                    <hr />
-                                </b-form-group>
-                                <div class="col-12">
-                                    <div class="row">
-                                        <b-form-group label="Data Processo:" class="font col-sm-6 col-md-6 col-lg-6">
-                                            <b-form-input disabled v-model="form.dataCadSIGED" placeholder="dd/mm/aaaa">
-                                            </b-form-input>
-                                        </b-form-group>      
-                                        <b-form-group label="Permanência:" class="font col-sm-6 col-md-6 col-lg-6">
-                                            <b-form-input disabled type="text" v-model="form.permanencia">
-                                            </b-form-input>
-                                        </b-form-group>
-                                    </div>
-                                    <div class="row">
-                                        <b-form-group label="Caixa Atual:" class="font col-sm-6 col-md-6 col-lg-6">
-                                            <b-form-input disabled type="text" v-model="form.caixaAtual"></b-form-input>
-                                        </b-form-group>
-
-                                        <b-form-group label="Tramitação:" class="font col-sm-6 col-md-6 col-lg-6">
-                                            <b-form-input disabled type="text" v-model="form.tramitacao"></b-form-input>
-                                        </b-form-group>
-                                    </div>
-
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-            <div class="py-2 mt-3" align="right">     
-                <b-button class="mr-3" @click="$bvModal.hide('modal-detalhes-processo')">Fechar</b-button>  
-                <b-button class="bordered" type="submit" variant="success">Salvar</b-button>
-            </div>
-
+                
                 </b-form>
             </div>
 
@@ -180,10 +48,9 @@ import ReturnMessage from "@/components/ReturnMessage.vue";
 import dataMixin from "@/mixins/dataMixin";
 import RestApiService from "@/services/rest/service";
 import LoadingSpinner from "@/components/LoadingSpinner.vue";
-import { TipoProcessoSeeder } from "@/type/tipoProcesso";
-import { OrgaosSeeder } from "@/type/orgaos";
-import { ClassificacaoSeeder } from "@/type/classificacao";
-import { ResponsavelSeeder } from "@/type/responsavel";
+import DetalhesProcesso from "../../../components/DetalhesProcesso.vue";
+import { Processo } from '@/type/processo';
+
 
 export default Vue.extend({
     directives: { mask },
@@ -196,6 +63,7 @@ export default Vue.extend({
         Notifications,
         ReturnMessage,
         LoadingSpinner,
+        DetalhesProcesso,
     },
     mixins: [        
         dataMixin,
@@ -203,81 +71,48 @@ export default Vue.extend({
     props: ["id"],
     data() {
         return {
-            show: false as boolean,
-            exibirMaisDetalhes: false as boolean,
-            exibirRegistroPrazo: false as boolean,
-            exibirRegistroSIGED: false as boolean,   
+            show: false as boolean, 
+            isLoading: true as boolean,           
             Notificacao: [] as Array<Notificacao>,
             Message: [] as Array<Notificacao>,
             loading: false as boolean,
             alert: false as boolean,  
-            optionsTipoProcesso: TipoProcessoSeeder,   
-            optionsOrgaos: OrgaosSeeder, 
-            optionsClassificacao: ClassificacaoSeeder,   
-            optionsResponsavel: ResponsavelSeeder,    
-            responsavelSelecionado: {
-                    texto: "Selecione um responsável" as string,
-                    value: "" as string,
-            },    
-            datas: {
-                dataProcessoBR: "" as string,
-                dataRecebimentoBR: "" as string,
-            },
-            form: {                
-                nProcedimento: "" as string,
-                nExpediente: "" as string,
-                assunto: "" as string,
-                caixaSIGED: "" as string,
-                tipoProcesso: "" as string,
-                status: "" as string,
-                orgaoDemandante: "" as string,
-                classificacao: "" as string,
-                qtdDiasPrazo: "" as string,
-                dataProcesso: "" as string,
-                dataRecebimento: "" as string,
-                horaRecebimento: "" as string,
-                objeto: "" as string,
-                responsavel: "" as string,
-                observacao: "" as string,
-                nSIGED: "" as string,
-                dataCadSIGED: "" as string,
-                permanencia: "" as string,
-                caixaAtual: "" as string,
-                tramitacao: "" as string,
-                requerSIGED: false as boolean,
-                monitoraPrazo: "" as string,
-                maisDetalhes: false as boolean,
-            }, 
+            formDados: {} as any,  
+            carregarForm: {} as Processo,  
         }
-    },  
+    },    
 
     mounted() {
-            const path = this.$route.path;
+        this.isLoading = false
+        //pega os dados do componente filho (detalhes do processo)
+        this.formDados = this.$refs.formDetalhes
+
+           /* const path = this.$route.path;
             const acao = "/editar";
 
             if (path.includes(acao)) {
                 this.carregarDados();            
-            }
-    },  
-       
+            }*/
+
+        this.carregarDados();            
+    
+    }, 
+            
     methods: {
         submit() {
             let acao = this.id ? "put" : "post"
             let url = this.id ? "processo/update" : "processo";
-            
-            //pegar o id do responsavel selecionado   
-            this.form.responsavel = this.responsavelSelecionado.value   
 
-            if (this.validarCampos()) {            
+            //pegar todos os valores já para armazenar
+            this.formDados.getValues()           
 
-              //formatar datas para salvar no banco de dados  
-              this.formatDatasBrToEn()  
+            if (this.validarCampos()) { 
 
-              console.log(JSON.stringify(this.form))
+              console.log('JSON: ',JSON.stringify(this.formDados.form))
               
               this.loading = true  
-
-              RestApiService.salvar(url, this.form, acao)
+            
+              RestApiService.salvar(url, this.formDados.form, acao)
                 .then((res) => {
                     if (acao == "put") {
                         this.adicionarAlert(
@@ -323,48 +158,54 @@ export default Vue.extend({
                     "alert",
                     "Realize as validações exibidas no topo desta página!"
                 );
-            }           
+            }                  
         },
- 
+
         carregarDados(): void {
             this.loading = true;
 
+            //this.formDados.form.objeto = 'abc'
+            //console.log('carregar: ',this.formDados.form )
+            
+            
             RestApiService.get("processo/listid", this.id)
                 .then((res: any) => {
-              
-                this.form.nProcedimento = res.data.nProcedimento
-                this.form.nExpediente = res.data.nExpediente
-                this.form.assunto = res.data.assunto
-                this.form.caixaSIGED = res.data.caixaSIGED
-                this.form.tipoProcesso = res.data.tipoProcesso
-                this.form.status = res.data.status
-                this.form.orgaoDemandante = res.data.orgaoDemandante
-                this.form.classificacao = res.data.classificacao
-                this.form.qtdDiasPrazo = res.data.qtdDiasPrazo
-                this.form.dataProcesso = res.data.dataProcesso
-                this.form.dataRecebimento = res.data.dataRecebimento
-                this.form.horaRecebimento = res.data.horaRecebimento
-                this.form.objeto = res.data.objeto
-                this.form.responsavel = res.data.responsavel
-                this.form.observacao = res.data.observacao
-                this.form.nSIGED = res.data.nSIGED
-                this.form.dataCadSIGED = res.data.dataCadSIGED
-                this.form.permanencia = res.data.permanencia
-                this.form.caixaAtual = res.data.caixaAtual
-                this.form.tramitacao = res.data.tramitacao
-                this.form.requerSIGED = res.data.requerSIGED
-                this.form.monitoraPrazo = res.data.monitoraPrazo
-                this.form.maisDetalhes = res.data.maisDetalhes
 
+                this.formDados.form.idProcesso =   res.data.idProcesso 
+                this.formDados.form.numProcedimento = res.data.numProcedimento
+                this.formDados.form.idTipoProcesso =  res.data.idTipoProcesso
+                this.formDados.form.prazoTotal = res.data.prazoTotal
+                this.formDados.form.idOrgaoDemandante = res.data.orgaoSelecionado.value
+                this.formDados.form.dataProcesso = res.data.dataProcesso
+                this.formDados.form.dataRecebimento = res.data.dataRecebimento
+                this.formDados.form.horaRecebimento =  res.data.horaRecebimento
+                this.formDados.form.idAssunto =  res.data.value
+                this.formDados.form.idClassificacao = res.data.idClassificacao
+                this.formDados.form.objeto =  res.data.objeto
+                this.formDados.form.requerSIGED = res.data.requerSIGED
+                this.formDados.form.numProcessoSIGED = res.data.numProcessoSIGED
+                this.formDados.form.dataProcessoSIGED = res.data.dataProcessoSIGED
+                this.formDados.form.permanenciaSIGED = res.data.permanenciaSIGED
+                this.formDados.form.caixaAtualSIGED =  res.data.caixaAtualSIGED
+                this.formDados.form.tramitacaoSIGED =  res.data.tramitacaoSIGED
+                this.formDados.form.idResponsavel = res.data.value
+                this.formDados.form.descricao = res.data.descricao
+                this.formDados.form.dataLimitePrazo =  res.data.dataLimitePrazo
+                this.formDados.form.diasPercorridos =  res.data.diasPercorridos
+                this.formDados.form.diasExpirados = res.data.diasExpirados
+                this.formDados.form.statusPrazo =  res.data.statusPrazo
+                this.formDados.form.statusProcesso = res.data.statusProcesso
+                this.formDados.form.sigiloso = res.data.sigiloso
+                this.formDados.form.observacao = res.data.observacao    
+                
                 //formatar datas para formato br
-                this.formatDatasEnToBr()
-
+                this.formDados.formatDatasEnToBr()
             })
             .catch((e) => {
-                this.adicionarAlert(
+              /*  this.adicionarAlert(
                     "alert",
                     "Houve um erro ao carregar os dados do paciente. Tente novamente!"
-                );
+                );*/
           
             })
             .finally(() => {
@@ -372,8 +213,66 @@ export default Vue.extend({
             });
         },
 
-        fechaAlert(): void {
-            this.alert = false;
+        validarCampos(): boolean {
+
+            if (!this.formDados.form.numProcedimento) {
+                this.adicionarNotificacao(
+                "danger",
+                "Nº Procedimento é obrigatório!"
+                );
+            }
+
+           if(!this.formDados.form.prazoTotal){
+                this.adicionarNotificacao(
+                "danger",
+                "Prazo Total é obrigatório!"
+                );
+            }
+
+              if(this.formDados.form.requerSIGED === true && !this.formDados.form.numProcessoSIGED){
+                this.adicionarNotificacao(
+                "danger",
+                "Nº SIGED é obrigatório quando o campo 'Requer SIGED' for selecionado!"
+                );
+            }
+         
+            if(!this.formDados.validarDataProcesso()){
+                this.adicionarNotificacao(
+                "danger",
+                "Data do Processo informada é inválida!"
+                );
+            }
+
+            if(!this.formDados.validarDataRecebimento()){
+                this.adicionarNotificacao(
+                "danger",
+                "Data do Recebimento informada é inválida!"
+                );
+            }  
+            
+            if(!this.formDados.validarDataFinalLimite()){
+                this.adicionarNotificacao(
+                "danger",
+                "Data Final Limite informada é inválida!"
+                );
+            }            
+
+            if (this.Notificacao.length > 0) {
+                //ir para o início da página onde aparecem as mensagens
+                window.scrollTo(0, 0);               
+
+                this.adicionarAlert(
+                    "alert",
+                     "Realize as validações exibidas no topo desta página!"
+                );
+
+                setTimeout(() => {
+                this.Notificacao = [];
+                }, 10000);
+                return false;
+            } else {
+                return true;
+            }
         },
 
         adicionarAlert(tipo: string, mensagem: string): void {
@@ -392,101 +291,10 @@ export default Vue.extend({
             });
         },
 
-        formatDatasBrToEn() {
-            this.form.dataProcesso = this.datas.dataProcessoBR ? 
-                   dataMixin.methods.dataFormatEn(this.datas.dataProcessoBR) : "";
-
-            this.form.dataRecebimento = this.datas.dataRecebimentoBR ? 
-                   dataMixin.methods.dataFormatEn(this.datas.dataRecebimentoBR) : ""; 
-        },
-
-        formatDatasEnToBr() {
-            this.datas.dataProcessoBR = this.form.dataProcesso ? 
-                   dataMixin.methods.dataFormatEn(this.form.dataProcesso) : "";
-
-            this.datas.dataRecebimentoBR = this.form.dataRecebimento ? 
-                   dataMixin.methods.dataFormatEn(this.form.dataRecebimento) : "";
-        },
-        
-        validarCampos(): boolean {
-
-            if (!this.form.nProcedimento) {
-                this.adicionarNotificacao(
-                "danger",
-                "Nº Procedimento é obrigatório!"
-                );
-            }
-
-            if(!this.form.qtdDiasPrazo){
-                this.adicionarNotificacao(
-                "danger",
-                "Prazo Total é obrigatório!"
-                );
-            }
-
-            if(this.form.requerSIGED === true && !this.form.nSIGED){
-                this.adicionarNotificacao(
-                "danger",
-                "Nº SIGED é obrigatório quando o campo 'Requer SIGED' for selecionado!"
-                );
-            }
-
-            if(this.datas.dataProcessoBR && !dataMixin.methods.validarData(this.datas.dataProcessoBR) ) {
-                this.adicionarNotificacao(
-                "danger",
-                "Data do Processo informada é inválida!"
-                );
-            }
-
-            if(this.datas.dataRecebimentoBR && !dataMixin.methods.validarData(this.datas.dataRecebimentoBR) ) {
-                this.adicionarNotificacao(
-                "danger",
-                "Data do Recebimento informada é inválida!"
-                );
-            }
-
-            if (this.Notificacao.length > 0) {
-                //ir para o início da página onde aparecem as mensagens
-                window.scrollTo(0, 0);
-                setTimeout(() => {
-                this.Notificacao = [];
-                }, 5000);
-                return false;
-            } else {
-                return true;
-            }
-        },
-
-        exibeMaisDetalhes(): void {
-            if (
-                this.form.maisDetalhes === true
-            ) {
-                this.exibirMaisDetalhes = true;
-            } else {
-                this.exibirMaisDetalhes = false;
-            }
-        },
-        exibirCampoPrazo(): void {
-            if (
-                this.form.monitoraPrazo == "sim"
-            ) {
-                this.exibirRegistroPrazo = true;
-            } else {
-                this.exibirRegistroPrazo = false;
-            }
-        },
-        exibirCampoSIGED(): void {
-            if (
-                this.form.requerSIGED === true
-            ) {
-                this.exibirRegistroSIGED = true;
-            } else {
-                this.exibirRegistroSIGED = false;
-            }
-        },
-        voltar(): void {
-            this.$router.push("/");
-        }
+        fechaAlert(): void {
+            this.alert = false;
+        },  
+       
     },
    
 });

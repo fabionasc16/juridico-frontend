@@ -148,12 +148,12 @@
 
               <template v-slot:cell(diasRestantes)="data">
                 <b-badge :variant="colorDiasRestantes(data.item.diasRestantes)">
-                   {{data.item.diasRestantes}} dias <br>({{statusDiasRestantes(data.item.diasRestantes)}})
+                   {{data.item.diasRestantes}}
                 </b-badge>
               </template>
 
               <template v-slot:cell(qtdReiteracao)="data">  
-                  <b-badge variant="light">{{data.item.qtdReiteracao}} </b-badge>             
+                  <b-badge :variant="colorReiteracao(data.item.qtdReiteracao)">{{data.item.qtdReiteracao}} </b-badge>             
               </template>
              
               <!-- BOTÕES DE AÇÕES -->
@@ -202,14 +202,18 @@
 
         <!-- MODAL -->
         <!-- CADASTRO DO PROCESSO -->
-        <b-modal id="modal-cadastro-processo" size="lg" centered title="Cadastro do Processo">
-          <ModalCadastroProcesso>
-          </ModalCadastroProcesso>
+        <b-modal id="modal-cadastro-processo" size="lg" centered title="Cadastro do Processo" hide-footer>
+          <!--<ModalCadastroProcesso>
+          </ModalCadastroProcesso>-->
+           <ModalDetalhesProcesso >
+           </ModalDetalhesProcesso>
+           <b-button class="bordered" @click="$bvModal.hide('modal-cadastro-processo')">Fechar</b-button>
         </b-modal>
         <!-- DETALHES DO PROCESSO -->
         <b-modal id="modal-detalhes-processo" size="lg" centered title="Detalhes do Processo" hide-footer>
-          <ModalDetalhesProcesso>
+          <ModalDetalhesProcesso >
           </ModalDetalhesProcesso>
+         
         </b-modal>
         <!-- TRAMITAÇÕES DO PROCESSO -->
         <b-modal id="modal-tramitacoes-processo" size="lg" centered title="Tramitações do Processo">
@@ -341,6 +345,13 @@ export default Vue.extend({
       this.form.caixaAtualSIGED = this.caixaSigedSelecionada.value
 
       console.log(JSON.stringify(this.form))
+    },
+    colorReiteracao(reiteracao: any) : any {
+            if(reiteracao > 0) {
+              return 'info'
+            }
+            
+            return "light"            
     },
     //dias corridos
     colorDiasRestantes(prazo: any) : any {
