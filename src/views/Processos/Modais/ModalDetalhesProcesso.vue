@@ -20,15 +20,12 @@
 
                     <div v-show="!isLoading"> 
                         <detalhes-processo  ref='formDetalhes' />       
-                    </div>                             
-                                         
-                    <!--<template class="py-2 mt-10" align="right">  -->
+                    </div>                                 
                         
-                    <template>  
-                        <!--<b-button class="mr-3" @click="$bvModal.hide('modal-detalhes-processo')">Fechar</b-button>  -->
-                     <!--  <slot name="buttons"></slot>-->
-                       <b-button class="bordered" type="submit" variant="success">Salvar</b-button>
-                    </template>
+                    <div class="py-2 mt-10" align="right">                        
+                       <slot name="buttons"></slot>
+                       <b-button class="bordered ml-2" type="submit" variant="success">Salvar</b-button>
+                    </div>
 
                 
                 </b-form>

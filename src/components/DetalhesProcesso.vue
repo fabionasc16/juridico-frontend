@@ -49,12 +49,12 @@
                                 v-mask="'##/##/####'"></b-form-input>                          
                         </b-form-group>
 
-                         <b-form-group label="Valor Multa:" class="font col-sm-3 col-md-3 col-lg-3">
-                               <!--<CurrencyInput 
+                       <!--  <b-form-group label="Valor Multa:" class="font col-sm-3 col-md-3 col-lg-3">
+                               <CurrencyInput 
                                     v-model="form.valorMulta"
                                     :options="optionsMoney"
-                                /> -->                            
-                         </b-form-group>
+                                />                            
+                         </b-form-group> -->
                          
 
                     </div>

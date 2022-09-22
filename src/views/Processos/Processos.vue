@@ -206,29 +206,40 @@
           <!--<ModalCadastroProcesso>
           </ModalCadastroProcesso>-->
            <ModalDetalhesProcesso >
+              <template v-slot:buttons>
+                 <b-button class="bordered" @click="$bvModal.hide('modal-cadastro-processo')">Fechar</b-button>
+              </template>
            </ModalDetalhesProcesso>
-           <b-button class="bordered" @click="$bvModal.hide('modal-cadastro-processo')">Fechar</b-button>
+          
         </b-modal>
         <!-- DETALHES DO PROCESSO -->
         <b-modal id="modal-detalhes-processo" size="lg" centered title="Detalhes do Processo" hide-footer>
           <ModalDetalhesProcesso >
+            <template v-slot:buttons>
+                <b-button class="bordered" @click="$bvModal.hide('modal-detalhes-processo')">Fechar</b-button>
+            </template>
           </ModalDetalhesProcesso>
-         
+            
         </b-modal>
         <!-- TRAMITAÇÕES DO PROCESSO -->
         <b-modal id="modal-tramitacoes-processo" size="lg" centered title="Tramitações do Processo">
-          <ModalTramitacoesProcesso>
+          <ModalTramitacoesProcesso>             
           </ModalTramitacoesProcesso>
         </b-modal>
         <!-- REITERAR PROCESSO -->
         <b-modal id="modal-reiterar-processo" size="lg" centered title="Reiterar Processo">
-          <ModalReiterarProcesso>
+          <ModalReiterarProcesso>             
           </ModalReiterarProcesso>
         </b-modal>
         <!-- DUPLICAR PROCESSO -->
-        <b-modal id="modal-duplicar-processo" size="lg" centered title="Duplicar Processo">
-          <ModalDuplicarProcesso>
-          </ModalDuplicarProcesso>
+        <b-modal id="modal-duplicar-processo" size="lg" centered title="Duplicar Processo" hide-footer>
+          <!--<ModalDuplicarProcesso>            
+          </ModalDuplicarProcesso>-->
+            <ModalDetalhesProcesso >
+            <template v-slot:buttons>
+                <b-button class="bordered" @click="$bvModal.hide('modal-duplicar-processo')">Fechar</b-button>
+            </template>
+          </ModalDetalhesProcesso>
         </b-modal>
         <!-- //modal -->
 

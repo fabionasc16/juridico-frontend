@@ -4,8 +4,8 @@ export type StatusPrazo = {
 };
 
 export const StatusPrazoSeeder: Array<StatusPrazo> = [
-  { texto: "Dentro do Prazo", value: "1" },
-  { texto: "Próximo a expirar", value: "2" },
-  { texto: "A expirar", value: "3" },
-  { texto: "Expirado", value: "4" },
+  { texto: "Crítico", value: "1" },
+  { texto: "Atenção", value: "2" },
+  { texto: "Normal", value: "3" },
+  { texto: "Expirado", value: "9" },
 ];
