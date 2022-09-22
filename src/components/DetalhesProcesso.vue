@@ -50,11 +50,11 @@
                         </b-form-group>
 
                          <b-form-group label="Valor Multa:" class="font col-sm-3 col-md-3 col-lg-3">
-                            <b-form-input class="bordered margin-field" type="text" v-model="form.valorMulta" placeholder="R$ 00,00"
-                               ></b-form-input>        
-                               
-                                 <!--<money v-model="form.valorMulta" v-bind="money"></money> {{form.valorMulta}}-->
-                        </b-form-group>
+                               <CurrencyInput 
+                                    v-model="form.valorMulta"
+                                    :options="optionsMoney"
+                                />                             
+                         </b-form-group>
 
                     </div>
 
@@ -172,7 +172,7 @@ import { AssuntoSeeder } from "@/type/assunto";
 import { ClassificacaoSeeder } from "@/type/classificacao";
 import { ResponsavelSeeder } from "@/type/responsavel";
 import { Processo } from '@/type/processo';
-//import {Money} from 'v-money'
+import CurrencyInput from './CurrencyInput.vue'
 
 export default Vue.extend({
     directives: { mask },
@@ -180,8 +180,8 @@ export default Vue.extend({
         BIconSearch,
         BIconJournalPlus,
         BIconPlusCircle,
-        BIconInfoCircle,  
-       // Money
+        BIconInfoCircle, 
+        CurrencyInput
     },
     mixins: [        
         dataMixin,
@@ -214,15 +214,21 @@ export default Vue.extend({
                 dataRecebimentoBR: "" as string,
                 dataLimitePrazoBR: "" as string,
             },           
-            form: {} as Processo,  
-            money: {
-                decimal: ',',
-                thousands: '.',
-                prefix: 'R$ ',
-                suffix: ' #',
+            form: {} as Processo,     
+            optionsMoney: {
+                locale: 'pt-BR',
+                currency: 'BRL',
+                //currencyDisplay: 'hidden',
                 precision: 2,
-                masked: false
-            }
+                hideCurrencySymbolOnFocus: true,
+                hideGroupingSeparatorOnFocus: true,
+                hideNegligibleDecimalDigitsOnFocus: true,
+                autoDecimalDigits: false,
+                exportValueAsInteger: false,
+                autoSign: false,
+                useGrouping: true
+             }        
+          
         }       
     },  
 
