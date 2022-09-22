@@ -213,6 +213,7 @@
         <b-modal id="modal-detalhes-processo" size="lg" centered title="Detalhes do Processo" hide-footer>
           <ModalDetalhesProcesso >
           </ModalDetalhesProcesso>
+         
         </b-modal>
         <!-- TRAMITAÇÕES DO PROCESSO -->
         <b-modal id="modal-tramitacoes-processo" size="lg" centered title="Tramitações do Processo">

@@ -50,11 +50,12 @@
                         </b-form-group>
 
                          <b-form-group label="Valor Multa:" class="font col-sm-3 col-md-3 col-lg-3">
-                               <CurrencyInput 
+                               <!--<CurrencyInput 
                                     v-model="form.valorMulta"
                                     :options="optionsMoney"
-                                />                             
+                                /> -->                            
                          </b-form-group>
+                         
 
                     </div>
 
@@ -143,9 +144,7 @@
                                     </div>
 
                                 </div>
-                            </div>
-
-                            
+                            </div>                            
 
                         </div>
 
@@ -172,7 +171,7 @@ import { AssuntoSeeder } from "@/type/assunto";
 import { ClassificacaoSeeder } from "@/type/classificacao";
 import { ResponsavelSeeder } from "@/type/responsavel";
 import { Processo } from '@/type/processo';
-import CurrencyInput from './CurrencyInput.vue'
+//import CurrencyInput from './CurrencyInput.vue'
 
 export default Vue.extend({
     directives: { mask },
@@ -181,7 +180,7 @@ export default Vue.extend({
         BIconJournalPlus,
         BIconPlusCircle,
         BIconInfoCircle, 
-        CurrencyInput
+        //CurrencyInput
     },
     mixins: [        
         dataMixin,

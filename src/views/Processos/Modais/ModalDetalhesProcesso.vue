@@ -26,7 +26,8 @@
                         
                     <template>  
                         <!--<b-button class="mr-3" @click="$bvModal.hide('modal-detalhes-processo')">Fechar</b-button>  -->
-                        <b-button class="bordered" type="submit" variant="success">Salvar</b-button>
+                     <!--  <slot name="buttons"></slot>-->
+                       <b-button class="bordered" type="submit" variant="success">Salvar</b-button>
                     </template>
 
                 
