@@ -25,4 +25,5 @@ export type Processo = {
     statusProcesso: string, 
     sigiloso: boolean,
     observacao: string,   
+    valorMulta: string
 };
