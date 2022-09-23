@@ -1,10 +1,10 @@
 <template>
     <div>
-        <!-- CARD DE EDIÇÃO -->
+        <!-- CARD DE CADASTRO -->
+        <div class="card">
             <div class="col-12">
-                <b-form @submit.prevent="submit">
-                                        
-                    <notifications :notifications="Notificacao"></notifications>      
+
+                  <notifications :notifications="Notificacao"></notifications>      
 
                     <div v-if="alert">
                         <ReturnMessage :message="Message" :fechaAlert="fechaAlert"></ReturnMessage>
@@ -13,21 +13,54 @@
                     <div v-if="loading">
                         <LoadingSpinner></LoadingSpinner>
                     </div>
-                    
-                    <b-form-group class="titulo m-0 p-0" label="Informações de entrada do processo" label-size="lg">
+
+                <b-form @submit.prevent="submit">
+
+                    <b-form-group class="titulo" label="Informações pessoais" label-size="lg">
                         <hr />
                     </b-form-group>
 
-                    <div v-show="!isLoading"> 
-                        <detalhes-processo  ref='formDetalhes' />       
-                    </div>                                 
-                        
+                    <!-- 1ª LINHA (CPF + NOME) -->
+                    <div class="row">
+                        <b-form-group label="CPF:" class="font col-sm-5 col-md-5 col-lg-5">
+                            <b-form-input :placeholder="'Digite seu CPF '" type="text" v-model="form.cpf"
+                                v-mask="'###.###.###-##'"></b-form-input>
+                        </b-form-group>
+
+                        <b-form-group label="Nome completo:" class="font col-sm-7 col-md-7 col-lg-7">
+                            <b-form-input :placeholder="'Digite seu Nome Completo'" type="text"
+                                v-model="form.nome">
+                            </b-form-input>
+                        </b-form-group>
+                    </div>
+                    <div class="row">
+                        <!-- 2ª LINHA  -->
+                        <b-form-group label="Telefone:" class="font col-sm-5 col-md-5 col-lg-5">
+                            <b-form-input :placeholder="'(00) 00000-0000'" type="text"
+                                v-model="form.telefone" v-mask="'(##) #####-####'"></b-form-input>
+                        </b-form-group>
+
+                        <b-form-group label="Email:" class="font col-sm-7 col-md-7 col-lg-7">
+                            <b-form-input :placeholder="'Digite seu Email'" type="email" v-model="form.email">
+                            </b-form-input>
+                        </b-form-group>
+                    </div>
+                    <div class="row">
+                        <!-- 3ª LINHA  -->                      
+                        <b-form-group label="Registro OAB:" class="font col-sm-5 col-md-5 col-lg-5">
+                            <b-form-input :placeholder="'Digite seu Registro OAB'" type="text" v-model="form.registroOAB">
+                            </b-form-input>
+                        </b-form-group>
+                    </div>
+
                     <div class="py-2 mt-10" align="right">                        
-                       <slot name="buttons"></slot>
+                       <b-button class="bordered" @click="$bvModal.hide('modal-cadastro-responsavel')">Fechar</b-button>
                        <b-button class="bordered ml-2" type="submit" variant="success">Salvar</b-button>
-                    </div>                
+                    </div>
+
                 </b-form>
             </div>
+        </div>
 
     </div>
 </template>
@@ -38,17 +71,16 @@ import HeaderPage from '@/components/HeaderPage.vue';
 import { mask } from "vue-the-mask";
 import Notifications from "@/components/Notifications.vue";
 import { BIconSearch, BIconPlusCircle, BIconInfoCircle, BIconJournalPlus } from 'bootstrap-vue'
+import { Responsavel } from '@/type/responsavel';
 import { Notificacao } from "@/type/notificacao";
 import ReturnMessage from "@/components/ReturnMessage.vue";
-import dataMixin from "@/mixins/dataMixin";
 import RestApiService from "@/services/rest/service";
 import LoadingSpinner from "@/components/LoadingSpinner.vue";
-import DetalhesProcesso from "../../../components/DetalhesProcesso.vue";
-import { Processo } from '@/type/processo';
-
+import ValidarCpfMixin from "@/mixins/validarCpfMixin";
 
 export default Vue.extend({
     directives: { mask },
+    mixins: [ValidarCpfMixin],
     components: {
         HeaderPage,
         BIconSearch,
@@ -58,56 +90,45 @@ export default Vue.extend({
         Notifications,
         ReturnMessage,
         LoadingSpinner,
-        DetalhesProcesso,
     },
-    mixins: [        
-        dataMixin,
-    ],
-    props: ["id"],
+    props: ['id'],
     data() {
         return {
-            show: false as boolean, 
-            isLoading: true as boolean,           
+            rows: 100,
+            currentPage: 1,
+            stickyHeader: true,
+            noCollapse: true,
+            show: false as boolean,
+            form: {} as Responsavel,      
             Notificacao: [] as Array<Notificacao>,
             Message: [] as Array<Notificacao>,
             loading: false as boolean,
-            alert: false as boolean,  
-            formDados: {} as any,  
-            carregarForm: {} as Processo,  
-        }
-    },    
-
+            alert: false as boolean,     
+            isLoading: false as boolean,
+        };
+    },
     mounted() {
         this.isLoading = false
-        //pega os dados do componente filho (detalhes do processo)
-        this.formDados = this.$refs.formDetalhes
-
+        
            /* const path = this.$route.path;
             const acao = "/editar";
 
             if (path.includes(acao)) {
                 this.carregarDados();            
-            }*/
-
-        this.carregarDados();            
-    
+            }*/          
     }, 
-            
     methods: {
-        submit() {
+         submit() {
             let acao = this.id ? "put" : "post"
-            let url = this.id ? "processo/update" : "processo";
-
-            //pegar todos os valores já para armazenar
-            this.formDados.getValues()           
-
+            let url = this.id ? "responsavel/update" : "responsavel";
+                    
             if (this.validarCampos()) { 
 
-              console.log('JSON: ',JSON.stringify(this.formDados.form))
+              console.log('JSON: ',JSON.stringify(this.form))
               
               this.loading = true  
             
-              RestApiService.salvar(url, this.formDados.form, acao)
+              RestApiService.salvar(url, this.form, acao)
                 .then((res) => {
                     if (acao == "put") {
                         this.adicionarAlert(
@@ -157,49 +178,23 @@ export default Vue.extend({
         },
 
         carregarDados(): void {
-            this.loading = true;
+            this.loading = true;       
+                        
+            RestApiService.get("responsavel/listid", this.id)
+                .then((res: any) => {          
 
-            //this.formDados.form.objeto = 'abc'
-            //console.log('carregar: ',this.formDados.form )
-            
-            
-            RestApiService.get("processo/listid", this.id)
-                .then((res: any) => {
-
-                this.formDados.form.idProcesso =   res.data.idProcesso 
-                this.formDados.form.numProcedimento = res.data.numProcedimento
-                this.formDados.form.idTipoProcesso =  res.data.idTipoProcesso
-                this.formDados.form.prazoTotal = res.data.prazoTotal
-                this.formDados.form.idOrgaoDemandante = res.data.orgaoSelecionado.value
-                this.formDados.form.dataProcesso = res.data.dataProcesso
-                this.formDados.form.dataRecebimento = res.data.dataRecebimento
-                this.formDados.form.horaRecebimento =  res.data.horaRecebimento
-                this.formDados.form.idAssunto =  res.data.value
-                this.formDados.form.idClassificacao = res.data.idClassificacao
-                this.formDados.form.objeto =  res.data.objeto
-                this.formDados.form.requerSIGED = res.data.requerSIGED
-                this.formDados.form.numProcessoSIGED = res.data.numProcessoSIGED
-                this.formDados.form.dataProcessoSIGED = res.data.dataProcessoSIGED
-                this.formDados.form.permanenciaSIGED = res.data.permanenciaSIGED
-                this.formDados.form.caixaAtualSIGED =  res.data.caixaAtualSIGED
-                this.formDados.form.tramitacaoSIGED =  res.data.tramitacaoSIGED
-                this.formDados.form.idResponsavel = res.data.value
-                this.formDados.form.descricao = res.data.descricao
-                this.formDados.form.dataLimitePrazo =  res.data.dataLimitePrazo
-                this.formDados.form.diasPercorridos =  res.data.diasPercorridos
-                this.formDados.form.diasExpirados = res.data.diasExpirados
-                this.formDados.form.statusPrazo =  res.data.statusPrazo
-                this.formDados.form.statusProcesso = res.data.statusProcesso
-                this.formDados.form.sigiloso = res.data.sigiloso
-                this.formDados.form.observacao = res.data.observacao    
-                
-                //formatar datas para formato br
-                this.formDados.formatDatasEnToBr()
+                this.form.idResponsavel =  res.data.idResponsavel 
+                this.form.nome = res.data.nome
+                this.form.cpf =  res.data.cpf
+                this.form.telefone = res.data.telefone
+                this.form.email = res.data.email
+                this.form.registroOAB = res.data.registroOAB               
+               
             })
             .catch((e) => {
-              /*  this.adicionarAlert(
+                /*  this.adicionarAlert(
                     "alert",
-                    "Houve um erro ao carregar os dados do paciente. Tente novamente!"
+                    "Houve um erro ao carregar os dados. Tente novamente!"
                 );*/
           
             })
@@ -207,51 +202,32 @@ export default Vue.extend({
                 this.loading = false;
             });
         },
+       
 
         validarCampos(): boolean {
+            this.Notificacao = [];
 
-            if (!this.formDados.form.numProcedimento) {
+            if (!this.form.nome) {
                 this.adicionarNotificacao(
                 "danger",
-                "Nº Procedimento é obrigatório!"
+                "Nome é obrigatório!"
                 );
             }
 
-           if(!this.formDados.form.prazoTotal){
+           if(!this.form.cpf){
                 this.adicionarNotificacao(
                 "danger",
-                "Prazo Total é obrigatório!"
+                "CPF é obrigatório!"
                 );
-            }
-
-              if(this.formDados.form.requerSIGED === true && !this.formDados.form.numProcessoSIGED){
+            }     
+        
+            if(this.form.cpf && !ValidarCpfMixin.methods.validarCpf(this.form.cpf)){
                 this.adicionarNotificacao(
                 "danger",
-                "Nº SIGED é obrigatório quando o campo 'Requer SIGED' for selecionado!"
+                "CPF inválido!"
                 );
-            }
-         
-            if(!this.formDados.validarDataProcesso()){
-                this.adicionarNotificacao(
-                "danger",
-                "Data do Processo informada é inválida!"
-                );
-            }
-
-            if(!this.formDados.validarDataRecebimento()){
-                this.adicionarNotificacao(
-                "danger",
-                "Data do Recebimento informada é inválida!"
-                );
-            }  
-            
-            if(!this.formDados.validarDataFinalLimite()){
-                this.adicionarNotificacao(
-                "danger",
-                "Data Final Limite informada é inválida!"
-                );
-            }            
-
+            }    
+          
             if (this.Notificacao.length > 0) {
                 //ir para o início da página onde aparecem as mensagens
                 window.scrollTo(0, 0);               
@@ -270,6 +246,7 @@ export default Vue.extend({
             }
         },
 
+
         adicionarAlert(tipo: string, mensagem: string): void {
             this.Message = []        
             this.Message.push({
@@ -284,12 +261,12 @@ export default Vue.extend({
                 type: tipo,
                 message: mensagem,
             });
-        },
+        },            
 
         fechaAlert(): void {
             this.alert = false;
         },  
-       
+
     },
    
 });

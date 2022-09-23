@@ -84,8 +84,8 @@
                             </div>
                             <div class="row">
                                 <b-form-group label="Responsável:" class="font col-sm-12 col-md-12 col-lg-12">                                   
-                                    <v-select style="font-size: 0.85rem" :options="optionsResponsavel" class="font" label="texto"
-                                        v-model="responsavelSelecionado"/>
+                                    <v-select style="font-size: 0.85rem" :options="optionsResponsavel" class="font" label="nome"
+                                        value="idResponsavel" v-model="responsavelSelecionado"/>
                                 </b-form-group>
                             </div>
                             <div class="row">
@@ -197,8 +197,8 @@ export default Vue.extend({
             optionsClassificacao: ClassificacaoSeeder,   
             optionsResponsavel: ResponsavelSeeder,    
             responsavelSelecionado: {
-                    texto: "Selecione um responsável" as string,
-                    value: "" as string,
+                    nome: "Selecione um responsável" as string,
+                    idResponsavel: "" as string,
             },  
             orgaoSelecionado: {
                     texto: "Selecione um órgão demandante" as string,
@@ -296,7 +296,7 @@ export default Vue.extend({
                 this.form.permanenciaSIGED = this.form.permanenciaSIGED ? this.form.permanenciaSIGED: ""
                 this.form.caixaAtualSIGED =  this.form.caixaAtualSIGED ?  this.form.caixaAtualSIGED : ""
                 this.form.tramitacaoSIGED =  this.form.tramitacaoSIGED ? this.form.tramitacaoSIGED : ""
-                this.form.idResponsavel = this.responsavelSelecionado.value ? this.responsavelSelecionado.value : ""
+                this.form.idResponsavel = this.responsavelSelecionado.idResponsavel ? this.responsavelSelecionado.idResponsavel : ""
                 this.form.descricao = this.form.descricao ?  this.form.descricao: ""
                 this.form.dataLimitePrazo =  this.form.dataLimitePrazo? this.form.dataLimitePrazo: ""
                 this.form.diasPercorridos =  this.form.diasPercorridos ? this.form.diasPercorridos: ""
