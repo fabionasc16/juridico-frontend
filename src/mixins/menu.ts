@@ -16,6 +16,10 @@ const menusMixin = {
 				path: "/processos"
 			},
 			{
+				name: "Responsáveis",
+				path: "/responsaveis"
+			},
+			{
 				name: "Usuários",
 				path: "/usuarios"
 			}
