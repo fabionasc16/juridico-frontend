@@ -79,10 +79,10 @@
                   </template>
 
                   <!-- ITENS DO DROPDOWN -->                
-                  <b-list-group-item block v-b-modal.modal-detalhes-processo class="btn-light btn-outline-dark m-0 p-1">
+                  <b-list-group-item block v-b-modal.modal-editar-responsavel class="btn-light btn-outline-dark m-0 p-1">
                     Editar
                   </b-list-group-item>                 
-                  <b-list-group-item block class="btn-light text-dark btn-outline-danger m-0 p-1">
+                  <b-list-group-item block class="btn-light text-dark btn-outline-danger m-0 p-1" @click="excluir(data.item.nome)">
                     Excluir
                   </b-list-group-item>
                 </b-dropdown>
@@ -102,7 +102,18 @@
          <!-- MODAL -->
 
         <b-modal id="modal-cadastro-responsavel" size="lg" centered title="Cadastro do Responsável" hide-footer>
-          <ModalCadastroResponsavel>            
+          <ModalCadastroResponsavel> 
+            <template v-slot:buttons> 
+                <b-button class="bordered" @click="$bvModal.hide('modal-cadastro-responsavel')">Fechar</b-button>
+            </template>           
+          </ModalCadastroResponsavel>
+        </b-modal>
+
+        <b-modal id="modal-editar-responsavel" size="lg" centered title="Editar Responsável" hide-footer>
+          <ModalCadastroResponsavel>  
+            <template v-slot:buttons> 
+                <b-button class="bordered" @click="$bvModal.hide('modal-editar-responsavel')">Fechar</b-button>
+            </template>           
           </ModalCadastroResponsavel>
         </b-modal>
 
@@ -165,6 +176,15 @@ export default Vue.extend({
    
     voltar(): void {
       this.$router.push("/");
+    },
+
+    excluir(data: any): void {
+    
+      let message = 'Deseja realmente excluir responsável ' + data + '?'
+
+      if(confirm(message)) {
+        console.log("Excluído")
+      }
     }
   },
  
