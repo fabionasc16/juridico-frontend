@@ -110,7 +110,8 @@
 
                  <b-form-group label="Responsável:" append="m" class="font col-sm-3 col-md-3 col-lg-3"
                   v-show="exibirMaisDetalhes">
-                  <v-select style="font-size: 0.85rem" :options="optionsResponsavel" class="font" label="texto"
+                  <v-select style="font-size: 0.85rem" :options="optionsResponsavel" class="font" label="nome"
+                                        value="idResponsavel" 
                                         v-model="responsavelSelecionado"/>  
                 </b-form-group>
                   
