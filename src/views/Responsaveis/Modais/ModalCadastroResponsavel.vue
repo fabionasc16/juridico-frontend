@@ -22,14 +22,16 @@
 
                     <!-- 1ª LINHA (CPF + NOME) -->
                     <div class="row">
-                        <b-form-group label="CPF:" class="font col-sm-5 col-md-5 col-lg-5">
+                        <b-form-group class="font col-sm-5 col-md-5 col-lg-5">
+                           <label>CPF<span class="text-danger">*</span>:</label>
                             <b-form-input :placeholder="'Digite seu CPF '" type="text" v-model="form.cpf"
-                                v-mask="'###.###.###-##'"></b-form-input>
+                                v-mask="'###.###.###-##'" required></b-form-input>
                         </b-form-group>
 
-                        <b-form-group label="Nome completo:" class="font col-sm-7 col-md-7 col-lg-7">
+                        <b-form-group class="font col-sm-7 col-md-7 col-lg-7">
+                            <label>Nome completo<span class="text-danger">*</span>:</label>
                             <b-form-input :placeholder="'Digite seu Nome Completo'" type="text"
-                                v-model="form.nome">
+                                v-model="form.nome" required>
                             </b-form-input>
                         </b-form-group>
                     </div>
@@ -54,7 +56,7 @@
                     </div>
 
                     <div class="py-2 mt-10" align="right">                        
-                       <b-button class="bordered" @click="$bvModal.hide('modal-cadastro-responsavel')">Fechar</b-button>
+                       <slot name="buttons"></slot>
                        <b-button class="bordered ml-2" type="submit" variant="success">Salvar</b-button>
                     </div>
 
