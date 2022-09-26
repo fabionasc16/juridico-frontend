@@ -56,7 +56,7 @@ export const FieldsTableProcesso =
         },  
         {
           key: 'diasRestantes',
-          label: 'Dias Restantes (Corridos)',
+          label: 'Dias a Expirar (Corridos)',
           sortable: true,
         }, 
         {

@@ -70,6 +70,13 @@
           <div class="row">
             <div class="col-12">
               <div class="row">
+
+                <b-form-group label="Órgão Demandante:" append="m" class="font col-sm-3 col-md-3 col-lg-3"
+                  v-show="exibirMaisDetalhes">
+                   <v-select style="font-size: 0.85rem" :options="optionsOrgaoDemandante" class="font" label="texto"
+                                        v-model="orgaoDemandanteSelecionado"/>            
+                </b-form-group>
+
                 <b-form-group label="Tipo do Processo:" append="m" class="font col-sm-3 col-md-3 col-lg-3"
                   v-show="exibirMaisDetalhes">                
                   <v-select style="font-size: 0.85rem" :options="optionsTipoProcesso" class="font" label="texto"
@@ -82,17 +89,18 @@
                                         v-model="statusProcessoSelecionado"/>
                 </b-form-group>
 
-                 <b-form-group label="Status Prazo:" append="m" class="font col-sm-3 col-md-3 col-lg-3"
-                  v-show="exibirMaisDetalhes">               
-                  <v-select style="font-size: 0.85rem" :options="optionsStatusPrazo" class="font" label="texto"
+                 <b-form-group append="m" class="font col-sm-3 col-md-3 col-lg-3"
+                  v-show="exibirMaisDetalhes">  
+                  
+                    <b-form-checkbox switch class="font" v-model="checkedExpiraHoje">                                         
+                      <label v-if="checkedExpiraHoje">Expira Hoje</label>    
+                      <label v-else>Status Prazo:</label>                           
+                    </b-form-checkbox> 
+
+                  <v-select v-if="!checkedExpiraHoje" style="font-size: 0.85rem" :options="optionsStatusPrazo" class="font" label="texto"
                                         v-model="statusPrazoSelecionado"/>
                 </b-form-group>
-
-                <b-form-group label="Órgão Demandante:" append="m" class="font col-sm-3 col-md-3 col-lg-3"
-                  v-show="exibirMaisDetalhes">
-                   <v-select style="font-size: 0.85rem" :options="optionsOrgaoDemandante" class="font" label="texto"
-                                        v-model="orgaoDemandanteSelecionado"/>            
-                </b-form-group>
+                
 
                 <b-form-group label="Classificação:" append="m" class="font col-sm-3 col-md-3 col-lg-3"
                   v-show="exibirMaisDetalhes">
@@ -105,6 +113,7 @@
                   <v-select style="font-size: 0.85rem" :options="optionsResponsavel" class="font" label="texto"
                                         v-model="responsavelSelecionado"/>  
                 </b-form-group>
+                  
               </div>
             </div>
           </div>
@@ -292,6 +301,7 @@ export default Vue.extend({
       pageOptions: [5, 10, 15, { value: 100, text: "Show a lot" }],
       form: {} as Processo,
       checkedProcessoSiged: false as boolean,
+      checkedExpiraHoje: false as boolean,
       maisDetalhes: false as boolean,
       fields: FieldsTableProcesso, //nome das colunas da tabela
       items: TableProcessoSeeder, // lista de processos
@@ -304,35 +314,35 @@ export default Vue.extend({
       optionsAssunto: AssuntoSeeder, 
       optionsCaixa: CaixaSigedSeeder,  
       tipoProcessoSelecionado: {
-        texto: "Selecione um tipo de processo" as string,
+        texto: "-- Selecione --" as string,
         value: "" as string,
       },
       statusProcessoSelecionado: {
-        texto: "Selecione status processo" as string,
+        texto: "-- Selecione --" as string,
         value: "" as string,
       },
       statusPrazoSelecionado: {
-        texto: "Selecione status prazo" as string,
+        texto: "-- Selecione --" as string,
         value: "" as string,
       },
       orgaoDemandanteSelecionado: {
-        texto: "Selecione órgão demandante" as string,
+        texto: "-- Selecione --" as string,
         value: "" as string,
       },
       classificacaoSelecionada: {
-        texto: "Selecione uma classificação" as string,
+        texto: "-- Selecione --" as string,
         value: "" as string,
       },
       responsavelSelecionado: {
-        texto: "Selecione um responsável" as string,
+        texto: "-- Selecione --" as string,
         value: "" as string,
       },
       assuntoSelecionado: {
-        texto: "Selecione um assunto" as string,
+        texto: "-- Selecione --" as string,
         value: "" as string,
       },
       caixaSigedSelecionada: {
-        texto: "Selecione caixa SIGED" as string,
+        texto: "-- Selecione --" as string,
         value: "" as string,
       },    
     };
