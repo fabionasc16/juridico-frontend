@@ -232,7 +232,7 @@
             
         </b-modal>
         <!-- TRAMITAÇÕES DO PROCESSO -->
-        <b-modal id="modal-tramitacoes-processo" size="lg" centered title="Tramitações do Processo">
+        <b-modal id="modal-tramitacoes-processo" size="lg" centered title="Tramitações do Processo" hide-footer>
           <ModalTramitacoesProcesso>             
           </ModalTramitacoesProcesso>
         </b-modal>

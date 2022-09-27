@@ -33,7 +33,12 @@
                 </b-pagination>
             </div>
         </div>
-    </div>
+
+        <div class="py-2 mt-10 mr-3" align="right">                        
+            <b-button class="bordered" @click="$bvModal.hide('modal-tramitacoes-processo')">Fechar</b-button>
+        </div>
+
+    </div>     
 
 
 </template>
@@ -49,42 +54,14 @@ import { BIconSearch, BIconPlusCircle, BIconInfoCircle, BIconJournalText } from 
 export default Vue.extend({
     directives: { mask },
     data() {
-        return {
-            show: false as boolean,
-            exibirMaisDetalhes: false as boolean,
-            exibirRegistroPrazo: false as boolean,
-            exibirRegistroSIGED: false as boolean,
+        return {           
             rows: 100,
             currentPage: 1,
             stickyHeader: true,
             noCollapse: true,
             totalRows: 1,
             perPage: 5,
-            pageOptions: [5, 10, 15, { value: 100, text: "Show a lot" }],
-            form: {
-                nProcedimento: "" as string,
-                assunto: "" as string,
-                caixaSIGED: "" as string,
-                tipoProcesso: "" as string,
-                status: "" as string,
-                orgaoDemandante: "" as string,
-                classificacao: "" as string,
-                qtdDiasPrazo: "" as string,
-                dataProcesso: "" as string,
-                dataRecebimento: "" as string,
-                horaRecebimento: "" as string,
-                objeto: "" as string,
-                responsavel: "" as string,
-                observacao: "" as string,
-                nSIGED: "" as string,
-                dataCadSIGED: "" as string,
-                permanencia: "" as string,
-                caixaAtual: "" as string,
-                tramitacao: "" as string,
-                requerSIGED: false as boolean,
-                monitoraPrazo: "" as string,
-                maisDetalhes: false as boolean,
-            },
+            pageOptions: [5, 10, 15, { value: 100, text: "Show a lot" }],            
             fields: [   //NOMES DAS COLUNAS
                 {
                     key: 'caixaSIGED',
@@ -119,40 +96,8 @@ export default Vue.extend({
             ]
         };
     },
-    methods: {
-        submit() {
-            alert("enviar");
-        },
-        exibeMaisDetalhes(): void {
-            if (
-                this.form.maisDetalhes === true
-            ) {
-                this.exibirMaisDetalhes = true;
-            } else {
-                this.exibirMaisDetalhes = false;
-            }
-        },
-        exibirCampoPrazo(): void {
-            if (
-                this.form.monitoraPrazo == "sim"
-            ) {
-                this.exibirRegistroPrazo = true;
-            } else {
-                this.exibirRegistroPrazo = false;
-            }
-        },
-        exibirCampoSIGED(): void {
-            if (
-                this.form.requerSIGED === true
-            ) {
-                this.exibirRegistroSIGED = true;
-            } else {
-                this.exibirRegistroSIGED = false;
-            }
-        },
-        voltar(): void {
-            this.$router.push("/");
-        }
+    methods: {       
+     
     },
     components: {
         HeaderPage,
