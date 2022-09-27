@@ -20,6 +20,10 @@ const menusMixin = {
 				path: "/responsaveis"
 			},
 			{
+				name: "Feriados",
+				path: "/feriados"
+			},
+			{
 				name: "Usuários",
 				path: "/usuarios"
 			}

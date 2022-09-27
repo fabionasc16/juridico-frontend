@@ -1,0 +1,352 @@
+<template>
+  <div>
+    <b-container fluid>
+      <div class="row">
+        <b-form-group class="titulo m-0" label="Consulta de Feriados" label-size="lg">
+          <hr />
+        </b-form-group>
+
+        <!-- NOTIFICAÇÕES -->       
+        <notifications :notifications="Notificacao"></notifications>      
+
+        <div v-if="alert">
+            <ReturnMessage :message="Message" :fechaAlert="fechaAlert"></ReturnMessage>
+        </div>          
+
+        <div v-if="loading">
+            <LoadingSpinner></LoadingSpinner>
+        </div>
+
+        <!-- FORMULÁRIO DE CONSULTA -->       
+        <b-form @submit.prevent="listarFeriados" class="mb-5">
+
+            <div class="row">               
+                <div class="col-3">
+                  <b-form-group label="Data:" class="font">
+                      <b-form-input class="bordered margin-field" type="text" v-model="dataFeriadoBR" placeholder="dd/mm/aaaa"
+                                v-mask="'##/##/####'"></b-form-input>   
+                  </b-form-group>
+                </div>    
+                <div class="col-3">             
+                  <b-form-group label="Tipo:" class="font">
+                      <b-form-select v-model="form.idTipoFeriado">
+                          <b-form-select-option value="">-- Selecione --</b-form-select-option>
+                          <b-form-select-option v-for="option in optionsTipoFeriado" :value="option.value"
+                              :key="option.value"> {{ option.texto }}
+                          </b-form-select-option>                                
+                      </b-form-select>
+                  </b-form-group>
+                </div>        
+                <!-- ÍCONE DA LUPA -->
+                <div class="col-2 justify-content-center">
+                  <b-form-group label="Consultar" class="font text-white">                    
+                      <b-button class="h2" type="submit">
+                        <b-icon-search v-b-tooltip.hover.topleft="'Consultar'"></b-icon-search>
+                      </b-button>               
+                  </b-form-group>               
+          </div>
+        </div>
+        </b-form>
+
+        <!-- CARD DA TABELA -->
+        <div class="card p-0 m-0">
+          <!-- CABEÇALHO DA TABELA (Espaço reservado para incluir ícones) -->
+          <div class="card-header" align="right">
+            <div class="row">
+                <!-- ÍCONE Journal-text -->
+                <div class="col-1 text-blue h2 p0m0" align="center" label="Feriados Cadastrados">
+                  <b-icon-journal-text>
+                  </b-icon-journal-text>
+                </div>
+              <!-- TÍTULO -->
+              <div class="col-10 mt-1" align="start">
+                <div class="row position-relative">
+                  <h5>Feriados Cadastrados</h5>
+                </div>
+              </div>
+              <!-- ÍCONE Plus-Circle -->
+              <div class="col-1 position-relative" align="center"> 
+                <b-form-group label="" class="btn text-primary position-absolute top-50 start-50 translate-middle">
+                  <div class="h3">
+                    <b-icon-plus-circle v-b-modal.modal-cadastro-responsavel v-b-tooltip.hover.topleft="'Adicionar Feriado'"></b-icon-plus-circle>
+                  </div>
+                </b-form-group>
+              </div>
+            </div>
+          </div>
+          <!-- TABELA -->
+          <div>
+            <b-table-lite small striped hover responsive class="m-0" head-variant="dark" :current-page="currentPage"
+              :per-page="perPage" :sticky-header="stickyHeader" :no-border-collapse="noCollapse" :items="items"
+              :fields="fields">            
+             
+              <!-- BOTÕES DE AÇÕES -->
+              <template v-slot:cell(botaoAction)="data">
+
+                <!-- BOTÃO DROPDOWN -->
+                <b-dropdown variant="dark" class="p0m0" size="sm">
+                  <!-- CONFIG. ICON HAMBURGUER -->
+                  <template #button-content>
+                    &#x2261;<span class="sr-only"></span>
+                  </template>
+
+                  <!-- ITENS DO DROPDOWN -->                
+                  <b-list-group-item block v-b-modal.modal-editar-responsavel class="btn-light btn-outline-dark m-0 p-1">
+                    Editar
+                  </b-list-group-item>                 
+                  <b-list-group-item block class="btn-light text-dark btn-outline-danger m-0 p-1" @click="excluir(data.item.nome)">
+                    Excluir
+                  </b-list-group-item>
+                </b-dropdown>
+              </template>
+            </b-table-lite>
+          </div>
+          <!-- RODAPÉ DA TABELA (Espaço reservado para incluir ícones) -->
+          <div class="card-footer m-0 px-1 pt-1">
+            <!-- PAGINAÇÃO -->
+            <div class="col-12 m-0 px-1 pt-1">
+              <b-pagination pills align="right" size="sm" v-model="currentPage" :total-rows="rows" :per-page="perPage">
+              </b-pagination>
+            </div>
+          </div>
+        </div>       
+        
+         <!-- MODAL -->
+<!--
+          <b-modal id="modal-cadastro-feriado" size="lg" centered title="Cadastro de Feriado" hide-footer>
+          <ModalCadastroResponsavel> 
+            <template v-slot:buttons> 
+                <b-button class="bordered" @click="$bvModal.hide('modal-cadastro-feriado')">Fechar</b-button>
+            </template>           
+          </ModalCadastroResponsavel>
+        </b-modal>
+
+        <b-modal id="modal-editar-feriado" size="lg" centered title="Editar Feriado" hide-footer>
+          <ModalCadastroResponsavel>  
+            <template v-slot:buttons> 
+                <b-button class="bordered" @click="$bvModal.hide('modal-editar-feriado')">Fechar</b-button>
+            </template>           
+          </ModalCadastroResponsavel>
+        </b-modal>
+
+      -->
+
+        <!-- //MODAL -->
+
+
+      </div>
+    </b-container>
+  </div>
+</template>
+
+<script lang="ts">
+import Vue from "vue";
+//import axios from "axios";
+import HeaderPage from '@/components/HeaderPage.vue';
+// import ModalCadastroResponsavel from './Modais/ModalCadastroResponsavel.vue';
+import { mask } from "vue-the-mask";
+import { Feriado } from '@/type/feriado';
+import { TableFeriadoSeeder } from '@/type/tableFeriado';
+import { FieldsTableFeriado } from "@/type/tableFeriado";
+import { BIconSearch, BIconPlusCircle, BIconInfoCircle, BIconJournalText } from 'bootstrap-vue'
+import dataMixin from "@/mixins/dataMixin";
+import { TipoFeriadoSeeder } from "@/type/tipoFeriado";
+import RestApiService from "@/services/rest/service";
+
+import Notifications from "@/components/Notifications.vue";
+import { Notificacao } from "@/type/notificacao";
+import ReturnMessage from "@/components/ReturnMessage.vue";
+import LoadingSpinner from "@/components/LoadingSpinner.vue";
+
+export default Vue.extend({
+  directives: { mask },
+  components: {
+    HeaderPage,   
+    BIconSearch,
+    BIconJournalText,
+    BIconPlusCircle,
+    BIconInfoCircle,
+    
+    Notifications,
+    ReturnMessage,
+    LoadingSpinner
+   // ModalCadastroResponsavel
+  },
+  mixins: [        
+        dataMixin,
+  ],  
+  data() {
+    return {
+      rows: 100,
+      currentPage: 1,
+      totalRows: 1,
+      perPage: 5,
+      pageOptions: [5, 10, 15, { value: 100, text: "Show a lot" }],
+      totalRow: null as any,
+      form: {} as Feriado,
+      fields: FieldsTableFeriado, //nome das colunas da tabela
+      items: TableFeriadoSeeder, 
+      stickyHeader: true,
+      noCollapse: true,
+      dataFeriadoBR: "" as string,
+      optionsTipoFeriado: TipoFeriadoSeeder,      
+      feriados: [] as Array<Feriado>,
+
+      Notificacao: [] as Array<Notificacao>,
+      Message: [] as Array<Notificacao>,
+      loading: false as boolean,
+      alert: false as boolean,      
+      
+    };
+  },
+  mounted() {
+    this.totalRows = this.items.length
+    this.listarFeriados(this.currentPage);
+     
+  },
+  methods: {
+    listarFeriados(currentpage: number): void {
+      alert("pesquisar");
+
+      this.loading = true;
+
+      if(this.validarCampos()) {
+        this.form.data = this.dataFeriadoBR ? 
+                   dataMixin.methods.dataFormatEn(this.dataFeriadoBR) : "";
+      
+        console.log(JSON.stringify(this.form))
+
+        RestApiService.get(
+          "feriado/list",
+          `?currentPage=${currentpage}`
+        )
+          .then((response: any) => {
+            this.feriados = response.data.data;
+            this.perPage = response.data.perPage;
+            this.totalRow = response.data.total;
+
+          })
+          .catch((e) => {
+            if (e.message === "Network Error") {
+                            this.adicionarAlert(
+                            "alert",
+                            "Sem conexão de rede. Verifique sua conexão!"
+                            );
+                        } else if (
+                            e &&
+                            e.response &&
+                            e.response.data &&
+                            e.response.data.message
+                        ) {
+                            this.adicionarAlert(
+                            "alert",
+                            e.response.data.message
+                            );                       
+                        } else {
+                            this.adicionarAlert(
+                            "alert",
+                            "Houve um erro. Não foi possível carregar a listagem!"
+                            );                      
+                        }      
+
+          })
+          .finally(() => {
+            this.loading = false;
+          
+          });
+      }
+    },  
+
+    validarCampos(): boolean {     
+
+      if(this.dataFeriadoBR && !dataMixin.methods.validarData(this.dataFeriadoBR) ) {
+              this.adicionarNotificacao(
+                    "danger",
+                    "A data informada é inválida."
+                );
+      }
+
+      if (this.Notificacao.length > 0) {
+                //ir para o início da página onde aparecem as mensagens
+                window.scrollTo(0, 0);               
+
+                this.adicionarAlert(
+                    "alert",
+                     "Realize as validações exibidas no topo desta página!"
+                );
+
+                setTimeout(() => {
+                this.Notificacao = [];
+                }, 10000);
+                return false;
+            } else {
+                return true;
+      }
+      
+    },
+   
+    voltar(): void {
+      this.$router.push("/");
+    },
+
+    excluir(data: any): void {
+    
+      let message = 'Deseja realmente excluir feriado ' + data + '?'
+
+      if(confirm(message)) {
+        console.log("Excluído")
+      }
+    },
+
+    adicionarAlert(tipo: string, mensagem: string): void {
+            this.Message = []        
+            this.Message.push({
+                type: tipo,
+                message: mensagem,
+            });
+            this.alert = true;
+    },
+
+    adicionarNotificacao(tipo: string, mensagem: string): void {
+        this.Notificacao.push({
+            type: tipo,
+            message: mensagem,
+        });
+    },
+
+    fechaAlert(): void {
+            this.alert = false;
+    }, 
+  },
+ 
+});
+</script>
+
+<style scope>
+.p0m0 {
+  margin: 0;
+  padding: 0;
+}
+
+.root .row {
+  min-height: 0vh;
+}
+
+.row {
+  min-height: 0vh;
+}
+
+.font {
+  font-family: "Mulish", sans-serif;
+}
+
+.titulo {
+  color: #293258;
+  margin-top: 20px;
+  font-family: "Mulish", sans-serif;
+}
+
+.custom-select-sm {
+  height: calc(2em + 0.5rem + 2px);
+}
+</style>
