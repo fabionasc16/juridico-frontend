@@ -245,13 +245,13 @@ export default Vue.extend({
 
         formatDatasEnToBr() {
             this.datas.dataProcessoBR = this.form.dataProcesso ? 
-                   dataMixin.methods.dataFormatEn(this.form.dataProcesso) : "";
+                   dataMixin.methods.formatarDataBr(this.form.dataProcesso) : "";
 
             this.datas.dataRecebimentoBR = this.form.dataRecebimento ? 
-                   dataMixin.methods.dataFormatEn(this.form.dataRecebimento) : "";
+                   dataMixin.methods.formatarDataBr(this.form.dataRecebimento) : "";
 
             this.datas.dataLimitePrazoBR = this.form.dataLimitePrazo ? 
-                   dataMixin.methods.dataFormatEn(this.form.dataLimitePrazo) : "";
+                   dataMixin.methods.formatarDataBr(this.form.dataLimitePrazo) : "";
         },
 
         validarDataProcesso(){
