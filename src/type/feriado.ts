@@ -3,4 +3,5 @@ export type Feriado = {
     data: string,
     descricao: string,
     idTipoFeriado: string,  
+    ano: string,
 };

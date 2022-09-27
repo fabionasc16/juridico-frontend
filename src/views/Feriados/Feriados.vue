@@ -36,7 +36,13 @@
                           </b-form-select-option>                                
                       </b-form-select>
                   </b-form-group>
-                </div>        
+                </div>      
+                <div class="col-2">
+                  <b-form-group label="Ano:" class="font">
+                      <b-form-input class="bordered margin-field" type="text" v-model="form.ano" placeholder="aaaa"
+                                v-mask="'####'"></b-form-input>   
+                  </b-form-group>
+                </div>    
                 <!-- ÍCONE DA LUPA -->
                 <div class="col-2 justify-content-center">
                   <b-form-group label="Consultar" class="font text-white">                    
@@ -68,7 +74,7 @@
               <div class="col-1 position-relative" align="center"> 
                 <b-form-group label="" class="btn text-primary position-absolute top-50 start-50 translate-middle">
                   <div class="h3">
-                    <b-icon-plus-circle v-b-modal.modal-cadastro-responsavel v-b-tooltip.hover.topleft="'Adicionar Feriado'"></b-icon-plus-circle>
+                    <b-icon-plus-circle v-b-modal.modal-cadastro-feriado v-b-tooltip.hover.topleft="'Adicionar Feriado'"></b-icon-plus-circle>
                   </div>
                 </b-form-group>
               </div>
@@ -91,10 +97,10 @@
                   </template>
 
                   <!-- ITENS DO DROPDOWN -->                
-                  <b-list-group-item block v-b-modal.modal-editar-responsavel class="btn-light btn-outline-dark m-0 p-1">
+                  <b-list-group-item block v-b-modal.modal-editar-feriado class="btn-light btn-outline-dark m-0 p-1">
                     Editar
                   </b-list-group-item>                 
-                  <b-list-group-item block class="btn-light text-dark btn-outline-danger m-0 p-1" @click="excluir(data.item.nome)">
+                  <b-list-group-item block class="btn-light text-dark btn-outline-danger m-0 p-1" @click="excluir(data.item.idFeriado, data.item.data)">
                     Excluir
                   </b-list-group-item>
                 </b-dropdown>
@@ -112,27 +118,24 @@
         </div>       
         
          <!-- MODAL -->
-<!--
-          <b-modal id="modal-cadastro-feriado" size="lg" centered title="Cadastro de Feriado" hide-footer>
-          <ModalCadastroResponsavel> 
+
+          <b-modal id="modal-cadastro-feriado" centered title="Cadastro de Feriado" hide-footer>
+          <ModalCadastroFeriado> 
             <template v-slot:buttons> 
                 <b-button class="bordered" @click="$bvModal.hide('modal-cadastro-feriado')">Fechar</b-button>
             </template>           
-          </ModalCadastroResponsavel>
+          </ModalCadastroFeriado>
         </b-modal>
 
-        <b-modal id="modal-editar-feriado" size="lg" centered title="Editar Feriado" hide-footer>
-          <ModalCadastroResponsavel>  
+        <b-modal id="modal-editar-feriado" centered title="Editar Feriado" hide-footer>
+          <ModalCadastroFeriado>  
             <template v-slot:buttons> 
                 <b-button class="bordered" @click="$bvModal.hide('modal-editar-feriado')">Fechar</b-button>
             </template>           
-          </ModalCadastroResponsavel>
-        </b-modal>
-
-      -->
+          </ModalCadastroFeriado>
+        </b-modal>    
 
         <!-- //MODAL -->
-
 
       </div>
     </b-container>
@@ -143,7 +146,6 @@
 import Vue from "vue";
 //import axios from "axios";
 import HeaderPage from '@/components/HeaderPage.vue';
-// import ModalCadastroResponsavel from './Modais/ModalCadastroResponsavel.vue';
 import { mask } from "vue-the-mask";
 import { Feriado } from '@/type/feriado';
 import { TableFeriadoSeeder } from '@/type/tableFeriado';
@@ -157,21 +159,21 @@ import Notifications from "@/components/Notifications.vue";
 import { Notificacao } from "@/type/notificacao";
 import ReturnMessage from "@/components/ReturnMessage.vue";
 import LoadingSpinner from "@/components/LoadingSpinner.vue";
+import ModalCadastroFeriado from "./Modais/ModalCadastroFeriado.vue";
 
 export default Vue.extend({
   directives: { mask },
   components: {
-    HeaderPage,   
+    HeaderPage,
     BIconSearch,
     BIconJournalText,
     BIconPlusCircle,
     BIconInfoCircle,
-    
     Notifications,
     ReturnMessage,
-    LoadingSpinner
-   // ModalCadastroResponsavel
-  },
+    LoadingSpinner,  
+    ModalCadastroFeriado
+},
   mixins: [        
         dataMixin,
   ],  
@@ -248,11 +250,9 @@ export default Vue.extend({
                             "Houve um erro. Não foi possível carregar a listagem!"
                             );                      
                         }      
-
           })
           .finally(() => {
-            this.loading = false;
-          
+            this.loading = false;          
           });
       }
     },  
@@ -289,11 +289,31 @@ export default Vue.extend({
       this.$router.push("/");
     },
 
-    excluir(data: any): void {
+    excluir(id: any, data: any): void {
     
-      let message = 'Deseja realmente excluir feriado ' + data + '?'
+      let message = 'Deseja realmente excluir feriado do dia ' + data + '?'
 
       if(confirm(message)) {
+      
+        RestApiService.delete("feriado", id)
+          .then((response: any) => {
+            this.loading = true;
+
+            this.adicionarAlert(
+                    "success",
+                    "Exclusão realizada com sucesso!"
+            );          
+          })
+          .catch((e: Error) => {    
+             this.adicionarAlert(
+                    "alert",
+                    "Ocorreu um erro ao excluir registro!"
+            );
+          })
+          .finally(() => {
+            this.loading = false;
+          });   
+
         console.log("Excluído")
       }
     },
