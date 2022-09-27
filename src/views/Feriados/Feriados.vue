@@ -203,7 +203,7 @@ export default Vue.extend({
   },
   mounted() {
     this.totalRows = this.items.length
-    this.listarFeriados(this.currentPage);
+    //this.listarFeriados(this.currentPage);
      
   },
   methods: {
