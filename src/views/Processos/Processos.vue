@@ -6,6 +6,18 @@
           <hr />
         </b-form-group>
 
+         <!-- NOTIFICAÇÕES -->       
+         <notifications :notifications="Notificacao"></notifications>      
+
+        <div v-if="alert">
+            <ReturnMessage :message="Message" :fechaAlert="fechaAlert"></ReturnMessage>
+        </div>          
+
+        <div v-if="loading">
+            <LoadingSpinner></LoadingSpinner>
+        </div>
+
+
         <!-- FORMULÁRIO DE CONSULTA DO PROCESSO -->
         <b-form  @submit.prevent="submit">
           <!-- 1ª LINHA (3 CAIXAS + ÍCONE) -->
@@ -163,7 +175,10 @@
               </template>
 
               <template v-slot:cell(qtdReiteracao)="data">  
-                  <b-badge :variant="colorReiteracao(data.item.qtdReiteracao)">{{data.item.qtdReiteracao}} </b-badge>             
+                  <b-badge :variant="colorReiteracao(data.item.qtdReiteracao)">{{data.item.qtdReiteracao}}</b-badge>
+                  <!--<a href="#" v-b-modal.modal-visualizar-reiteracao>
+                     <b-badge :variant="colorReiteracao(data.item.qtdReiteracao)">{{data.item.qtdReiteracao}}</b-badge>
+                  </a>-->
               </template>
              
               <!-- BOTÕES DE AÇÕES -->
@@ -182,9 +197,9 @@
                   </b-list-group-item>
                   <b-list-group-item block v-b-modal.modal-tramitacoes-processo class="btn-light btn-outline-dark m-0 p-1">
                     Tramitações
-                  </b-list-group-item>
-                  <b-list-group-item block v-b-modal.modal-reiterar-processo class="btn-light btn-outline-dark m-0 p-1">
-                    Reiterar
+                  </b-list-group-item>                  
+                  <b-list-group-item block v-b-modal.modal-visualizar-reiteracao class="btn-light btn-outline-dark m-0 p-1">
+                    Reiterações
                   </b-list-group-item>
                   <b-list-group-item block v-b-modal.modal-duplicar-processo class="btn-light btn-outline-dark m-0 p-1">
                     Duplicar
@@ -192,7 +207,7 @@
                   <b-list-group-item block class="btn-light text-dark btn-outline-success m-0 p-1">
                     Arquivar
                   </b-list-group-item>
-                  <b-list-group-item block class="btn-light text-dark btn-outline-danger m-0 p-1">
+                  <b-list-group-item block class="btn-light text-dark btn-outline-danger m-0 p-1" @click="excluir(data.item.idProcesso, data.item.numProcedimento)">
                     Excluir
                   </b-list-group-item>
 
@@ -236,11 +251,31 @@
           <ModalTramitacoesProcesso>             
           </ModalTramitacoesProcesso>
         </b-modal>
-        <!-- REITERAR PROCESSO -->
-        <b-modal id="modal-reiterar-processo" size="lg" centered title="Reiterar Processo">
-          <ModalReiterarProcesso>             
-          </ModalReiterarProcesso>
+        <!-- REITERAR PROCESSO -->        
+        <b-modal id="modal-cadastro-reiteracao" size="lg" centered title="Cadastro - Reiterar Processo" hide-footer>
+          <ModalReiteracaoProcesso> 
+            <template v-slot:buttons>
+                <b-button class="bordered" @click="$bvModal.hide('modal-cadastro-reiteracao')">Fechar</b-button>
+            </template>            
+          </ModalReiteracaoProcesso>
         </b-modal>
+
+        <b-modal id="modal-editar-reiteracao" size="lg" centered title="Edição - Reiterar Processo" hide-footer>
+          <ModalReiteracaoProcesso> 
+            <template v-slot:buttons>
+                <b-button class="bordered" @click="$bvModal.hide('modal-editar-reiteracao')">Fechar</b-button>
+            </template>            
+          </ModalReiteracaoProcesso>
+        </b-modal>
+
+        <b-modal id="modal-visualizar-reiteracao" size="lg" centered title="Reiterações do Processo" hide-footer>
+          <ModalVisualizarReiteracao> 
+            <template v-slot:buttons>
+                <b-button class="bordered" @click="$bvModal.hide('modal-visualizar-reiteracao')">Fechar</b-button>
+            </template>            
+          </ModalVisualizarReiteracao>
+        </b-modal>        
+
         <!-- DUPLICAR PROCESSO -->
         <b-modal id="modal-duplicar-processo" size="lg" centered title="Duplicar Processo" hide-footer>
           <!--<ModalDuplicarProcesso>            
@@ -265,11 +300,8 @@ import HeaderPage from '@/components/HeaderPage.vue';
 import ModalTramitacoesProcesso from './Modais/ModalTramitacoesProcesso.vue';
 //import ModalCadastroProcesso from './Modais/ModalCadastroProcesso.vue';
 import ModalDetalhesProcesso from './Modais/ModalDetalhesProcesso.vue';
-import ModalReiterarProcesso from './Modais/ModalReiterarProcesso.vue';
 //import ModalDuplicarProcesso from './Modais/ModalDuplicarProcesso.vue';
 import { mask } from "vue-the-mask";
-import Notifications from "@/components/Notifications.vue";
-import { Notificacao } from "@/type/notificacao";
 //import { GrauParentescoSeeder } from "@/type/parentesco";
 //import { mapActions } from 'vuex';
 import { Processo } from '@/type/processo';
@@ -284,9 +316,33 @@ import { ResponsavelSeeder } from "@/type/responsavel";
 import { AssuntoSeeder } from "@/type/assunto";
 import { CaixaSigedSeeder } from "@/type/caixaSiged";
 import { FieldsTableProcesso } from "@/type/tableProcesso";
+import ModalReiteracaoProcesso from './Modais/ModalReiteracaoProcesso.vue';
+import ModalVisualizarReiteracao from './Modais/ModalVisualizarReiteracao.vue';
+import RestApiService from "@/services/rest/service";
+
+import Notifications from "@/components/Notifications.vue";
+import { Notificacao } from "@/type/notificacao";
+import ReturnMessage from "@/components/ReturnMessage.vue";
+import LoadingSpinner from "@/components/LoadingSpinner.vue";
 
 export default Vue.extend({
   directives: { mask },
+  components: {
+    HeaderPage,
+    ModalTramitacoesProcesso,
+    //ModalCadastroProcesso,
+    ModalDetalhesProcesso,
+    // ModalDuplicarProcesso,
+    BIconSearch,
+    BIconJournalText,
+    BIconPlusCircle,
+    BIconInfoCircle,
+    Notifications,
+    ModalReiteracaoProcesso,
+    ModalVisualizarReiteracao,
+    ReturnMessage,
+    LoadingSpinner,
+  },
   data() {
     return {
       rows: 100,
@@ -314,6 +370,12 @@ export default Vue.extend({
       optionsResponsavel: ResponsavelSeeder, 
       optionsAssunto: AssuntoSeeder, 
       optionsCaixa: CaixaSigedSeeder,  
+
+      Notificacao: [] as Array<Notificacao>,
+      Message: [] as Array<Notificacao>,
+      loading: false as boolean,
+      alert: false as boolean,   
+
       tipoProcessoSelecionado: {
         texto: "-- Selecione --" as string,
         value: "" as string,
@@ -368,6 +430,36 @@ export default Vue.extend({
 
       console.log(JSON.stringify(this.form))
     },
+
+    excluir(id: any, data: any): void {
+    
+    let message = 'Deseja realmente excluir processo Nº ' + data + '?'
+
+    if(confirm(message)) {
+    
+      RestApiService.delete("processo", id)
+        .then((response: any) => {
+          this.loading = true;
+
+          this.adicionarAlert(
+                  "success",
+                  "Exclusão realizada com sucesso!"
+          );          
+        })
+        .catch((e: Error) => {    
+           this.adicionarAlert(
+                  "alert",
+                  "Ocorreu um erro ao excluir registro!"
+          );
+        })
+        .finally(() => {
+          this.loading = false;
+        });   
+
+      console.log("Excluído")
+    }
+   },
+
     colorReiteracao(reiteracao: any) : any {
             if(reiteracao > 0) {
               return 'info'
@@ -455,23 +547,32 @@ export default Vue.extend({
         this.exibirRegistroSIGED = false;
       }
     },
+
+    adicionarAlert(tipo: string, mensagem: string): void {
+            this.Message = []        
+            this.Message.push({
+                type: tipo,
+                message: mensagem,
+            });
+            this.alert = true;
+    },
+
+    adicionarNotificacao(tipo: string, mensagem: string): void {
+        this.Notificacao.push({
+            type: tipo,
+            message: mensagem,
+        });
+    },
+
+    fechaAlert(): void {
+            this.alert = false;
+    }, 
+
     voltar(): void {
       this.$router.push("/");
     }
   },
-  components: {
-    HeaderPage,
-    ModalTramitacoesProcesso,
-    //ModalCadastroProcesso,
-    ModalDetalhesProcesso,
-    ModalReiterarProcesso,
-    // ModalDuplicarProcesso,
-    BIconSearch,
-    BIconJournalText,
-    BIconPlusCircle,
-    BIconInfoCircle,
-    Notifications,
-  }
+  
 });
 </script>
 
