@@ -49,12 +49,10 @@
                                 v-mask="'##/##/####'"></b-form-input>                          
                         </b-form-group>
 
-                       <!--  <b-form-group label="Valor Multa:" class="font col-sm-3 col-md-3 col-lg-3">
-                               <CurrencyInput 
-                                    v-model="form.valorMulta"
-                                    :options="optionsMoney"
-                                />                            
-                         </b-form-group> -->
+                        <b-form-group label="Valor Multa:" class="font col-sm-4 col-md-4 col-lg-4">
+                            <vue-numeric currency="R$" separator="." :precision='precision' class="form-control bordered margin-field" 
+                            prefix="R$" v-model="form.valorMulta" :allow-clear="allowclear"></vue-numeric>                
+                        </b-form-group>
                          
 
                     </div>
@@ -171,7 +169,8 @@ import { AssuntoSeeder } from "@/type/assunto";
 import { ClassificacaoSeeder } from "@/type/classificacao";
 import { ResponsavelSeeder } from "@/type/responsavel";
 import { Processo } from '@/type/processo';
-//import CurrencyInput from './CurrencyInput.vue'
+import VueNumeric from 'vue-numeric'
+Vue.use(VueNumeric)
 
 export default Vue.extend({
     directives: { mask },
@@ -180,7 +179,8 @@ export default Vue.extend({
         BIconJournalPlus,
         BIconPlusCircle,
         BIconInfoCircle, 
-        //CurrencyInput
+        VueNumeric,
+        
     },
     mixins: [        
         dataMixin,
@@ -214,19 +214,10 @@ export default Vue.extend({
                 dataLimitePrazoBR: "" as string,
             },           
             form: {} as Processo,     
-            optionsMoney: {
-                locale: 'pt-BR',
-                currency: 'BRL',
-                //currencyDisplay: 'hidden',
-                precision: 2,
-                hideCurrencySymbolOnFocus: true,
-                hideGroupingSeparatorOnFocus: true,
-                hideNegligibleDecimalDigitsOnFocus: true,
-                autoDecimalDigits: false,
-                exportValueAsInteger: false,
-                autoSign: false,
-                useGrouping: true
-             }        
+            
+            //para o campo valor multa
+            allowclear: true as boolean,
+            precision: 2 as number,
           
         }       
     },  
