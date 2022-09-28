@@ -14,9 +14,9 @@
                         <LoadingSpinner></LoadingSpinner>
                     </div>
                     
-                    <b-form-group class="titulo m-0 p-0" label="Informações de entrada do processo" label-size="lg">
+                  <!--  <b-form-group class="titulo m-0 p-0" label="Informações de entrada do processo" label-size="lg">
                         <hr />
-                    </b-form-group>
+                    </b-form-group>-->
 
                     <div v-show="!isLoading"> 
                       <!--  <detalhes-processo  ref='formDetalhes' />    -->
@@ -235,7 +235,7 @@ export default Vue.extend({
                 this.formDadosReiteracao.formatDatasEnToBr()
             })
             .catch((e) => {
-              /*  this.adicionarAlert(
+               /* this.adicionarAlert(
                     "alert",
                     "Houve um erro ao carregar os dados. Tente novamente!"
                 );*/
