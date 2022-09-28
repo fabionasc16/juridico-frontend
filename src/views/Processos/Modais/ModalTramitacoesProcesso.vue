@@ -33,7 +33,12 @@
                 </b-pagination>
             </div>
         </div>
-    </div>
+
+        <div class="py-2 mt-10 mr-3" align="right">                        
+            <b-button class="bordered" @click="$bvModal.hide('modal-tramitacoes-processo')">Fechar</b-button>
+        </div>
+
+    </div>     
 
 
 </template>
@@ -44,115 +49,26 @@ import HeaderPage from '@/components/HeaderPage.vue';
 import { mask } from "vue-the-mask";
 import Notifications from "@/components/Notifications.vue";
 import { BIconSearch, BIconPlusCircle, BIconInfoCircle, BIconJournalText } from 'bootstrap-vue'
-
+import {FieldsTableTramitacao} from "@/type/tableTramitacao"
+import {TableTramitacaoSeeder} from "@/type/tableTramitacao"
 
 export default Vue.extend({
     directives: { mask },
     data() {
-        return {
-            show: false as boolean,
-            exibirMaisDetalhes: false as boolean,
-            exibirRegistroPrazo: false as boolean,
-            exibirRegistroSIGED: false as boolean,
+        return {           
             rows: 100,
             currentPage: 1,
             stickyHeader: true,
             noCollapse: true,
             totalRows: 1,
             perPage: 5,
-            pageOptions: [5, 10, 15, { value: 100, text: "Show a lot" }],
-            form: {
-                nProcedimento: "" as string,
-                assunto: "" as string,
-                caixaSIGED: "" as string,
-                tipoProcesso: "" as string,
-                status: "" as string,
-                orgaoDemandante: "" as string,
-                classificacao: "" as string,
-                qtdDiasPrazo: "" as string,
-                dataProcesso: "" as string,
-                dataRecebimento: "" as string,
-                horaRecebimento: "" as string,
-                objeto: "" as string,
-                responsavel: "" as string,
-                observacao: "" as string,
-                nSIGED: "" as string,
-                dataCadSIGED: "" as string,
-                permanencia: "" as string,
-                caixaAtual: "" as string,
-                tramitacao: "" as string,
-                requerSIGED: false as boolean,
-                monitoraPrazo: "" as string,
-                maisDetalhes: false as boolean,
-            },
-            fields: [   //NOMES DAS COLUNAS
-                {
-                    key: 'caixaSIGED',
-                    label: 'Caixa SIGED',
-                    sortable: true,
-                },
-                {
-                    key: 'eventoTramitacao',
-                    label: 'Evento Tramitação',
-                    sortable: true
-                },
-                {
-                    key: 'entradaSetor',
-                    label: 'Entrada no Setor',
-                    sortable: true,
-                },
-                {
-                    key: 'permanencia',
-                    label: 'Permanência',
-                    sortable: true,
-                },
-            ],
-            items: [    //DADOS DA TABELA
-                { isActive: true, caixaSIGED: 'JURÍDICO', eventoTramitacao: 'Para Assinatura', entradaSetor: '03/06/2022', permanencia: '0' },
-                { isActive: true, caixaSIGED: 'CONTRATOS', eventoTramitacao: 'Aguardar Pagamento', entradaSetor: '01/06/2022', permanencia: '2' },
-                { isActive: true, caixaSIGED: 'COMPRAS', eventoTramitacao: 'Tramitando', entradaSetor: '28/05/2022', permanencia: '4' },
-                { isActive: true, caixaSIGED: 'DETIN', eventoTramitacao: 'Conhecimento e Providências', entradaSetor: '26/05/2022', permanencia: '2' },
-                { isActive: true, caixaSIGED: 'RECURSOS HUMANOS', eventoTramitacao: 'Validar Registro', entradaSetor: '20/05/2022', permanencia: '6' },
-                { isActive: true, caixaSIGED: 'DIREÇÃO', eventoTramitacao: 'Conhecimento e Providências', entradaSetor: '16/05/2022', permanencia: '4' },
-                { isActive: true, caixaSIGED: 'JURÍDICO', eventoTramitacao: 'Para Assinatura Digital', entradaSetor: '16/05/2022', permanencia: '0' },
-                { isActive: true, caixaSIGED: 'PROTOCOLO', eventoTramitacao: 'Tramitando', entradaSetor: '15/05/2022', permanencia: '1' },
-            ]
+            pageOptions: [5, 10, 15, { value: 100, text: "Show a lot" }],     
+            fields: FieldsTableTramitacao,
+            items: TableTramitacaoSeeder,
         };
     },
-    methods: {
-        submit() {
-            alert("enviar");
-        },
-        exibeMaisDetalhes(): void {
-            if (
-                this.form.maisDetalhes === true
-            ) {
-                this.exibirMaisDetalhes = true;
-            } else {
-                this.exibirMaisDetalhes = false;
-            }
-        },
-        exibirCampoPrazo(): void {
-            if (
-                this.form.monitoraPrazo == "sim"
-            ) {
-                this.exibirRegistroPrazo = true;
-            } else {
-                this.exibirRegistroPrazo = false;
-            }
-        },
-        exibirCampoSIGED(): void {
-            if (
-                this.form.requerSIGED === true
-            ) {
-                this.exibirRegistroSIGED = true;
-            } else {
-                this.exibirRegistroSIGED = false;
-            }
-        },
-        voltar(): void {
-            this.$router.push("/");
-        }
+    methods: {       
+     
     },
     components: {
         HeaderPage,

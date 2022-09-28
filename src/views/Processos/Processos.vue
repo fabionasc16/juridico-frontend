@@ -232,7 +232,7 @@
             
         </b-modal>
         <!-- TRAMITAÇÕES DO PROCESSO -->
-        <b-modal id="modal-tramitacoes-processo" size="lg" centered title="Tramitações do Processo">
+        <b-modal id="modal-tramitacoes-processo" size="lg" centered title="Tramitações do Processo" hide-footer>
           <ModalTramitacoesProcesso>             
           </ModalTramitacoesProcesso>
         </b-modal>
@@ -263,10 +263,10 @@ import Vue from "vue";
 //import axios from "axios";
 import HeaderPage from '@/components/HeaderPage.vue';
 import ModalTramitacoesProcesso from './Modais/ModalTramitacoesProcesso.vue';
-import ModalCadastroProcesso from './Modais/ModalCadastroProcesso.vue';
+//import ModalCadastroProcesso from './Modais/ModalCadastroProcesso.vue';
 import ModalDetalhesProcesso from './Modais/ModalDetalhesProcesso.vue';
 import ModalReiterarProcesso from './Modais/ModalReiterarProcesso.vue';
-import ModalDuplicarProcesso from './Modais/ModalDuplicarProcesso.vue';
+//import ModalDuplicarProcesso from './Modais/ModalDuplicarProcesso.vue';
 import { mask } from "vue-the-mask";
 import Notifications from "@/components/Notifications.vue";
 import { Notificacao } from "@/type/notificacao";
@@ -462,10 +462,10 @@ export default Vue.extend({
   components: {
     HeaderPage,
     ModalTramitacoesProcesso,
-    ModalCadastroProcesso,
+    //ModalCadastroProcesso,
     ModalDetalhesProcesso,
     ModalReiterarProcesso,
-    ModalDuplicarProcesso,
+    // ModalDuplicarProcesso,
     BIconSearch,
     BIconJournalText,
     BIconPlusCircle,
