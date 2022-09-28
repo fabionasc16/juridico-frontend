@@ -186,6 +186,9 @@
                   <b-list-group-item block v-b-modal.modal-reiterar-processo class="btn-light btn-outline-dark m-0 p-1">
                     Reiterar
                   </b-list-group-item>
+                  <b-list-group-item block v-b-modal.modal-reiteracao-processo class="btn-light btn-outline-dark m-0 p-1">
+                    Reiteração
+                  </b-list-group-item>
                   <b-list-group-item block v-b-modal.modal-duplicar-processo class="btn-light btn-outline-dark m-0 p-1">
                     Duplicar
                   </b-list-group-item>
@@ -241,6 +244,13 @@
           <ModalReiterarProcesso>             
           </ModalReiterarProcesso>
         </b-modal>
+        <b-modal id="modal-reiteracao-processo" size="lg" centered title="Reiterar Processo" hide-footer>
+          <ModalReiteracaoProcesso> 
+            <template v-slot:buttons>
+                <b-button class="bordered" @click="$bvModal.hide('modal-reiteracao-processo')">Fechar</b-button>
+            </template>            
+          </ModalReiteracaoProcesso>
+        </b-modal>
         <!-- DUPLICAR PROCESSO -->
         <b-modal id="modal-duplicar-processo" size="lg" centered title="Duplicar Processo" hide-footer>
           <!--<ModalDuplicarProcesso>            
@@ -284,9 +294,24 @@ import { ResponsavelSeeder } from "@/type/responsavel";
 import { AssuntoSeeder } from "@/type/assunto";
 import { CaixaSigedSeeder } from "@/type/caixaSiged";
 import { FieldsTableProcesso } from "@/type/tableProcesso";
+import ModalReiteracaoProcesso from './Modais/ModalReiteracaoProcesso.vue';
 
 export default Vue.extend({
   directives: { mask },
+  components: {
+    HeaderPage,
+    ModalTramitacoesProcesso,
+    //ModalCadastroProcesso,
+    ModalDetalhesProcesso,
+    ModalReiterarProcesso,
+    // ModalDuplicarProcesso,
+    BIconSearch,
+    BIconJournalText,
+    BIconPlusCircle,
+    BIconInfoCircle,
+    Notifications,
+    ModalReiteracaoProcesso
+  },
   data() {
     return {
       rows: 100,
@@ -459,19 +484,7 @@ export default Vue.extend({
       this.$router.push("/");
     }
   },
-  components: {
-    HeaderPage,
-    ModalTramitacoesProcesso,
-    //ModalCadastroProcesso,
-    ModalDetalhesProcesso,
-    ModalReiterarProcesso,
-    // ModalDuplicarProcesso,
-    BIconSearch,
-    BIconJournalText,
-    BIconPlusCircle,
-    BIconInfoCircle,
-    Notifications,
-  }
+  
 });
 </script>
 

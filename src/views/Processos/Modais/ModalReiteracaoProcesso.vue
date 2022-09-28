@@ -19,7 +19,8 @@
                     </b-form-group>
 
                     <div v-show="!isLoading"> 
-                        <detalhes-processo  ref='formDetalhes' />       
+                      <!--  <detalhes-processo  ref='formDetalhes' />    -->
+                        <reiteracao-processo ref='formReiteracao'/>
                     </div>                                 
                         
                     <div class="py-2 mt-10" align="right">                        
@@ -45,19 +46,22 @@ import RestApiService from "@/services/rest/service";
 import LoadingSpinner from "@/components/LoadingSpinner.vue";
 import DetalhesProcesso from "../../../components/DetalhesProcesso.vue";
 import { Processo } from '@/type/processo';
+import ReiteracaoProcesso from "../../../components/ReiteracaoProcesso.vue";
+
 
 export default Vue.extend({
     directives: { mask },
     components: {
-        HeaderPage,
-        BIconSearch,
-        BIconJournalPlus,
-        BIconPlusCircle,
-        BIconInfoCircle,
-        Notifications,
-        ReturnMessage,
-        LoadingSpinner,
-        DetalhesProcesso
+    HeaderPage,
+    BIconSearch,
+    BIconJournalPlus,
+    BIconPlusCircle,
+    BIconInfoCircle,
+    Notifications,
+    ReturnMessage,
+    LoadingSpinner,
+    DetalhesProcesso,
+    ReiteracaoProcesso
     },
     mixins: [        
         dataMixin,
@@ -71,7 +75,8 @@ export default Vue.extend({
             Message: [] as Array<Notificacao>,
             loading: false as boolean,
             alert: false as boolean,  
-            formDados: {} as any,  
+            formDadosProcesso: {} as any,  
+            formDadosReiteracao: {} as any,  
             carregarForm: {} as Processo,  
         }
     },    
@@ -79,7 +84,8 @@ export default Vue.extend({
     mounted() {
         this.isLoading = false
         //pega os dados do componente filho (detalhes do processo)
-        this.formDados = this.$refs.formDetalhes
+        this.formDadosProcesso = this.$refs.formDetalhes
+        this.formDadosReiteracao = this.$refs.formReiteracao
 
            /* const path = this.$route.path;
             const acao = "/editar";
@@ -88,7 +94,8 @@ export default Vue.extend({
                 this.carregarDados();            
             }*/
 
-        this.carregarDados();            
+        this.carregarDadosProcesso();   
+        this.carregarDadosReiteracao();            
     
     }, 
             
@@ -98,15 +105,15 @@ export default Vue.extend({
             let url = this.id ? "processo/update" : "processo";
 
             //pegar todos os valores já para armazenar
-            this.formDados.getValues()           
+            this.formDadosReiteracao.getValues()           
 
             if (this.validarCampos()) { 
 
-              console.log('JSON: ',JSON.stringify(this.formDados.form))
+              console.log('JSON: ',JSON.stringify(this.formDadosReiteracao.form))
               
               this.loading = true  
             
-              RestApiService.salvar(url, this.formDados.form, acao)
+              RestApiService.salvar(url, this.formDadosReiteracao.form, acao)
                 .then((res) => {
                     if (acao == "put") {
                         this.adicionarAlert(
@@ -155,7 +162,7 @@ export default Vue.extend({
             }                  
         },
 
-        carregarDados(): void {
+        carregarDadosProcesso(): void {
             this.loading = true;
 
             //this.formDados.form.objeto = 'abc'
@@ -165,40 +172,72 @@ export default Vue.extend({
             RestApiService.get("processo/listid", this.id)
                 .then((res: any) => {
 
-                this.formDados.form.idProcesso =   res.data.idProcesso 
-                this.formDados.form.numProcedimento = res.data.numProcedimento
-                this.formDados.form.idTipoProcesso =  res.data.idTipoProcesso
-                this.formDados.form.prazoTotal = res.data.prazoTotal
-                this.formDados.form.idOrgaoDemandante = res.data.orgaoSelecionado.value
-                this.formDados.form.dataProcesso = res.data.dataProcesso
-                this.formDados.form.dataRecebimento = res.data.dataRecebimento
-                this.formDados.form.horaRecebimento =  res.data.horaRecebimento
-                this.formDados.form.idAssunto =  res.data.value
-                this.formDados.form.idClassificacao = res.data.idClassificacao
-                this.formDados.form.objeto =  res.data.objeto
-                this.formDados.form.requerSIGED = res.data.requerSIGED
-                this.formDados.form.numProcessoSIGED = res.data.numProcessoSIGED
-                this.formDados.form.dataProcessoSIGED = res.data.dataProcessoSIGED
-                this.formDados.form.permanenciaSIGED = res.data.permanenciaSIGED
-                this.formDados.form.caixaAtualSIGED =  res.data.caixaAtualSIGED
-                this.formDados.form.tramitacaoSIGED =  res.data.tramitacaoSIGED
-                this.formDados.form.idResponsavel = res.data.value
-                this.formDados.form.descricao = res.data.descricao
-                this.formDados.form.dataLimitePrazo =  res.data.dataLimitePrazo
-                this.formDados.form.diasPercorridos =  res.data.diasPercorridos
-                this.formDados.form.diasExpirados = res.data.diasExpirados
-                this.formDados.form.statusPrazo =  res.data.statusPrazo
-                this.formDados.form.statusProcesso = res.data.statusProcesso
-                this.formDados.form.sigiloso = res.data.sigiloso
-                this.formDados.form.observacao = res.data.observacao    
+                this.formDadosProcesso.form.idProcesso =   res.data.idProcesso 
+                this.formDadosProcesso.form.numProcedimento = res.data.numProcedimento
+                this.formDadosProcesso.form.idTipoProcesso =  res.data.idTipoProcesso
+                this.formDadosProcesso.form.prazoTotal = res.data.prazoTotal
+                this.formDadosProcesso.form.idOrgaoDemandante = res.data.orgaoSelecionado.value
+                this.formDadosProcesso.form.dataProcesso = res.data.dataProcesso
+                this.formDadosProcesso.form.dataRecebimento = res.data.dataRecebimento
+                this.formDadosProcesso.form.horaRecebimento =  res.data.horaRecebimento
+                this.formDadosProcesso.form.idAssunto =  res.data.value
+                this.formDadosProcesso.form.idClassificacao = res.data.idClassificacao
+                this.formDadosProcesso.form.objeto =  res.data.objeto
+                this.formDadosProcesso.form.requerSIGED = res.data.requerSIGED
+                this.formDadosProcesso.form.numProcessoSIGED = res.data.numProcessoSIGED
+                this.formDadosProcesso.form.dataProcessoSIGED = res.data.dataProcessoSIGED
+                this.formDadosProcesso.form.permanenciaSIGED = res.data.permanenciaSIGED
+                this.formDadosProcesso.form.caixaAtualSIGED =  res.data.caixaAtualSIGED
+                this.formDadosProcesso.form.tramitacaoSIGED =  res.data.tramitacaoSIGED
+                this.formDadosProcesso.form.idResponsavel = res.data.value
+                this.formDadosProcesso.form.descricao = res.data.descricao
+                this.formDadosProcesso.form.dataLimitePrazo =  res.data.dataLimitePrazo
+                this.formDadosProcesso.form.diasPercorridos =  res.data.diasPercorridos
+                this.formDadosProcesso.form.diasExpirados = res.data.diasExpirados
+                this.formDadosProcesso.form.statusPrazo =  res.data.statusPrazo
+                this.formDadosProcesso.form.statusProcesso = res.data.statusProcesso
+                this.formDadosProcesso.form.sigiloso = res.data.sigiloso
+                this.formDadosProcesso.form.observacao = res.data.observacao    
                 
                 //formatar datas para formato br
-                this.formDados.formatDatasEnToBr()
+                this.formDadosProcesso.formatDatasEnToBr()
             })
             .catch((e) => {
               /*  this.adicionarAlert(
                     "alert",
-                    "Houve um erro ao carregar os dados do paciente. Tente novamente!"
+                    "Houve um erro ao carregar os dados. Tente novamente!"
+                );*/
+          
+            })
+            .finally(() => {
+                this.loading = false;
+            });
+        },
+
+        carregarDadosReiteracao(): void {
+            this.loading = true;         
+            
+            RestApiService.get("reiteracao/listid", this.id)
+                .then((res: any) => {
+
+                this.formDadosReiteracao.form.idProcesso =   res.data.idProcesso 
+                this.formDadosReiteracao.form.numProcedimento = res.data.numProcedimento        
+                this.formDadosReiteracao.form.prazoTotal = res.data.prazoTotal            
+                this.formDadosReiteracao.form.dataProcesso = res.data.dataProcesso
+                this.formDadosReiteracao.form.dataRecebimento = res.data.dataRecebimento
+                this.formDadosReiteracao.form.horaRecebimento =  res.data.horaRecebimento                
+                this.formDadosReiteracao.form.numProcessoSIGED = res.data.numProcessoSIGED              
+                this.formDadosReiteracao.form.reiteracao = res.data.reiteracao
+                this.formDadosReiteracao.form.dataLimitePrazo =  res.data.dataLimitePrazo              
+                this.formDadosReiteracao.form.statusPrazo =  res.data.statusPrazo  
+                
+                //formatar datas para formato br
+                this.formDadosReiteracao.formatDatasEnToBr()
+            })
+            .catch((e) => {
+              /*  this.adicionarAlert(
+                    "alert",
+                    "Houve um erro ao carregar os dados. Tente novamente!"
                 );*/
           
             })
@@ -209,42 +248,35 @@ export default Vue.extend({
 
         validarCampos(): boolean {
 
-            if (!this.formDados.form.numProcedimento) {
+            if (!this.formDadosReiteracao.form.numProcedimento) {
                 this.adicionarNotificacao(
                 "danger",
                 "Nº Procedimento é obrigatório!"
                 );
             }
 
-           if(!this.formDados.form.prazoTotal){
+           if(!this.formDadosReiteracao.form.prazoTotal){
                 this.adicionarNotificacao(
                 "danger",
                 "Prazo Total é obrigatório!"
                 );
-            }
-
-              if(this.formDados.form.requerSIGED === true && !this.formDados.form.numProcessoSIGED){
-                this.adicionarNotificacao(
-                "danger",
-                "Nº SIGED é obrigatório quando o campo 'Requer SIGED' for selecionado!"
-                );
-            }
+            }             
          
-            if(!this.formDados.validarDataProcesso()){
+            if(!this.formDadosReiteracao.validarDataProcesso()){
                 this.adicionarNotificacao(
                 "danger",
                 "Data do Processo informada é inválida!"
                 );
             }
 
-            if(!this.formDados.validarDataRecebimento()){
+            if(!this.formDadosReiteracao.validarDataRecebimento()){
                 this.adicionarNotificacao(
                 "danger",
                 "Data do Recebimento informada é inválida!"
                 );
             }  
             
-            if(!this.formDados.validarDataFinalLimite()){
+            if(!this.formDadosReiteracao.validarDataFinalLimite()){
                 this.adicionarNotificacao(
                 "danger",
                 "Data Final Limite informada é inválida!"
