@@ -26,5 +26,6 @@ export type Processo = {
     sigiloso: boolean,
     observacao: string,   
     valorMulta?: string,
-    reiteracao?: string
+    reiteracao?: string,
+    dataArquivamento?: string,
 };

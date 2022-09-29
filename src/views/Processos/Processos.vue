@@ -204,10 +204,12 @@
                   <b-list-group-item block v-b-modal.modal-duplicar-processo class="btn-light btn-outline-dark m-0 p-1">
                     Duplicar
                   </b-list-group-item>
-                  <b-list-group-item block class="btn-light text-dark btn-outline-success m-0 p-1">
+                  <b-list-group-item block v-b-modal.modal-arquivar-processo class="btn-light text-dark btn-outline-success m-0 p-1">
                     Arquivar
                   </b-list-group-item>
-                  <b-list-group-item block class="btn-light text-dark btn-outline-danger m-0 p-1" @click="excluir(data.item.idProcesso, data.item.numProcedimento)">
+                  <b-list-group-item block class="btn-light text-dark btn-outline-danger m-0 p-1"
+                      v-if="data.item.statusProcesso=='Cadastrado'"  
+                      @click="excluir(data.item.idProcesso, data.item.numProcedimento, data.item.statusProcesso)">
                     Excluir
                   </b-list-group-item>
 
@@ -276,6 +278,16 @@
           </ModalVisualizarReiteracao>
         </b-modal>        
 
+        <!-- ARQUIVAR PROCESSO -->
+        <b-modal id="modal-arquivar-processo" centered title="Arquivar Processo" hide-footer>         
+            <ModalArquivarProcesso >
+            <template v-slot:buttons>
+                <b-button class="bordered" @click="$bvModal.hide('modal-arquivar-processo')">Fechar</b-button>
+            </template>
+          </ModalArquivarProcesso> 
+        </b-modal>
+        <!-- //modal -->
+
         <!-- DUPLICAR PROCESSO -->
         <b-modal id="modal-duplicar-processo" size="lg" centered title="Duplicar Processo" hide-footer>
           <!--<ModalDuplicarProcesso>            
@@ -287,7 +299,7 @@
           </ModalDetalhesProcesso>
         </b-modal>
         <!-- //modal -->
-
+      
       </div>
     </b-container>
   </div>
@@ -298,12 +310,9 @@ import Vue from "vue";
 //import axios from "axios";
 import HeaderPage from '@/components/HeaderPage.vue';
 import ModalTramitacoesProcesso from './Modais/ModalTramitacoesProcesso.vue';
-//import ModalCadastroProcesso from './Modais/ModalCadastroProcesso.vue';
+import ModalArquivarProcesso from './Modais/ModalArquivarProcesso.vue';
 import ModalDetalhesProcesso from './Modais/ModalDetalhesProcesso.vue';
-//import ModalDuplicarProcesso from './Modais/ModalDuplicarProcesso.vue';
 import { mask } from "vue-the-mask";
-//import { GrauParentescoSeeder } from "@/type/parentesco";
-//import { mapActions } from 'vuex';
 import { Processo } from '@/type/processo';
 import { TableProcessoSeeder } from '@/type/tableProcesso';
 import { BIconSearch, BIconPlusCircle, BIconInfoCircle, BIconJournalText } from 'bootstrap-vue'
@@ -329,10 +338,9 @@ export default Vue.extend({
   directives: { mask },
   components: {
     HeaderPage,
-    ModalTramitacoesProcesso,
-    //ModalCadastroProcesso,
+    ModalTramitacoesProcesso,   
     ModalDetalhesProcesso,
-    // ModalDuplicarProcesso,
+    ModalArquivarProcesso,    
     BIconSearch,
     BIconJournalText,
     BIconPlusCircle,
@@ -431,11 +439,11 @@ export default Vue.extend({
       console.log(JSON.stringify(this.form))
     },
 
-    excluir(id: any, data: any): void {
+    excluir(id: any, data: any, status: string): void {
     
     let message = 'Deseja realmente excluir processo Nº ' + data + '?'
 
-    if(confirm(message)) {
+    if(confirm(message) && (status == 'Cadastrado' || status == 'cadastrado')) {
     
       RestApiService.delete("processo", id)
         .then((response: any) => {
