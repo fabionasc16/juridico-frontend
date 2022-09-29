@@ -44,7 +44,8 @@
                     </template>
 
                     <!-- ITENS DO DROPDOWN -->                
-                    <b-list-group-item block v-b-modal.modal-editar-reiteracao class="btn-light btn-outline-dark m-0 p-1">
+                    <b-list-group-item block v-b-modal.modal-editar-reiteracao 
+                      class="btn-light btn-outline-dark m-0 p-1">
                         Editar
                     </b-list-group-item>
 

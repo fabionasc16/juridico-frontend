@@ -192,12 +192,17 @@
                   </template>
 
                   <!-- ITENS DO DROPDOWN -->                
-                  <b-list-group-item block v-b-modal.modal-editar-processo class="btn-light btn-outline-dark m-0 p-1">
+                  <b-list-group-item block v-b-modal.modal-editar-processo class="btn-light btn-outline-dark m-0 p-1"
+                  v-if="data.item.statusProcesso!='Arquivado'">
                     Editar
                   </b-list-group-item>
                   <b-list-group-item block v-b-modal.modal-visualizar-processo class="btn-light btn-outline-dark m-0 p-1">
                     Visualizar
                   </b-list-group-item>
+                  <b-list-group-item block v-b-modal.modal-andamento-processo class="btn-light btn-outline-dark m-0 p-1"
+                  v-if="data.item.statusProcesso!='Arquivado'">
+                    Alterar Situação
+                  </b-list-group-item> 
                   <b-list-group-item block v-b-modal.modal-tramitacoes-processo class="btn-light btn-outline-dark m-0 p-1">
                     Tramitações
                   </b-list-group-item>                  
@@ -207,11 +212,11 @@
                   <b-list-group-item block v-b-modal.modal-duplicar-processo class="btn-light btn-outline-dark m-0 p-1">
                     Duplicar
                   </b-list-group-item>
-                  <b-list-group-item block v-b-modal.modal-arquivar-processo 
+                  <!-- <b-list-group-item block v-b-modal.modal-arquivar-processo 
                      class="btn-light text-dark btn-outline-success m-0 p-1"
                      v-if="data.item.statusProcesso!='Arquivado'">
                     Arquivar
-                  </b-list-group-item>
+                  </b-list-group-item> -->
                   <b-list-group-item block class="btn-light text-dark btn-outline-danger m-0 p-1"
                       v-if="data.item.statusProcesso=='Arquivado'"  
                       @click="desarquivar(data.item.idProcesso, data.item.numProcedimento, data.item.statusProcesso, data.item)">
@@ -264,6 +269,15 @@
                 <b-button class="bordered" @click="$bvModal.hide('modal-visualizar-processo')">Fechar</b-button>
             </template>
           </ModalDetalhesProcesso>
+        </b-modal>
+
+        <!-- ANDAMENTO PROCESSO - ALTERAR STATUS -->
+        <b-modal id="modal-andamento-processo" centered title="Alterar Situação do Processo" hide-footer>         
+            <ModalAndamentoProcesso >
+            <template v-slot:buttons>
+                <b-button class="bordered" @click="$bvModal.hide('modal-andamento-processo')">Fechar</b-button>
+            </template>
+          </ModalAndamentoProcesso> 
         </b-modal>
             
         
@@ -346,6 +360,7 @@ import { CaixaSigedSeeder } from "@/type/caixaSiged";
 import { FieldsTableProcesso } from "@/type/tableProcesso";
 import ModalReiteracaoProcesso from './Modais/ModalReiteracaoProcesso.vue';
 import ModalVisualizarReiteracao from './Modais/ModalVisualizarReiteracao.vue';
+import ModalAndamentoProcesso from './Modais/ModalAndamentoProcesso.vue';
 import RestApiService from "@/services/rest/service";
 
 import Notifications from "@/components/Notifications.vue";
@@ -367,6 +382,7 @@ export default Vue.extend({
     Notifications,
     ModalReiteracaoProcesso,
     ModalVisualizarReiteracao,
+    ModalAndamentoProcesso,
     ReturnMessage,
     LoadingSpinner,
   },
