@@ -21,7 +21,9 @@
                                 <b-form-input class="bordered margin-field" type="text" v-model="dataArquivamentoBR" placeholder="dd/mm/aaaa"
                                         v-mask="'##/##/####'" autofocus required></b-form-input>                          
                             </b-form-group>
-                        </div>                              
+                        </div>   
+                        
+                        <small>Após arquivamento não será possível editar processo.</small>
                 </div>               
                         
                     <div class="py-2 mt-10" align="right">                        
