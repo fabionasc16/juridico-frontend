@@ -14,17 +14,33 @@
                     </div>
                     
                     <div class="row">
-                       
-                        <div class="col-7">   
+
+                        <b-form-group append="m" class="font col-7 col-sm-7 col-md-7 col-lg-7"
+                        >             
+                        <label>Status Processo: <span class="text-danger">*</span></label> 
+                             <b-form-select v-model="form.idStatusProcesso " @change="alteraStatus($event)">
+                                <b-form-select-option value="">-- Selecione --</b-form-select-option>
+                                <b-form-select-option v-for="option in optionsStatusProcesso" 
+                                  :value="option.value" 
+                                   :key="option.value"> {{ option.texto }}
+                                </b-form-select-option>                                
+                            </b-form-select>
+                        </b-form-group>
+                    </div>
+                    <div class="row" v-if="form.idStatusProcesso=='5'">    
+                        <div class="col-7" style="margin-bottom:-10px">    
                             <b-form-group class="font">                                
                                 <label>Data Arquivamento SIGED: <span class="text-danger">*</span></label>
                                 <b-form-input class="bordered margin-field" type="text" v-model="dataArquivamentoBR" placeholder="dd/mm/aaaa"
-                                        v-mask="'##/##/####'" autofocus required></b-form-input>                          
+                                        v-mask="'##/##/####'"></b-form-input>                          
                             </b-form-group>
-                        </div>   
-                        
-                        <small>Após arquivamento não será possível editar processo.</small>
-                </div>               
+                        </div>  
+                        <div class="col-12 mt-0">    
+                            <b-form-group class="font">                   
+                                <small>Após <b>arquivamento</b> não será possível editar processo.</small>
+                            </b-form-group>
+                        </div>                                                  
+                    </div>               
                         
                     <div class="py-2 mt-10" align="right">                        
                        <slot name="buttons"></slot>
@@ -49,6 +65,7 @@ import RestApiService from "@/services/rest/service";
 import LoadingSpinner from "@/components/LoadingSpinner.vue";
 import DetalhesProcesso from "../../../components/DetalhesProcesso.vue";
 import { Processo } from '@/type/processo';
+import { StatusProcessoSeeder } from "@/type/statusProcesso";
 
 export default Vue.extend({
     directives: { mask },
@@ -78,7 +95,11 @@ export default Vue.extend({
             form: {} as Processo,  
             carregarForm: {} as Processo,  
             dataArquivamentoBR: "" as string,
-               
+            optionsStatusProcesso: StatusProcessoSeeder,  
+            /*statusProcessoSelecionado: {
+                texto: "-- Selecione --" as string,
+                value: "" as string,
+            }, */
         }
     },    
 
@@ -96,19 +117,25 @@ export default Vue.extend({
     
     }, 
             
-    methods: {
+    methods: {    
+        alteraStatus() {        
+            this.dataArquivamentoBR = ""
+            this.form.dataArquivamento = ""
+        },
         submit() {
             let acao = this.id ? "put" : "post"
             let url = this.id ? "processo/update" : "processo";
 
             this.loading = true  
-
+           
             if (this.validarCampos()) { 
 
                 this.form.dataArquivamento = this.dataArquivamentoBR ? 
                    dataMixin.methods.dataFormatEn(this.dataArquivamentoBR) : "";
 
-                 console.log('JSON: ',JSON.stringify(this.form))
+                //this.form.idStatusProcesso = this.statusProcessoSelecionado               
+                
+                console.log('JSON: ',JSON.stringify(this.form))
             
               RestApiService.salvar(url, this.form, acao)
                 .then((res) => {
@@ -125,6 +152,8 @@ export default Vue.extend({
                     }                   
                 }) 
                 .catch((e) => {
+                    this.loading = false;
+
                         if (e.message === "Network Error") {
                             this.adicionarAlert(
                             "alert",
@@ -152,6 +181,7 @@ export default Vue.extend({
                 });
 
             }else{
+                this.loading = false  
                 this.adicionarAlert(
                     "alert",
                     "Realize as validações exibidas no topo desta página!"
@@ -167,11 +197,11 @@ export default Vue.extend({
 
                 this.form.idProcesso =   res.data.idProcesso               
                 this.form.dataArquivamento = res.data.dataArquivamento
+                this.form.statusProcesso = res.data.statusProcesso
              
                 //formatar datas para formato br
                 this.dataArquivamentoBR = res.data.dataArquivamento ? 
-                   dataMixin.methods.formatarDataBr(res.data.dataArquivamento) : "";
-               
+                   dataMixin.methods.formatarDataBr(res.data.dataArquivamento) : "";               
                
             })
             .catch((e) => {
@@ -188,7 +218,7 @@ export default Vue.extend({
 
         validarCampos(): boolean {     
             
-            if(!this.dataArquivamentoBR){
+            if(this.form.idStatusProcesso=='5' && !this.dataArquivamentoBR){
                 this.adicionarNotificacao(
                 "danger",
                 "Campo Data é obrigatório!"

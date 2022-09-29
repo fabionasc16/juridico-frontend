@@ -14,9 +14,9 @@
                         <LoadingSpinner></LoadingSpinner>
                     </div>
                     
-                    <b-form-group class="titulo m-0 p-0" label="Informações de entrada do processo" label-size="lg">
+                    <!--<b-form-group class="titulo m-0 p-0" label="Informações de entrada do processo" label-size="lg">
                         <hr />
-                    </b-form-group>
+                    </b-form-group>-->
 
                     <div v-show="!isLoading"> 
                         <detalhes-processo  ref='formDetalhes' />       
@@ -24,7 +24,7 @@
                         
                     <div class="py-2 mt-10" align="right">                        
                        <slot name="buttons"></slot>
-                       <b-button class="bordered ml-2" type="submit" variant="success">Salvar</b-button>
+                       <b-button class="bordered ml-2" type="submit" variant="success" v-if="!formDados.disabledAll">Salvar</b-button>
                     </div>                
                 </b-form>
             </div>
@@ -62,7 +62,10 @@ export default Vue.extend({
     mixins: [        
         dataMixin,
     ],
-    props: ["id"],
+    props: {
+    tipo: String,
+    id: Number
+    },
     data() {
         return {
             show: false as boolean, 
@@ -72,24 +75,31 @@ export default Vue.extend({
             loading: false as boolean,
             alert: false as boolean,  
             formDados: {} as any,  
-            carregarForm: {} as Processo,  
+            carregarForm: {} as Processo,
+            buttonDisabled: false as boolean,  
         }
     },    
 
     mounted() {
         this.isLoading = false
         //pega os dados do componente filho (detalhes do processo)
-        this.formDados = this.$refs.formDetalhes
+        this.formDados = this.$refs.formDetalhes           
 
-           /* const path = this.$route.path;
-            const acao = "/editar";
+        if(this.tipo == 'visualizar') {
+            this.formDados.disabledAll = true
+            this.buttonDisabled = true
+            return;
+        }  
 
-            if (path.includes(acao)) {
-                this.carregarDados();            
-            }*/
-
-        this.carregarDados();            
-    
+        if(this.tipo == 'editar') {           
+            this.carregarDados();      
+            return;
+        }
+        
+        if(this.tipo == 'duplicar') {           
+            this.carregarDadosDuplicados();             
+            return;  
+        }      
     }, 
             
     methods: {
@@ -206,6 +216,38 @@ export default Vue.extend({
                 this.loading = false;
             });
         },
+
+        carregarDadosDuplicados(): void {
+            this.loading = true;         
+            
+            RestApiService.get("processo/listid", this.id)
+                .then((res: any) => {
+              
+                this.formDados.form.idTipoProcesso =  res.data.idTipoProcesso              
+                this.formDados.form.idOrgaoDemandante = res.data.orgaoSelecionado.value               
+                this.formDados.form.idAssunto =  res.data.value
+                this.formDados.form.idClassificacao = res.data.idClassificacao
+                this.formDados.form.objeto =  res.data.objeto 
+                this.formDados.form.idResponsavel = res.data.value
+                this.formDados.form.descricao = res.data.descricao 
+                this.formDados.form.sigiloso = res.data.sigiloso
+                this.formDados.form.observacao = res.data.observacao    
+                
+                //formatar datas para formato br
+                this.formDados.formatDatasEnToBr()
+            })
+            .catch((e) => {
+              /*  this.adicionarAlert(
+                    "alert",
+                    "Houve um erro ao carregar os dados do paciente. Tente novamente!"
+                );*/
+          
+            })
+            .finally(() => {
+                this.loading = false;
+            });
+        },
+
 
         validarCampos(): boolean {
 
