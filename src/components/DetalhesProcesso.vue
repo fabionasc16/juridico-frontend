@@ -4,11 +4,11 @@
                         <b-form-group class="font col-sm-5 col-md-5 col-lg-5">
                             <label>Nº Procedimento: <span class="text-danger">*</span></label>
                             <b-form-input type="text" v-model="form.numProcedimento" required
-                             placeholder="Procedimento/Expediente"></b-form-input>                             
+                             placeholder="Procedimento/Expediente" autofocus :disabled="disabledAll"></b-form-input>                             
                         </b-form-group> 
 
                         <b-form-group label="Tipo:" class="font col-sm-3 col-md-3 col-lg-3">
-                            <b-form-select v-model="form.idTipoProcesso">
+                            <b-form-select v-model="form.idTipoProcesso" :disabled="disabledAll">
                                 <b-form-select-option value="">-- Selecione --</b-form-select-option>
                                 <b-form-select-option v-for="option in optionsTipoProcesso" :value="option.value"
                                    :key="option.value"> {{ option.texto }}
@@ -19,39 +19,39 @@
                         <b-form-group class="font col-sm-3 col-md-3 col-lg-3">
                             <label>Prazo total: <span class="text-danger">*</span></label>
                             <b-form-input type="text" v-model="form.prazoTotal" required
-                            v-mask="'######'"
-                            placeholder="em dias úteis"></b-form-input>
+                            v-mask="'######'" 
+                            placeholder="em dias úteis" :disabled="disabledAll"></b-form-input>
                         </b-form-group>
                     </div>
 
                     <div class="row">
                         <b-form-group label="Órgão Demandante:" class="font col-sm-5 col-md-5 col-lg-5">
                             <v-select style="font-size: 0.85rem" :options="optionsOrgaos" class="font" label="texto"
-                                        v-model="orgaoSelecionado"/>
+                                        v-model="orgaoSelecionado" :disabled="disabledAll"/>
                         </b-form-group>                       
                           
                         <b-form-group label="Data do Processo:" class="font col-sm-3 col-md-3 col-lg-3">
                             <b-form-input class="bordered margin-field" type="text" v-model="datas.dataProcessoBR" placeholder="dd/mm/aaaa"
-                                v-mask="'##/##/####'"></b-form-input>                          
+                                v-mask="'##/##/####'" :disabled="disabledAll"></b-form-input>                          
                         </b-form-group>
 
                         <b-form-group label="Data Recebimento:" class="font col-sm-3 col-md-3 col-lg-3">
                             <b-form-input class="bordered margin-field" type="text" v-model="datas.dataRecebimentoBR" placeholder="dd/mm/aaaa"
-                                v-mask="'##/##/####'"></b-form-input>                          
+                                v-mask="'##/##/####'" :disabled="disabledAll"></b-form-input>                          
                         </b-form-group>
 
                         <b-form-group label="Hora Recebimento:" class="font col-sm-3 col-md-3 col-lg-3">
-                            <b-form-input type="time" v-model="form.horaRecebimento"></b-form-input>
+                            <b-form-input type="time" v-model="form.horaRecebimento" :disabled="disabledAll"></b-form-input>
                         </b-form-group>
 
                         <b-form-group label="Data Final Limite:" class="font col-sm-3 col-md-3 col-lg-3">
                             <b-form-input class="bordered margin-field" type="text" v-model="datas.dataLimitePrazoBR" placeholder="dd/mm/aaaa"
-                                v-mask="'##/##/####'"></b-form-input>                          
+                                v-mask="'##/##/####'" :disabled="disabledAll"></b-form-input>                          
                         </b-form-group>
 
                         <b-form-group label="Valor Multa:" class="font col-sm-4 col-md-4 col-lg-4">
                             <vue-numeric currency="R$" separator="." :precision='precision' class="form-control bordered margin-field" 
-                            prefix="R$" v-model="form.valorMulta" :allow-clear="allowclear"></vue-numeric>                
+                            prefix="R$" v-model="form.valorMulta" :allow-clear="allowclear" :disabled="disabledAll"></vue-numeric>                
                         </b-form-group>
                          
 
@@ -60,11 +60,11 @@
                     <div class="row">
                         <b-form-group label="Assunto:" class="font col-sm-7 col-md-7 col-lg-7">                           
                              <v-select style="font-size: 0.85rem" :options="optionsAssunto" class="font" label="texto"
-                                        v-model="assuntoSelecionado"/>
+                                        v-model="assuntoSelecionado" :disabled="disabledAll"/>
                         </b-form-group>
 
                         <b-form-group label="Classificação:" class="font col-sm-5 col-md-5 col-lg-5">
-                            <b-form-select size="sm" v-model="form.idClassificacao">                               
+                            <b-form-select size="sm" v-model="form.idClassificacao" :disabled="disabledAll">                               
                                  <b-form-select-option value="">-- Selecione --</b-form-select-option>
                                  <b-form-select-option v-for="option in optionsClassificacao" :value="option.value"
                                    :key="option.value"> {{ option.texto }}
@@ -77,18 +77,18 @@
                         <div class="col-7">
                             <div class="row">
                                 <b-form-group label="Objeto:" class="font col-sm-12 col-md-12 col-lg-12">
-                                    <b-form-textarea rows="2" max-rows="2" v-model="form.objeto"></b-form-textarea>
+                                    <b-form-textarea rows="2" max-rows="2" v-model="form.objeto" :disabled="disabledAll"></b-form-textarea>
                                 </b-form-group>
                             </div>
                             <div class="row">
                                 <b-form-group label="Responsável:" class="font col-sm-12 col-md-12 col-lg-12">                                   
                                     <v-select style="font-size: 0.85rem" :options="optionsResponsavel" class="font" label="nome"
-                                        value="idResponsavel" v-model="responsavelSelecionado"/>
+                                        value="idResponsavel" v-model="responsavelSelecionado" :disabled="disabledAll"/>
                                 </b-form-group>
                             </div>
                             <div class="row">
                                 <b-form-group label="Descrição:" class="font col-sm-12 col-md-12 col-lg-12">
-                                    <b-form-textarea rows="4" max-rows="4" v-model="form.descricao"></b-form-textarea>
+                                    <b-form-textarea rows="4" max-rows="4" v-model="form.descricao" :disabled="disabledAll"></b-form-textarea>
                                 </b-form-group>
                             </div>
                             
@@ -99,19 +99,19 @@
                         <div class="col-5">
 
                              <div class="row mb-3">
-                                <b-form-checkbox v-model="form.sigiloso" switch
+                                <b-form-checkbox v-model="form.sigiloso" switch :disabled="disabledAll"
                                     class="font col-sm-12 col-md-12 col-lg-12">Processo sigiloso?
                                 </b-form-checkbox>
                              </div>
 
                             <div class="row">
-                                <b-form-checkbox v-model="form.requerSIGED" @change="exibirCampoSIGED()" switch
+                                <b-form-checkbox v-model="form.requerSIGED" @change="exibirCampoSIGED()" switch :disabled="disabledAll"
                                     class="font col-sm-2 col-md-2 col-lg-2">Requer SIGED
                                 </b-form-checkbox>
 
                                 <b-form-group label="" class="ml-4 mt-2 mb-0 font col-sm-9 col-md-9 col-lg-9"
                                     v-show="exibirRegistroSIGED">
-                                    <b-form-input :placeholder="'Nº SIGED'" type="text" v-model="form.numProcessoSIGED">
+                                    <b-form-input :placeholder="'Nº SIGED'" type="text" v-model="form.numProcessoSIGED" :disabled="disabledAll">
                                     </b-form-input>
                                 </b-form-group>
                             </div>
@@ -142,14 +142,14 @@
                                     </div>
 
                                 </div>
-                            </div>                            
+                            </div>                          
 
                         </div>
 
                         <div class="col-12">
                             <div class="row">
                                 <b-form-group label="Observação:" class="font col-sm-12 col-md-12 col-lg-12">
-                                    <b-form-textarea rows="2" max-rows="2" v-model="form.observacao"></b-form-textarea>
+                                    <b-form-textarea rows="2" max-rows="2" v-model="form.observacao" :disabled="disabledAll"></b-form-textarea>
                                 </b-form-group>
                             </div>
                         </div>
@@ -188,6 +188,7 @@ export default Vue.extend({
     data() {
         return {            
             show: false as boolean,
+            disabledAll: false as boolean,
             exibirMaisDetalhes: false as boolean,
             exibirRegistroPrazo: false as boolean,
             exibirRegistroSIGED: false as boolean, 

@@ -192,8 +192,11 @@
                   </template>
 
                   <!-- ITENS DO DROPDOWN -->                
-                  <b-list-group-item block v-b-modal.modal-detalhes-processo class="btn-light btn-outline-dark m-0 p-1">
-                    Detalhar
+                  <b-list-group-item block v-b-modal.modal-editar-processo class="btn-light btn-outline-dark m-0 p-1">
+                    Editar
+                  </b-list-group-item>
+                  <b-list-group-item block v-b-modal.modal-visualizar-processo class="btn-light btn-outline-dark m-0 p-1">
+                    Visualizar
                   </b-list-group-item>
                   <b-list-group-item block v-b-modal.modal-tramitacoes-processo class="btn-light btn-outline-dark m-0 p-1">
                     Tramitações
@@ -204,7 +207,9 @@
                   <b-list-group-item block v-b-modal.modal-duplicar-processo class="btn-light btn-outline-dark m-0 p-1">
                     Duplicar
                   </b-list-group-item>
-                  <b-list-group-item block v-b-modal.modal-arquivar-processo class="btn-light text-dark btn-outline-success m-0 p-1">
+                  <b-list-group-item block v-b-modal.modal-arquivar-processo 
+                     class="btn-light text-dark btn-outline-success m-0 p-1"
+                     v-if="data.item.statusProcesso!='Arquivado'">
                     Arquivar
                   </b-list-group-item>
                   <b-list-group-item block class="btn-light text-dark btn-outline-danger m-0 p-1"
@@ -237,7 +242,7 @@
         <b-modal id="modal-cadastro-processo" size="lg" centered title="Cadastro do Processo" hide-footer>
           <!--<ModalCadastroProcesso>
           </ModalCadastroProcesso>-->
-           <ModalDetalhesProcesso >
+           <ModalDetalhesProcesso tipo="cadastrar">
               <template v-slot:buttons>
                  <b-button class="bordered" @click="$bvModal.hide('modal-cadastro-processo')">Fechar</b-button>
               </template>
@@ -245,14 +250,23 @@
           
         </b-modal>
         <!-- DETALHES DO PROCESSO -->
-        <b-modal id="modal-detalhes-processo" size="lg" centered title="Detalhes do Processo" hide-footer>
-          <ModalDetalhesProcesso >
+        <b-modal id="modal-editar-processo" size="lg" centered title="Editar Processo" hide-footer>
+          <ModalDetalhesProcesso tipo="editar">
             <template v-slot:buttons>
-                <b-button class="bordered" @click="$bvModal.hide('modal-detalhes-processo')">Fechar</b-button>
+                <b-button class="bordered" @click="$bvModal.hide('modal-editar-processo')">Fechar</b-button>
             </template>
           </ModalDetalhesProcesso>
-            
         </b-modal>
+
+          <b-modal id="modal-visualizar-processo" size="lg" centered title="Visualizar Processo" hide-footer>
+          <ModalDetalhesProcesso tipo="visualizar">
+            <template v-slot:buttons>
+                <b-button class="bordered" @click="$bvModal.hide('modal-visualizar-processo')">Fechar</b-button>
+            </template>
+          </ModalDetalhesProcesso>
+        </b-modal>
+            
+        
         <!-- TRAMITAÇÕES DO PROCESSO -->
         <b-modal id="modal-tramitacoes-processo" size="lg" centered title="Tramitações do Processo" hide-footer>
           <ModalTramitacoesProcesso>             
@@ -297,7 +311,7 @@
         <b-modal id="modal-duplicar-processo" size="lg" centered title="Duplicar Processo" hide-footer>
           <!--<ModalDuplicarProcesso>            
           </ModalDuplicarProcesso>-->
-            <ModalDetalhesProcesso >
+            <ModalDetalhesProcesso tipo="duplicar">
             <template v-slot:buttons>
                 <b-button class="bordered" @click="$bvModal.hide('modal-duplicar-processo')">Fechar</b-button>
             </template>
