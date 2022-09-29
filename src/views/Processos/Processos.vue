@@ -208,6 +208,11 @@
                     Arquivar
                   </b-list-group-item>
                   <b-list-group-item block class="btn-light text-dark btn-outline-danger m-0 p-1"
+                      v-if="data.item.statusProcesso=='Arquivado'"  
+                      @click="desarquivar(data.item.idProcesso, data.item.numProcedimento, data.item.statusProcesso, data.item)">
+                    Desarquivar
+                  </b-list-group-item>
+                  <b-list-group-item block class="btn-light text-dark btn-outline-danger m-0 p-1"
                       v-if="data.item.statusProcesso=='Cadastrado'"  
                       @click="excluir(data.item.idProcesso, data.item.numProcedimento, data.item.statusProcesso)">
                     Excluir
@@ -438,6 +443,36 @@ export default Vue.extend({
 
       console.log(JSON.stringify(this.form))
     },
+
+    desarquivar(id: any, data: any, status: string, dadosForm: any): void {
+    
+    let message = 'Deseja realmente desarquivar processo Nº ' + data + '?'
+
+    if(confirm(message) && (status == 'Arquivado' || status == 'arquivado')) {
+    
+      RestApiService.update("processo", dadosForm)
+        .then((response: any) => {
+          this.loading = true;
+
+          this.adicionarAlert(
+                  "success",
+                  "Processo Desarquivado com sucesso!"
+          );          
+        })
+        .catch((e: Error) => {    
+           this.adicionarAlert(
+                  "alert",
+                  "Ocorreu um erro ao desarquivar processo! Contacte o administrador do sistema."
+          );
+        })
+        .finally(() => {
+          this.loading = false;
+        });   
+
+      console.log("Desarquivado.")
+    }
+   },
+
 
     excluir(id: any, data: any, status: string): void {
     
