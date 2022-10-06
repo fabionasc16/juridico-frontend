@@ -230,7 +230,14 @@
 
                 </b-dropdown>
               </template>
+             
             </b-table-lite>
+
+            <div class="m-3 text-center">
+              <label>Nenhum registro encontrado.</label>
+            </div>
+            
+            
           </div>
           <!-- RODAPÉ DA TABELA (Espaço reservado para incluir ícones) -->
           <div class="card-footer m-0 px-1 pt-1">
@@ -347,7 +354,8 @@ import ModalArquivarProcesso from './Modais/ModalArquivarProcesso.vue';
 import ModalDetalhesProcesso from './Modais/ModalDetalhesProcesso.vue';
 import { mask } from "vue-the-mask";
 import { Processo } from '@/type/processo';
-import { TableProcessoSeeder } from '@/type/tableProcesso';
+//import { TableProcesso } from '@/type/tableProcesso';
+//import { TableProcessoSeeder } from '@/type/tableProcesso';
 import { BIconSearch, BIconPlusCircle, BIconInfoCircle, BIconJournalText } from 'bootstrap-vue'
 import { TipoProcessoSeeder } from "@/type/tipoProcesso";
 import { StatusProcessoSeeder } from "@/type/statusProcesso";
@@ -389,22 +397,23 @@ export default Vue.extend({
   data() {
     return {
       rows: 100,
+      totalRows: null as any,
+      perPage: 10,
       currentPage: 1,
       stickyHeader: true,
       noCollapse: true,
       show: false as boolean,
       exibirMaisDetalhes: false as boolean,
       exibirRegistroPrazo: false as boolean,
-      exibirRegistroSIGED: false as boolean,
-      totalRows: 1,
-      perPage: 5,
+      exibirRegistroSIGED: false as boolean,      
       pageOptions: [5, 10, 15, { value: 100, text: "Show a lot" }],
       form: {} as Processo,
       checkedProcessoSiged: false as boolean,
       checkedExpiraHoje: false as boolean,
       maisDetalhes: false as boolean,
       fields: FieldsTableProcesso, //nome das colunas da tabela
-      items: TableProcessoSeeder, // lista de processos
+      //items: TableProcessoSeeder, // lista de processos
+      items: [] as Array<String>,
       optionsTipoProcesso: TipoProcessoSeeder,
       optionsStatusProcesso: StatusProcessoSeeder,
       optionsStatusPrazo: StatusPrazoSeeder,
@@ -454,8 +463,7 @@ export default Vue.extend({
     };
   },
   mounted() {
-    this.totalRows = this.items.length
-     
+    this.listarProcesso(this.currentPage)
   },
   methods: {
     submit() {
@@ -472,6 +480,37 @@ export default Vue.extend({
       this.form.caixaAtualSIGED = this.caixaSigedSelecionada.value
 
       console.log(JSON.stringify(this.form))
+    },
+
+    listarProcesso(currentpage: number): void {
+      this.loading = true
+
+      RestApiService.postParams("processos", `?currentPage=${currentpage}`)
+        .then((response: any) => {
+          this.items = response.data.data
+          this.perPage = response.data.perPage
+          this.totalRows = response.data.total
+        })
+        .catch((e) => {
+          this.Notificacao.push({
+            type: "danger",
+            message: "Não foi possível carregar a listagem!"            
+          })
+          console.log(e.response.data.message)
+        })
+        .finally(() => {
+          this.loading = false
+          this.limparNotificacao();
+        })
+
+    },
+
+    limparNotificacao(): void {
+      if (this.Notificacao.length > 0) {
+        setTimeout(() => {
+          this.Notificacao = [];
+        }, 3000);
+      }
     },
 
     desarquivar(id: any, data: any, status: string, dadosForm: any): void {
@@ -559,8 +598,7 @@ export default Vue.extend({
               return "success"
             }
   
-            return ""
-            
+            return ""            
     },
     statusDiasRestantes(prazo: any) : any {
 
