@@ -16,7 +16,7 @@ services:
     image: nginx:latest
     container_name: sapej
     ports:
-      - '8080:80'
+      - '8282:80'
     volumes:
       - '/opt/sapej/dist/:/usr/share/nginx/html'
     network_mode: bridge
