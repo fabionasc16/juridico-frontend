@@ -1,11 +1,26 @@
 stages:          # List of stages for jobs, and their order of execution
+  - build
   - deploy 
+
+build: # This job runs in the deploy stage.
+  stage: build
+  script:
+    - cp src/environments/environment.prod.ts src/environments/environment.ts
+    - docker-compose up sapej_build
+    - cp -R dist /opt/sipah/
+  tags:
+    - prodam_150
+  only:
+    - master
 
 deploy:      # This job runs in the deploy stage.
   stage: deploy
   script:
-    - docker-compose up -d --force-recreate
+    - docker-compose up -d --force-recreate sapej
   tags:
-    - ses_23
+    - prodam_150
   only:
     - master  
+  dependencies:
+    - build
+
