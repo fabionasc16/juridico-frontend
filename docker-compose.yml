@@ -18,5 +18,5 @@ services:
     ports:
       - '8080:80'
     volumes:
-      - './dist/:/usr/share/nginx/html'
+      - '/opt/sapej/dist/:/usr/share/nginx/html'
     network_mode: bridge

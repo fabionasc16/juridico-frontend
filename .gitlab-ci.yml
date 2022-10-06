@@ -7,7 +7,7 @@ build: # This job runs in the deploy stage.
   script:
     - cp src/environments/environment.prod.ts src/environments/environment.ts
     - docker-compose up sapej_build
-    - cp -R dist /opt/sipah/
+    - cp -R dist /opt/sapej/
   tags:
     - prodam_150
   only:
