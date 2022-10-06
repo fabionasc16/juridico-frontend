@@ -430,11 +430,11 @@ export default Vue.extend({
 
       tipoProcessoSelecionado: {
         texto: "-- Selecione --" as string,
-        value: "" as string,
+        value: null as any,
       },
       statusProcessoSelecionado: {
         texto: "-- Selecione --" as string,
-        value: "" as string,
+        value: null as any,
       },
       statusPrazoSelecionado: {
         texto: "-- Selecione --" as string,
@@ -442,7 +442,7 @@ export default Vue.extend({
       },
       orgaoDemandanteSelecionado: {
         texto: "-- Selecione --" as string,
-        value: "" as string,
+        value: null as any,
       },
       classificacaoSelecionada: {
         texto: "-- Selecione --" as string,
