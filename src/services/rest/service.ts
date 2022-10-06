@@ -23,6 +23,10 @@ class RestApiService {
     return http.post(`/${uri}`, JSON.stringify(data));
   }
 
+  public postParams(uri: string, params: any): Promise<any> {
+    return http.post(`/${uri}/${params}`);
+  }
+
   public get(uri: string, params: any): Promise<any> {
     return http.get(`/${uri}/${params}`);
   }
