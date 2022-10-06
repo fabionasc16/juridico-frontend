@@ -11,6 +11,9 @@ import vSelect from 'vue-select'
 
 Vue.component('v-select', vSelect)
 
+import VueCompositionAPI from '@vue/composition-api'
+Vue.use(VueCompositionAPI)
+
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 import 'vue-select/dist/vue-select.css';

@@ -20,43 +20,43 @@ export const FieldsTableProcesso =
           sortable: false,
         },
         {
-          key: 'numProcedimento',
+          key: 'num_procedimento',
           label: 'Nº Procedimento',
           sortable: true
         },
         {
-          key: 'numProcessoSIGED',
+          key: 'numero_siged',
           label: 'Nº SIGED',
           sortable: true
         },       
         {
-          key: 'orgaoDemandante',
+          key: 'orgaoDemandante.orgao_demandante',
           label: 'Órgão Demandante',
           sortable: true,
         },
         {
-          key: 'classificacao',
+          key: 'classificacao.desc_classificacao',
           label: 'Classificação',
           sortable: true,
         },
         {
-          key: 'caixaAtualSiged',
+          key: 'caixa_atual_siged',
           label: 'Caixa SIGED',
           sortable: true,
         },
         {
-          key: 'statusProcesso',
+          key: 'status.desc_status',
           label: 'Status',
           sortable: true,
         },  
         {
-          key: 'prazoTotal',
+          key: 'prazo_total',
           label: 'Prazo (Dias Úteis)',
           sortable: true,
         },  
         {
           key: 'diasRestantes',
-          label: 'Dias Restantes (Corridos)',
+          label: 'Dias a Expirar (Corridos)',
           sortable: true,
         }, 
         {

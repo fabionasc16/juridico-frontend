@@ -4,7 +4,7 @@ export type Classificacao = {
 };
 
 export const ClassificacaoSeeder: Array<Classificacao> = [
-    { texto: "Normal", value: "1" },
-    { texto: "Próximo à expiração", value: "2" },
-    { texto: "Expirado", value: "3" },   
+    { texto: "Paciente", value: "1" },
+    { texto: "Covid", value: "2" },  
+    { texto: "Outros", value: "3" },    
 ];

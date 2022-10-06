@@ -13,6 +13,8 @@ const routes: Array<RouteConfig> = [
   { path: '/graficoLinha', name: 'Gráfico de Linha', component: () => import('../views/Dashboard/Graficos/GraficoLinha.vue') },
   { path: '/graficoLinhas', name: 'Gráfico de Linhas', component: () => import('../views/Dashboard/Graficos/GraficoLinhas.vue') },
   { path: '/graficoPizza', name: 'Gráfico de Pizza', component: () => import('../views/Dashboard/Graficos/GraficoPizza.vue') },
+  { path: '/responsaveis', name: 'Responsáveis', component: () => import('../views/Responsaveis/Responsaveis.vue') },
+  { path: '/feriados', name: 'Feriados', component: () => import('../views/Feriados/Feriados.vue') },
 ]
 
 const router = new VueRouter({

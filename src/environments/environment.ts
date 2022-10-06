@@ -1,8 +1,8 @@
 export let environment = {
   production: false,
-  apiURL: "",
-  apiURLImagem: "",
-  apiURLSSO: ""
+  apiURL: "http://192.168.107.150:3302/api",
+  apiURLImagem: "http://192.168.107.150:3302",
+  apiURLSSO: "http://192.168.107.150:3302/api/v1",
 
   //apiURL: "http://10.200.7.27:3301/api",
   //apiURLImagem: "http://10.200.7.27:3301",

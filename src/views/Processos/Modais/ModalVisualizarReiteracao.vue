@@ -1,12 +1,14 @@
 <template>
+    <div>   
+    
 
     <!-- CARD DA TABELA DO PROCESSO -->
-    <div class="card p-0 m-0">
+    <div class="card p-0 mt-10">
         <!-- CABEÇALHO DA TABELA (Espaço reservado para incluir ícones) -->
         <div class="card-header" align="right">
             <div class="row">
                 <!-- ÍCONE Journal-Text -->
-                <div class="col-1 text-blue h2 p0m0" align="center" label="Tramitações do Processo">
+                <div class="col-1 text-blue h2 p0m0" align="center" label="Reiterações">
                     <b-icon-journal-text></b-icon-journal-text>
                 </div>
                 <!-- TÍTULO -->
@@ -15,6 +17,14 @@
                         <h5>123456/7890-12</h5>
                     </div>
                 </div>
+                <!-- ÍCONE Plus-Circle -->
+                <div class="col-1 position-relative mt-3 mb-3" align="center"> 
+                    <b-form-group label="" class="btn text-primary position-absolute top-50 start-50 translate-middle">
+                    <div class="h3">
+                        <b-icon-plus-circle v-b-modal.modal-cadastro-reiteracao v-b-tooltip.hover.topleft="'Adicionar Reiteração'"></b-icon-plus-circle>
+                    </div>
+                    </b-form-group>
+                </div>
             </div>
         </div>
         <!-- TABELA -->
@@ -22,6 +32,25 @@
             <b-table-lite small striped hover responsive class="m-0" head-variant="dark"
                 :current-page="currentPage" :per-page="perPage" :sticky-header="stickyHeader"
                 :no-border-collapse="noCollapse" :items="items" :fields="fields">
+
+              <!-- BOTÕES DE AÇÕES -->
+              <template v-slot:cell(botaoAction)="data">
+
+                    <!-- BOTÃO DROPDOWN -->
+                    <b-dropdown variant="dark" class="p0m0" size="sm">
+                    <!-- CONFIG. ICON HAMBURGUER -->
+                    <template #button-content>
+                        &#x2261;<span class="sr-only"></span>
+                    </template>
+
+                    <!-- ITENS DO DROPDOWN -->                
+                    <b-list-group-item block v-b-modal.modal-editar-reiteracao 
+                      class="btn-light btn-outline-dark m-0 p-1">
+                        Editar
+                    </b-list-group-item>
+
+                    </b-dropdown>
+                    </template>
             </b-table-lite>
         </div>
         <!-- RODAPÉ DA TABELA (Espaço reservado para incluir ícones) -->
@@ -35,12 +64,11 @@
         </div>
 
         <div class="py-2 mt-10 mr-3" align="right">                        
-            <b-button class="bordered" @click="$bvModal.hide('modal-tramitacoes-processo')">Fechar</b-button>
+            <b-button class="bordered" @click="$bvModal.hide('modal-visualizar-reiteracao')">Fechar</b-button>
         </div>
 
     </div>     
-
-
+   </div>     
 </template>
 
 <script lang="ts">
@@ -49,8 +77,9 @@ import HeaderPage from '@/components/HeaderPage.vue';
 import { mask } from "vue-the-mask";
 import Notifications from "@/components/Notifications.vue";
 import { BIconSearch, BIconPlusCircle, BIconInfoCircle, BIconJournalText } from 'bootstrap-vue'
-import {FieldsTableTramitacao} from "@/type/tableTramitacao"
-import {TableTramitacaoSeeder} from "@/type/tableTramitacao"
+import {FieldsTableReiteracao} from "@/type/tableReiteracao"
+import {TableReiteracaoSeeder} from "@/type/tableReiteracao"
+
 
 export default Vue.extend({
     directives: { mask },
@@ -63,8 +92,8 @@ export default Vue.extend({
             totalRows: 1,
             perPage: 5,
             pageOptions: [5, 10, 15, { value: 100, text: "Show a lot" }],     
-            fields: FieldsTableTramitacao,
-            items: TableTramitacaoSeeder,
+            fields: FieldsTableReiteracao,
+            items: TableReiteracaoSeeder,
         };
     },
     methods: {       

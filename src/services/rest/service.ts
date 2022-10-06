@@ -1,26 +1,30 @@
 import "axios";
 import { environment } from "../../environments/environment";
-import http from "./http_sipah";
+import http3 from "./http_sipah";
 import http2 from "./http_img";
-import http3 from "./http_sso";
+import http from "./http_sso";
 
 class RestApiService {
   private apiUrl = environment.apiURL;
 
   public postLogin(uri: string, data: any): Promise<any> {
-    return http3.post(`/${uri}`, JSON.stringify(data));
+    return http.post(`/${uri}`, JSON.stringify(data));
   }
 
   public getUnidades(uri: string, params: any): Promise<any> {
-    return http3.get(`/${uri}/${params}`);
+    return http.get(`/${uri}/${params}`);
   }
 
   public postResetPass(uri: string, data: any): Promise<any> {
-    return http3.post(`/${uri}`, JSON.stringify(data));
+    return http.post(`/${uri}`, JSON.stringify(data));
   }
 
   public post(uri: string, data: any): Promise<any> {
     return http.post(`/${uri}`, JSON.stringify(data));
+  }
+
+  public postParams(uri: string, params: any): Promise<any> {
+    return http.post(`/${uri}/${params}`);
   }
 
   public get(uri: string, params: any): Promise<any> {

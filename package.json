@@ -1,5 +1,5 @@
 {
-  "name": "ticados2",
+  "name": "juridico-frontend",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -7,7 +7,7 @@
     "build": "vue-cli-service build"
   },
   "dependencies": {
-    "@vue/composition-api": "^1.6.1",
+    "@vue/composition-api": "^1.7.0",
     "animate.css": "^4.1.1",
     "axios": "^0.27.2",
     "bootstrap-vue": "^2.22.0",
@@ -20,6 +20,7 @@
     "vue-axios": "^3.4.1",
     "vue-chart-3": "^2.1.2",
     "vue-chartjs": "^3.5.1",
+    "vue-numeric": "^2.5.0",
     "vue-router": "^3.5.1",
     "vue-select": "^3.20.0",
     "vue-the-mask": "^0.11.1",

@@ -6,6 +6,18 @@
           <hr />
         </b-form-group>
 
+         <!-- NOTIFICAÇÕES -->       
+         <notifications :notifications="Notificacao"></notifications>      
+
+        <div v-if="alert">
+            <ReturnMessage :message="Message" :fechaAlert="fechaAlert"></ReturnMessage>
+        </div>          
+
+        <div v-if="loading">
+            <LoadingSpinner></LoadingSpinner>
+        </div>
+
+
         <!-- FORMULÁRIO DE CONSULTA DO PROCESSO -->
         <b-form  @submit.prevent="submit">
           <!-- 1ª LINHA (3 CAIXAS + ÍCONE) -->
@@ -16,7 +28,7 @@
 
                 <b-form-group append="m" class="font col-sm-3 col-md-3 col-lg-3">
                    
-                  <b-form-checkbox switch class="font" v-model="checkedProcessoSiged">                      
+                  <b-form-checkbox switch class="font" v-model="checkedProcessoSiged" @change="alterarProced">                      
                     <label v-if="checkedProcessoSiged">Nº Procedimento:</label> 
                     <label v-else>Nº SIGED:</label>                       
                   </b-form-checkbox>                            
@@ -70,6 +82,13 @@
           <div class="row">
             <div class="col-12">
               <div class="row">
+
+                <b-form-group label="Órgão Demandante:" append="m" class="font col-sm-3 col-md-3 col-lg-3"
+                  v-show="exibirMaisDetalhes">
+                   <v-select style="font-size: 0.85rem" :options="optionsOrgaoDemandante" class="font" label="texto"
+                                        v-model="orgaoDemandanteSelecionado"/>            
+                </b-form-group>
+
                 <b-form-group label="Tipo do Processo:" append="m" class="font col-sm-3 col-md-3 col-lg-3"
                   v-show="exibirMaisDetalhes">                
                   <v-select style="font-size: 0.85rem" :options="optionsTipoProcesso" class="font" label="texto"
@@ -82,17 +101,18 @@
                                         v-model="statusProcessoSelecionado"/>
                 </b-form-group>
 
-                 <b-form-group label="Status Prazo:" append="m" class="font col-sm-3 col-md-3 col-lg-3"
-                  v-show="exibirMaisDetalhes">               
-                  <v-select style="font-size: 0.85rem" :options="optionsStatusPrazo" class="font" label="texto"
+                 <b-form-group append="m" class="font col-sm-3 col-md-3 col-lg-3"
+                  v-show="exibirMaisDetalhes">  
+                  
+                    <b-form-checkbox switch class="font" v-model="checkedExpiraHoje">                                         
+                      <label v-if="checkedExpiraHoje">Expira Hoje</label>    
+                      <label v-else>Status Prazo:</label>                           
+                    </b-form-checkbox> 
+
+                  <v-select v-if="!checkedExpiraHoje" style="font-size: 0.85rem" :options="optionsStatusPrazo" class="font" label="texto"
                                         v-model="statusPrazoSelecionado"/>
                 </b-form-group>
-
-                <b-form-group label="Órgão Demandante:" append="m" class="font col-sm-3 col-md-3 col-lg-3"
-                  v-show="exibirMaisDetalhes">
-                   <v-select style="font-size: 0.85rem" :options="optionsOrgaoDemandante" class="font" label="texto"
-                                        v-model="orgaoDemandanteSelecionado"/>            
-                </b-form-group>
+                
 
                 <b-form-group label="Classificação:" append="m" class="font col-sm-3 col-md-3 col-lg-3"
                   v-show="exibirMaisDetalhes">
@@ -102,9 +122,11 @@
 
                  <b-form-group label="Responsável:" append="m" class="font col-sm-3 col-md-3 col-lg-3"
                   v-show="exibirMaisDetalhes">
-                  <v-select style="font-size: 0.85rem" :options="optionsResponsavel" class="font" label="texto"
+                  <v-select style="font-size: 0.85rem" :options="optionsResponsavel" class="font" label="nome"
+                                        value="idResponsavel" 
                                         v-model="responsavelSelecionado"/>  
                 </b-form-group>
+                  
               </div>
             </div>
           </div>
@@ -148,12 +170,15 @@
 
               <template v-slot:cell(diasRestantes)="data">
                 <b-badge :variant="colorDiasRestantes(data.item.diasRestantes)">
-                   {{data.item.diasRestantes}} dias <br>({{statusDiasRestantes(data.item.diasRestantes)}})
+                   {{data.item.diasRestantes}}
                 </b-badge>
               </template>
 
               <template v-slot:cell(qtdReiteracao)="data">  
-                  <b-badge variant="light">{{data.item.qtdReiteracao}} </b-badge>             
+                  <b-badge :variant="colorReiteracao(data.item.qtdReiteracao)">{{data.item.qtdReiteracao}}</b-badge>
+                  <!--<a href="#" v-b-modal.modal-visualizar-reiteracao>
+                     <b-badge :variant="colorReiteracao(data.item.qtdReiteracao)">{{data.item.qtdReiteracao}}</b-badge>
+                  </a>-->
               </template>
              
               <!-- BOTÕES DE AÇÕES -->
@@ -167,28 +192,52 @@
                   </template>
 
                   <!-- ITENS DO DROPDOWN -->                
-                  <b-list-group-item block v-b-modal.modal-detalhes-processo class="btn-light btn-outline-dark m-0 p-1">
-                    Detalhar
+                  <b-list-group-item block v-b-modal.modal-editar-processo class="btn-light btn-outline-dark m-0 p-1"
+                  v-if="data.item.statusProcesso!='Arquivado'">
+                    Editar
                   </b-list-group-item>
+                  <b-list-group-item block v-b-modal.modal-visualizar-processo class="btn-light btn-outline-dark m-0 p-1">
+                    Visualizar
+                  </b-list-group-item>
+                  <b-list-group-item block v-b-modal.modal-andamento-processo class="btn-light btn-outline-dark m-0 p-1"
+                  v-if="data.item.statusProcesso!='Arquivado'">
+                    Alterar Situação
+                  </b-list-group-item> 
                   <b-list-group-item block v-b-modal.modal-tramitacoes-processo class="btn-light btn-outline-dark m-0 p-1">
                     Tramitações
-                  </b-list-group-item>
-                  <b-list-group-item block v-b-modal.modal-reiterar-processo class="btn-light btn-outline-dark m-0 p-1">
-                    Reiterar
+                  </b-list-group-item>                  
+                  <b-list-group-item block v-b-modal.modal-visualizar-reiteracao class="btn-light btn-outline-dark m-0 p-1">
+                    Reiterações
                   </b-list-group-item>
                   <b-list-group-item block v-b-modal.modal-duplicar-processo class="btn-light btn-outline-dark m-0 p-1">
                     Duplicar
                   </b-list-group-item>
-                  <b-list-group-item block class="btn-light text-dark btn-outline-success m-0 p-1">
+                  <!-- <b-list-group-item block v-b-modal.modal-arquivar-processo 
+                     class="btn-light text-dark btn-outline-success m-0 p-1"
+                     v-if="data.item.statusProcesso!='Arquivado'">
                     Arquivar
+                  </b-list-group-item> -->
+                  <b-list-group-item block class="btn-light text-dark btn-outline-danger m-0 p-1"
+                      v-if="data.item.statusProcesso=='Arquivado'"  
+                      @click="desarquivar(data.item.idProcesso, data.item.numProcedimento, data.item.statusProcesso, data.item)">
+                    Desarquivar
                   </b-list-group-item>
-                  <b-list-group-item block class="btn-light text-dark btn-outline-danger m-0 p-1">
+                  <b-list-group-item block class="btn-light text-dark btn-outline-danger m-0 p-1"
+                      v-if="data.item.statusProcesso=='Cadastrado'"  
+                      @click="excluir(data.item.idProcesso, data.item.numProcedimento, data.item.statusProcesso)">
                     Excluir
                   </b-list-group-item>
 
                 </b-dropdown>
               </template>
+             
             </b-table-lite>
+
+            <div class="m-3 text-center" v-if="!items">
+              <label>Nenhum registro encontrado.</label>
+            </div>
+            
+            
           </div>
           <!-- RODAPÉ DA TABELA (Espaço reservado para incluir ícones) -->
           <div class="card-footer m-0 px-1 pt-1">
@@ -202,32 +251,95 @@
 
         <!-- MODAL -->
         <!-- CADASTRO DO PROCESSO -->
-        <b-modal id="modal-cadastro-processo" size="lg" centered title="Cadastro do Processo">
-          <ModalCadastroProcesso>
-          </ModalCadastroProcesso>
+        <b-modal id="modal-cadastro-processo" size="lg" centered title="Cadastro do Processo" hide-footer>
+          <!--<ModalCadastroProcesso>
+          </ModalCadastroProcesso>-->
+           <ModalDetalhesProcesso tipo="cadastrar">
+              <template v-slot:buttons>
+                 <b-button class="bordered" @click="$bvModal.hide('modal-cadastro-processo')">Fechar</b-button>
+              </template>
+           </ModalDetalhesProcesso>
+          
         </b-modal>
         <!-- DETALHES DO PROCESSO -->
-        <b-modal id="modal-detalhes-processo" size="lg" centered title="Detalhes do Processo" hide-footer>
-          <ModalDetalhesProcesso>
+        <b-modal id="modal-editar-processo" size="lg" centered title="Editar Processo" hide-footer>
+          <ModalDetalhesProcesso tipo="editar">
+            <template v-slot:buttons>
+                <b-button class="bordered" @click="$bvModal.hide('modal-editar-processo')">Fechar</b-button>
+            </template>
           </ModalDetalhesProcesso>
         </b-modal>
+
+          <b-modal id="modal-visualizar-processo" size="lg" centered title="Visualizar Processo" hide-footer>
+          <ModalDetalhesProcesso tipo="visualizar">
+            <template v-slot:buttons>
+                <b-button class="bordered" @click="$bvModal.hide('modal-visualizar-processo')">Fechar</b-button>
+            </template>
+          </ModalDetalhesProcesso>
+        </b-modal>
+
+        <!-- ANDAMENTO PROCESSO - ALTERAR STATUS -->
+        <b-modal id="modal-andamento-processo" centered title="Alterar Situação do Processo" hide-footer>         
+            <ModalAndamentoProcesso >
+            <template v-slot:buttons>
+                <b-button class="bordered" @click="$bvModal.hide('modal-andamento-processo')">Fechar</b-button>
+            </template>
+          </ModalAndamentoProcesso> 
+        </b-modal>
+            
+        
         <!-- TRAMITAÇÕES DO PROCESSO -->
-        <b-modal id="modal-tramitacoes-processo" size="lg" centered title="Tramitações do Processo">
-          <ModalTramitacoesProcesso>
+        <b-modal id="modal-tramitacoes-processo" size="lg" centered title="Tramitações do Processo" hide-footer>
+          <ModalTramitacoesProcesso>             
           </ModalTramitacoesProcesso>
         </b-modal>
-        <!-- REITERAR PROCESSO -->
-        <b-modal id="modal-reiterar-processo" size="lg" centered title="Reiterar Processo">
-          <ModalReiterarProcesso>
-          </ModalReiterarProcesso>
+        <!-- REITERAR PROCESSO -->        
+        <b-modal id="modal-cadastro-reiteracao" size="lg" centered title="Cadastro - Reiterar Processo" hide-footer>
+          <ModalReiteracaoProcesso> 
+            <template v-slot:buttons>
+                <b-button class="bordered" @click="$bvModal.hide('modal-cadastro-reiteracao')">Fechar</b-button>
+            </template>            
+          </ModalReiteracaoProcesso>
         </b-modal>
-        <!-- DUPLICAR PROCESSO -->
-        <b-modal id="modal-duplicar-processo" size="lg" centered title="Duplicar Processo">
-          <ModalDuplicarProcesso>
-          </ModalDuplicarProcesso>
+
+        <b-modal id="modal-editar-reiteracao" size="lg" centered title="Edição - Reiterar Processo" hide-footer>
+          <ModalReiteracaoProcesso> 
+            <template v-slot:buttons>
+                <b-button class="bordered" @click="$bvModal.hide('modal-editar-reiteracao')">Fechar</b-button>
+            </template>            
+          </ModalReiteracaoProcesso>
+        </b-modal>
+
+        <b-modal id="modal-visualizar-reiteracao" size="lg" centered title="Reiterações do Processo" hide-footer>
+          <ModalVisualizarReiteracao> 
+            <template v-slot:buttons>
+                <b-button class="bordered" @click="$bvModal.hide('modal-visualizar-reiteracao')">Fechar</b-button>
+            </template>            
+          </ModalVisualizarReiteracao>
+        </b-modal>        
+
+        <!-- ARQUIVAR PROCESSO -->
+        <b-modal id="modal-arquivar-processo" centered title="Arquivar Processo" hide-footer>         
+            <ModalArquivarProcesso >
+            <template v-slot:buttons>
+                <b-button class="bordered" @click="$bvModal.hide('modal-arquivar-processo')">Fechar</b-button>
+            </template>
+          </ModalArquivarProcesso> 
         </b-modal>
         <!-- //modal -->
 
+        <!-- DUPLICAR PROCESSO -->
+        <b-modal id="modal-duplicar-processo" size="lg" centered title="Duplicar Processo" hide-footer>
+          <!--<ModalDuplicarProcesso>            
+          </ModalDuplicarProcesso>-->
+            <ModalDetalhesProcesso tipo="duplicar">
+            <template v-slot:buttons>
+                <b-button class="bordered" @click="$bvModal.hide('modal-duplicar-processo')">Fechar</b-button>
+            </template>
+          </ModalDetalhesProcesso>
+        </b-modal>
+        <!-- //modal -->
+      
       </div>
     </b-container>
   </div>
@@ -238,17 +350,12 @@ import Vue from "vue";
 //import axios from "axios";
 import HeaderPage from '@/components/HeaderPage.vue';
 import ModalTramitacoesProcesso from './Modais/ModalTramitacoesProcesso.vue';
-import ModalCadastroProcesso from './Modais/ModalCadastroProcesso.vue';
+import ModalArquivarProcesso from './Modais/ModalArquivarProcesso.vue';
 import ModalDetalhesProcesso from './Modais/ModalDetalhesProcesso.vue';
-import ModalReiterarProcesso from './Modais/ModalReiterarProcesso.vue';
-import ModalDuplicarProcesso from './Modais/ModalDuplicarProcesso.vue';
 import { mask } from "vue-the-mask";
-import Notifications from "@/components/Notifications.vue";
-import { Notificacao } from "@/type/notificacao";
-//import { GrauParentescoSeeder } from "@/type/parentesco";
-//import { mapActions } from 'vuex';
 import { Processo } from '@/type/processo';
-import { TableProcessoSeeder } from '@/type/tableProcesso';
+//import { TableProcesso } from '@/type/tableProcesso';
+//import { TableProcessoSeeder } from '@/type/tableProcesso';
 import { BIconSearch, BIconPlusCircle, BIconInfoCircle, BIconJournalText } from 'bootstrap-vue'
 import { TipoProcessoSeeder } from "@/type/tipoProcesso";
 import { StatusProcessoSeeder } from "@/type/statusProcesso";
@@ -259,27 +366,54 @@ import { ResponsavelSeeder } from "@/type/responsavel";
 import { AssuntoSeeder } from "@/type/assunto";
 import { CaixaSigedSeeder } from "@/type/caixaSiged";
 import { FieldsTableProcesso } from "@/type/tableProcesso";
+import ModalReiteracaoProcesso from './Modais/ModalReiteracaoProcesso.vue';
+import ModalVisualizarReiteracao from './Modais/ModalVisualizarReiteracao.vue';
+import ModalAndamentoProcesso from './Modais/ModalAndamentoProcesso.vue';
+import RestApiService from "@/services/rest/service";
+
+import Notifications from "@/components/Notifications.vue";
+import { Notificacao } from "@/type/notificacao";
+import ReturnMessage from "@/components/ReturnMessage.vue";
+import LoadingSpinner from "@/components/LoadingSpinner.vue";
 
 export default Vue.extend({
   directives: { mask },
+  components: {
+    HeaderPage,
+    ModalTramitacoesProcesso,   
+    ModalDetalhesProcesso,
+    ModalArquivarProcesso,    
+    BIconSearch,
+    BIconJournalText,
+    BIconPlusCircle,
+    BIconInfoCircle,
+    Notifications,
+    ModalReiteracaoProcesso,
+    ModalVisualizarReiteracao,
+    ModalAndamentoProcesso,
+    ReturnMessage,
+    LoadingSpinner,
+  },
   data() {
     return {
       rows: 100,
+      totalRows: null as any,
+      perPage: 10,
       currentPage: 1,
       stickyHeader: true,
       noCollapse: true,
       show: false as boolean,
       exibirMaisDetalhes: false as boolean,
       exibirRegistroPrazo: false as boolean,
-      exibirRegistroSIGED: false as boolean,
-      totalRows: 1,
-      perPage: 5,
+      exibirRegistroSIGED: false as boolean,      
       pageOptions: [5, 10, 15, { value: 100, text: "Show a lot" }],
       form: {} as Processo,
       checkedProcessoSiged: false as boolean,
+      checkedExpiraHoje: false as boolean,
       maisDetalhes: false as boolean,
       fields: FieldsTableProcesso, //nome das colunas da tabela
-      items: TableProcessoSeeder, // lista de processos
+      //items: TableProcessoSeeder, // lista de processos
+      items: [] as Array<String>,
       optionsTipoProcesso: TipoProcessoSeeder,
       optionsStatusProcesso: StatusProcessoSeeder,
       optionsStatusPrazo: StatusPrazoSeeder,
@@ -288,45 +422,54 @@ export default Vue.extend({
       optionsResponsavel: ResponsavelSeeder, 
       optionsAssunto: AssuntoSeeder, 
       optionsCaixa: CaixaSigedSeeder,  
+
+      Notificacao: [] as Array<Notificacao>,
+      Message: [] as Array<Notificacao>,
+      loading: false as boolean,
+      alert: false as boolean,   
+
       tipoProcessoSelecionado: {
-        texto: "Selecione um tipo de processo" as string,
-        value: "" as string,
+        texto: "-- Selecione --" as string,
+        value: null as any,
       },
       statusProcessoSelecionado: {
-        texto: "Selecione status processo" as string,
-        value: "" as string,
+        texto: "-- Selecione --" as string,
+        value: null as any,
       },
       statusPrazoSelecionado: {
-        texto: "Selecione status prazo" as string,
+        texto: "-- Selecione --" as string,
         value: "" as string,
       },
       orgaoDemandanteSelecionado: {
-        texto: "Selecione órgão demandante" as string,
-        value: "" as string,
+        texto: "-- Selecione --" as string,
+        value: null as any,
       },
       classificacaoSelecionada: {
-        texto: "Selecione uma classificação" as string,
+        texto: "-- Selecione --" as string,
         value: "" as string,
       },
       responsavelSelecionado: {
-        texto: "Selecione um responsável" as string,
-        value: "" as string,
+        nome: "-- Selecione --" as string,
+        idResponsavel: "" as string,
       },
       assuntoSelecionado: {
-        texto: "Selecione um assunto" as string,
+        texto: "-- Selecione --" as string,
         value: "" as string,
       },
       caixaSigedSelecionada: {
-        texto: "Selecione caixa SIGED" as string,
+        texto: "-- Selecione --" as string,
         value: "" as string,
       },    
     };
   },
   mounted() {
-    this.totalRows = this.items.length
-     
+    this.listarProcesso(this.currentPage)
   },
   methods: {
+    alterarProced(){
+     this.form.numProcessoSIGED=""
+     this.form.numProcedimento=""
+    },
     submit() {
       alert("enviar");
 
@@ -336,11 +479,109 @@ export default Vue.extend({
       this.form.statusPrazo    = this.statusPrazoSelecionado.value
       this.form.idOrgaoDemandante = this.orgaoDemandanteSelecionado.value
       this.form.idClassificacao   = this.classificacaoSelecionada.value
-      this.form.idResponsavel   = this.responsavelSelecionado.value
+      this.form.idResponsavel   = this.responsavelSelecionado.idResponsavel
       this.form.idAssunto       = this.assuntoSelecionado.value
       this.form.caixaAtualSIGED = this.caixaSigedSelecionada.value
-
+     
       console.log(JSON.stringify(this.form))
+    },
+
+    listarProcesso(currentpage: number): void {
+      this.loading = true
+
+      RestApiService.get("processos", `?currentPage=${currentpage}`)
+        .then((response: any) => {
+          console.log("Resp ", response.data.data)
+          this.items = response.data.data
+          this.perPage = response.data.perPage
+          this.totalRows = response.data.total
+        })
+        .catch((e) => {
+          this.Notificacao.push({
+            type: "danger",
+            message: "Não foi possível carregar a listagem!"            
+          })
+          console.log(e.response.data.message)
+        })
+        .finally(() => {
+          this.loading = false
+          this.limparNotificacao();
+        })
+    },
+
+    limparNotificacao(): void {
+      if (this.Notificacao.length > 0) {
+        setTimeout(() => {
+          this.Notificacao = [];
+        }, 3000);
+      }
+    },
+
+    desarquivar(id: any, data: any, status: string, dadosForm: any): void {
+    
+    let message = 'Deseja realmente desarquivar processo Nº ' + data + '?'
+
+    if(confirm(message) && (status == 'Arquivado' || status == 'arquivado')) {
+    
+      RestApiService.update("processo", dadosForm)
+        .then((response: any) => {
+          this.loading = true;
+
+          this.adicionarAlert(
+                  "success",
+                  "Processo Desarquivado com sucesso!"
+          );          
+        })
+        .catch((e: Error) => {    
+           this.adicionarAlert(
+                  "alert",
+                  "Ocorreu um erro ao desarquivar processo! Contacte o administrador do sistema."
+          );
+        })
+        .finally(() => {
+          this.loading = false;
+        });   
+
+      console.log("Desarquivado.")
+    }
+   },
+
+
+    excluir(id: any, data: any, status: string): void {
+    
+    let message = 'Deseja realmente excluir processo Nº ' + data + '?'
+
+    if(confirm(message) && (status == 'Cadastrado' || status == 'cadastrado')) {
+    
+      RestApiService.delete("processo", id)
+        .then((response: any) => {
+          this.loading = true;
+
+          this.adicionarAlert(
+                  "success",
+                  "Exclusão realizada com sucesso!"
+          );          
+        })
+        .catch((e: Error) => {    
+           this.adicionarAlert(
+                  "alert",
+                  "Ocorreu um erro ao excluir registro!"
+          );
+        })
+        .finally(() => {
+          this.loading = false;
+        });   
+
+      console.log("Excluído")
+    }
+   },
+
+    colorReiteracao(reiteracao: any) : any {
+            if(reiteracao > 0) {
+              return 'info'
+            }
+            
+            return "light"            
     },
     //dias corridos
     colorDiasRestantes(prazo: any) : any {
@@ -361,8 +602,7 @@ export default Vue.extend({
               return "success"
             }
   
-            return ""
-            
+            return ""            
     },
     statusDiasRestantes(prazo: any) : any {
 
@@ -422,23 +662,32 @@ export default Vue.extend({
         this.exibirRegistroSIGED = false;
       }
     },
+
+    adicionarAlert(tipo: string, mensagem: string): void {
+            this.Message = []        
+            this.Message.push({
+                type: tipo,
+                message: mensagem,
+            });
+            this.alert = true;
+    },
+
+    adicionarNotificacao(tipo: string, mensagem: string): void {
+        this.Notificacao.push({
+            type: tipo,
+            message: mensagem,
+        });
+    },
+
+    fechaAlert(): void {
+            this.alert = false;
+    }, 
+
     voltar(): void {
       this.$router.push("/");
     }
   },
-  components: {
-    HeaderPage,
-    ModalTramitacoesProcesso,
-    ModalCadastroProcesso,
-    ModalDetalhesProcesso,
-    ModalReiterarProcesso,
-    ModalDuplicarProcesso,
-    BIconSearch,
-    BIconJournalText,
-    BIconPlusCircle,
-    BIconInfoCircle,
-    Notifications,
-  }
+  
 });
 </script>
 
