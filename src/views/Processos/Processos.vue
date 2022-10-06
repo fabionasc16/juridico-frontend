@@ -28,7 +28,7 @@
 
                 <b-form-group append="m" class="font col-sm-3 col-md-3 col-lg-3">
                    
-                  <b-form-checkbox switch class="font" v-model="checkedProcessoSiged">                      
+                  <b-form-checkbox switch class="font" v-model="checkedProcessoSiged" @change="alterarProced">                      
                     <label v-if="checkedProcessoSiged">Nº Procedimento:</label> 
                     <label v-else>Nº SIGED:</label>                       
                   </b-form-checkbox>                            
@@ -233,7 +233,7 @@
              
             </b-table-lite>
 
-            <div class="m-3 text-center">
+            <div class="m-3 text-center" v-if="!items">
               <label>Nenhum registro encontrado.</label>
             </div>
             
@@ -449,8 +449,8 @@ export default Vue.extend({
         value: "" as string,
       },
       responsavelSelecionado: {
-        texto: "-- Selecione --" as string,
-        value: "" as string,
+        nome: "-- Selecione --" as string,
+        idResponsavel: "" as string,
       },
       assuntoSelecionado: {
         texto: "-- Selecione --" as string,
@@ -466,6 +466,10 @@ export default Vue.extend({
     this.listarProcesso(this.currentPage)
   },
   methods: {
+    alterarProced(){
+     this.form.numProcessoSIGED=""
+     this.form.numProcedimento=""
+    },
     submit() {
       alert("enviar");
 
@@ -475,18 +479,19 @@ export default Vue.extend({
       this.form.statusPrazo    = this.statusPrazoSelecionado.value
       this.form.idOrgaoDemandante = this.orgaoDemandanteSelecionado.value
       this.form.idClassificacao   = this.classificacaoSelecionada.value
-      this.form.idResponsavel   = this.responsavelSelecionado.value
+      this.form.idResponsavel   = this.responsavelSelecionado.idResponsavel
       this.form.idAssunto       = this.assuntoSelecionado.value
       this.form.caixaAtualSIGED = this.caixaSigedSelecionada.value
-
+     
       console.log(JSON.stringify(this.form))
     },
 
     listarProcesso(currentpage: number): void {
       this.loading = true
 
-      RestApiService.postParams("processos", `?currentPage=${currentpage}`)
+      RestApiService.get("processos", `?currentPage=${currentpage}`)
         .then((response: any) => {
+          console.log("Resp ", response.data.data)
           this.items = response.data.data
           this.perPage = response.data.perPage
           this.totalRows = response.data.total
@@ -502,7 +507,6 @@ export default Vue.extend({
           this.loading = false
           this.limparNotificacao();
         })
-
     },
 
     limparNotificacao(): void {
