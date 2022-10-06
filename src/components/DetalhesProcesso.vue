@@ -203,7 +203,7 @@ export default Vue.extend({
             },  
             orgaoSelecionado: {
                     texto: "Selecione um órgão demandante" as string,
-                    value: "" as string,
+                    value: null as any,
             },  
             assuntoSelecionado: {
                     texto: "Selecione um assunto" as string,
@@ -224,6 +224,15 @@ export default Vue.extend({
     },  
 
     methods: {
+        carregarOrgaos(){
+            
+        },
+        carregarAssuntos(){
+            
+        },
+        carregarTipoProcesso(){
+            
+        },
         formatDatasBrToEn() {
             this.form.dataProcesso = this.datas.dataProcessoBR ? 
                    dataMixin.methods.dataFormatEn(this.datas.dataProcessoBR) : "";
@@ -275,7 +284,7 @@ export default Vue.extend({
                 this.form.numProcedimento = this.form.numProcedimento ? this.form.numProcedimento: ""
                 this.form.idTipoProcesso =  this.form.idTipoProcesso ? this.form.idTipoProcesso: ""
                 this.form.prazoTotal =  this.form.prazoTotal ? this.form.prazoTotal : ""
-                this.form.idOrgaoDemandante = this.orgaoSelecionado.value ? this.orgaoSelecionado.value : ""
+                this.form.idOrgaoDemandante = this.orgaoSelecionado.value ? this.orgaoSelecionado.value : null
                 this.form.dataProcesso = this.form.dataProcesso ? this.form.dataProcesso: ""
                 this.form.dataRecebimento = this.form.dataRecebimento ? this.form.dataRecebimento: ""
                 this.form.horaRecebimento =  this.form.horaRecebimento ? this.form.horaRecebimento  : ""

@@ -3,7 +3,7 @@ export type Processo = {
     numProcedimento: string,
     idTipoProcesso: string,
     prazoTotal: string,
-    idOrgaoDemandante: string,
+    idOrgaoDemandante: number,
     dataProcesso: string,
     dataRecebimento: string,
     horaRecebimento: string,

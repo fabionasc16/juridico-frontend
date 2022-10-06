@@ -105,7 +105,7 @@ export default Vue.extend({
     methods: {
         submit() {
             let acao = this.id ? "put" : "post"
-            let url = this.id ? "processo/update" : "processo";
+            let url = this.id ? "processos/update" : "processos";
 
             //pegar todos os valores já para armazenar
             this.formDados.getValues()           
@@ -172,7 +172,7 @@ export default Vue.extend({
             //console.log('carregar: ',this.formDados.form )
             
             
-            RestApiService.get("processo/listid", this.id)
+            RestApiService.get("processos/listid", this.id)
                 .then((res: any) => {
 
                 this.formDados.form.idProcesso =   res.data.idProcesso 
