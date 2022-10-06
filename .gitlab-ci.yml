@@ -6,6 +6,6 @@ deploy:      # This job runs in the deploy stage.
   script:
     - docker-compose up -d --force-recreate
   tags:
-    - ses_23
+    - prodam_150
   only:
     - master  
