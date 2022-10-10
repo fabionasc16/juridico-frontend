@@ -4,8 +4,8 @@ export type TipoFeriado = {
 };
 
 export const TipoFeriadoSeeder: Array<TipoFeriado> = [
-  { texto: "Fixo", value: "1" },
-  { texto: "Móvel", value: "2" },
+  { texto: "Fixo", value: "FIXO" },
+  { texto: "Móvel", value: "MOVEL" },
  
 ];
              
