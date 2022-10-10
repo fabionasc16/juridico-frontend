@@ -47,8 +47,12 @@ class RestApiService {
     return http.put(`/${uri}/${data.id}`);
   }
 
-  public salvar(uri: string, data: any, acao: string): Promise<any> {
+  public salvar(uri: string, data: any, acao: string, id?:any): Promise<any> {
     if (acao == "post") return http.post(`/${uri}`, JSON.stringify(data));
+    
+    else if(id)
+       return http.put(`/${uri}/${id}`, JSON.stringify(data));//quando o id vem do back com outro nome
+
     else return http.put(`/${uri}/${data.id}`, JSON.stringify(data));
   }
 

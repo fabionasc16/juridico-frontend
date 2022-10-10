@@ -75,8 +75,8 @@
           </div>
           <!-- TABELA -->
           <div>
-            <b-table-lite small striped hover responsive class="m-0" head-variant="dark" :current-page="currentPage"
-              :per-page="perPage" :sticky-header="stickyHeader" :no-border-collapse="noCollapse" :items="items"
+            <b-table-lite small striped hover class="m-0" head-variant="dark" :current-page="currentPage"
+              :per-page="perPage" :no-border-collapse="noCollapse" :items="items"
               :fields="fields">            
              
               <!-- BOTÕES DE AÇÕES -->
@@ -90,7 +90,8 @@
                   </template>
 
                   <!-- ITENS DO DROPDOWN -->                
-                  <b-list-group-item block v-b-modal.modal-editar-responsavel class="btn-light btn-outline-dark m-0 p-1">
+                  <b-list-group-item block
+                     class="btn-light btn-outline-dark m-0 p-1" @click="editarResponsavel(data.item.id_responsavel)">
                     Editar
                   </b-list-group-item>                 
                   <b-list-group-item block class="btn-light text-dark btn-outline-danger m-0 p-1" @click="excluir(data.item.id_responsavel, data.item.nome_responsavel)">
@@ -104,7 +105,9 @@
           <div class="card-footer m-0 px-1 pt-1">
             <!-- PAGINAÇÃO -->
             <div class="col-12 m-0 px-1 pt-1">
-              <b-pagination pills align="right" size="sm" v-model="currentPage" :total-rows="rows" :per-page="perPage">
+              <b-pagination pills align="right" size="sm" v-model="currentPage" 
+                @change="listarResponsaveis"              
+                :total-rows="totalRows" :per-page="perPage">
               </b-pagination>
             </div>
           </div>
@@ -113,7 +116,7 @@
          <!-- MODAL -->
 
         <b-modal id="modal-cadastro-responsavel" size="lg" centered title="Cadastro do Responsável" hide-footer>
-          <ModalCadastroResponsavel  @listarResponsaveis="listarResponsaveis"> 
+          <ModalCadastroResponsavel  @listarResponsaveis="listarResponsaveis" tipo="cadastrar"> 
             <template v-slot:buttons> 
                 <b-button class="bordered" @click="$bvModal.hide('modal-cadastro-responsavel')">Fechar</b-button>
             </template>           
@@ -121,7 +124,7 @@
         </b-modal>
 
         <b-modal id="modal-editar-responsavel" size="lg" centered title="Editar Responsável" hide-footer>
-          <ModalCadastroResponsavel>  
+          <ModalCadastroResponsavel @listarResponsaveis="listarResponsaveis" tipo="editar" :id="idResponsavel">  
             <template v-slot:buttons> 
                 <b-button class="bordered" @click="$bvModal.hide('modal-editar-responsavel')">Fechar</b-button>
             </template>           
@@ -169,6 +172,7 @@ export default Vue.extend({
   },
   data() {
     return {
+      idResponsavel: null as any, //para modal
       rows: 100,
       currentPage: 1,
       totalRows: null as any,
@@ -196,15 +200,18 @@ export default Vue.extend({
       console.log(JSON.stringify(this.form))
     },  
 
+    editarResponsavel(id: number): void {
+        this.idResponsavel = id
+        this.$bvModal.show('modal-editar-responsavel')       
+    },
+
     listarResponsaveis(currentpage: number) : void {
       this.loading = true
       RestApiService.get("responsaveis", `?page=${currentpage}`)
         .then((response: any) => {
           this.items = response.data.data
           this.perPage = response.data.perPage
-          this.totalRows = response.data.total
-
-          console.log( response.data.data)
+          this.totalRows = response.data.total          
         })
         .catch((e: Error) => {
           console.log(e)
