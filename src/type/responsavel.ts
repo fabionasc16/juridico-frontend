@@ -7,6 +7,15 @@ export type Responsavel = {
     registro_oab?: string;
 };
 
+export type ResponsavelCadastro = { 
+    idResponsavel: string;
+    nomeResponsavel: string;
+    cpfResponsavel: string;
+    telefone?: string;
+    email?: string;
+    registroOAB?: string;
+};
+
 /*export const ResponsavelSeeder: Array<Responsavel> = [
     { nome: "Heleno", idResponsavel: "1", cpf: "83318572080" },
     { nome: "Viviane", idResponsavel: "2", cpf: "21250663008" },
