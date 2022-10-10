@@ -1,13 +1,13 @@
 export type Responsavel = { 
-    idResponsavel: string;
-    nome: string;
-    cpf: string;
+    id_responsavel: string;
+    nome_responsavel: string;
+    cpf_responsavel: string;
     telefone?: string;
     email?: string;
-    registroOAB?: string;
+    registro_oab?: string;
 };
 
-export const ResponsavelSeeder: Array<Responsavel> = [
+/*export const ResponsavelSeeder: Array<Responsavel> = [
     { nome: "Heleno", idResponsavel: "1", cpf: "83318572080" },
     { nome: "Viviane", idResponsavel: "2", cpf: "21250663008" },
     { nome: "Natacha", idResponsavel: "3", cpf: "02671675046" },
@@ -24,4 +24,4 @@ export const ResponsavelSeeder: Array<Responsavel> = [
     { nome: "Louise", idResponsavel: "14", cpf: "77583398088"},
     { nome: "Sabrina", idResponsavel: "15", cpf: "85441053003"},
 
-];
+];*/

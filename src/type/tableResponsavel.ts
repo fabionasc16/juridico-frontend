@@ -11,12 +11,12 @@ export const FieldsTableResponsavel =
           sortable: false,
         },
         {
-          key: 'nome',
+          key: 'nome_responsavel',
           label: 'Nome',
           sortable: true
         },
         {
-          key: 'cpf',
+          key: 'cpf_responsavel',
           label: 'CPF',
           sortable: true
         },
