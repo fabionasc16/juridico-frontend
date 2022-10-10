@@ -35,6 +35,10 @@ class RestApiService {
     return http.get(`/${uri}/cpf/query?cpf_usuario=${params}`);
   }
 
+  public getFeatures(uri: string): Promise<any> {
+    return http.get(`/${uri}`);
+  }
+
   public update(uri: string, data: any): Promise<any> {
     return http.put(`/${uri}/${data.id}`, JSON.stringify(data));
   }

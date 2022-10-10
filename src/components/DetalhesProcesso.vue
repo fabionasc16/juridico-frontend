@@ -176,7 +176,6 @@ import { TipoProcessoSeeder } from "@/type/tipoProcesso";
 import { OrgaosSeeder } from "@/type/orgaos";
 import { AssuntoSeeder } from "@/type/assunto";
 import { ClassificacaoSeeder } from "@/type/classificacao";
-import { ResponsavelSeeder } from "@/type/responsavel";
 import { Processo } from '@/type/processo';
 import VueNumeric from 'vue-numeric'
 Vue.use(VueNumeric)

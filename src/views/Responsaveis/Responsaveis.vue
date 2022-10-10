@@ -6,6 +6,17 @@
           <hr />
         </b-form-group>
 
+          <!-- NOTIFICAÇÕES -->       
+         <notifications :notifications="Notificacao"></notifications>      
+
+        <div v-if="alert">
+            <ReturnMessage :message="Message" :fechaAlert="fechaAlert"></ReturnMessage>
+        </div>          
+
+        <div v-if="loading">
+            <LoadingSpinner></LoadingSpinner>
+        </div>
+
         <!-- FORMULÁRIO DE CONSULTA -->       
         <b-form @submit.prevent="submit" class="mb-5">
 
@@ -82,7 +93,7 @@
                   <b-list-group-item block v-b-modal.modal-editar-responsavel class="btn-light btn-outline-dark m-0 p-1">
                     Editar
                   </b-list-group-item>                 
-                  <b-list-group-item block class="btn-light text-dark btn-outline-danger m-0 p-1" @click="excluir(data.item.nome)">
+                  <b-list-group-item block class="btn-light text-dark btn-outline-danger m-0 p-1" @click="excluir(data.item.id_responsavel, data.item.nome_responsavel)">
                     Excluir
                   </b-list-group-item>
                 </b-dropdown>
@@ -131,12 +142,17 @@ import Vue from "vue";
 import HeaderPage from '@/components/HeaderPage.vue';
 import ModalCadastroResponsavel from './Modais/ModalCadastroResponsavel.vue';
 import { mask } from "vue-the-mask";
-import Notifications from "@/components/Notifications.vue";
-import { Notificacao } from "@/type/notificacao";
 import { Responsavel } from '@/type/responsavel';
 import { TableResponsaveisSeeder } from '@/type/tableResponsavel';
 import { FieldsTableResponsavel } from "@/type/tableResponsavel";
 import { BIconSearch, BIconPlusCircle, BIconInfoCircle, BIconJournalText } from 'bootstrap-vue'
+
+import Notifications from "@/components/Notifications.vue";
+import { Notificacao } from "@/type/notificacao";
+import ReturnMessage from "@/components/ReturnMessage.vue";
+import LoadingSpinner from "@/components/LoadingSpinner.vue";
+
+import RestApiService from "@/services/rest/service";
 
 export default Vue.extend({
   directives: { mask },
@@ -147,25 +163,31 @@ export default Vue.extend({
     BIconPlusCircle,
     BIconInfoCircle,
     Notifications,
-    ModalCadastroResponsavel
+    ModalCadastroResponsavel,
+    ReturnMessage,
+    LoadingSpinner,
   },
   data() {
     return {
       rows: 100,
       currentPage: 1,
-      totalRows: 1,
-      perPage: 5,
+      totalRows: null as any,
+      perPage: 10,
+      items: [] as Array<String>,  
       pageOptions: [5, 10, 15, { value: 100, text: "Show a lot" }],
       form: {} as Responsavel,
-      fields: FieldsTableResponsavel, //nome das colunas da tabela
-      items:  TableResponsaveisSeeder, 
+      fields: FieldsTableResponsavel, //nome das colunas da tabela     
       stickyHeader: true,
       noCollapse: true,
+
+      Notificacao: [] as Array<Notificacao>,
+      Message: [] as Array<Notificacao>,
+      loading: false as boolean,
+      alert: false as boolean,   
     };
   },
   mounted() {
-    this.totalRows = this.items.length
-     
+    this.listarResponsaveis(this.currentPage)
   },
   methods: {
     submit() {
@@ -173,19 +195,79 @@ export default Vue.extend({
       
       console.log(JSON.stringify(this.form))
     },  
+
+    listarResponsaveis(currentpage: number) : void {
+      this.loading = true
+      RestApiService.get("responsaveis", `?page=${currentpage}`)
+        .then((response: any) => {
+          this.items = response.data.data
+          this.perPage = response.data.perPage
+          this.totalRows = response.data.total
+
+          console.log( response.data.data)
+        })
+        .catch((e: Error) => {
+          console.log(e)
+          this.Notificacao.push({
+            type: "danger",
+            message: "Não foi possível carregar a listagem!",
+          })
+          return false;
+        })
+        .finally(() => {
+           this.loading = false;
+        });
+
+    },
    
     voltar(): void {
       this.$router.push("/");
     },
 
-    excluir(data: any): void {
+    excluir(id: any, nome: string): void {
     
-      let message = 'Deseja realmente excluir responsável ' + data + '?'
+      let message = 'Deseja realmente excluir responsável ' + nome + '?'
 
       if(confirm(message)) {
-        console.log("Excluído")
+        RestApiService.delete("responsaveis", id)
+          .then((response: any) =>{
+              this.loading = true
+              this.adicionarAlert(
+                  "success",
+                  "Exclusão realizada com sucesso!"
+              );
+          })
+          .catch((e: Error) => {
+             this.adicionarAlert(
+                  "alert",
+                  "Ocorreu um erro ao excluir registro!"
+              );
+          })
+          .finally(() => {
+            this.loading = false
+          });
       }
-    }
+    },
+
+    adicionarAlert(tipo: string, mensagem: string): void {
+            this.Message = []        
+            this.Message.push({
+                type: tipo,
+                message: mensagem,
+            });
+            this.alert = true;
+    },
+
+    adicionarNotificacao(tipo: string, mensagem: string): void {
+        this.Notificacao.push({
+            type: tipo,
+            message: mensagem,
+        });
+    },
+
+    fechaAlert(): void {
+            this.alert = false;
+    }, 
   },
  
 });

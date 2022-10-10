@@ -122,7 +122,8 @@ export default Vue.extend({
     methods: {
          submit() {
             let acao = this.id ? "put" : "post"
-            let url = this.id ? "responsavel/update" : "responsavel";
+            let url = "responsaveis";
+            //let url = this.id ? "responsavel/update" : "responsavel";
                     
             if (this.validarCampos()) { 
 
@@ -185,12 +186,12 @@ export default Vue.extend({
             RestApiService.get("responsavel/listid", this.id)
                 .then((res: any) => {          
 
-                this.form.idResponsavel =  res.data.idResponsavel 
-                this.form.nome = res.data.nome
-                this.form.cpf =  res.data.cpf
+                this.form.id_responsavel =  res.data.idResponsavel 
+                this.form.nome_responsavel = res.data.nome
+                this.form.cpf_responsavel =  res.data.cpf
                 this.form.telefone = res.data.telefone
                 this.form.email = res.data.email
-                this.form.registroOAB = res.data.registroOAB               
+                this.form.registro_oab = res.data.registroOAB               
                
             })
             .catch((e) => {
@@ -209,21 +210,21 @@ export default Vue.extend({
         validarCampos(): boolean {
             this.Notificacao = [];
 
-            if (!this.form.nome) {
+            if (!this.form.nome_responsavel) {
                 this.adicionarNotificacao(
                 "danger",
                 "Nome é obrigatório!"
                 );
             }
 
-           if(!this.form.cpf){
+           if(!this.form.cpf_responsavel){
                 this.adicionarNotificacao(
                 "danger",
                 "CPF é obrigatório!"
                 );
             }     
         
-            if(this.form.cpf && !ValidarCpfMixin.methods.validarCpf(this.form.cpf)){
+            if(this.form.cpf_responsavel && !ValidarCpfMixin.methods.validarCpf(this.form.cpf_responsavel)){
                 this.adicionarNotificacao(
                 "danger",
                 "CPF inválido!"

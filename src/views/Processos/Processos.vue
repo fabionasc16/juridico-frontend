@@ -38,8 +38,12 @@
                 </b-form-group>
 
                 <b-form-group label="Assunto:" append="m" class="font col-sm-5 col-md-5 col-lg-5">
-                  <v-select style="font-size: 0.85rem" :options="optionsAssunto" class="font" label="texto"
-                                        v-model="assuntoSelecionado"/>                  
+                  <v-select style="font-size: 0.85rem" :options="optionsAssunto" 
+                                class="font" 
+                                label="desc_assunto"
+                                value="id_assunto"    
+                                placeholder="--Selecione--"      
+                                v-model="assuntoSelecionado"/>                                          
                 </b-form-group>
 
                 <b-form-group label="Caixa SIGED:" append="m" class="font col-sm-4 col-md-4 col-lg-4">
@@ -84,15 +88,23 @@
               <div class="row">
 
                 <b-form-group label="Órgão Demandante:" append="m" class="font col-sm-3 col-md-3 col-lg-3"
-                  v-show="exibirMaisDetalhes">
-                   <v-select style="font-size: 0.85rem" :options="optionsOrgaoDemandante" class="font" label="texto"
-                                        v-model="orgaoDemandanteSelecionado"/>            
+                  v-show="exibirMaisDetalhes">  
+                    <v-select style="font-size: 0.85rem" :options="optionsOrgaoDemandante" 
+                                        class="font" 
+                                        label="orgao_demandante"
+                                        value="id_orgao"    
+                                        placeholder="--Selecione--"                                     
+                                        v-model="orgaoDemandanteSelecionado"/>         
                 </b-form-group>
 
                 <b-form-group label="Tipo do Processo:" append="m" class="font col-sm-3 col-md-3 col-lg-3"
-                  v-show="exibirMaisDetalhes">                
-                  <v-select style="font-size: 0.85rem" :options="optionsTipoProcesso" class="font" label="texto"
-                                        v-model="tipoProcessoSelecionado"/>
+                  v-show="exibirMaisDetalhes"> 
+                   <v-select style="font-size: 0.85rem" :options="optionsTipoProcesso" 
+                                        class="font" 
+                                        label="desc_tipoprocesso"
+                                        value="id_tipoprocesso"    
+                                        placeholder="--Selecione--"                                     
+                                        v-model="tipoProcessoSelecionado"/>  
                 </b-form-group>
 
                 <b-form-group label="Status Processo:" append="m" class="font col-sm-3 col-md-3 col-lg-3"
@@ -104,11 +116,12 @@
                  <b-form-group append="m" class="font col-sm-3 col-md-3 col-lg-3"
                   v-show="exibirMaisDetalhes">  
                   
-                    <b-form-checkbox switch class="font" v-model="checkedExpiraHoje">                                         
+                   <!-- <b-form-checkbox switch class="font" v-model="checkedExpiraHoje">                                         
                       <label v-if="checkedExpiraHoje">Expira Hoje</label>    
                       <label v-else>Status Prazo:</label>                           
-                    </b-form-checkbox> 
+                    </b-form-checkbox> -->
 
+                  <label>Status Prazo:</label>   
                   <v-select v-if="!checkedExpiraHoje" style="font-size: 0.85rem" :options="optionsStatusPrazo" class="font" label="texto"
                                         v-model="statusPrazoSelecionado"/>
                 </b-form-group>
@@ -116,15 +129,22 @@
 
                 <b-form-group label="Classificação:" append="m" class="font col-sm-3 col-md-3 col-lg-3"
                   v-show="exibirMaisDetalhes">
-                  <v-select style="font-size: 0.85rem" :options="optionsClassificacao" class="font" label="texto"
-                                        v-model="classificacaoSelecionada"/>  
+                  <v-select style="font-size: 0.85rem" :options="optionsClassificacao" 
+                                        class="font" 
+                                        label="desc_classificacao"
+                                        value="id_classificacao"    
+                                        placeholder="--Selecione--"                                     
+                                        v-model="classificacaoSelecionada"/>
                 </b-form-group>
 
                  <b-form-group label="Responsável:" append="m" class="font col-sm-3 col-md-3 col-lg-3"
                   v-show="exibirMaisDetalhes">
-                  <v-select style="font-size: 0.85rem" :options="optionsResponsavel" class="font" label="nome"
-                                        value="idResponsavel" 
-                                        v-model="responsavelSelecionado"/>  
+                  <v-select style="font-size: 0.85rem" :options="optionsResponsavel" 
+                                        class="font" 
+                                        label="nome_responsavel"
+                                        value="id_responsavel"    
+                                        placeholder="--Selecione--"                                     
+                                        v-model="responsavelSelecionado"/>
                 </b-form-group>
                   
               </div>
@@ -366,13 +386,9 @@ import { Processo } from '@/type/processo';
 //import { TableProcesso } from '@/type/tableProcesso';
 //import { TableProcessoSeeder } from '@/type/tableProcesso';
 import { BIconSearch, BIconPlusCircle, BIconInfoCircle, BIconJournalText } from 'bootstrap-vue'
-import { TipoProcessoSeeder } from "@/type/tipoProcesso";
 import { StatusProcessoSeeder } from "@/type/statusProcesso";
 import { StatusPrazoSeeder } from "@/type/statusPrazo";
 import { OrgaosSeeder } from "@/type/orgaos";
-import { ClassificacaoSeeder } from "@/type/classificacao";
-import { ResponsavelSeeder } from "@/type/responsavel";
-import { AssuntoSeeder } from "@/type/assunto";
 import { CaixaSigedSeeder } from "@/type/caixaSiged";
 import { FieldsTableProcesso } from "@/type/tableProcesso";
 import ModalReiteracaoProcesso from './Modais/ModalReiteracaoProcesso.vue';
@@ -402,9 +418,10 @@ export default Vue.extend({
     ModalAndamentoProcesso,
     ReturnMessage,
     LoadingSpinner,
-  },
+  }, 
   data() {
     return {
+      placeholderItem: '--Selecione--',
       idProcessoModal: null as any,
       rows: 100,
       totalRows: null as any,
@@ -424,14 +441,16 @@ export default Vue.extend({
       fields: FieldsTableProcesso, //nome das colunas da tabela
       //items: TableProcessoSeeder, // lista de processos
       items: [] as Array<String>,
-      optionsTipoProcesso: TipoProcessoSeeder,
+      
       optionsStatusProcesso: StatusProcessoSeeder,
       optionsStatusPrazo: StatusPrazoSeeder,
       optionsOrgaoDemandante: OrgaosSeeder, 
-      optionsClassificacao: ClassificacaoSeeder, 
-      optionsResponsavel: ResponsavelSeeder, 
-      optionsAssunto: AssuntoSeeder, 
       optionsCaixa: CaixaSigedSeeder,  
+
+      optionsTipoProcesso: [] as Array<String>,
+      optionsAssunto: [] as Array<String>,
+      optionsClassificacao: [] as Array<String>,
+      optionsResponsavel: [] as Array<String>,
 
       Notificacao: [] as Array<Notificacao>,
       Message: [] as Array<Notificacao>,
@@ -439,32 +458,32 @@ export default Vue.extend({
       alert: false as boolean,   
 
       tipoProcessoSelecionado: {
-        texto: "-- Selecione --" as string,
-        value: null as any,
+        desc_tipoprocesso: "-- Selecione --" as string,
+        id_tipoprocesso: "" as any,
       },
       statusProcessoSelecionado: {
         texto: "-- Selecione --" as string,
-        value: null as any,
+        value: "" as any,
       },
       statusPrazoSelecionado: {
         texto: "-- Selecione --" as string,
         value: "" as string,
       },
       orgaoDemandanteSelecionado: {
-        texto: "-- Selecione --" as string,
-        value: null as any,
+        orgao_demandante: "-- Selecione --" as string,
+        id_orgao: "" as any,
       },
-      classificacaoSelecionada: {
-        texto: "-- Selecione --" as string,
-        value: "" as string,
+      classificacaoSelecionada: {     
+        id_classificacao: "" as string,
+        desc_classificacao: "-- Selecione --" as string,
       },
       responsavelSelecionado: {
-        nome: "-- Selecione --" as string,
-        idResponsavel: "" as string,
+        nome_responsavel: "-- Selecione --" as string,
+        id_responsavel: "" as string,
       },
       assuntoSelecionado: {
-        texto: "-- Selecione --" as string,
-        value: "" as string,
+        id_assunto: "" as string,
+        desc_assunto: "-- Selecione --" as string,        
       },
       caixaSigedSelecionada: {
         texto: "-- Selecione --" as string,
@@ -472,8 +491,14 @@ export default Vue.extend({
       },    
     };
   },
+    
   mounted() {
     this.listarProcesso(this.currentPage)
+    this.carregarResponsavel()
+    this.carregarClassificacao()
+    this.carregarAssunto()
+    this.carregarOrgaosDemandantes()
+    this.carregarTipoProcesso()
   },
   methods: {
     abrirModal(modalname: string, idProcesso: number){
@@ -489,13 +514,13 @@ export default Vue.extend({
       alert("enviar");
 
       //pegar o id dos options   
-      this.form.idTipoProcesso = this.tipoProcessoSelecionado.value
+      this.form.idTipoProcesso = this.tipoProcessoSelecionado.id_tipoprocesso
       this.form.statusProcesso = this.statusProcessoSelecionado.value
       this.form.statusPrazo    = this.statusPrazoSelecionado.value
-      this.form.idOrgaoDemandante = this.orgaoDemandanteSelecionado.value
-      this.form.idClassificacao   = this.classificacaoSelecionada.value
-      this.form.idResponsavel   = this.responsavelSelecionado.idResponsavel
-      this.form.idAssunto       = this.assuntoSelecionado.value
+      this.form.idOrgaoDemandante = this.orgaoDemandanteSelecionado.id_orgao
+      this.form.idClassificacao   = this.classificacaoSelecionada.id_classificacao
+      this.form.idResponsavel   = this.responsavelSelecionado.id_responsavel
+      this.form.idAssunto       = this.assuntoSelecionado.id_assunto
       this.form.caixaAtualSIGED = this.caixaSigedSelecionada.value
      
       console.log(JSON.stringify(this.form))
@@ -516,7 +541,112 @@ export default Vue.extend({
             type: "danger",
             message: "Não foi possível carregar a listagem!"            
           })
-          console.log(e.response.data.message)
+          console.log(e)
+        })
+        .finally(() => {
+          this.loading = false
+          this.limparNotificacao();
+        })
+    },
+
+     carregarResponsavel(): void {
+      this.loading = true
+
+      RestApiService.getFeatures("responsaveis")
+        .then((response: any) => {        
+          this.optionsResponsavel = response.data.data
+        
+        })
+        .catch((e) => {
+          /*this.Notificacao.push({
+            type: "danger",
+            message: "Não foi possível carregar a listagem!"            
+          })*/
+          console.log(e)
+        })
+        .finally(() => {
+          this.loading = false
+          this.limparNotificacao();
+        })
+    },
+
+    carregarClassificacao(): void {
+      this.loading = true
+
+      RestApiService.getFeatures("classificacoes")
+        .then((response: any) => {         
+          this.optionsClassificacao = response.data.data
+        
+        })
+        .catch((e) => {
+          /*this.Notificacao.push({
+            type: "danger",
+            message: "Não foi possível carregar a listagem!"            
+          })*/
+          console.log(e)
+        })
+        .finally(() => {
+          this.loading = false
+          this.limparNotificacao();
+        })
+    },
+
+    carregarAssunto(): void {
+      this.loading = true
+
+      RestApiService.getFeatures("assuntos")
+        .then((response: any) => {         
+          this.optionsAssunto = response.data.data
+        
+        })
+        .catch((e) => {
+          /*this.Notificacao.push({
+            type: "danger",
+            message: "Não foi possível carregar a listagem!"            
+          })*/
+          console.log(e)
+        })
+        .finally(() => {
+          this.loading = false
+          this.limparNotificacao();
+        })
+    },
+
+     carregarOrgaosDemandantes(): void {
+      this.loading = true
+
+      RestApiService.getFeatures("orgaos-demandantes")
+        .then((response: any) => {         
+          this.optionsOrgaoDemandante = response.data.data
+        
+        })
+        .catch((e) => {
+          /*this.Notificacao.push({
+            type: "danger",
+            message: "Não foi possível carregar a listagem!"            
+          })*/
+          console.log(e)
+        })
+        .finally(() => {
+          this.loading = false
+          this.limparNotificacao();
+        })
+    },
+
+     carregarTipoProcesso(): void {
+      this.loading = true
+
+      RestApiService.getFeatures("tipos-processo")
+        .then((response: any) => {         
+          this.optionsTipoProcesso = response.data.data
+        
+        })
+        .catch((e) => {
+          /*this.Notificacao.push({
+            type: "danger",
+            message: "Não foi possível carregar a listagem!"            
+          })*/
+          console.log(e)
         })
         .finally(() => {
           this.loading = false
