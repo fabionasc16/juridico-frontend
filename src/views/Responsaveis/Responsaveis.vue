@@ -93,6 +93,11 @@
                   <b-list-group-item block
                      class="btn-light btn-outline-dark m-0 p-1" @click="editarResponsavel(data.item.id_responsavel)">
                     Editar
+                  </b-list-group-item>  
+                  <b-list-group-item block 
+                     @click="visualizarResponsavel(data.item.id_responsavel)"
+                     class="btn-light btn-outline-dark m-0 p-1">
+                    Visualizar
                   </b-list-group-item>                 
                   <b-list-group-item block class="btn-light text-dark btn-outline-danger m-0 p-1" @click="excluir(data.item.id_responsavel, data.item.nome_responsavel)">
                     Excluir
@@ -127,6 +132,14 @@
           <ModalCadastroResponsavel @listarResponsaveis="listarResponsaveis" tipo="editar" :id="idResponsavel">  
             <template v-slot:buttons> 
                 <b-button class="bordered" @click="$bvModal.hide('modal-editar-responsavel')">Fechar</b-button>
+            </template>           
+          </ModalCadastroResponsavel>
+        </b-modal>
+
+        <b-modal id="modal-visualizar-responsavel" size="lg" centered title="Visualizar Responsável" hide-footer>
+          <ModalCadastroResponsavel tipo="visualizar" :id="idResponsavel"> 
+            <template v-slot:buttons> 
+                <b-button class="bordered" @click="$bvModal.hide('modal-visualizar-responsavel')">Fechar</b-button>
             </template>           
           </ModalCadastroResponsavel>
         </b-modal>
@@ -203,6 +216,11 @@ export default Vue.extend({
     editarResponsavel(id: number): void {
         this.idResponsavel = id
         this.$bvModal.show('modal-editar-responsavel')       
+    },
+
+    visualizarResponsavel(id: number): void {
+        this.idResponsavel = id
+        this.$bvModal.show('modal-visualizar-responsavel')
     },
 
     listarResponsaveis(currentpage: number) : void {
