@@ -83,7 +83,7 @@
           <!-- TABELA -->
           <div>
             <b-table-lite small striped hover responsive class="m-0" head-variant="dark" :current-page="currentPage"
-              :per-page="perPage" :sticky-header="stickyHeader" :no-border-collapse="noCollapse" :items="items"
+              :per-page="perPage" :no-border-collapse="noCollapse" :items="items"
               :fields="fields">            
              
               <!-- BOTÕES DE AÇÕES -->
@@ -97,10 +97,16 @@
                   </template>
 
                   <!-- ITENS DO DROPDOWN -->                
-                  <b-list-group-item block v-b-modal.modal-editar-feriado class="btn-light btn-outline-dark m-0 p-1">
+                  <b-list-group-item block class="btn-light btn-outline-dark m-0 p-1"
+                    @click="editarFeriado(data.item.id_feriado)">
                     Editar
+                  </b-list-group-item>  
+                   <b-list-group-item block 
+                     @click="visualizarFeriado(data.item.id_feriado)"
+                     class="btn-light btn-outline-dark m-0 p-1">
+                    Visualizar
                   </b-list-group-item>                 
-                  <b-list-group-item block class="btn-light text-dark btn-outline-danger m-0 p-1" @click="excluir(data.item.idFeriado, data.item.data)">
+                  <b-list-group-item block class="btn-light text-dark btn-outline-danger m-0 p-1" @click="excluir(data.item.id_feriado, data.item.desc_feriado)">
                     Excluir
                   </b-list-group-item>
                 </b-dropdown>
@@ -111,7 +117,7 @@
           <div class="card-footer m-0 px-1 pt-1">
             <!-- PAGINAÇÃO -->
             <div class="col-12 m-0 px-1 pt-1">
-              <b-pagination pills align="right" size="sm" v-model="currentPage" :total-rows="rows" :per-page="perPage">
+              <b-pagination pills align="right" size="sm" v-model="currentPage" :total-rows="totalRows" :per-page="perPage">
               </b-pagination>
             </div>
           </div>
@@ -121,14 +127,14 @@
 
           <b-modal id="modal-cadastro-feriado" centered title="Cadastro de Feriado" hide-footer>
           <ModalCadastroFeriado> 
-            <template v-slot:buttons> 
+            <template v-slot:buttons  @listarFeriados="listarFeriados" tipo="cadastrar"> 
                 <b-button class="bordered" @click="$bvModal.hide('modal-cadastro-feriado')">Fechar</b-button>
             </template>           
           </ModalCadastroFeriado>
         </b-modal>
 
         <b-modal id="modal-editar-feriado" centered title="Editar Feriado" hide-footer>
-          <ModalCadastroFeriado>  
+          <ModalCadastroFeriado  @listarFeriados="listarFeriados"  tipo="editar" :id="idFeriado">  
             <template v-slot:buttons> 
                 <b-button class="bordered" @click="$bvModal.hide('modal-editar-feriado')">Fechar</b-button>
             </template>           
@@ -148,7 +154,6 @@ import Vue from "vue";
 import HeaderPage from '@/components/HeaderPage.vue';
 import { mask } from "vue-the-mask";
 import { Feriado } from '@/type/feriado';
-import { TableFeriadoSeeder } from '@/type/tableFeriado';
 import { FieldsTableFeriado } from "@/type/tableFeriado";
 import { BIconSearch, BIconPlusCircle, BIconInfoCircle, BIconJournalText } from 'bootstrap-vue'
 import dataMixin from "@/mixins/dataMixin";
@@ -179,6 +184,7 @@ export default Vue.extend({
   ],  
   data() {
     return {
+      idFeriado: null as any, //para modal
       rows: 100,
       currentPage: 1,
       totalRows: 1,
@@ -187,12 +193,13 @@ export default Vue.extend({
       totalRow: null as any,
       form: {} as Feriado,
       fields: FieldsTableFeriado, //nome das colunas da tabela
-      items: TableFeriadoSeeder, 
+     
       stickyHeader: true,
       noCollapse: true,
       dataFeriadoBR: "" as string,
-      optionsTipoFeriado: TipoFeriadoSeeder,      
-      feriados: [] as Array<Feriado>,
+      optionsTipoFeriado: TipoFeriadoSeeder, 
+
+      items: [] as Array<Feriado>,
 
       Notificacao: [] as Array<Notificacao>,
       Message: [] as Array<Notificacao>,
@@ -201,15 +208,67 @@ export default Vue.extend({
       
     };
   },
-  mounted() {
-    this.totalRows = this.items.length
-    //this.listarFeriados(this.currentPage);
+  mounted() {   
+    this.listarFeriados(this.currentPage);
      
   },
   methods: {
-    listarFeriados(currentpage: number): void {
-      alert("pesquisar");
+    editarFeriado(id: number): void {
+        this.idFeriado = id
+        this.$bvModal.show('modal-editar-feriado')       
+    },
 
+    visualizarFeriado(id: number): void {
+        this.idFeriado = id
+        this.$bvModal.show('modal-visualizar-feriado')
+    },
+
+    listarFeriados(currentpage: number): void {
+     
+      this.loading = true;  
+       
+        RestApiService.get(
+          "feriados",
+          `?currentPage=${currentpage}`
+        )
+          .then((response: any) => {
+            this.items = response.data.data;
+            this.perPage = response.data.perPage;
+            this.totalRows = response.data.total;
+
+          })
+          .catch((e) => {
+            if (e.message === "Network Error") {
+                            this.adicionarAlert(
+                            "alert",
+                            "Sem conexão de rede. Verifique sua conexão!"
+                            );
+                        } else if (
+                            e &&
+                            e.response &&
+                            e.response.data &&
+                            e.response.data.message
+                        ) {
+                            this.adicionarAlert(
+                            "alert",
+                            e.response.data.message
+                            );                       
+                        } else {
+                            this.adicionarAlert(
+                            "alert",
+                            "Houve um erro. Não foi possível carregar a listagem!"
+                            );                      
+                        }      
+          })
+          .finally(() => {
+            this.loading = false;          
+          });
+      
+    },
+
+
+    pesquisarFeriados(currentpage: number): void {
+     
       this.loading = true;
 
       if(this.validarCampos()) {
@@ -223,7 +282,7 @@ export default Vue.extend({
           `?currentPage=${currentpage}`
         )
           .then((response: any) => {
-            this.feriados = response.data.data;
+            this.items = response.data.data;
             this.perPage = response.data.perPage;
             this.totalRow = response.data.total;
 
@@ -291,18 +350,20 @@ export default Vue.extend({
 
     excluir(id: any, data: any): void {
     
-      let message = 'Deseja realmente excluir feriado do dia ' + data + '?'
+      let message = 'Deseja realmente excluir feriado de ' + data + '?'
 
       if(confirm(message)) {
       
-        RestApiService.delete("feriado", id)
+        RestApiService.delete("feriados", id)
           .then((response: any) => {
             this.loading = true;
 
             this.adicionarAlert(
                     "success",
                     "Exclusão realizada com sucesso!"
-            );          
+            );  
+            
+            this.listarFeriados(this.currentPage)
           })
           .catch((e: Error) => {    
              this.adicionarAlert(
@@ -312,9 +373,7 @@ export default Vue.extend({
           })
           .finally(() => {
             this.loading = false;
-          });   
-
-        console.log("Excluído")
+          });         
       }
     },
 

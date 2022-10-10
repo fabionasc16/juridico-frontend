@@ -258,7 +258,7 @@ export default Vue.extend({
                   "Exclusão realizada com sucesso!"
               );
 
-             this.listarResponsaveis(1)
+             this.listarResponsaveis(this.currentPage)
           })
           .catch((e: Error) => {
              this.adicionarAlert(
