@@ -25,13 +25,13 @@
                         <b-form-group class="font col-sm-5 col-md-5 col-lg-5">
                            <label>CPF<span class="text-danger">*</span>:</label>
                             <b-form-input :placeholder="'Digite seu CPF '" type="text" v-model="form.cpfResponsavel"
-                                v-mask="'###.###.###-##'" required></b-form-input>
+                                v-mask="'###.###.###-##'" required :disabled="disabledAll"></b-form-input>
                         </b-form-group>
 
                         <b-form-group class="font col-sm-7 col-md-7 col-lg-7">
                             <label>Nome completo<span class="text-danger">*</span>:</label>
                             <b-form-input :placeholder="'Digite seu Nome Completo'" type="text"
-                                v-model="form.nomeResponsavel" required>
+                                v-model="form.nomeResponsavel" required :disabled="disabledAll">
                             </b-form-input>
                         </b-form-group>
                     </div>
@@ -40,12 +40,13 @@
                         <b-form-group class="font col-sm-5 col-md-5 col-lg-5">
                             <label>Telefone<span class="text-danger">*</span>:</label>
                             <b-form-input :placeholder="'(00) 00000-0000'" type="text"
-                                v-model="form.telefone" v-mask="'(##) #####-####'" required></b-form-input>
+                                v-model="form.telefone" v-mask="'(##) #####-####'" required :disabled="disabledAll"></b-form-input>
                         </b-form-group>
 
                         <b-form-group class="font col-sm-7 col-md-7 col-lg-7">
                             <label>Email<span class="text-danger">*</span>:</label>
-                            <b-form-input :placeholder="'Digite seu Email'" type="email" v-model="form.email" required>
+                            <b-form-input :placeholder="'Digite seu Email'" type="email" v-model="form.email" required
+                              :disabled="disabledAll">
                             </b-form-input>
                         </b-form-group>
                     </div>
@@ -53,14 +54,15 @@
                         <!-- 3ª LINHA  -->                      
                         <b-form-group class="font col-sm-5 col-md-5 col-lg-5">
                              <label>Registro OAB:<span class="text-danger">*</span>:</label>
-                            <b-form-input :placeholder="'Digite seu Registro OAB'" type="text" v-model="form.registroOAB" required>
+                            <b-form-input :placeholder="'Digite seu Registro OAB'" type="text" v-model="form.registroOAB"
+                             required :disabled="disabledAll">
                             </b-form-input>
                         </b-form-group>
                     </div>
 
                     <div class="py-2 mt-10" align="right">                        
                        <slot name="buttons"></slot>
-                       <b-button class="bordered ml-2" type="submit" variant="success">Salvar</b-button>
+                       <b-button v-if="!disabledAll" class="bordered ml-2" type="submit" variant="success">Salvar</b-button>
                     </div>
 
                 </b-form>
@@ -99,10 +101,11 @@ export default Vue.extend({
     props: ['id', 'tipo'],
     data() {
         return {
+            disabledAll: false as boolean,
             rows: 100,
             currentPage: 1,
-            stickyHeader: true,
-            noCollapse: true,
+            stickyHeader: true as boolean,
+            noCollapse: true as boolean,
             show: false as boolean,
             form: {} as ResponsavelCadastro,      
             Notificacao: [] as Array<Notificacao>,
@@ -118,6 +121,11 @@ export default Vue.extend({
         if(this.tipo == 'editar') {
             this.carregarDados();   
         }      
+
+        if(this.tipo == 'visualizar'){
+            this.carregarDados();  
+            this.disabledAll = true; 
+        }
     }, 
     methods: {
          submit() {
