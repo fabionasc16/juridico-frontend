@@ -232,10 +232,7 @@ export default Vue.extend({
         })
         .catch((e: Error) => {
           console.log(e)
-          this.Notificacao.push({
-            type: "danger",
-            message: "Não foi possível carregar a listagem!",
-          })
+          this.adicionarNotificacao('danger', 'Não foi possível carregar a listagem!')         
           return false;
         })
         .finally(() => {
