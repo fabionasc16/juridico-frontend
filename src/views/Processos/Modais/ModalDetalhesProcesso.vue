@@ -64,7 +64,7 @@ export default Vue.extend({
     ],
     props: {
     tipo: String,
-    id: Number
+    idProcesso: Number
     },
     data() {
         return {
@@ -83,7 +83,9 @@ export default Vue.extend({
     mounted() {
         this.isLoading = false
         //pega os dados do componente filho (detalhes do processo)
-        this.formDados = this.$refs.formDetalhes           
+        this.formDados = this.$refs.formDetalhes   
+        
+        console.log("> ",this.formDados)
 
         if(this.tipo == 'visualizar') {
             this.formDados.disabledAll = true
@@ -91,7 +93,10 @@ export default Vue.extend({
             return;
         }  
 
-        if(this.tipo == 'editar') {           
+       //  alert(this.tipo)
+          // this.carregarDados();  
+
+         if(this.tipo == 'editar') {           
             this.carregarDados();      
             return;
         }
@@ -104,8 +109,13 @@ export default Vue.extend({
             
     methods: {
         submit() {
-            let acao = this.id ? "put" : "post"
-            let url = this.id ? "processos/update" : "processos";
+            let acao = this.idProcesso ? "put" : "post"
+            let url = this.idProcesso ? "processos/update" : "processos"; 
+
+            if(acao == 'post') {
+                this.formDados.form.statusProcesso = 10 
+                this.formDados.form.statusPrazo = 1 //apagar quando André deixar padrão               
+            }
 
             //pegar todos os valores já para armazenar
             this.formDados.getValues()           
@@ -172,8 +182,11 @@ export default Vue.extend({
             //console.log('carregar: ',this.formDados.form )
             
             
-            RestApiService.get("processos/listid", this.id)
+            RestApiService.get("processos", this.idProcesso)
                 .then((res: any) => {
+
+               console.log("edit",res.data)
+
 
                 this.formDados.form.idProcesso =   res.data.idProcesso 
                 this.formDados.form.numProcedimento = res.data.numProcedimento
@@ -210,7 +223,7 @@ export default Vue.extend({
                     "alert",
                     "Houve um erro ao carregar os dados do paciente. Tente novamente!"
                 );*/
-          
+                console.log(e)
             })
             .finally(() => {
                 this.loading = false;
@@ -220,7 +233,7 @@ export default Vue.extend({
         carregarDadosDuplicados(): void {
             this.loading = true;         
             
-            RestApiService.get("processo/listid", this.id)
+            RestApiService.get("processo/listid", this.idProcesso)
                 .then((res: any) => {
               
                 this.formDados.form.idTipoProcesso =  res.data.idTipoProcesso              

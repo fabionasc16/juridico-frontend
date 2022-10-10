@@ -160,7 +160,7 @@
           </div>
           <!-- TABELA -->
           <div>
-            <b-table-lite small striped hover responsive class="m-0" head-variant="dark" :current-page="currentPage"
+            <b-table-lite small striped hover responsive class="m-0 table-responsive" head-variant="dark" :current-page="currentPage"
               :per-page="perPage" :sticky-header="stickyHeader" :no-border-collapse="noCollapse" :items="items"
               :fields="fields">
 
@@ -184,8 +184,10 @@
               <!-- BOTÕES DE AÇÕES -->
               <template v-slot:cell(botaoAction)="data">
 
+              
+
                 <!-- BOTÃO DROPDOWN -->
-                <b-dropdown variant="dark" class="p0m0" size="sm">
+                <b-dropdown variant="dark" class="p0m0" size="sm"  data-toggle="dropdown" >
                   <!-- CONFIG. ICON HAMBURGUER -->
                   <template #button-content>
                     &#x2261;<span class="sr-only"></span>
@@ -194,8 +196,15 @@
                   <!-- ITENS DO DROPDOWN -->                
                   <b-list-group-item block v-b-modal.modal-editar-processo class="btn-light btn-outline-dark m-0 p-1"
                   v-if="data.item.statusProcesso!='Arquivado'">
-                    Editar
+                    Editar {{data.item.id_processo}}
                   </b-list-group-item>
+
+                  <b-list-group-item block v-b-modal.modal-editar-processo class="btn-light btn-outline-dark m-0 p-1"
+                  v-if="data.item.statusProcesso!='Arquivado'"  @click="abrirModal('modal-editar-processo', data.item.id_processo)">
+                    Editar new
+                  </b-list-group-item>
+
+
                   <b-list-group-item block v-b-modal.modal-visualizar-processo class="btn-light btn-outline-dark m-0 p-1">
                     Visualizar
                   </b-list-group-item>
@@ -263,7 +272,7 @@
         </b-modal>
         <!-- DETALHES DO PROCESSO -->
         <b-modal id="modal-editar-processo" size="lg" centered title="Editar Processo" hide-footer>
-          <ModalDetalhesProcesso tipo="editar">
+          <ModalDetalhesProcesso tipo="editar" :idProcesso="idProcessoModal">
             <template v-slot:buttons>
                 <b-button class="bordered" @click="$bvModal.hide('modal-editar-processo')">Fechar</b-button>
             </template>
@@ -396,6 +405,7 @@ export default Vue.extend({
   },
   data() {
     return {
+      idProcessoModal: null as any,
       rows: 100,
       totalRows: null as any,
       perPage: 10,
@@ -466,6 +476,11 @@ export default Vue.extend({
     this.listarProcesso(this.currentPage)
   },
   methods: {
+    abrirModal(modalname: string, idProcesso: number){
+       // this.$refs[modalname]?.show()
+       this.idProcessoModal = idProcesso
+       this.$bvModal.show(modalname)      
+    },
     alterarProced(){
      this.form.numProcessoSIGED=""
      this.form.numProcedimento=""
