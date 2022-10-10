@@ -96,7 +96,7 @@ export default Vue.extend({
         ReturnMessage,
         LoadingSpinner,
     },
-    props: ['id'],
+    props: ['id', 'tipo'],
     data() {
         return {
             rows: 100,
@@ -114,13 +114,10 @@ export default Vue.extend({
     },
     mounted() {
         this.isLoading = false
-        
-           /* const path = this.$route.path;
-            const acao = "/editar";
 
-            if (path.includes(acao)) {
-                this.carregarDados();            
-            }*/          
+        if(this.tipo == 'editar') {
+            this.carregarDados();   
+        }      
     }, 
     methods: {
          submit() {
@@ -133,7 +130,7 @@ export default Vue.extend({
               
               this.loading = true  
             
-              RestApiService.salvar(url, this.form, acao)
+              RestApiService.salvar(url, this.form, acao, this.form.idResponsavel)
                 .then((res) => {
                     if (acao == "put") {
                         this.adicionarAlert(
@@ -182,31 +179,31 @@ export default Vue.extend({
             }                  
         },
 
-       /* carregarDados(): void {
+         carregarDados(): void {
             this.loading = true;       
                         
-            RestApiService.get("responsavel/listid", this.id)
+            RestApiService.get("responsaveis/id", this.id)
                 .then((res: any) => {          
 
-                this.form.idResponsavel =  res.data.idResponsavel 
-                this.form.nomeesponsavel = res.data.nome
-                this.form.cpf_responsavel =  res.data.cpf
+                this.form.idResponsavel =  res.data.id_responsavel 
+                this.form.nomeResponsavel = res.data.nome_responsavel
+                this.form.cpfResponsavel =  res.data.cpf_responsavel
                 this.form.telefone = res.data.telefone
                 this.form.email = res.data.email
-                this.form.registro_oab = res.data.registroOAB               
+                this.form.registroOAB = res.data.registro_oab               
                
             })
             .catch((e) => {
-                /*  this.adicionarAlert(
+                   this.adicionarAlert(
                     "alert",
                     "Houve um erro ao carregar os dados. Tente novamente!"
-                );*/
+                );
           
-       /*      })
+            })
             .finally(() => {
                 this.loading = false;
             });
-        },*/
+        },
              
         validarCampos(): boolean {
             this.Notificacao = [];
@@ -270,7 +267,8 @@ export default Vue.extend({
         fechaAlert(): void {
             this.alert = false;
             this.$bvModal.hide('modal-cadastro-responsavel')
-            this.$emit("listarResponsaveis",1);
+            this.$bvModal.hide('modal-editar-responsavel')
+            this.$emit("listarResponsaveis");
         },  
        
 
