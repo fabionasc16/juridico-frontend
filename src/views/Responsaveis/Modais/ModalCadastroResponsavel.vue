@@ -24,33 +24,36 @@
                     <div class="row">
                         <b-form-group class="font col-sm-5 col-md-5 col-lg-5">
                            <label>CPF<span class="text-danger">*</span>:</label>
-                            <b-form-input :placeholder="'Digite seu CPF '" type="text" v-model="form.cpf"
+                            <b-form-input :placeholder="'Digite seu CPF '" type="text" v-model="form.cpfResponsavel"
                                 v-mask="'###.###.###-##'" required></b-form-input>
                         </b-form-group>
 
                         <b-form-group class="font col-sm-7 col-md-7 col-lg-7">
                             <label>Nome completo<span class="text-danger">*</span>:</label>
                             <b-form-input :placeholder="'Digite seu Nome Completo'" type="text"
-                                v-model="form.nome" required>
+                                v-model="form.nomeResponsavel" required>
                             </b-form-input>
                         </b-form-group>
                     </div>
                     <div class="row">
                         <!-- 2ª LINHA  -->
-                        <b-form-group label="Telefone:" class="font col-sm-5 col-md-5 col-lg-5">
+                        <b-form-group class="font col-sm-5 col-md-5 col-lg-5">
+                            <label>Telefone<span class="text-danger">*</span>:</label>
                             <b-form-input :placeholder="'(00) 00000-0000'" type="text"
-                                v-model="form.telefone" v-mask="'(##) #####-####'"></b-form-input>
+                                v-model="form.telefone" v-mask="'(##) #####-####'" required></b-form-input>
                         </b-form-group>
 
-                        <b-form-group label="Email:" class="font col-sm-7 col-md-7 col-lg-7">
-                            <b-form-input :placeholder="'Digite seu Email'" type="email" v-model="form.email">
+                        <b-form-group class="font col-sm-7 col-md-7 col-lg-7">
+                            <label>Email<span class="text-danger">*</span>:</label>
+                            <b-form-input :placeholder="'Digite seu Email'" type="email" v-model="form.email" required>
                             </b-form-input>
                         </b-form-group>
                     </div>
                     <div class="row">
                         <!-- 3ª LINHA  -->                      
-                        <b-form-group label="Registro OAB:" class="font col-sm-5 col-md-5 col-lg-5">
-                            <b-form-input :placeholder="'Digite seu Registro OAB'" type="text" v-model="form.registroOAB">
+                        <b-form-group class="font col-sm-5 col-md-5 col-lg-5">
+                             <label>Registro OAB:<span class="text-danger">*</span>:</label>
+                            <b-form-input :placeholder="'Digite seu Registro OAB'" type="text" v-model="form.registroOAB" required>
                             </b-form-input>
                         </b-form-group>
                     </div>
@@ -73,7 +76,7 @@ import HeaderPage from '@/components/HeaderPage.vue';
 import { mask } from "vue-the-mask";
 import Notifications from "@/components/Notifications.vue";
 import { BIconSearch, BIconPlusCircle, BIconInfoCircle, BIconJournalPlus } from 'bootstrap-vue'
-import { Responsavel } from '@/type/responsavel';
+import { ResponsavelCadastro } from '@/type/responsavel';
 import { Notificacao } from "@/type/notificacao";
 import ReturnMessage from "@/components/ReturnMessage.vue";
 import RestApiService from "@/services/rest/service";
@@ -101,7 +104,7 @@ export default Vue.extend({
             stickyHeader: true,
             noCollapse: true,
             show: false as boolean,
-            form: {} as Responsavel,      
+            form: {} as ResponsavelCadastro,      
             Notificacao: [] as Array<Notificacao>,
             Message: [] as Array<Notificacao>,
             loading: false as boolean,
@@ -122,8 +125,7 @@ export default Vue.extend({
     methods: {
          submit() {
             let acao = this.id ? "put" : "post"
-            let url = "responsaveis";
-            //let url = this.id ? "responsavel/update" : "responsavel";
+            let url = "responsaveis";           
                     
             if (this.validarCampos()) { 
 
@@ -143,7 +145,7 @@ export default Vue.extend({
                             "success",
                             "Cadastro realizado com sucesso!"
                         );
-                    }                   
+                    } 
                 }) 
                 .catch((e) => {
                         if (e.message === "Network Error") {
@@ -180,14 +182,14 @@ export default Vue.extend({
             }                  
         },
 
-        carregarDados(): void {
+       /* carregarDados(): void {
             this.loading = true;       
                         
             RestApiService.get("responsavel/listid", this.id)
                 .then((res: any) => {          
 
-                this.form.id_responsavel =  res.data.idResponsavel 
-                this.form.nome_responsavel = res.data.nome
+                this.form.idResponsavel =  res.data.idResponsavel 
+                this.form.nomeesponsavel = res.data.nome
                 this.form.cpf_responsavel =  res.data.cpf
                 this.form.telefone = res.data.telefone
                 this.form.email = res.data.email
@@ -200,31 +202,30 @@ export default Vue.extend({
                     "Houve um erro ao carregar os dados. Tente novamente!"
                 );*/
           
-            })
+       /*      })
             .finally(() => {
                 this.loading = false;
             });
-        },
-       
-
+        },*/
+             
         validarCampos(): boolean {
             this.Notificacao = [];
 
-            if (!this.form.nome_responsavel) {
+            if (!this.form.nomeResponsavel) {
                 this.adicionarNotificacao(
                 "danger",
                 "Nome é obrigatório!"
                 );
             }
 
-           if(!this.form.cpf_responsavel){
+           if(!this.form.cpfResponsavel){
                 this.adicionarNotificacao(
                 "danger",
                 "CPF é obrigatório!"
                 );
             }     
         
-            if(this.form.cpf_responsavel && !ValidarCpfMixin.methods.validarCpf(this.form.cpf_responsavel)){
+            if(this.form.cpfResponsavel && !ValidarCpfMixin.methods.validarCpf(this.form.cpfResponsavel)){
                 this.adicionarNotificacao(
                 "danger",
                 "CPF inválido!"
@@ -268,7 +269,10 @@ export default Vue.extend({
 
         fechaAlert(): void {
             this.alert = false;
+            this.$bvModal.hide('modal-cadastro-responsavel')
+            this.$emit("listarResponsaveis",1);
         },  
+       
 
     },
    

@@ -113,7 +113,7 @@
          <!-- MODAL -->
 
         <b-modal id="modal-cadastro-responsavel" size="lg" centered title="Cadastro do Responsável" hide-footer>
-          <ModalCadastroResponsavel> 
+          <ModalCadastroResponsavel  @listarResponsaveis="listarResponsaveis"> 
             <template v-slot:buttons> 
                 <b-button class="bordered" @click="$bvModal.hide('modal-cadastro-responsavel')">Fechar</b-button>
             </template>           
@@ -236,6 +236,8 @@ export default Vue.extend({
                   "success",
                   "Exclusão realizada com sucesso!"
               );
+
+             this.listarResponsaveis(1)
           })
           .catch((e: Error) => {
              this.adicionarAlert(
