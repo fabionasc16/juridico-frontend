@@ -159,7 +159,6 @@ import HeaderPage from '@/components/HeaderPage.vue';
 import ModalCadastroResponsavel from './Modais/ModalCadastroResponsavel.vue';
 import { mask } from "vue-the-mask";
 import { Responsavel } from '@/type/responsavel';
-import { TableResponsaveisSeeder } from '@/type/tableResponsavel';
 import { FieldsTableResponsavel } from "@/type/tableResponsavel";
 import { BIconSearch, BIconPlusCircle, BIconInfoCircle, BIconJournalText } from 'bootstrap-vue'
 

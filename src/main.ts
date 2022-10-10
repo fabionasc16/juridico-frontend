@@ -8,7 +8,6 @@ import 'animate.css'
 import 'axios'
 import HighchartsVue from 'highcharts-vue'
 import vSelect from 'vue-select'
-
 Vue.component('v-select', vSelect)
 
 import VueCompositionAPI from '@vue/composition-api'
