@@ -5,27 +5,33 @@ const menusMixin = {
 			commonMenus: [
 			{
 				name: "Página Inicial",
-				path: "/"
+				path: "/",
+				meta: { menu: "" }
 			},
 			{
 				name: "Dashboard",
-				path: "/dashboard"
+				path: "/dashboard",
+				meta: { menu: "" }
 			},
 			{
 				name: "Processos",
-				path: "/processos"
+				path: "/processos",
+				meta: { menu: "" }
 			},
 			{
 				name: "Responsáveis",
-				path: "/responsaveis"
+				path: "/responsaveis",
+				meta: { menu: "Cadastros" }
 			},
 			{
 				name: "Feriados",
-				path: "/feriados"
+				path: "/feriados",
+				meta: { menu: "Cadastros" }
 			},
 			{
 				name: "Usuários",
-				path: "/usuarios"
+				path: "/usuarios",
+				meta: { menu: "Cadastros" }
 			}
 			] as Array<RouteConfig>
 		}

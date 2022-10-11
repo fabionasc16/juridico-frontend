@@ -180,8 +180,9 @@
           </div>
           <!-- TABELA -->
           <div>
-            <b-table-lite small striped hover responsive class="m-0 table-responsive" head-variant="dark" :current-page="currentPage"
-              :per-page="perPage" :sticky-header="stickyHeader" :no-border-collapse="noCollapse" :items="items"
+            <b-table-lite small striped hover responsive class="m-0 table-responsive" head-variant="dark" 
+              :current-page="currentPage"
+              :per-page="perPage"  :items="items"
               :fields="fields">
 
               <template v-slot:cell(statusProcesso)="data">
@@ -438,8 +439,7 @@ export default Vue.extend({
       checkedProcessoSiged: false as boolean,
       checkedExpiraHoje: false as boolean,
       maisDetalhes: false as boolean,
-      fields: FieldsTableProcesso, //nome das colunas da tabela
-      //items: TableProcessoSeeder, // lista de processos
+      fields: FieldsTableProcesso, //nome das colunas da tabela  
       items: [] as Array<String>,
       
       optionsStatusProcesso: StatusProcessoSeeder,

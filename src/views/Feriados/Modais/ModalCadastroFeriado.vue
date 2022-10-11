@@ -51,7 +51,6 @@
                     </div>                
                 </b-form>
             </div>
-
     </div>
 </template>
 
@@ -115,7 +114,6 @@ export default Vue.extend({
             this.carregarDados();  
             this.disabledAll = true; 
         }      
-    
     }, 
             
     methods: {
@@ -194,8 +192,7 @@ export default Vue.extend({
 
                 //formatar datas para formato br
                 this.dataFeriadoBR = res.data.data ? 
-                   dataMixin.methods.formatarDataBr(res.data.data) : "";
-               
+                   dataMixin.methods.formatarDataBr(res.data.data) : "";              
                
             })
             .catch((e) => {
@@ -257,10 +254,7 @@ export default Vue.extend({
                 } else {
                     return true;
             }
-
-        },
-
-       
+        },       
 
         adicionarAlert(tipo: string, mensagem: string): void {
             this.Message = []        
@@ -280,6 +274,9 @@ export default Vue.extend({
 
         fechaAlert(): void {
             this.alert = false;
+            this.$bvModal.hide('modal-cadastro-feriado')
+            this.$bvModal.hide('modal-editar-feriado')
+            this.$emit("listarFeriados");
         },  
        
     },
