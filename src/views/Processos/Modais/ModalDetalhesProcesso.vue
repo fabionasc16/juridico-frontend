@@ -114,7 +114,7 @@ export default Vue.extend({
 
             if(acao == 'post') {
                 this.formDados.form.statusProcesso = 10 
-                this.formDados.form.statusPrazo = 1 //apagar quando André deixar padrão               
+                this.formDados.form.statusPrazo = "TESTE APAGAR" //apagar quando André deixar padrão               
             }
 
             //pegar todos os valores já para armazenar
