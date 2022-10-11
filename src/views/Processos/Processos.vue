@@ -377,19 +377,15 @@
 
 <script lang="ts">
 import Vue from "vue";
-//import axios from "axios";
 import HeaderPage from '@/components/HeaderPage.vue';
 import ModalTramitacoesProcesso from './Modais/ModalTramitacoesProcesso.vue';
 import ModalArquivarProcesso from './Modais/ModalArquivarProcesso.vue';
 import ModalDetalhesProcesso from './Modais/ModalDetalhesProcesso.vue';
 import { mask } from "vue-the-mask";
 import { Processo } from '@/type/processo';
-//import { TableProcesso } from '@/type/tableProcesso';
-//import { TableProcessoSeeder } from '@/type/tableProcesso';
 import { BIconSearch, BIconPlusCircle, BIconInfoCircle, BIconJournalText } from 'bootstrap-vue'
 import { StatusProcessoSeeder } from "@/type/statusProcesso";
 import { StatusPrazoSeeder } from "@/type/statusPrazo";
-import { OrgaosSeeder } from "@/type/orgaos";
 import { CaixaSigedSeeder } from "@/type/caixaSiged";
 import { FieldsTableProcesso } from "@/type/tableProcesso";
 import ModalReiteracaoProcesso from './Modais/ModalReiteracaoProcesso.vue';
@@ -443,10 +439,10 @@ export default Vue.extend({
       items: [] as Array<String>,
       
       optionsStatusProcesso: StatusProcessoSeeder,
-      optionsStatusPrazo: StatusPrazoSeeder,
-      optionsOrgaoDemandante: OrgaosSeeder, 
+      optionsStatusPrazo: StatusPrazoSeeder,    
       optionsCaixa: CaixaSigedSeeder,  
 
+      optionsOrgaoDemandante: [] as Array<String>,
       optionsTipoProcesso: [] as Array<String>,
       optionsAssunto: [] as Array<String>,
       optionsClassificacao: [] as Array<String>,
@@ -557,11 +553,7 @@ export default Vue.extend({
           this.optionsResponsavel = response.data.data
         
         })
-        .catch((e) => {
-          /*this.Notificacao.push({
-            type: "danger",
-            message: "Não foi possível carregar a listagem!"            
-          })*/
+        .catch((e) => {          
           console.log(e)
         })
         .finally(() => {
@@ -578,11 +570,7 @@ export default Vue.extend({
           this.optionsClassificacao = response.data.data
         
         })
-        .catch((e) => {
-          /*this.Notificacao.push({
-            type: "danger",
-            message: "Não foi possível carregar a listagem!"            
-          })*/
+        .catch((e) => {         
           console.log(e)
         })
         .finally(() => {
@@ -600,10 +588,6 @@ export default Vue.extend({
         
         })
         .catch((e) => {
-          /*this.Notificacao.push({
-            type: "danger",
-            message: "Não foi possível carregar a listagem!"            
-          })*/
           console.log(e)
         })
         .finally(() => {
@@ -620,11 +604,7 @@ export default Vue.extend({
           this.optionsOrgaoDemandante = response.data.data
         
         })
-        .catch((e) => {
-          /*this.Notificacao.push({
-            type: "danger",
-            message: "Não foi possível carregar a listagem!"            
-          })*/
+        .catch((e) => {          
           console.log(e)
         })
         .finally(() => {
@@ -641,11 +621,7 @@ export default Vue.extend({
           this.optionsTipoProcesso = response.data.data
         
         })
-        .catch((e) => {
-          /*this.Notificacao.push({
-            type: "danger",
-            message: "Não foi possível carregar a listagem!"            
-          })*/
+        .catch((e) => {          
           console.log(e)
         })
         .finally(() => {

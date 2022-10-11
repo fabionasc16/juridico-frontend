@@ -2,7 +2,7 @@
   <div>
     <b-container fluid>
       <div class="row">
-        <b-form-group class="titulo m-0" label="Consulta de Responsáveis" label-size="lg">
+        <b-form-group class="titulo m-0" label="Consulta de Órgão Demandante" label-size="lg">
           <hr />
         </b-form-group>
 
@@ -20,18 +20,11 @@
         <!-- FORMULÁRIO DE CONSULTA -->       
         <b-form @submit.prevent="submit" class="mb-5">
 
-            <div class="row">
-                <!-- (CPF) -->
-                <div class="col-3">
-                  <b-form-group label="CPF:" class="font">
-                    <b-form-input :placeholder="'Digite seu CPF '" type="text" v-model="form.cpfUsuario"
-                      v-mask="'###.###.###-##'"></b-form-input>
-                  </b-form-group>
-                </div>
+            <div class="row">               
                 <!-- (NOME) -->
                 <div class="col-4"> 
                   <b-form-group label="Nome:" class="font">
-                    <b-form-input :placeholder="'Digite seu Nome'" type="text" v-model="form.nomeUsuario">
+                    <b-form-input :placeholder="'Digite Nome do Órgão Demandante'" type="text" v-model="form.orgaoDemandante">
                     </b-form-input>
                   </b-form-group>
                 </div>
@@ -60,14 +53,14 @@
               <!-- TÍTULO -->
               <div class="col-10 mt-1" align="start">
                 <div class="row position-relative">
-                  <h5>Responsáveis Cadastrados</h5>
+                  <h5>Órgãos Cadastrados</h5>
                 </div>
               </div>
               <!-- ÍCONE Plus-Circle -->
               <div class="col-1 position-relative" align="center"> 
                 <b-form-group label="" class="btn text-primary position-absolute top-50 start-50 translate-middle">
                   <div class="h3">
-                    <b-icon-plus-circle v-b-modal.modal-cadastro-responsavel v-b-tooltip.hover.topleft="'Adicionar Responsável'"></b-icon-plus-circle>
+                    <b-icon-plus-circle v-b-modal.modal-cadastro-orgao v-b-tooltip.hover.topleft="'Adicionar Órgão'"></b-icon-plus-circle>
                   </div>
                 </b-form-group>
               </div>
@@ -91,15 +84,15 @@
 
                   <!-- ITENS DO DROPDOWN -->                
                   <b-list-group-item block
-                     class="btn-light btn-outline-dark m-0 p-1" @click="editarResponsavel(data.item.id_responsavel)">
+                     class="btn-light btn-outline-dark m-0 p-1" @click="editarOrgao(data.item.id_orgao)">
                     Editar
                   </b-list-group-item>  
                   <b-list-group-item block 
-                     @click="visualizarResponsavel(data.item.id_responsavel)"
+                     @click="visualizarOrgao(data.item.id_orgao)"
                      class="btn-light btn-outline-dark m-0 p-1">
                     Visualizar
                   </b-list-group-item>                 
-                  <b-list-group-item block class="btn-light text-dark btn-outline-danger m-0 p-1" @click="excluir(data.item.id_responsavel, data.item.nome_responsavel)">
+                  <b-list-group-item block class="btn-light text-dark btn-outline-danger m-0 p-1" @click="excluir(data.item.id_orgao, data.item.orgao_demandante)">
                     Excluir
                   </b-list-group-item>
                 </b-dropdown>
@@ -111,7 +104,7 @@
             <!-- PAGINAÇÃO -->
             <div class="col-12 m-0 px-1 pt-1">              
               <b-pagination pills align="right" size="sm" v-model="currentPage" 
-                @change="listarResponsaveis"              
+                @change="listarOrgaos"              
                 :total-rows="totalRows" :per-page="perPage"  v-show="totalRows">
               </b-pagination>               
             </div>           
@@ -122,28 +115,28 @@
         
          <!-- MODAL -->
 
-        <b-modal id="modal-cadastro-responsavel" size="lg" centered title="Cadastro do Responsável" hide-footer>
-          <ModalCadastroResponsavel  @listarResponsaveis="listarResponsaveis(this.currentPage)" tipo="cadastrar"> 
+        <b-modal id="modal-cadastro-orgao" size="lg" centered title="Cadastro do Órgão Demandante" hide-footer>
+          <ModalCadastroOrgao  @listarOrgaos="listarOrgaos(currentPage)" tipo="cadastrar"> 
             <template v-slot:buttons> 
-                <b-button class="bordered" @click="$bvModal.hide('modal-cadastro-responsavel')">Fechar</b-button>
+                <b-button class="bordered" @click="$bvModal.hide('modal-cadastro-orgao')">Fechar</b-button>
             </template>           
-          </ModalCadastroResponsavel>
+          </ModalCadastroOrgao>
         </b-modal>
 
-        <b-modal id="modal-editar-responsavel" size="lg" centered title="Editar Responsável" hide-footer>
-          <ModalCadastroResponsavel @listarResponsaveis="listarResponsaveis(this.currentPage)" tipo="editar" :id="idResponsavel">  
+        <b-modal id="modal-editar-orgao" size="lg" centered title="Editar Órgão Demandante" hide-footer>
+          <ModalCadastroOrgao @listarOrgaos="listarOrgaos(currentPage)" tipo="editar" :id="idOrgao">  
             <template v-slot:buttons> 
-                <b-button class="bordered" @click="$bvModal.hide('modal-editar-responsavel')">Fechar</b-button>
+                <b-button class="bordered" @click="$bvModal.hide('modal-editar-orgao')">Fechar</b-button>
             </template>           
-          </ModalCadastroResponsavel>
+          </ModalCadastroOrgao>
         </b-modal>
 
-        <b-modal id="modal-visualizar-responsavel" size="lg" centered title="Visualizar Responsável" hide-footer>
-          <ModalCadastroResponsavel tipo="visualizar" :id="idResponsavel"> 
+        <b-modal id="modal-visualizar-orgao" size="lg" centered title="Visualizar Órgão Demandante" hide-footer>
+          <ModalCadastroOrgao tipo="visualizar" :id="idOrgao"> 
             <template v-slot:buttons> 
-                <b-button class="bordered" @click="$bvModal.hide('modal-visualizar-responsavel')">Fechar</b-button>
+                <b-button class="bordered" @click="$bvModal.hide('modal-visualizar-orgao')">Fechar</b-button>
             </template>           
-          </ModalCadastroResponsavel>
+          </ModalCadastroOrgao>
         </b-modal>
 
         <!-- //MODAL -->
@@ -158,10 +151,10 @@
 import Vue from "vue";
 //import axios from "axios";
 import HeaderPage from '@/components/HeaderPage.vue';
-import ModalCadastroResponsavel from './Modais/ModalCadastroResponsavel.vue';
+import ModalCadastroOrgao from './Modais/ModalCadastroOrgao.vue';
 import { mask } from "vue-the-mask";
-import { Responsavel } from '@/type/responsavel';
-import { FieldsTableResponsavel } from "@/type/tableResponsavel";
+import { Orgaos } from '@/type/orgaos';
+import { FieldsTableOrgao } from "@/type/tableOrgaos";
 import { BIconSearch, BIconPlusCircle, BIconInfoCircle, BIconJournalText } from 'bootstrap-vue'
 
 import Notifications from "@/components/Notifications.vue";
@@ -180,21 +173,21 @@ export default Vue.extend({
     BIconPlusCircle,
     BIconInfoCircle,
     Notifications,
-    ModalCadastroResponsavel,
+    ModalCadastroOrgao,
     ReturnMessage,
     LoadingSpinner,
   },
   data() {
     return {
-      idResponsavel: null as any, //para modal
+      idOrgao: null as any, //para modal
       rows: 100,
       currentPage: 1,
       totalRows: null as any,
       perPage: 10,
       items: [] as Array<String>,  
       pageOptions: [5, 10, 15, { value: 100, text: "Show a lot" }],
-      form: {} as Responsavel,
-      fields: FieldsTableResponsavel, //nome das colunas da tabela     
+      form: {} as Orgaos,
+      fields: FieldsTableOrgao, //nome das colunas da tabela     
       stickyHeader: true,
       noCollapse: true,
 
@@ -205,7 +198,7 @@ export default Vue.extend({
     };
   },
   mounted() {
-    this.listarResponsaveis(this.currentPage)
+    this.listarOrgaos(this.currentPage)
   },
   methods: {
     submit() {
@@ -214,19 +207,19 @@ export default Vue.extend({
       console.log(JSON.stringify(this.form))
     },  
 
-    editarResponsavel(id: number): void {
-        this.idResponsavel = id
-        this.$bvModal.show('modal-editar-responsavel')       
+    editarOrgao(id: number): void {
+        this.idOrgao = id
+        this.$bvModal.show('modal-editar-orgao')       
     },
 
-    visualizarResponsavel(id: number): void {
-        this.idResponsavel = id
-        this.$bvModal.show('modal-visualizar-responsavel')
+    visualizarOrgao(id: number): void {
+        this.idOrgao = id
+        this.$bvModal.show('modal-visualizar-orgao')
     },
 
-    listarResponsaveis(currentpage: number) : void {
+    listarOrgaos(currentpage: number) : void {
       this.loading = true
-      RestApiService.get("responsaveis", `?currentPage=${currentpage}`)
+      RestApiService.get("orgaos-demandantes", `?currentPage=${currentpage}`)
         .then((response: any) => {
           this.items = response.data.data
           this.perPage = response.data.perPage
@@ -249,10 +242,10 @@ export default Vue.extend({
 
     excluir(id: any, nome: string): void {
     
-      let message = 'Deseja realmente excluir responsável ' + nome + '?'
+      let message = 'Deseja realmente excluir órgão demandante ' + nome + '?'
 
       if(confirm(message)) {
-        RestApiService.delete("responsaveis", id)
+        RestApiService.delete("orgaos-demandantes", id)
           .then((response: any) =>{
               this.loading = true
               this.adicionarAlert(
@@ -260,7 +253,7 @@ export default Vue.extend({
                   "Exclusão realizada com sucesso!"
               );
 
-             this.listarResponsaveis(this.currentPage)
+             this.listarOrgaos(this.currentPage)
           })
           .catch((e: Error) => {
              this.adicionarAlert(

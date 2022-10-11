@@ -15,6 +15,7 @@ const routes: Array<RouteConfig> = [
   { path: '/graficoPizza', name: 'Gráfico de Pizza', component: () => import('../views/Dashboard/Graficos/GraficoPizza.vue') },
   { path: '/responsaveis', name: 'Responsáveis', component: () => import('../views/Responsaveis/Responsaveis.vue') },
   { path: '/feriados', name: 'Feriados', component: () => import('../views/Feriados/Feriados.vue') },
+  { path: '/orgaos', name: 'Órgãos Demandantes', component: () => import('../views/Orgaos/Orgaos.vue') },
 ]
 
 const router = new VueRouter({

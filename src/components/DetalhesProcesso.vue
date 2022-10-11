@@ -172,10 +172,6 @@ import Vue from "vue";
 import { mask } from "vue-the-mask";
 import { BIconSearch, BIconPlusCircle, BIconInfoCircle, BIconJournalPlus } from 'bootstrap-vue'
 import dataMixin from "@/mixins/dataMixin";
-import { TipoProcessoSeeder } from "@/type/tipoProcesso";
-import { OrgaosSeeder } from "@/type/orgaos";
-import { AssuntoSeeder } from "@/type/assunto";
-import { ClassificacaoSeeder } from "@/type/classificacao";
 import { Processo } from '@/type/processo';
 import VueNumeric from 'vue-numeric'
 Vue.use(VueNumeric)

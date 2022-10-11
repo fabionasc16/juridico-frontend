@@ -123,7 +123,7 @@
          <!-- MODAL -->
 
         <b-modal id="modal-cadastro-responsavel" size="lg" centered title="Cadastro do Responsável" hide-footer>
-          <ModalCadastroResponsavel  @listarResponsaveis="listarResponsaveis(this.currentPage)" tipo="cadastrar"> 
+          <ModalCadastroResponsavel  @listarResponsaveis="listarResponsaveis(currentPage)" tipo="cadastrar"> 
             <template v-slot:buttons> 
                 <b-button class="bordered" @click="$bvModal.hide('modal-cadastro-responsavel')">Fechar</b-button>
             </template>           
@@ -131,7 +131,7 @@
         </b-modal>
 
         <b-modal id="modal-editar-responsavel" size="lg" centered title="Editar Responsável" hide-footer>
-          <ModalCadastroResponsavel @listarResponsaveis="listarResponsaveis(this.currentPage)" tipo="editar" :id="idResponsavel">  
+          <ModalCadastroResponsavel @listarResponsaveis="listarResponsaveis(currentPage)" tipo="editar" :id="idResponsavel">  
             <template v-slot:buttons> 
                 <b-button class="bordered" @click="$bvModal.hide('modal-editar-responsavel')">Fechar</b-button>
             </template>           
