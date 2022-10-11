@@ -84,8 +84,13 @@
           <div>
             <b-table-lite small striped hover responsive class="m-0" head-variant="dark" :current-page="currentPage"
               :per-page="perPage" :no-border-collapse="noCollapse" :items="items"
-              :fields="fields">            
-             
+              :fields="fields">      
+
+              <!-- DATA FERIADO -->
+              <template v-slot:cell(data_feriado)="data">
+                 {{formatarDataBr(data.item.data_feriado)}}
+              </template>    
+                           
               <!-- BOTÕES DE AÇÕES -->
               <template v-slot:cell(botaoAction)="data">
 
@@ -126,8 +131,8 @@
          <!-- MODAL -->
 
           <b-modal id="modal-cadastro-feriado" centered title="Cadastro de Feriado" hide-footer>
-          <ModalCadastroFeriado> 
-            <template v-slot:buttons  @listarFeriados="listarFeriados" tipo="cadastrar"> 
+          <ModalCadastroFeriado  @listarFeriados="listarFeriados" > 
+            <template v-slot:buttons tipo="cadastrar"> 
                 <b-button class="bordered" @click="$bvModal.hide('modal-cadastro-feriado')">Fechar</b-button>
             </template>           
           </ModalCadastroFeriado>
@@ -209,7 +214,7 @@ export default Vue.extend({
     };
   },
   mounted() {   
-    this.listarFeriados(this.currentPage);
+    this.listarFeriados();
      
   },
   methods: {
@@ -223,13 +228,13 @@ export default Vue.extend({
         this.$bvModal.show('modal-visualizar-feriado')
     },
 
-    listarFeriados(currentpage: number): void {
+    listarFeriados(): void {   
      
       this.loading = true;  
        
         RestApiService.get(
           "feriados",
-          `?currentPage=${currentpage}`
+          `?currentPage=${this.currentPage}`
         )
           .then((response: any) => {
             this.items = response.data.data;
@@ -363,7 +368,7 @@ export default Vue.extend({
                     "Exclusão realizada com sucesso!"
             );  
             
-            this.listarFeriados(this.currentPage)
+            this.listarFeriados()
           })
           .catch((e: Error) => {    
              this.adicionarAlert(
