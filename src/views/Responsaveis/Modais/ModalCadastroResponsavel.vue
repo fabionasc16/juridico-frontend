@@ -274,9 +274,11 @@ export default Vue.extend({
 
         fechaAlert(): void {
             this.alert = false;
-            this.$bvModal.hide('modal-cadastro-responsavel')
-            this.$bvModal.hide('modal-editar-responsavel')
-            this.$emit("listarResponsaveis");
+             if(this.Message[0].type == 'success') {
+                this.$bvModal.hide('modal-cadastro-responsavel')
+                this.$bvModal.hide('modal-editar-responsavel')
+                this.$emit("listarResponsaveis");
+             }
         },  
        
 

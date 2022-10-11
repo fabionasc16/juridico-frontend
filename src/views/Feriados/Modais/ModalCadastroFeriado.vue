@@ -274,9 +274,12 @@ export default Vue.extend({
 
         fechaAlert(): void {
             this.alert = false;
-            this.$bvModal.hide('modal-cadastro-feriado')
-            this.$bvModal.hide('modal-editar-feriado')
-            this.$emit("listarFeriados");
+            
+             if(this.Message[0].type == 'success') {
+                this.$bvModal.hide('modal-cadastro-feriado')
+                this.$bvModal.hide('modal-editar-feriado')
+                this.$emit("listarFeriados");
+             }
         },  
        
     },

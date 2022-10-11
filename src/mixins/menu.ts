@@ -29,6 +29,11 @@ const menusMixin = {
 				meta: { menu: "Cadastros" }
 			},
 			{
+				name: "Orgãos",
+				path: "/orgaos",
+				meta: { menu: "Cadastros" }
+			},
+			{
 				name: "Usuários",
 				path: "/usuarios",
 				meta: { menu: "Cadastros" }

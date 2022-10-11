@@ -14,51 +14,49 @@
                         <LoadingSpinner></LoadingSpinner>
                     </div>
 
-                <b-form @submit.prevent="submit">
-
-                    <b-form-group class="titulo" label="Informações pessoais" label-size="lg">
-                        <hr />
-                    </b-form-group>
+                <b-form @submit.prevent="submit">                   
 
                     <!-- 1ª LINHA (CPF + NOME) -->
+                    <div class="row mt-3"> 
+                        <b-form-group class="font col-sm-10 col-md-10 col-lg-10">
+                            <label>Nome<span class="text-danger">*</span>:</label>
+                            <b-form-input :placeholder="'Digite o Nome do Órgão'" type="text" autofocus
+                                v-model="form.orgaoDemandante" :disabled="disabledAll" required>
+                            </b-form-input>
+                        </b-form-group>                        
+                    </div>
+
                     <div class="row">
                         <b-form-group class="font col-sm-5 col-md-5 col-lg-5">
-                           <label>CPF<span class="text-danger">*</span>:</label>
-                            <b-form-input :placeholder="'Digite seu CPF '" type="text" v-model="form.cpfResponsavel"
-                                v-mask="'###.###.###-##'" required :disabled="disabledAll"></b-form-input>
+                            <label>Sigla<span class="text-danger">*</span>:</label>
+                            <b-form-input type="text"
+                                v-model="form.siglaOrgao" :disabled="disabledAll" required></b-form-input>
                         </b-form-group>
 
-                        <b-form-group class="font col-sm-7 col-md-7 col-lg-7">
-                            <label>Nome completo<span class="text-danger">*</span>:</label>
-                            <b-form-input :placeholder="'Digite seu Nome Completo'" type="text"
-                                v-model="form.nomeResponsavel" required :disabled="disabledAll">
-                            </b-form-input>
+                        <b-form-group class="font col-sm-5 col-md-5 col-lg-5">
+                            <label>Esfera<span class="text-danger">*</span>:</label>
+                            <b-form-input type="text"
+                                v-model="form.esferaOrgao" :disabled="disabledAll" required></b-form-input>
                         </b-form-group>
                     </div>
+
                     <div class="row">
                         <!-- 2ª LINHA  -->
-                        <b-form-group class="font col-sm-5 col-md-5 col-lg-5">
-                            <label>Telefone<span class="text-danger">*</span>:</label>
-                            <b-form-input :placeholder="'(00) 00000-0000'" type="text"
-                                v-model="form.telefone" v-mask="'(##) #####-####'" required :disabled="disabledAll"></b-form-input>
-                        </b-form-group>
+                         <b-form-group class="font col-sm-6 col-md-6 col-lg-6">
+                                <b-form-checkbox v-model="form.orgaoControle" switch :disabled="disabledAll"
+                                    class="font col-sm-12 col-md-12 col-lg-12">Órgão de Controle?
+                               </b-form-checkbox>
+                          </b-form-group>                                           
+                    </div>
 
-                        <b-form-group class="font col-sm-7 col-md-7 col-lg-7">
-                            <label>Email<span class="text-danger">*</span>:</label>
-                            <b-form-input :placeholder="'Digite seu Email'" type="email" v-model="form.email" required
-                              :disabled="disabledAll">
-                            </b-form-input>
-                        </b-form-group>
+                    <div class="row"> 
+                           <b-form-group class="font col-sm-6 col-md-6 col-lg-6">
+                                <b-form-checkbox v-model="form.orgaoJustica" switch :disabled="disabledAll"
+                                    class="font col-sm-12 col-md-12 col-lg-12">Órgão de Justiça?
+                               </b-form-checkbox>
+                          </b-form-group>                       
                     </div>
-                    <div class="row">
-                        <!-- 3ª LINHA  -->                      
-                        <b-form-group class="font col-sm-5 col-md-5 col-lg-5">
-                             <label>Registro OAB:<span class="text-danger">*</span>:</label>
-                            <b-form-input :placeholder="'Digite seu Registro OAB'" type="text" v-model="form.registroOAB"
-                             required :disabled="disabledAll">
-                            </b-form-input>
-                        </b-form-group>
-                    </div>
+                   
 
                     <div class="py-2 mt-10" align="right">                        
                        <slot name="buttons"></slot>
@@ -78,7 +76,7 @@ import HeaderPage from '@/components/HeaderPage.vue';
 import { mask } from "vue-the-mask";
 import Notifications from "@/components/Notifications.vue";
 import { BIconSearch, BIconPlusCircle, BIconInfoCircle, BIconJournalPlus } from 'bootstrap-vue'
-import { ResponsavelCadastro } from '@/type/responsavel';
+import { OrgaoCadastro } from '@/type/orgaos';
 import { Notificacao } from "@/type/notificacao";
 import ReturnMessage from "@/components/ReturnMessage.vue";
 import RestApiService from "@/services/rest/service";
@@ -107,7 +105,7 @@ export default Vue.extend({
             stickyHeader: true as boolean,
             noCollapse: true as boolean,
             show: false as boolean,
-            form: {} as ResponsavelCadastro,      
+            form: {} as OrgaoCadastro,      
             Notificacao: [] as Array<Notificacao>,
             Message: [] as Array<Notificacao>,
             loading: false as boolean,
@@ -130,15 +128,19 @@ export default Vue.extend({
     methods: {
          submit() {
             let acao = this.id ? "put" : "post"
-            let url = "responsaveis";           
-                    
+            let url = "orgaos-demandantes";       
+                                            
             if (this.validarCampos()) { 
 
               console.log('JSON: ',JSON.stringify(this.form))
               
               this.loading = true  
+
+              this.form.orgaoControle = this.form.orgaoControle ? 'S' : 'N'
+              this.form.orgaoJustica = this.form.orgaoJustica ? 'S' : 'N'
+
             
-              RestApiService.salvar(url, this.form, acao, this.form.idResponsavel)
+              RestApiService.salvar(url, this.form, acao, this.form.idOrgao)
                 .then((res) => {
                     if (acao == "put") {
                         this.adicionarAlert(
@@ -190,22 +192,22 @@ export default Vue.extend({
          carregarDados(): void {
             this.loading = true;       
                         
-            RestApiService.get("responsaveis/id", this.id)
+            RestApiService.get("orgaos-demandantes/id", this.id)
                 .then((res: any) => {          
 
-                this.form.idResponsavel =  res.data.id_responsavel 
-                this.form.nomeResponsavel = res.data.nome_responsavel
-                this.form.cpfResponsavel =  res.data.cpf_responsavel
-                this.form.telefone = res.data.telefone
-                this.form.email = res.data.email
-                this.form.registroOAB = res.data.registro_oab               
+                this.form.idOrgao =  res.data.id_orgao 
+                this.form.orgaoDemandante = res.data.orgao_demandante
+                this.form.siglaOrgao =  res.data.sigla_orgao
+                this.form.esferaOrgao = res.data.esfera_orgao
+                this.form.orgaoControle = res.data.orgao_controle
+                this.form.orgaoJustica = res.data.orgao_justica               
                
             })
             .catch((e) => {
                    this.adicionarAlert(
                     "alert",
                     "Houve um erro ao carregar os dados. Tente novamente!"
-                );
+                );              
           
             })
             .finally(() => {
@@ -216,26 +218,27 @@ export default Vue.extend({
         validarCampos(): boolean {
             this.Notificacao = [];
 
-            if (!this.form.nomeResponsavel) {
+            if (!this.form.orgaoDemandante) {
                 this.adicionarNotificacao(
                 "danger",
-                "Nome é obrigatório!"
+                "Campo Nome é obrigatório!"
                 );
             }
 
-           if(!this.form.cpfResponsavel){
+            if (!this.form.siglaOrgao) {
                 this.adicionarNotificacao(
                 "danger",
-                "CPF é obrigatório!"
+                "Campo Sigla é obrigatório!"
                 );
-            }     
-        
-            if(this.form.cpfResponsavel && !ValidarCpfMixin.methods.validarCpf(this.form.cpfResponsavel)){
+            }
+
+             if (!this.form.esferaOrgao) {
                 this.adicionarNotificacao(
                 "danger",
-                "CPF inválido!"
+                "Campo Esfera é obrigatório!"
                 );
-            }    
+            }
+          
           
             if (this.Notificacao.length > 0) {
                 //ir para o início da página onde aparecem as mensagens
@@ -248,7 +251,7 @@ export default Vue.extend({
 
                 setTimeout(() => {
                 this.Notificacao = [];
-                }, 10000);
+                }, 5000);
                 return false;
             } else {
                 return true;
@@ -273,13 +276,14 @@ export default Vue.extend({
         },            
 
         fechaAlert(): void {
-            this.alert = false;
-            this.$bvModal.hide('modal-cadastro-responsavel')
-            this.$bvModal.hide('modal-editar-responsavel')
-            this.$emit("listarResponsaveis");
-        },  
-       
+            this.alert = false;           
 
+            if(this.Message[0].type == 'success') {
+                this.$bvModal.hide('modal-cadastro-orgao')
+                this.$bvModal.hide('modal-editar-orgao')
+                this.$emit("listarOrgaos");
+            }                       
+        },  
     },
    
 });
