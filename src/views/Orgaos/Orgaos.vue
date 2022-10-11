@@ -24,7 +24,7 @@
                 <!-- (NOME) -->
                 <div class="col-4"> 
                   <b-form-group label="Nome:" class="font">
-                    <b-form-input :placeholder="'Digite Nome do Órgão Demandante'" type="text" v-model="form.orgao_demandante">
+                    <b-form-input :placeholder="'Digite Nome do Órgão Demandante'" type="text" v-model="form.orgaoDemandante">
                     </b-form-input>
                   </b-form-group>
                 </div>
