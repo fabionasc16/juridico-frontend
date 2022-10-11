@@ -237,7 +237,7 @@ export default Vue.extend({
         this.listarResponsaveis()
 
         if(!this.form.idProcesso && this.form.valorMulta == 0){
-            this.form.valorMulta = ""
+            this.form.valorMulta = 0
         }
         
         if(!this.form.idTipoProcesso){
@@ -370,7 +370,7 @@ export default Vue.extend({
                 this.form.statusPrazo =  this.form.statusPrazo ?  this.form.statusPrazo: ""
                
                 this.form.sigiloso = this.form.sigiloso ? this.form.sigiloso: false                  
-                this.form.valorMulta = this.form.valorMulta ? this.form.valorMulta: ""     
+                this.form.valorMulta = this.form.valorMulta ? this.form.valorMulta: 0     
                
 
                 this.form.idClassificacao = this.form.idClassificacao ? this.form.idClassificacao : ""

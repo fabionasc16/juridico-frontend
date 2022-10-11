@@ -513,6 +513,8 @@ export default Vue.extend({
       this.form.idTipoProcesso = this.tipoProcessoSelecionado.id_tipoprocesso
       this.form.statusProcesso = this.statusProcessoSelecionado.value
       this.form.statusPrazo    = this.statusPrazoSelecionado.value
+
+    
       this.form.idOrgaoDemandante = this.orgaoDemandanteSelecionado.id_orgao
       this.form.idClassificacao   = this.classificacaoSelecionada.id_classificacao
       this.form.idResponsavel   = this.responsavelSelecionado.id_responsavel
@@ -708,19 +710,19 @@ export default Vue.extend({
     colorDiasRestantes(prazo: any) : any {
 
             if(prazo < 0) {
-              return "dark"
+              return "dark" 
             }
 
             if(prazo >= 0 && prazo < 4) {
-              return "danger"
+              return "danger" //desc_status = atenção
             }
 
             if(prazo >= 4 && prazo < 6 ) {
-              return "warning"
+              return "warning" //desc_status = atenção
             }
 
             if(prazo >= 6) {
-              return "success"
+              return "success" 
             }
   
             return ""            
@@ -728,21 +730,21 @@ export default Vue.extend({
     statusDiasRestantes(prazo: any) : any {
 
             if(prazo < 0) {
-              return "Expirado"
+              return "Expirado" 
             }
 
             if(prazo >= 0 && prazo <= 3) {
-              return "A Expirar"
+              return "Crítico"
             }
 
             if(prazo >= 4 && prazo <= 5 ) {
-              return "Próximo a expirar"
+              return "Atenção"
             }
 
             if(prazo >= 6) {
-              return "Dentro do Prazo"
+              return "Normal"
             }
-  
+
             return ""
             
     },

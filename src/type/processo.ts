@@ -27,7 +27,7 @@ export type Processo = {
     idStatusProcesso: any, 
     sigiloso: boolean,
     observacao: string,   
-    valorMulta?: any,
+    valorMulta: number,
     reiteracao?: string,
     dataArquivamento?: string,
 };
