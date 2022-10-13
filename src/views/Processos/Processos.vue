@@ -33,7 +33,7 @@
                     <label v-else>Nº SIGED:</label>                       
                   </b-form-checkbox>                            
 
-                  <b-form-input v-if="checkedProcessoSiged" size="md" type="text" v-model="form.numProcedimento" v-mask="'######/####-##'" autofocus></b-form-input>
+                  <b-form-input v-if="checkedProcessoSiged" size="md" type="text" v-model="form.numProcedimento" autofocus></b-form-input>
                   <b-form-input v-else size="md" type="text" v-model="form.numProcessoSIGED" v-mask="'######/####-##'" autofocus></b-form-input>
                 </b-form-group>
 
@@ -186,7 +186,7 @@
               :fields="fields">
 
               <template v-slot:cell(statusProcesso)="data">
-                <b-badge :variant="colorStatusProcesso(data.item.statusProcesso)">{{data.item.statusProcesso}}</b-badge>
+                <b-badge :variant="colorStatusProcesso(data.item.statusProcesso)">{{data.item.statusProcesso}}</b-badge>            
               </template>
 
               <template v-slot:cell(diasRestantes)="data">
@@ -214,66 +214,80 @@
                     &#x2261;<span class="sr-only"></span>
                   </template>
 
-                  <!-- ITENS DO DROPDOWN -->                
-                  <b-list-group-item block v-b-modal.modal-editar-processo class="btn-light btn-outline-dark m-0 p-1"
-                  v-if="data.item.statusProcesso!='Arquivado'">
-                    Editar {{data.item.id_processo}}
-                  </b-list-group-item>
+                  <!-- ITENS DO DROPDOWN -->
 
-                  <b-list-group-item block v-b-modal.modal-editar-processo class="btn-light btn-outline-dark m-0 p-1"
-                  v-if="data.item.statusProcesso!='Arquivado'"  @click="abrirModal('modal-editar-processo', data.item.id_processo)">
-                    Editar new
+                  <!--status diferente de arquivado(14) -->                  
+                  <b-list-group-item block class="btn-light btn-outline-dark m-0 p-1"
+                  v-if="data.item.status.id_status!='14'" 
+                    @click="abrirModal('modal-editar-processo', data.item.id_processo)"
+                    @listarProcesso="listarProcesso(currentPage)"
+                    >
+                    Editar
                   </b-list-group-item>
-
 
                   <b-list-group-item block v-b-modal.modal-visualizar-processo class="btn-light btn-outline-dark m-0 p-1">
                     Visualizar
                   </b-list-group-item>
+
+                  <!--status diferente de arquivado(14) --> 
                   <b-list-group-item block v-b-modal.modal-andamento-processo class="btn-light btn-outline-dark m-0 p-1"
-                  v-if="data.item.statusProcesso!='Arquivado'">
+                   v-if="data.item.status.id_status!='14'"  @listarProcesso="listarProcesso(currentPage)">
                     Alterar Situação
-                  </b-list-group-item> 
-                  <b-list-group-item block v-b-modal.modal-tramitacoes-processo class="btn-light btn-outline-dark m-0 p-1">
-                    Tramitações
-                  </b-list-group-item>                  
-                  <b-list-group-item block v-b-modal.modal-visualizar-reiteracao class="btn-light btn-outline-dark m-0 p-1">
-                    Reiterações
-                  </b-list-group-item>
-                  <b-list-group-item block v-b-modal.modal-duplicar-processo class="btn-light btn-outline-dark m-0 p-1">
-                    Duplicar
-                  </b-list-group-item>
-                  <!-- <b-list-group-item block v-b-modal.modal-arquivar-processo 
-                     class="btn-light text-dark btn-outline-success m-0 p-1"
-                     v-if="data.item.statusProcesso!='Arquivado'">
-                    Arquivar
-                  </b-list-group-item> -->
-                  <b-list-group-item block class="btn-light text-dark btn-outline-danger m-0 p-1"
-                      v-if="data.item.statusProcesso=='Arquivado'"  
-                      @click="desarquivar(data.item.idProcesso, data.item.numProcedimento, data.item.statusProcesso, data.item)">
-                    Desarquivar
-                  </b-list-group-item>
-                  <b-list-group-item block class="btn-light text-dark btn-outline-danger m-0 p-1"
-                      v-if="data.item.statusProcesso=='Cadastrado'"  
-                      @click="excluir(data.item.idProcesso, data.item.numProcedimento, data.item.statusProcesso)">
-                    Excluir
                   </b-list-group-item>
 
+                  <b-list-group-item block v-b-modal.modal-tramitacoes-processo 
+                     @listarProcesso="listarProcesso(currentPage)" class="btn-light btn-outline-dark m-0 p-1">
+                    Tramitações
+                  </b-list-group-item>  
+
+                  <b-list-group-item block v-b-modal.modal-visualizar-reiteracao 
+                     @listarProcesso="listarProcesso(currentPage)" class="btn-light btn-outline-dark m-0 p-1">
+                    Reiterações
+                  </b-list-group-item>
+
+                  <b-list-group-item block v-b-modal.modal-duplicar-processo 
+                     @listarProcesso="listarProcesso(currentPage)" class="btn-light btn-outline-dark m-0 p-1">
+                    Duplicar
+                  </b-list-group-item>
+                  
+                   <!--status diferente de arquivado(14) --> 
+                  <b-list-group-item block v-b-modal.modal-arquivar-processo 
+                     class="btn-light text-dark btn-outline-success m-0 p-1"
+                     v-if="data.item.status.id_status!='14'">
+                    Arquivar
+                  </b-list-group-item>
+
+                  <!--status igual arquivado(14) --> 
+                  <b-list-group-item block class="btn-light text-dark btn-outline-danger m-0 p-1"
+                        v-if="data.item.status.id_status=='14'" 
+                         @listarProcesso="listarProcesso(currentPage)"
+                      @click="desarquivar(data.item.id_processo, data.item.num_procedimento, data.item.status.id_status, data.item)">
+                    Desarquivar
+                  </b-list-group-item>
+
+                  <!--status igual a recebido (10) --> 
+                  <b-list-group-item block class="btn-light text-dark btn-outline-danger m-0 p-1"                 
+                      @listarProcesso="listarProcesso(currentPage)"
+                      v-if="data.item.status.id_status=='10'"
+                      @click="excluir(data.item.id_processo, data.item.num_procedimento, data.item.status.id_status)">
+                    Excluir {{data.item.desc_status}}
+                  </b-list-group-item>
                 </b-dropdown>
-              </template>
-             
+              </template>             
             </b-table-lite>
 
             <div class="m-3 text-center" v-if="!items">
               <label>Nenhum registro encontrado.</label>
-            </div>
-            
-            
+            </div>         
           </div>
+
           <!-- RODAPÉ DA TABELA (Espaço reservado para incluir ícones) -->
           <div class="card-footer m-0 px-1 pt-1">
             <!-- PAGINAÇÃO -->
             <div class="col-12 m-0 px-1 pt-1">
-              <b-pagination pills align="right" size="sm" v-model="currentPage" :total-rows="rows" :per-page="perPage">
+              <b-pagination pills align="right" size="sm" v-model="currentPage" 
+                @change="listarProcesso"
+                :total-rows="totalRows" :per-page="perPage" v-show="totalRows">
               </b-pagination>
             </div>
           </div>
@@ -281,10 +295,8 @@
 
         <!-- MODAL -->
         <!-- CADASTRO DO PROCESSO -->
-        <b-modal id="modal-cadastro-processo" size="lg" centered title="Cadastro do Processo" hide-footer>
-          <!--<ModalCadastroProcesso>
-          </ModalCadastroProcesso>-->
-           <ModalDetalhesProcesso tipo="cadastrar">
+        <b-modal id="modal-cadastro-processo" size="lg" centered title="Cadastro do Processo" hide-footer>       
+           <ModalDetalhesProcesso tipo="cadastrar"  @listarProcesso="listarProcesso(currentPage)">
               <template v-slot:buttons>
                  <b-button class="bordered" @click="$bvModal.hide('modal-cadastro-processo')">Fechar</b-button>
               </template>
@@ -674,16 +686,19 @@ export default Vue.extend({
     
     let message = 'Deseja realmente excluir processo Nº ' + data + '?'
 
-    if(confirm(message) && (status == 'Cadastrado' || status == 'cadastrado')) {
+    //status recebido
+    if(confirm(message) && (status == '10')) {
     
-      RestApiService.delete("processo", id)
+      RestApiService.delete("processos", id)
         .then((response: any) => {
           this.loading = true;
 
           this.adicionarAlert(
                   "success",
                   "Exclusão realizada com sucesso!"
-          );          
+          ); 
+          
+          this.listarProcesso(this.currentPage)
         })
         .catch((e: Error) => {    
            this.adicionarAlert(
@@ -693,10 +708,8 @@ export default Vue.extend({
         })
         .finally(() => {
           this.loading = false;
-        });   
-
-      console.log("Excluído")
-    }
+        });  
+    } 
    },
 
     colorReiteracao(reiteracao: any) : any {

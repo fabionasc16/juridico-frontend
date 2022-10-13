@@ -20,7 +20,7 @@
 
                     <div v-show="!isLoading"> 
                         <detalhes-processo  ref='formDetalhes' />       
-                    </div>                                 
+                    </div>                                
                         
                     <div class="py-2 mt-10" align="right">                        
                        <slot name="buttons"></slot>
@@ -91,12 +91,9 @@ export default Vue.extend({
             this.formDados.disabledAll = true
             this.buttonDisabled = true
             return;
-        }  
+        }       
 
-       //  alert(this.tipo)
-          // this.carregarDados();  
-
-         if(this.tipo == 'editar') {           
+        if(this.tipo == 'editar') {           
             this.carregarDados();      
             return;
         }
@@ -108,18 +105,19 @@ export default Vue.extend({
     }, 
             
     methods: {
-        submit() {
+        submit() {            
+            //pegar todos os valores já para armazenar
+            this.formDados.getValues()            
+
             let acao = this.idProcesso ? "put" : "post"
-            let url = this.idProcesso ? "processos/update" : "processos"; 
+            let url ="processos"
 
             if(acao == 'post') {
                 this.formDados.form.statusProcesso = 10 
                 this.formDados.form.statusPrazo = "TESTE APAGAR" //apagar quando André deixar padrão               
             }
 
-            //pegar todos os valores já para armazenar
-            this.formDados.getValues()           
-
+     
             if (this.validarCampos()) { 
 
               console.log('JSON: ',JSON.stringify(this.formDados.form))
@@ -304,7 +302,21 @@ export default Vue.extend({
                 "danger",
                 "Data Final Limite informada é inválida!"
                 );
-            }            
+            }   
+            
+            if(this.formDados.form.dataRecebimento < this.formDados.form.dataProcesso){
+                this.adicionarNotificacao(
+                "danger",
+                "Data de Recebimento não pode ser menor que a data do processo!"
+                );
+            }  
+                      
+            if(this.formDados.form.dataLimitePrazo && (this.formDados.form.dataLimitePrazo < this.formDados.form.dataProcesso)){
+                this.adicionarNotificacao(
+                "danger",
+                "Data Final Limite não pode ser menor que a data do processo!"
+                );
+            }  
 
             if (this.Notificacao.length > 0) {
                 //ir para o início da página onde aparecem as mensagens
@@ -342,6 +354,12 @@ export default Vue.extend({
 
         fechaAlert(): void {
             this.alert = false;
+
+            if(this.Message[0].type == 'success') {
+                this.$bvModal.hide('modal-cadastro-processo')
+                this.$bvModal.hide('modal-editar-processo')
+                this.$emit("listarProcesso");
+            }   
         },  
        
     },
