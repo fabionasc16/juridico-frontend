@@ -16,6 +16,7 @@ const routes: Array<RouteConfig> = [
   { path: '/responsaveis', name: 'Responsáveis', component: () => import('../views/Responsaveis/Responsaveis.vue') },
   { path: '/feriados', name: 'Feriados', component: () => import('../views/Feriados/Feriados.vue') },
   { path: '/orgaos', name: 'Órgãos Demandantes', component: () => import('../views/Orgaos/Orgaos.vue') },
+  { path: '/tiposprocesso', name: 'Tipos Processo', component: () => import('../views/TiposProcesso/TiposProcesso.vue') },
 ]
 
 const router = new VueRouter({

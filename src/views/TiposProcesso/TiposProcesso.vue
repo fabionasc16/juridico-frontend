@@ -2,7 +2,7 @@
   <div>
     <b-container fluid>
       <div class="row">
-        <b-form-group class="titulo m-0" label="Consulta de Feriados" label-size="lg">
+        <b-form-group class="titulo m-0" label="Consulta de Tipos de Processo" label-size="lg">
           <hr />
         </b-form-group>
 
@@ -18,31 +18,17 @@
         </div>
 
         <!-- FORMULÁRIO DE CONSULTA -->       
-        <b-form @submit.prevent="listarFeriados" class="mb-5">
+        <b-form @submit.prevent="listarTiposProcesso" class="mb-5">
 
             <div class="row">               
                 <div class="col-3">
-                  <b-form-group label="Data:" class="font">
-                      <b-form-input class="bordered margin-field" type="text" v-model="dataFeriadoBR" placeholder="dd/mm/aaaa"
-                                v-mask="'##/##/####'"></b-form-input>   
+                  <b-form-group label="Tipo Processo:" class="font">
+                      <b-form-input class="bordered margin-field" type="text" 
+                          v-model="form.desc_tipoprocesso"
+                               ></b-form-input>   
                   </b-form-group>
-                </div>    
-                <div class="col-3">             
-                  <b-form-group label="Tipo:" class="font">
-                      <b-form-select v-model="form.idTipoFeriado">
-                          <b-form-select-option value="">-- Selecione --</b-form-select-option>
-                          <b-form-select-option v-for="option in optionsTipoFeriado" :value="option.value"
-                              :key="option.value"> {{ option.texto }}
-                          </b-form-select-option>                                
-                      </b-form-select>
-                  </b-form-group>
-                </div>      
-                <div class="col-2">
-                  <b-form-group label="Ano:" class="font">
-                      <b-form-input class="bordered margin-field" type="text" v-model="form.ano" placeholder="aaaa"
-                                v-mask="'####'"></b-form-input>   
-                  </b-form-group>
-                </div>    
+                </div>                   
+                
                 <!-- ÍCONE DA LUPA -->
                 <div class="col-2 justify-content-center">
                   <b-form-group label="Consultar" class="font text-white">                    
@@ -60,21 +46,21 @@
           <div class="card-header" align="right">
             <div class="row">
                 <!-- ÍCONE Journal-text -->
-                <div class="col-1 text-blue h2 p0m0" align="center" label="Feriados Cadastrados">
+                <div class="col-1 text-blue h2 p0m0" align="center" label="Tipos de Processo Cadastrados">
                   <b-icon-journal-text>
                   </b-icon-journal-text>
                 </div>
               <!-- TÍTULO -->
               <div class="col-10 mt-1" align="start">
                 <div class="row position-relative">
-                  <h5>Feriados Cadastrados</h5>
+                  <h5>Tipos de Processo Cadastrados</h5>
                 </div>
               </div>
               <!-- ÍCONE Plus-Circle -->
               <div class="col-1 position-relative" align="center"> 
                 <b-form-group label="" class="btn text-primary position-absolute top-50 start-50 translate-middle">
                   <div class="h3">
-                    <b-icon-plus-circle v-b-modal.modal-cadastro-feriado v-b-tooltip.hover.topleft="'Adicionar Feriado'"></b-icon-plus-circle>
+                    <b-icon-plus-circle v-b-modal.modal-cadastro-tipoprocesso v-b-tooltip.hover.topleft="'Adicionar Tipo de Processo'"></b-icon-plus-circle>
                   </div>
                 </b-form-group>
               </div>
@@ -85,11 +71,7 @@
             <b-table-lite small striped hover responsive class="m-0" head-variant="dark" :current-page="currentPage"
               :per-page="perPage" :no-border-collapse="noCollapse" :items="items"
               :fields="fields">      
-
-              <!-- DATA FERIADO -->
-              <template v-slot:cell(data_feriado)="data">
-                 {{formatarDataBr(data.item.data_feriado)}}
-              </template>    
+                 
                            
               <!-- BOTÕES DE AÇÕES -->
               <template v-slot:cell(botaoAction)="data">
@@ -103,15 +85,15 @@
 
                   <!-- ITENS DO DROPDOWN -->                
                   <b-list-group-item block class="btn-light btn-outline-dark m-0 p-1"
-                    @click="editarFeriado(data.item.id_feriado)">
+                    @click="editarTipoProcesso(data.item.id_tipoprocesso)">
                     Editar
                   </b-list-group-item>  
                    <b-list-group-item block 
-                     @click="visualizarFeriado(data.item.id_feriado)"
+                     @click="visualizarTipoProcesso(data.item.id_tipoprocesso)"
                      class="btn-light btn-outline-dark m-0 p-1">
                     Visualizar
                   </b-list-group-item>                 
-                  <b-list-group-item block class="btn-light text-dark btn-outline-danger m-0 p-1" @click="excluir(data.item.id_feriado, data.item.desc_feriado)">
+                  <b-list-group-item block class="btn-light text-dark btn-outline-danger m-0 p-1" @click="excluir(data.item.id_tipoprocesso, data.item.desc_tipoprocesso)">
                     Excluir
                   </b-list-group-item>
                 </b-dropdown>
@@ -122,30 +104,31 @@
           <div class="card-footer m-0 px-1 pt-1">
             <!-- PAGINAÇÃO -->
             <div class="col-12 m-0 px-1 pt-1">
-              <b-pagination pills align="right" size="sm" v-model="currentPage" :total-rows="totalRows" 
-                :per-page="perPage" @change="listarFeriados" v-show="totalRows">
-              </b-pagination>
+              <b-pagination pills align="right" size="sm" v-model="currentPage" 
+                 :total-rows="totalRows" :per-page="perPage" v-show="totalRows"
+                  @change="listarTiposProcesso">
+              </b-pagination>              
             </div>
-          </div>
+          </div> 
            <div>&nbsp <b>Total Registros:</b> {{totalRows}}</div>  
         </div>       
         
          <!-- MODAL -->
 
-          <b-modal id="modal-cadastro-feriado" centered title="Cadastro de Feriado" hide-footer>
-          <ModalCadastroFeriado  @listarFeriados="listarFeriados(currentPage)" > 
+          <b-modal id="modal-cadastro-tipoprocesso" centered title="Cadastro de Tipo de Processo" hide-footer>
+          <ModalCadastroTipoProcesso  @listarTiposProcesso="listarTiposProcesso(currentPage)" > 
             <template v-slot:buttons tipo="cadastrar"> 
-                <b-button class="bordered" @click="$bvModal.hide('modal-cadastro-feriado')">Fechar</b-button>
+                <b-button class="bordered" @click="$bvModal.hide('modal-cadastro-tipoprocesso')">Fechar</b-button>
             </template>           
-          </ModalCadastroFeriado>
+          </ModalCadastroTipoProcesso>
         </b-modal>
 
-        <b-modal id="modal-editar-feriado" centered title="Editar Feriado" hide-footer>
-          <ModalCadastroFeriado  @listarFeriados="listarFeriados(currentPage)"  tipo="editar" :id="idFeriado">  
+        <b-modal id="modal-editar-tipoprocesso" centered title="Editar Tipo de Processo" hide-footer>
+          <ModalCadastroTipoProcesso  @listarTiposProcesso="listarTiposProcesso(currentPage)" tipo="editar" :id="idTipoProcesso">  
             <template v-slot:buttons> 
-                <b-button class="bordered" @click="$bvModal.hide('modal-editar-feriado')">Fechar</b-button>
+                <b-button class="bordered" @click="$bvModal.hide('modal-editar-tipoprocesso')">Fechar</b-button>
             </template>           
-          </ModalCadastroFeriado>
+          </ModalCadastroTipoProcesso>
         </b-modal>    
 
         <!-- //MODAL -->
@@ -160,18 +143,17 @@ import Vue from "vue";
 //import axios from "axios";
 import HeaderPage from '@/components/HeaderPage.vue';
 import { mask } from "vue-the-mask";
-import { Feriado } from '@/type/feriado';
-import { FieldsTableFeriado } from "@/type/tableFeriado";
+import { TipoProcesso } from '@/type/tipoProcesso';
+import { FieldsTableTipoProcesso } from "@/type/tableTipoProcesso";
 import { BIconSearch, BIconPlusCircle, BIconInfoCircle, BIconJournalText } from 'bootstrap-vue'
 import dataMixin from "@/mixins/dataMixin";
-import { TipoFeriadoSeeder } from "@/type/tipoFeriado";
 import RestApiService from "@/services/rest/service";
 
 import Notifications from "@/components/Notifications.vue";
 import { Notificacao } from "@/type/notificacao";
 import ReturnMessage from "@/components/ReturnMessage.vue";
 import LoadingSpinner from "@/components/LoadingSpinner.vue";
-import ModalCadastroFeriado from "./Modais/ModalCadastroFeriado.vue";
+import ModalCadastroTipoProcesso from "./Modais/ModalCadastroTipoProcesso.vue";
 
 export default Vue.extend({
   directives: { mask },
@@ -184,28 +166,26 @@ export default Vue.extend({
     Notifications,
     ReturnMessage,
     LoadingSpinner,  
-    ModalCadastroFeriado
+    ModalCadastroTipoProcesso
 },
   mixins: [        
         dataMixin,
   ],  
   data() {
     return {
-      idFeriado: null as any, //para modal
+      idTipoProcesso: null as any, //para modal
       rows: 100,
       currentPage: 1,
       totalRows: 1,
       perPage: 5,
-      pageOptions: [5, 10, 15, { value: 100, text: "Show a lot" }],     
-      form: {} as Feriado,
-      fields: FieldsTableFeriado, //nome das colunas da tabela
+      pageOptions: [5, 10, 15, { value: 100, text: "Show a lot" }],   
+      form: {} as TipoProcesso,
+      fields: FieldsTableTipoProcesso, //nome das colunas da tabela
      
       stickyHeader: true,
       noCollapse: true,
-      dataFeriadoBR: "" as string,
-      optionsTipoFeriado: TipoFeriadoSeeder, 
-
-      items: [] as Array<Feriado>,
+           
+      items: [] as Array<TipoProcesso>,
 
       Notificacao: [] as Array<Notificacao>,
       Message: [] as Array<Notificacao>,
@@ -215,26 +195,26 @@ export default Vue.extend({
     };
   },
   mounted() {   
-    this.listarFeriados(this.currentPage);
+    this.listarTiposProcesso(this.currentPage);
      
   },
   methods: {
-    editarFeriado(id: number): void {
-        this.idFeriado = id
-        this.$bvModal.show('modal-editar-feriado')       
+    editarTipoProcesso(id: number): void {
+        this.idTipoProcesso = id
+        this.$bvModal.show('modal-editar-tipoprocesso')       
     },
 
-    visualizarFeriado(id: number): void {
-        this.idFeriado = id
-        this.$bvModal.show('modal-visualizar-feriado')
+    visualizarTipoProcesso(id: number): void {
+        this.idTipoProcesso = id
+        this.$bvModal.show('modal-visualizar-tipoprocesso')
     },
 
-    listarFeriados(currentpage: number) : void { 
+    listarTiposProcesso(currentpage: number) : void {
      
       this.loading = true;  
        
         RestApiService.get(
-          "feriados", `?currentPage=${currentpage}`)
+          "tipos-processo", `?currentPage=${currentpage}`)
           .then((response: any) => {
             this.items = response.data.data;
             this.perPage = response.data.perPage;
@@ -268,47 +248,15 @@ export default Vue.extend({
             this.loading = false;          
           });
       
-    },
-
-    validarCampos(): boolean {     
-
-      if(this.dataFeriadoBR && !dataMixin.methods.validarData(this.dataFeriadoBR) ) {
-              this.adicionarNotificacao(
-                    "danger",
-                    "A data informada é inválida."
-                );
-      }
-
-      if (this.Notificacao.length > 0) {
-                //ir para o início da página onde aparecem as mensagens
-                window.scrollTo(0, 0);               
-
-                this.adicionarAlert(
-                    "alert",
-                     "Realize as validações exibidas no topo desta página!"
-                );
-
-                setTimeout(() => {
-                this.Notificacao = [];
-                }, 10000);
-                return false;
-            } else {
-                return true;
-      }
-      
-    },
-   
-    voltar(): void {
-      this.$router.push("/");
-    },
+    },   
 
     excluir(id: any, data: any): void {
     
-      let message = 'Deseja realmente excluir feriado de ' + data + '?'
+      let message = 'Deseja realmente excluir tipo de processo ' + data + '?'
 
       if(confirm(message)) {
       
-        RestApiService.delete("feriados", id)
+        RestApiService.delete("tipos-processo", id)
           .then((response: any) => {
             this.loading = true;
 
@@ -317,7 +265,7 @@ export default Vue.extend({
                     "Exclusão realizada com sucesso!"
             );  
             
-            this.listarFeriados(this.currentPage)
+            this.listarTiposProcesso(this.currentPage)
           })
           .catch((e: Error) => {    
              this.adicionarAlert(
