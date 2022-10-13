@@ -30,6 +30,10 @@ class RestApiService {
   public get(uri: string, params: any): Promise<any> {
     return http.get(`/${uri}/${params}`);
   }
+
+  public buscarProcessoSiged(params: any): Promise<any> {
+    return http.get(`/processos/busca-processo?numero_processo=${params}`);
+  }   
   
   public getCpf(uri: string, params: any): Promise<any> {
     return http.get(`/${uri}/cpf/query?cpf_usuario=${params}`);

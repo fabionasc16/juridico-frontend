@@ -67,7 +67,7 @@
                         <b-form-group class="font col-sm-7 col-md-7 col-lg-7">   
                              <label>Assunto: <span class="text-danger">*</span></label>   
                              <v-select style="font-size: 0.85rem" :options="optionsAssunto" class="font" label="desc_assunto"
-                                        v-model="assuntoSelecionado" :disabled="disabledAll" required="required"/>
+                                        v-model="assuntoSelecionado" :disabled="disabledAll" required/>
                         </b-form-group>
 
                         <b-form-group class="font col-sm-5 col-md-5 col-lg-5">
@@ -90,14 +90,17 @@
                                 </b-form-group>
                             </div>
                             <div class="row">
-                                <b-form-group label="Responsável:" class="font col-sm-12 col-md-12 col-lg-12">                                   
+                                <b-form-group class="font col-sm-12 col-md-12 col-lg-12">  
+                                    <label>Responsável: <span class="text-danger">*</span></label>                                 
                                     <v-select style="font-size: 0.85rem" :options="optionsResponsavel" class="font" label="nome_responsavel"
-                                        value="id_responsavel" v-model="responsavelSelecionado" :disabled="disabledAll"/>
+                                        value="id_responsavel" v-model="responsavelSelecionado" :disabled="disabledAll" required/>
                                 </b-form-group>
                             </div>
                             <div class="row">
-                                <b-form-group label="Descrição:" class="font col-sm-12 col-md-12 col-lg-12">
-                                    <b-form-textarea rows="4" max-rows="4" v-model="form.descricao" :disabled="disabledAll"></b-form-textarea>
+                                <b-form-group class="font col-sm-12 col-md-12 col-lg-12">
+                                    <label>Descrição: <span class="text-danger">*</span></label>        
+                                    <b-form-textarea rows="4" max-rows="4" v-model="form.descricao" 
+                                     :disabled="disabledAll" required></b-form-textarea>
                                 </b-form-group>
                             </div>
                             
@@ -120,8 +123,13 @@
 
                                 <b-form-group label="" class="ml-4 mt-2 mb-0 font col-sm-9 col-md-9 col-lg-9"
                                     v-show="exibirRegistroSIGED">
-                                    <b-form-input :placeholder="'Nº SIGED'" type="text" v-model="form.numProcessoSIGED" :disabled="disabledAll">
-                                    </b-form-input>
+                                    <b-form-input :placeholder="'Nº SIGED'" type="text" v-model="form.numProcessoSIGED"                                     
+                                    @blur="buscarDadosSiged"
+                                    :disabled="disabledAll">
+                                    </b-form-input> <!--v-mask="'######/####-##'"-->
+
+                                    <b-alert variant="danger" :show="showMessageSiged">{{messageSiged}}</b-alert>
+                                
                                 </b-form-group>
                             </div>
                             <div class="row">
@@ -193,6 +201,8 @@ export default Vue.extend({
     data() {
         return {            
             show: false as boolean,
+            showMessageSiged: false as boolean,
+            messageSiged: "" as string,
             currentPage: 1 as number,
             disabledAll: false as boolean,
             exibirMaisDetalhes: false as boolean,
@@ -236,9 +246,9 @@ export default Vue.extend({
         this.listarClassificacoes()
         this.listarResponsaveis()
 
-        if(!this.form.idProcesso && this.form.valorMulta == 0){
+        /*if(!this.form.idProcesso && this.form.valorMulta == 0){
             this.form.valorMulta = 0
-        }
+        }*/
         
         if(!this.form.idTipoProcesso){
             this.form.idTipoProcesso = ""
@@ -249,7 +259,34 @@ export default Vue.extend({
         }
         
     },
-    methods: {       
+    methods: {   
+        buscarDadosSiged(){ 
+            
+           if(!this.form.numProcessoSIGED){
+                this.form.dataProcessoSIGED = ""
+                this.form.permanenciaSIGED = ""
+                this.form.caixaAtualSIGED = ""
+                this.form.tramitacaoSIGED = ""
+                this.messageSiged=""
+                this.showMessageSiged = false
+           }
+           else{ 
+                RestApiService.buscarProcessoSiged(this.form.numProcessoSIGED)
+                .then((response) => {   
+                            this.form.dataProcessoSIGED = response.data.data.dataProcessoSIGED 
+                            this.form.permanenciaSIGED = response.data.data.permanenciaSIGED
+                            this.form.caixaAtualSIGED = response.data.data.caixaAtualSIGED
+                            this.form.tramitacaoSIGED = response.data.data.tramitacaoSIGED
+                        })
+                        .catch((e) => {
+                           this.showMessageSiged = true                           
+                           this.messageSiged= 'Ocorreu um erro ao buscar dados do SIGED.'
+                           
+                           console.log( e.message )
+                })
+           }
+
+        },        
         listarOrgaos(){
             RestApiService.get("orgaos-demandantes", `?currentPage=${this.currentPage}`)
                 .then((response) => {
@@ -362,7 +399,8 @@ export default Vue.extend({
                 this.form.permanenciaSIGED = this.form.permanenciaSIGED ? this.form.permanenciaSIGED: ""
                 this.form.caixaAtualSIGED =  this.form.caixaAtualSIGED ?  this.form.caixaAtualSIGED : ""
                 this.form.tramitacaoSIGED =  this.form.tramitacaoSIGED ? this.form.tramitacaoSIGED : ""
-                this.form.idResponsavel = this.responsavelSelecionado.id_responsavel ? this.responsavelSelecionado.id_responsavel : ""
+
+                this.form.idResponsavel = this.responsavelSelecionado && this.responsavelSelecionado.id_responsavel ? this.responsavelSelecionado.id_responsavel : ""
                 this.form.descricao = this.form.descricao ?  this.form.descricao: ""
                 this.form.dataLimitePrazo =  this.form.dataLimitePrazo? this.form.dataLimitePrazo: ""
                 this.form.diasPercorridos =  this.form.diasPercorridos ? this.form.diasPercorridos: ""
@@ -374,13 +412,12 @@ export default Vue.extend({
                
 
                 this.form.idClassificacao = this.form.idClassificacao ? this.form.idClassificacao : ""
-                this.form.idOrgaoDemandante = this.orgaoSelecionado.id_orgao ? this.orgaoSelecionado.id_orgao : null
+                this.form.idOrgaoDemandante = this.orgaoSelecionado && this.orgaoSelecionado.id_orgao ? this.orgaoSelecionado.id_orgao : null
                 this.form.idTipoProcesso =  this.form.idTipoProcesso ? this.form.idTipoProcesso: ""
-                this.form.idAssunto =  this.assuntoSelecionado.id_assunto ? this.assuntoSelecionado.id_assunto : ""    
+                this.form.idAssunto =  this.assuntoSelecionado && this.assuntoSelecionado.id_assunto ? this.assuntoSelecionado.id_assunto : ""    
                 this.form.statusProcesso = this.form.statusProcesso ? this.form.statusProcesso : ""
                 this.form.observacao = this.form.observacao ? this.form.observacao: ""       
-
-                console.log('orgao ',this.orgaoSelecionado.id_orgao)
+              
             
         },
 
