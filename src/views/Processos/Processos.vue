@@ -460,6 +460,8 @@ export default Vue.extend({
       loading: false as boolean,
       alert: false as boolean,   
 
+      perPageListagens:30000,
+
       tipoProcessoSelecionado: {
         desc_tipoprocesso: "-- Selecione --" as string,
         id_tipoprocesso: "" as any,
@@ -555,12 +557,14 @@ export default Vue.extend({
     },
 
      carregarResponsavel(): void {
-      this.loading = true
+      this.loading = true   
 
-      RestApiService.getFeatures("responsaveis")
+        RestApiService.get(
+          "responsaveis",
+          `?currentPage=1&perPage=${this.perPageListagens}`
+        )
         .then((response: any) => {        
-          this.optionsResponsavel = response.data.data
-        
+          this.optionsResponsavel = response.data.data     
         })
         .catch((e) => {          
           console.log(e)
@@ -573,8 +577,11 @@ export default Vue.extend({
 
     carregarClassificacao(): void {
       this.loading = true
-
-      RestApiService.getFeatures("classificacoes")
+    
+      RestApiService.get(
+          "classificacoes",
+          `?currentPage=1&perPage=${this.perPageListagens}`
+        )
         .then((response: any) => {         
           this.optionsClassificacao = response.data.data
         
@@ -590,8 +597,11 @@ export default Vue.extend({
 
     carregarAssunto(): void {
       this.loading = true
-
-      RestApiService.getFeatures("assuntos")
+     
+      RestApiService.get(
+          "assuntos",
+          `?currentPage=1&perPage=${this.perPageListagens}`
+        )
         .then((response: any) => {         
           this.optionsAssunto = response.data.data
         
@@ -608,7 +618,10 @@ export default Vue.extend({
      carregarOrgaosDemandantes(): void {
       this.loading = true
 
-      RestApiService.getFeatures("orgaos-demandantes")
+        RestApiService.get(
+          "orgaos-demandantes",
+          `?currentPage=1&perPage=${this.perPageListagens}`
+        )      
         .then((response: any) => {         
           this.optionsOrgaoDemandante = response.data.data
         
@@ -625,9 +638,12 @@ export default Vue.extend({
      carregarTipoProcesso(): void {
       this.loading = true
 
-      RestApiService.getFeatures("tipos-processo")
+        RestApiService.get(
+          "tipos-processo",
+          `?currentPage=1&perPage=${this.perPageListagens}`
+        )      
         .then((response: any) => {         
-          this.optionsTipoProcesso = response.data.data
+          this.optionsTipoProcesso = response.data.data       
         
         })
         .catch((e) => {          
