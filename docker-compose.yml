@@ -7,9 +7,6 @@ services:
     network_mode: bridge
     working_dir: /app
     command: bash -c 'npm install && npm run build'
-    environment:
-      NODE_ENV: production
-      production: true
     volumes:
       - ./:/app
       - '/etc/timezone:/etc/timezone:ro'
