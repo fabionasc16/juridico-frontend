@@ -41,7 +41,7 @@ class RestApiService {
 
   public getFeatures(uri: string): Promise<any> {
     return http.get(`/${uri}`);
-  }
+  } 
 
   public update(uri: string, data: any): Promise<any> {
     return http.put(`/${uri}/${data.id}`, JSON.stringify(data));

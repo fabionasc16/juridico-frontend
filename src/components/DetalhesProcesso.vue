@@ -8,7 +8,7 @@
                         </b-form-group> 
 
                         <b-form-group class="font col-sm-3 col-md-3 col-lg-3">
-                            <label>Tipo: <span class="text-danger">*</span></label>
+                            <label>Tipo Processo: <span class="text-danger">*</span></label>
                             <b-form-select v-model="form.idTipoProcesso" :disabled="disabledAll" required>
                                 <b-form-select-option value="">-- Selecione --</b-form-select-option>
                                 <b-form-select-option v-for="option in optionsTipoProcesso" :value="option.id_tipoprocesso"
@@ -213,6 +213,7 @@ export default Vue.extend({
             optionsAssunto: [] as Array<string>,    
             optionsClassificacao: [] as Array<string>,   
             optionsResponsavel: [] as Array<string>,    
+            perPageListagens:30000,
             responsavelSelecionado: {
                     nome_responsavel: "Selecione um responsável" as string,
                     id_responsavel: "" as string,
@@ -288,29 +289,39 @@ export default Vue.extend({
 
         },        
         listarOrgaos(){
-            RestApiService.get("orgaos-demandantes", `?currentPage=${this.currentPage}`)
-                .then((response) => {
-                    this.optionsOrgaos = response.data.data                  
-                })
-                .catch((e) => {
-                  // alert("Houve um erro ao carregar listagem")
-                })
+
+            RestApiService.get(
+                "orgaos-demandantes",
+                `?currentPage=1&perPage=${this.perPageListagens}`
+            )
+            .then((response) => {
+                this.optionsOrgaos = response.data.data                  
+            })
+            .catch((e) => {
+                // alert("Houve um erro ao carregar listagem")
+            })
             
         },
         listarAssuntos(){
 
-             RestApiService.get("assuntos", `?currentPage=${this.currentPage}`)
-                .then((response) => {
-                    this.optionsAssunto = response.data.data                   
-                })
-                .catch((e) => {
-                  // alert("Houve um erro ao carregar listagem")
-                })
+            RestApiService.get(
+                "assuntos",
+                `?currentPage=1&perPage=${this.perPageListagens}`
+            )            
+            .then((response) => {
+                this.optionsAssunto = response.data.data                   
+            })
+            .catch((e) => {
+                // alert("Houve um erro ao carregar listagem")
+            })
             
         },
         listarTipoProcesso(){
-
-             RestApiService.get("tipos-processo", `?currentPage=${this.currentPage}`)
+            
+              RestApiService.get(
+                "tipos-processo",
+                `?currentPage=1&perPage=${this.perPageListagens}`
+                )
                 .then((response) => {
                     this.optionsTipoProcesso = response.data.data                   
                 })
@@ -320,7 +331,11 @@ export default Vue.extend({
             
         },
         listarClassificacoes() {
-             RestApiService.get("classificacoes", `?currentPage=${this.currentPage}`)
+
+             RestApiService.get(
+                "classificacoes",
+                `?currentPage=1&perPage=${this.perPageListagens}`
+                )            
                 .then((response) => {
                     this.optionsClassificacao = response.data.data                    
                 })
@@ -328,8 +343,12 @@ export default Vue.extend({
                   // alert("Houve um erro ao carregar listagem")
                 })           
         },
-        listarResponsaveis() {
-             RestApiService.get("responsaveis", `?currentPage=${this.currentPage}`)
+        listarResponsaveis() {            
+
+             RestApiService.get(
+                "responsaveis",
+                `?currentPage=1&perPage=${this.perPageListagens}`
+                )                 
                 .then((response) => {
                     this.optionsResponsavel = response.data.data                    
                 })
