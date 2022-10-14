@@ -8,7 +8,7 @@
                         </b-form-group> 
 
                         <b-form-group class="font col-sm-3 col-md-3 col-lg-3">
-                            <label>Tipo: <span class="text-danger">*</span></label>
+                            <label>Tipo Processo: <span class="text-danger">*</span></label>
                             <b-form-select v-model="form.idTipoProcesso" :disabled="disabledAll" required>
                                 <b-form-select-option value="">-- Selecione --</b-form-select-option>
                                 <b-form-select-option v-for="option in optionsTipoProcesso" :value="option.id_tipoprocesso"

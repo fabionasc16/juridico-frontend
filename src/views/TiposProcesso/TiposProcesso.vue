@@ -18,16 +18,26 @@
         </div>
 
         <!-- FORMULÁRIO DE CONSULTA -->       
-        <b-form @submit.prevent="listarTiposProcesso" class="mb-5">
+        <b-form @submit.prevent="search" class="mb-5">
 
             <div class="row">               
                 <div class="col-3">
                   <b-form-group label="Tipo Processo:" class="font">
-                      <b-form-input class="bordered margin-field" type="text" 
-                          v-model="form.desc_tipoprocesso"
-                               ></b-form-input>   
+                      
+                        <b-input-group>  
+                          <b-form-input class="bordered margin-field" type="text"
+                                    v-model="busca"
+                          ></b-form-input>   
+
+                          <b-input-group-append>                
+                            <b-input-group-text @click="busca=''">
+                              <b-icon icon="x" />
+                            </b-input-group-text>
+                          </b-input-group-append>
+                        </b-input-group>
+
                   </b-form-group>
-                </div>                   
+                </div>   
                 
                 <!-- ÍCONE DA LUPA -->
                 <div class="col-2 justify-content-center">
@@ -148,12 +158,10 @@
 
 <script lang="ts">
 import Vue from "vue";
-//import axios from "axios";
 import HeaderPage from '@/components/HeaderPage.vue';
 import { mask } from "vue-the-mask";
 import { TipoProcesso } from '@/type/tipoProcesso';
 import { FieldsTableTipoProcesso } from "@/type/tableTipoProcesso";
-import { BIconSearch, BIconPlusCircle, BIconInfoCircle, BIconJournalText } from 'bootstrap-vue'
 import dataMixin from "@/mixins/dataMixin";
 import RestApiService from "@/services/rest/service";
 
@@ -161,20 +169,17 @@ import Notifications from "@/components/Notifications.vue";
 import { Notificacao } from "@/type/notificacao";
 import ReturnMessage from "@/components/ReturnMessage.vue";
 import LoadingSpinner from "@/components/LoadingSpinner.vue";
+
 import ModalCadastroTipoProcesso from "./Modais/ModalCadastroTipoProcesso.vue";
 
 export default Vue.extend({
   directives: { mask },
   components: {
-    HeaderPage,
-    BIconSearch,
-    BIconJournalText,
-    BIconPlusCircle,
-    BIconInfoCircle,
+    HeaderPage,   
     Notifications,
     ReturnMessage,
     LoadingSpinner,  
-    ModalCadastroTipoProcesso
+    ModalCadastroTipoProcesso,
 },
   mixins: [        
         dataMixin,
@@ -186,8 +191,8 @@ export default Vue.extend({
       currentPage: 1,
       totalRows: 1,
       perPage: 5,
-      pageOptions: [5, 10, 15, { value: 100, text: "Show a lot" }],   
-      form: {} as TipoProcesso,
+      pageOptions: [5, 10, 15, { value: 100, text: "Show a lot" }],      
+      busca: "" as string,
       fields: FieldsTableTipoProcesso, //nome das colunas da tabela
      
       stickyHeader: true,
@@ -216,6 +221,32 @@ export default Vue.extend({
         this.idTipoProcesso = id
         this.$bvModal.show('modal-visualizar-tipoprocesso')
     },
+   
+    search():void {
+
+      console.log(JSON.stringify(this.busca))
+
+      if (!this.busca) {
+        this.listarTiposProcesso(this.currentPage);
+      } else {
+        RestApiService.get(
+          "tipos-processo",
+          `?currentPage=${this.currentPage}&search=${this.busca}`
+        )
+          .then((response: any) => {
+            this.perPage = response.data.perPage;
+            this.items = response.data.data;
+            this.totalRows = response.data.total;
+          })
+          .catch((e) => {
+            this.adicionarAlert(
+                            "alert",
+                            "Ocorreu um erro ao realizar a pesquisa!"
+                            );         
+          });
+      }
+    },
+
 
     listarTiposProcesso(currentpage: number) : void {
      

@@ -395,7 +395,6 @@ import ModalArquivarProcesso from './Modais/ModalArquivarProcesso.vue';
 import ModalDetalhesProcesso from './Modais/ModalDetalhesProcesso.vue';
 import { mask } from "vue-the-mask";
 import { Processo } from '@/type/processo';
-import { BIconSearch, BIconPlusCircle, BIconInfoCircle, BIconJournalText } from 'bootstrap-vue'
 import { StatusProcessoSeeder } from "@/type/statusProcesso";
 import { StatusPrazoSeeder } from "@/type/statusPrazo";
 import { CaixaSigedSeeder } from "@/type/caixaSiged";
@@ -416,11 +415,7 @@ export default Vue.extend({
     HeaderPage,
     ModalTramitacoesProcesso,   
     ModalDetalhesProcesso,
-    ModalArquivarProcesso,    
-    BIconSearch,
-    BIconJournalText,
-    BIconPlusCircle,
-    BIconInfoCircle,
+    ModalArquivarProcesso,
     Notifications,
     ModalReiteracaoProcesso,
     ModalVisualizarReiteracao,

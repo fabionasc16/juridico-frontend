@@ -1,6 +1,10 @@
 import Vue from 'vue'
 import './plugins/bootstrap-vue'
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
+import { BIconSearch, BIconPlusCircle, BIconInfoCircle, BIconJournalText, BIconX } from 'bootstrap-vue'
+Vue.use(BootstrapVue)
+Vue.use(IconsPlugin)
+
 import App from './App.vue'
 import router from './router'
 import store from './store'
