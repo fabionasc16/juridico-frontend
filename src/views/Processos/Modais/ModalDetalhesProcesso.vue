@@ -180,36 +180,35 @@ export default Vue.extend({
             //console.log('carregar: ',this.formDados.form )
             
             
-            RestApiService.get("processos", this.idProcesso)
+            RestApiService.get("processos/id", this.idProcesso)
                 .then((res: any) => {
 
                console.log("edit",res.data)
 
-
-                this.formDados.form.idProcesso =   res.data.idProcesso 
-                this.formDados.form.numProcedimento = res.data.numProcedimento
-                this.formDados.form.idTipoProcesso =  res.data.idTipoProcesso
-                this.formDados.form.prazoTotal = res.data.prazoTotal
-                this.formDados.form.idOrgaoDemandante = res.data.orgaoSelecionado.value
-                this.formDados.form.dataProcesso = res.data.dataProcesso
-                this.formDados.form.dataRecebimento = res.data.dataRecebimento
-                this.formDados.form.horaRecebimento =  res.data.horaRecebimento
-                this.formDados.form.idAssunto =  res.data.value
-                this.formDados.form.idClassificacao = res.data.idClassificacao
+                this.formDados.form.idProcesso =   res.data.id_processo                
+                this.formDados.form.numProcedimento = res.data.num_procedimento
+                this.formDados.form.idTipoProcesso =  res.data.fk_tipoprocesso
+                this.formDados.form.prazoTotal = res.data.prazo_total
+                this.formDados.form.idOrgaoDemandante = res.data.fk_orgaodemandante
+                this.formDados.form.dataProcesso = res.data.data_processo
+                this.formDados.form.dataRecebimento = res.data.data_recebimento
+                this.formDados.form.horaRecebimento =  res.data.hora_recebimento
+                this.formDados.form.idAssunto =  res.data.fk_assunto
+                this.formDados.form.idClassificacao = res.data.fk_classificacao
                 this.formDados.form.objeto =  res.data.objeto
-                this.formDados.form.requerSIGED = res.data.requerSIGED
-                this.formDados.form.numProcessoSIGED = res.data.numProcessoSIGED
-                this.formDados.form.dataProcessoSIGED = res.data.dataProcessoSIGED
-                this.formDados.form.permanenciaSIGED = res.data.permanenciaSIGED
-                this.formDados.form.caixaAtualSIGED =  res.data.caixaAtualSIGED
-                this.formDados.form.tramitacaoSIGED =  res.data.tramitacaoSIGED
-                this.formDados.form.idResponsavel = res.data.value
+                this.formDados.form.requerSIGED = res.data.requer_siged
+                this.formDados.form.numProcessoSIGED = res.data.numero_siged
+                this.formDados.form.dataProcessoSIGED = res.data.data_processo_siged
+                this.formDados.form.permanenciaSIGED = res.data.permanencia_siged
+                this.formDados.form.caixaAtualSIGED =  res.data.caixa_atual_siged
+                this.formDados.form.tramitacaoSIGED =  res.data.tramitacao_siged
+                this.formDados.form.idResponsavel = res.data.fk_responsavel
                 this.formDados.form.descricao = res.data.descricao
-                this.formDados.form.dataLimitePrazo =  res.data.dataLimitePrazo
-                this.formDados.form.diasPercorridos =  res.data.diasPercorridos
-                this.formDados.form.diasExpirados = res.data.diasExpirados
-                this.formDados.form.statusPrazo =  res.data.statusPrazo
-                this.formDados.form.statusProcesso = res.data.statusProcesso
+                this.formDados.form.dataLimitePrazo =  res.data.dia_limite_prazo
+                this.formDados.form.diasPercorridos =  res.data.dias_percorridos
+                this.formDados.form.diasExpirados = res.data.dias_expirados
+                // this.formDados.form.statusPrazo =  res.data.status_prazo
+                // this.formDados.form.statusProcesso = res.data.fk_status
                 this.formDados.form.sigiloso = res.data.sigiloso
                 this.formDados.form.observacao = res.data.observacao    
                 
