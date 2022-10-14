@@ -102,7 +102,12 @@
                                     <b-form-textarea rows="4" max-rows="4" v-model="form.descricao" 
                                      :disabled="disabledAll" required></b-form-textarea>
                                 </b-form-group>
-                            </div>
+                            </div>                            
+                                <div class="row">
+                                    <b-form-group label="Observação:" class="font col-sm-12 col-md-12 col-lg-12">
+                                        <b-form-textarea rows="4" max-rows="2" v-model="form.observacao" :disabled="disabledAll"></b-form-textarea>
+                                    </b-form-group>
+                                </div>                             
                             
                         </div>
 
@@ -118,7 +123,7 @@
 
                             <div class="row">
                                 <b-form-checkbox v-model="form.requerSIGED" @change="exibirCampoSIGED()" switch :disabled="disabledAll"
-                                    class="font col-sm-2 col-md-2 col-lg-2">Requer SIGED
+                                    class="mt-2  font col-sm-2 col-md-2 col-lg-2">Requer SIGED
                                 </b-form-checkbox>
 
                                 <b-form-group label="" class="ml-4 mt-2 mb-0 font col-sm-9 col-md-9 col-lg-9"
@@ -133,27 +138,32 @@
                                 </b-form-group>
                             </div>
                             <div class="row">
-                                <b-form-group class="titulo col-sm-12 col-md-12 col-lg-12" label="Dados do SIGED:"
+                                <!-- <b-form-group class="titulo col-sm-12 col-md-12 col-lg-12" label="Dados do SIGED:"
                                     label-size="lg">
                                     <hr />
-                                </b-form-group>
+                                </b-form-group>-->
+                                <h5 class="mt-3">Dados do SIGED:</h5>
+                                 <hr />
+
                                 <div class="col-12">
-                                    <div class="row">
-                                        <b-form-group label="Data Processo:" class="font col-sm-6 col-md-6 col-lg-6">
-                                            <b-form-input disabled v-model="form.dataProcessoSIGED" placeholder="dd/mm/aaaa">
+                                    <div class="row">                                     
+                                        <b-form-group label="Data Processo:" class="font col-sm-12 col-md-12 col-lg-12">
+                                            <b-form-input disabled v-model="datas.dataProcessoSIGEDBR"
+                                            placeholder="dd/mm/aaaa">
                                             </b-form-input>
-                                        </b-form-group>      
-                                        <b-form-group label="Permanência:" class="font col-sm-6 col-md-6 col-lg-6">
+                                        </b-form-group>  
+
+                                        <b-form-group label="Permanência:" class="font col-sm-12 col-md-12 col-lg-12">
                                             <b-form-input disabled type="text" v-model="form.permanenciaSIGED">
                                             </b-form-input>
                                         </b-form-group>
                                     </div>
                                     <div class="row">
-                                        <b-form-group label="Caixa Atual:" class="font col-sm-6 col-md-6 col-lg-6">
+                                        <b-form-group label="Caixa Atual:" class="font col-sm-12 col-md-12 col-lg-12">
                                             <b-form-input disabled type="text" v-model="form.caixaAtualSIGED"></b-form-input>
                                         </b-form-group>
 
-                                        <b-form-group label="Tramitação:" class="font col-sm-6 col-md-6 col-lg-6">
+                                        <b-form-group label="Tramitação:" class="font col-sm-12 col-md-12 col-lg-12">
                                             <b-form-input disabled type="text" v-model="form.tramitacaoSIGED"></b-form-input>
                                         </b-form-group>
                                     </div>
@@ -162,14 +172,7 @@
                             </div>                          
 
                         </div>
-
-                        <div class="col-12">
-                            <div class="row">
-                                <b-form-group label="Observação:" class="font col-sm-12 col-md-12 col-lg-12">
-                                    <b-form-textarea rows="2" max-rows="2" v-model="form.observacao" :disabled="disabledAll"></b-form-textarea>
-                                </b-form-group>
-                            </div>
-                        </div>
+                       
 
                     </div>
                 </div>
@@ -230,6 +233,7 @@ export default Vue.extend({
                 dataProcessoBR: "" as string,
                 dataRecebimentoBR: "" as string,
                 dataLimitePrazoBR: "" as string,
+                dataProcessoSIGEDBR: "" as string,
             },           
             form: {} as Processo,     
             
@@ -264,7 +268,7 @@ export default Vue.extend({
         buscarDadosSiged(){ 
             
            if(!this.form.numProcessoSIGED){
-                this.form.dataProcessoSIGED = ""
+                this.datas.dataProcessoSIGEDBR = ""
                 this.form.permanenciaSIGED = ""
                 this.form.caixaAtualSIGED = ""
                 this.form.tramitacaoSIGED = ""
@@ -274,7 +278,7 @@ export default Vue.extend({
            else{ 
                 RestApiService.buscarProcessoSiged(this.form.numProcessoSIGED)
                 .then((response) => {   
-                            this.form.dataProcessoSIGED = response.data.data.dataProcessoSIGED 
+                            this.datas.dataProcessoSIGEDBR = response.data.data.dataProcessoSIGED 
                             this.form.permanenciaSIGED = response.data.data.permanenciaSIGED
                             this.form.caixaAtualSIGED = response.data.data.caixaAtualSIGED
                             this.form.tramitacaoSIGED = response.data.data.tramitacaoSIGED
@@ -365,6 +369,9 @@ export default Vue.extend({
 
             this.form.dataLimitePrazo = this.datas.dataLimitePrazoBR ? 
             dataMixin.methods.dataFormatEn(this.datas.dataLimitePrazoBR) : ""; 
+
+             this.form.dataProcessoSIGED = this.datas.dataProcessoSIGEDBR ? 
+            dataMixin.methods.dataFormatEn(this.datas.dataProcessoSIGEDBR) : ""; 
         },
 
         formatDatasEnToBr() {
@@ -376,6 +383,9 @@ export default Vue.extend({
 
             this.datas.dataLimitePrazoBR = this.form.dataLimitePrazo ? 
                    dataMixin.methods.formatarDataBr(this.form.dataLimitePrazo) : "";
+
+            this.datas.dataProcessoSIGEDBR = this.form.dataProcessoSIGED ? 
+            dataMixin.methods.formatarDataBr(this.form.dataProcessoSIGED) : ""; 
         },
 
         validarDataProcesso(){
@@ -410,7 +420,7 @@ export default Vue.extend({
                 this.form.dataProcesso = this.form.dataProcesso ? this.form.dataProcesso: ""
                 this.form.dataRecebimento = this.form.dataRecebimento ? this.form.dataRecebimento: ""
                 this.form.horaRecebimento =  this.form.horaRecebimento ? this.form.horaRecebimento  : ""
-                          
+                                         
                 this.form.objeto =  this.form.objeto ? this.form.objeto : ""
                 this.form.requerSIGED =  this.form.requerSIGED ? this.form.requerSIGED: false
                 this.form.numProcessoSIGED = this.form.numProcessoSIGED ? this.form.numProcessoSIGED: ""
