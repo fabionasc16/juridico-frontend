@@ -15,35 +15,14 @@
                     
                     <div class="row">
                        
-                        <div class="col-6">   
+                        <div class="col-10">   
                             <b-form-group class="font">                                
-                                <label>Data: <span class="text-danger">*</span></label>
-                                <b-form-input class="bordered margin-field" type="text" v-model="dataFeriadoBR" placeholder="dd/mm/aaaa"
-                                        v-mask="'##/##/####'" :disabled="disabledAll" required></b-form-input>                          
+                                <label>Tipo de Processo: <span class="text-danger">*</span></label>
+                                <b-form-input class="bordered margin-field" type="text" v-model="form.desc_tipoprocesso"
+                                        :disabled="disabledAll" required></b-form-input>                          
                             </b-form-group>
-                        </div>
-
-                        <div class="col-6">   
-                            <b-form-group label="Tipo:" class="font">
-                                    <b-form-select v-model="form.tipoFeriado" :disabled="disabledAll">
-                                        <b-form-select-option value="">-- Selecione --</b-form-select-option>
-                                        <b-form-select-option v-for="option in optionsTipoFeriado" :value="option.value"
-                                        :key="option.value"> {{ option.texto }}
-                                        </b-form-select-option>                                
-                                    </b-form-select>
-                            </b-form-group> 
-                        </div>      
-                </div>
-
-                <div class="row">
-                        <div class="col-12">
-                            <div class="row">
-                                <b-form-group label="Descrição:" class="font col-sm-12 col-md-12 col-lg-12">
-                                    <b-form-textarea rows="2" max-rows="2" v-model="form.descFeriado" :disabled="disabledAll"></b-form-textarea>
-                                </b-form-group>
-                            </div>
-                        </div>
-                    </div>
+                        </div>                      
+                   </div>
                         
                     <div class="py-2 mt-10" align="right">                        
                        <slot name="buttons"></slot>
@@ -66,9 +45,7 @@ import dataMixin from "@/mixins/dataMixin";
 import RestApiService from "@/services/rest/service";
 import LoadingSpinner from "@/components/LoadingSpinner.vue";
 import DetalhesProcesso from "../../../components/DetalhesProcesso.vue";
-import { Processo } from '@/type/processo';
-import { CadastroFeriado } from "@/type/feriado";
-import { TipoFeriadoSeeder } from "@/type/tipoFeriado";
+import { TipoProcesso } from '@/type/tipoProcesso';
 
 export default Vue.extend({
     directives: { mask },
@@ -83,9 +60,6 @@ export default Vue.extend({
         LoadingSpinner,
         DetalhesProcesso,
     },
-    mixins: [        
-        dataMixin,
-    ],
     props: ["id", "tipo"],
     data() {
         return {
@@ -96,10 +70,7 @@ export default Vue.extend({
             Message: [] as Array<Notificacao>,
             loading: false as boolean,
             alert: false as boolean,  
-            form: {} as CadastroFeriado,  
-            carregarForm: {} as Processo,  
-            dataFeriadoBR: "" as string,
-            optionsTipoFeriado: TipoFeriadoSeeder,      
+            form: {} as TipoProcesso,  
         }
     },    
 
@@ -119,18 +90,15 @@ export default Vue.extend({
     methods: {
         submit() {
             let acao = this.id ? "put" : "post"
-            let url = "feriados";
+            let url = "tipos-processo";
 
             this.loading = true  
 
             if (this.validarCampos()) { 
 
-                this.form.dataFeriado = this.dataFeriadoBR ? 
-                   dataMixin.methods.dataFormatEn(this.dataFeriadoBR) : "";
-
-                 console.log('JSON: ',JSON.stringify(this.form))
+              console.log('JSON: ',JSON.stringify(this.form))
             
-              RestApiService.salvar(url, this.form, acao, this.form.id_feriado)
+              RestApiService.salvar(url, this.form, acao, this.form.id_tipoprocesso)
                 .then((res) => {
                     if (acao == "put") {
                         this.adicionarAlert(
@@ -182,23 +150,14 @@ export default Vue.extend({
         carregarDados(): void {
             this.loading = true;          
             
-            RestApiService.get("feriado/listid", this.id)
+            RestApiService.get("tipos-processo/id", this.id)
                 .then((res: any) => {
-
-                this.form.id_feriado =   res.data.idProcesso 
-                this.form.tipoFeriado =  res.data.idTipoFeriado
-                this.form.dataFeriado = res.data.data
-                this.form.descFeriado = res.data.descricao    
-
-                //formatar datas para formato br
-                this.dataFeriadoBR = res.data.data ? 
-                   dataMixin.methods.formatarDataBr(res.data.data) : "";              
-               
+                this.form.id_tipoprocesso =   res.data.id_tipoprocesso                
             })
             .catch((e) => {
                 this.adicionarAlert(
                     "alert",
-                    "Houve um erro ao carregar os dados do feriado. Tente novamente!"
+                    "Houve um erro ao carregar os dados. Tente novamente!"
                 );
           
             })
@@ -209,33 +168,12 @@ export default Vue.extend({
 
         validarCampos(): boolean {     
             
-            if(!this.dataFeriadoBR){
+            if(!this.form.desc_tipoprocesso){
                 this.adicionarNotificacao(
                 "danger",
-                "Campo Data é obrigatório!"
+                "Campo Tipo de Processo é obrigatório!"
                 );
-            }
-
-            if(!this.form.tipoFeriado){
-                this.adicionarNotificacao(
-                "danger",
-                "Campo Tipo é obrigatório!"
-                );
-            }
-
-            if(!this.form.descFeriado){
-                this.adicionarNotificacao(
-                "danger",
-                "Campo Descrição é obrigatório!"
-                );
-            }
-
-            if(this.dataFeriadoBR && !dataMixin.methods.validarData(this.dataFeriadoBR) ) {
-                    this.adicionarNotificacao(
-                        "danger",
-                        "A data informada é inválida."
-                    );
-            }
+            }          
 
             if (this.Notificacao.length > 0) {
                     this.loading = false;
@@ -276,9 +214,9 @@ export default Vue.extend({
             this.alert = false;
             
              if(this.Message[0].type == 'success') {
-                this.$bvModal.hide('modal-cadastro-feriado')
-                this.$bvModal.hide('modal-editar-feriado')
-                this.$emit("listarFeriados");
+                this.$bvModal.hide('modal-cadastro-tipoprocesso')
+                this.$bvModal.hide('modal-editar-tipoprocesso')
+                this.$emit("listarTiposProcesso");
              }
         },  
        

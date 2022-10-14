@@ -129,7 +129,15 @@
                 <b-button class="bordered" @click="$bvModal.hide('modal-editar-tipoprocesso')">Fechar</b-button>
             </template>           
           </ModalCadastroTipoProcesso>
-        </b-modal>    
+        </b-modal> 
+        
+        <b-modal id="modal-visualizar-tipoprocesso" centered title="Visualizar Tipo de Processo" hide-footer>
+          <ModalCadastroTipoProcesso  @listarTiposProcesso="listarTiposProcesso(currentPage)" tipo="visualizar" :id="idTipoProcesso">  
+            <template v-slot:buttons> 
+                <b-button class="bordered" @click="$bvModal.hide('modal-visualizar-tipoprocesso')">Fechar</b-button>
+            </template>           
+          </ModalCadastroTipoProcesso>
+        </b-modal>     
 
         <!-- //MODAL -->
 
