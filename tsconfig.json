@@ -3,7 +3,6 @@
     "target": "esnext",
     "module": "esnext",
     "strict": true,
-    "noImplicitAny": false,
     "jsx": "preserve",
     "moduleResolution": "node",
     "skipLibCheck": false,
@@ -15,6 +14,10 @@
     "baseUrl": ".",
     "types": [
       "webpack-env"
+    ],
+    "typeRoots": [
+      "./node_modules/@types",
+      "./src/types"
     ],
     "paths": {
       "@/*": [
