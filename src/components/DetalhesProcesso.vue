@@ -152,7 +152,7 @@
                                             </b-form-input>
                                         </b-form-group>  
 
-                                        <b-form-group label="Permanência:" class="font col-sm-12 col-md-12 col-lg-12">
+                                        <b-form-group label="Permanência (dias):" class="font col-sm-12 col-md-12 col-lg-12">
                                             <b-form-input disabled type="text" v-model="form.permanenciaSIGED">
                                             </b-form-input>
                                         </b-form-group>
@@ -270,14 +270,12 @@ export default Vue.extend({
            }
            else{ 
                 RestApiService.buscarProcessoSiged(this.form.numProcessoSIGED)
-                .then((response) => {  
-                    
-                    console.log("busca ",response.data)
-
-                            this.datas.dataProcessoSIGEDBR = response.data.data.dataProcessoSIGED 
-                            this.form.permanenciaSIGED = response.data.data.permanenciaSIGED
-                            this.form.caixaAtualSIGED = response.data.data.caixaAtualSIGED
-                            this.form.tramitacaoSIGED = response.data.data.tramitacaoSIGED
+                .then((response) => { 
+                            this.datas.dataProcessoSIGEDBR = response.data.dataProcesso ? 
+                                dataMixin.methods.formatarDataBr(response.data.dataProcesso) : "";  
+                            this.form.permanenciaSIGED = response.data.tempoPermanencia
+                            this.form.caixaAtualSIGED = response.data.caixaAtual
+                            this.form.tramitacaoSIGED = response.data.eventoTramitacao
                         })
                         .catch((e) => {
                            this.showMessageSiged = true                           
@@ -435,7 +433,6 @@ export default Vue.extend({
                 this.form.sigiloso = this.form.sigiloso ? this.form.sigiloso: false                  
                 this.form.valorMulta = this.form.valorMulta ? this.form.valorMulta: 0     
                
-
                 this.form.idClassificacao = this.form.idClassificacao ? this.form.idClassificacao : ""
                 this.form.idOrgaoDemandante = this.orgaoSelecionado && this.orgaoSelecionado.id_orgao ? this.orgaoSelecionado.id_orgao : null
                 this.form.idTipoProcesso =  this.form.idTipoProcesso ? this.form.idTipoProcesso: ""
