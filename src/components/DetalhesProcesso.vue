@@ -26,7 +26,7 @@
                     </div>
 
                     <div class="row">
-                        <b-form-group class="font col-sm-5 col-md-5 col-lg-5">
+                        <b-form-group class="font col-sm-5 col-md-5 col-lg-5">                            
                             <label>Órgão Demandante: <span class="text-danger">*</span></label>
                             <v-select style="font-size: 0.85rem" :options="optionsOrgaos" class="font" label="orgao_demandante"
                                         v-model="orgaoSelecionado" :disabled="disabledAll" required/>
@@ -58,9 +58,7 @@
                             <vue-numeric currency="R$" separator="." :precision='precision' class="form-control bordered margin-field" 
                             prefix="R$" v-model="form.valorMulta" :allow-clear="allowclear" :disabled="disabledAll"
                             placeholder="R$ 0,00"></vue-numeric>                
-                        </b-form-group>
-                         
-
+                        </b-form-group>                        
                     </div>
 
                     <div class="row">
@@ -107,14 +105,12 @@
                                     <b-form-group label="Observação:" class="font col-sm-12 col-md-12 col-lg-12">
                                         <b-form-textarea rows="4" max-rows="2" v-model="form.observacao" :disabled="disabledAll"></b-form-textarea>
                                     </b-form-group>
-                                </div>                             
-                            
+                                </div>                           
                         </div>
 
 
                         <!-- ÁREA DO SIGED -->
                         <div class="col-5">
-
                              <div class="row mb-3">
                                 <b-form-checkbox v-model="form.sigiloso" switch :disabled="disabledAll"
                                     class="font col-sm-12 col-md-12 col-lg-12">Processo sigiloso?
@@ -124,19 +120,22 @@
                             <div class="row">
                                 <b-form-checkbox v-model="form.requerSIGED" @change="exibirCampoSIGED()" switch :disabled="disabledAll"
                                     class="mt-2  font col-sm-2 col-md-2 col-lg-2">Requer SIGED
-                                </b-form-checkbox>
+                                </b-form-checkbox>                                                            
+                            </div>
 
-                                <b-form-group label="" class="ml-4 mt-2 mb-0 font col-sm-9 col-md-9 col-lg-9"
+                            <div class="row">
+                                <b-form-group label="" class="ml-4 mt-2 mb-0 font col-sm-11 col-md-11 col-lg-11"
                                     v-show="exibirRegistroSIGED">
                                     <b-form-input :placeholder="'Nº SIGED'" type="text" v-model="form.numProcessoSIGED"                                     
-                                    @blur="buscarDadosSiged"
-                                    :disabled="disabledAll">
+                                    @blur="buscarDadosSiged"  v-mask="'##.##.######.######/####-##'"
+                                    :disabled="disabledAll">                           
                                     </b-form-input> <!--v-mask="'######/####-##'"-->
 
                                     <b-alert variant="danger" :show="showMessageSiged">{{messageSiged}}</b-alert>
                                 
                                 </b-form-group>
                             </div>
+
                             <div class="row">
                                 <!-- <b-form-group class="titulo col-sm-12 col-md-12 col-lg-12" label="Dados do SIGED:"
                                     label-size="lg">
@@ -172,8 +171,6 @@
                             </div>                          
 
                         </div>
-                       
-
                     </div>
                 </div>
 </template>
@@ -249,11 +246,7 @@ export default Vue.extend({
         this.listarAssuntos()
         this.listarTipoProcesso()
         this.listarClassificacoes()
-        this.listarResponsaveis()
-
-        /*if(!this.form.idProcesso && this.form.valorMulta == 0){
-            this.form.valorMulta = 0
-        }*/
+        this.listarResponsaveis()        
         
         if(!this.form.idTipoProcesso){
             this.form.idTipoProcesso = ""
@@ -277,7 +270,10 @@ export default Vue.extend({
            }
            else{ 
                 RestApiService.buscarProcessoSiged(this.form.numProcessoSIGED)
-                .then((response) => {   
+                .then((response) => {  
+                    
+                    console.log("busca ",response.data)
+
                             this.datas.dataProcessoSIGEDBR = response.data.data.dataProcessoSIGED 
                             this.form.permanenciaSIGED = response.data.data.permanenciaSIGED
                             this.form.caixaAtualSIGED = response.data.data.caixaAtualSIGED
@@ -445,10 +441,26 @@ export default Vue.extend({
                 this.form.idTipoProcesso =  this.form.idTipoProcesso ? this.form.idTipoProcesso: ""
                 this.form.idAssunto =  this.assuntoSelecionado && this.assuntoSelecionado.id_assunto ? this.assuntoSelecionado.id_assunto : ""    
                 this.form.statusProcesso = this.form.statusProcesso ? this.form.statusProcesso : ""
-                this.form.observacao = this.form.observacao ? this.form.observacao: ""       
-              
+                this.form.observacao = this.form.observacao ? this.form.observacao: ""                
             
         },
+
+        //inserir valores no vue-select
+        insereSelectOrgaoDemandante(orgao: any): void {
+            this.orgaoSelecionado.id_orgao = orgao.id_orgao
+            this.orgaoSelecionado.orgao_demandante = orgao.orgao_demandante
+        },
+
+        insereSelectAssunto(assunto: any): void {
+            this.assuntoSelecionado.id_assunto = assunto.id_assunto
+            this.assuntoSelecionado.desc_assunto = assunto.desc_assunto
+        },
+
+        insereSelectResponsavel(responsavel: any): void {
+            this.responsavelSelecionado.id_responsavel = responsavel.id_responsavel
+            this.responsavelSelecionado.nome_responsavel = responsavel.nome_responsavel
+        },
+        
 
         exibirCampoSIGED(): void {
             if (

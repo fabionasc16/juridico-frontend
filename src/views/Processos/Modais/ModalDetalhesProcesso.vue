@@ -76,7 +76,7 @@ export default Vue.extend({
             alert: false as boolean,  
             formDados: {} as any,  
             carregarForm: {} as Processo,
-            buttonDisabled: false as boolean,  
+            buttonDisabled: false as boolean,             
         }
     },    
 
@@ -90,6 +90,7 @@ export default Vue.extend({
         if(this.tipo == 'visualizar') {
             this.formDados.disabledAll = true
             this.buttonDisabled = true
+            this.carregarDados();
             return;
         }       
 
@@ -124,7 +125,7 @@ export default Vue.extend({
               
               this.loading = true  
             
-              RestApiService.salvar(url, this.formDados.form, acao)
+              RestApiService.salvar(url, this.formDados.form, acao, this.idProcesso)
                 .then((res) => {
                     if (acao == "put") {
                         this.adicionarAlert(
@@ -189,11 +190,19 @@ export default Vue.extend({
                 this.formDados.form.numProcedimento = res.data.num_procedimento
                 this.formDados.form.idTipoProcesso =  res.data.fk_tipoprocesso
                 this.formDados.form.prazoTotal = res.data.prazo_total
+                
                 this.formDados.form.idOrgaoDemandante = res.data.fk_orgaodemandante
+                this.formDados.form.idAssunto =  res.data.fk_assunto
+                this.formDados.form.idResponsavel = res.data.fk_responsavel
+
+                this.formDados.insereSelectOrgaoDemandante(res.data.orgaoDemandante)
+                this.formDados.insereSelectAssunto(res.data.assunto)
+                this.formDados.insereSelectResponsavel(res.data.responsavel)
+
                 this.formDados.form.dataProcesso = res.data.data_processo
                 this.formDados.form.dataRecebimento = res.data.data_recebimento
                 this.formDados.form.horaRecebimento =  res.data.hora_recebimento
-                this.formDados.form.idAssunto =  res.data.fk_assunto
+               
                 this.formDados.form.idClassificacao = res.data.fk_classificacao
                 this.formDados.form.objeto =  res.data.objeto
                 this.formDados.form.requerSIGED = res.data.requer_siged
@@ -201,8 +210,7 @@ export default Vue.extend({
                 this.formDados.form.dataProcessoSIGED = res.data.data_processo_siged
                 this.formDados.form.permanenciaSIGED = res.data.permanencia_siged
                 this.formDados.form.caixaAtualSIGED =  res.data.caixa_atual_siged
-                this.formDados.form.tramitacaoSIGED =  res.data.tramitacao_siged
-                this.formDados.form.idResponsavel = res.data.fk_responsavel
+                this.formDados.form.tramitacaoSIGED =  res.data.tramitacao_siged              
                 this.formDados.form.descricao = res.data.descricao
                 this.formDados.form.dataLimitePrazo =  res.data.dia_limite_prazo
                 this.formDados.form.diasPercorridos =  res.data.dias_percorridos
@@ -211,16 +219,26 @@ export default Vue.extend({
                 // this.formDados.form.statusProcesso = res.data.fk_status
                 this.formDados.form.sigiloso = res.data.sigiloso
                 this.formDados.form.observacao = res.data.observacao    
+
+                this.formDados.form.valorMulta = res.data.valor_multa
+
+                this.formDados.form.sigiloso =                    
+                   (res.data.sigiloso && res.data.sigiloso=='S' ? true : false)
+
+                this.formDados.form.requerSIGED =                    
+                (res.data.requer_siged && res.data.requer_siged=='S' ? true : false)
+
+                this.formDados.exibirRegistroSIGED = 
+                (res.data.requer_siged && res.data.requer_siged=='S' ? true : false)
                 
                 //formatar datas para formato br
                 this.formDados.formatDatasEnToBr()
             })
             .catch((e) => {
-              /*  this.adicionarAlert(
+                this.adicionarAlert(
                     "alert",
-                    "Houve um erro ao carregar os dados do paciente. Tente novamente!"
-                );*/
-                console.log(e)
+                    "Houve um erro ao carregar os dados. Tente novamente!"
+                );               
             })
             .finally(() => {
                 this.loading = false;

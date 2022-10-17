@@ -225,7 +225,9 @@
                     Editar
                   </b-list-group-item>
 
-                  <b-list-group-item block v-b-modal.modal-visualizar-processo class="btn-light btn-outline-dark m-0 p-1">
+                  <b-list-group-item block 
+                  @click="abrirModal('modal-visualizar-processo', data.item.id_processo)"
+                  class="btn-light btn-outline-dark m-0 p-1">
                     Visualizar
                   </b-list-group-item>
 
@@ -313,7 +315,7 @@
         </b-modal>
 
           <b-modal id="modal-visualizar-processo" size="lg" centered title="Visualizar Processo" hide-footer>
-          <ModalDetalhesProcesso tipo="visualizar">
+          <ModalDetalhesProcesso tipo="visualizar" :idProcesso="idProcessoModal">
             <template v-slot:buttons>
                 <b-button class="bordered" @click="$bvModal.hide('modal-visualizar-processo')">Fechar</b-button>
             </template>
