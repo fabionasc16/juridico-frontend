@@ -22,7 +22,8 @@
                         <detalhes-processo  ref='formDetalhes' />       
                     </div>                                
                         
-                    <div class="py-2 mt-10" align="right">                        
+                    <div class="py-2 mt-10" align="right">  
+                       <b-button class="bordered ml-2 mr-2" type="button" variant="primary" v-if="!formDados.disabledAll">Duplicar</b-button>                                             
                        <slot name="buttons"></slot>
                        <b-button class="bordered ml-2" type="submit" variant="success" v-if="!formDados.disabledAll">Salvar</b-button>
                     </div>                
