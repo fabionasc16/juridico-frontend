@@ -247,10 +247,10 @@
                     Reiterações
                   </b-list-group-item>
 
-                  <b-list-group-item block v-b-modal.modal-duplicar-processo 
+                  <!--<b-list-group-item block v-b-modal.modal-duplicar-processo 
                      @listarProcesso="listarProcesso(currentPage)" class="btn-light btn-outline-dark m-0 p-1">
                     Duplicar
-                  </b-list-group-item>
+                  </b-list-group-item>-->
                   
                    <!--status diferente de arquivado(14) --> 
                   <b-list-group-item block v-b-modal.modal-arquivar-processo 
@@ -298,7 +298,7 @@
         <!-- MODAL -->
         <!-- CADASTRO DO PROCESSO -->
         <b-modal id="modal-cadastro-processo" size="lg" centered title="Cadastro do Processo" hide-footer>       
-           <ModalDetalhesProcesso tipo="cadastrar"  @listarProcesso="listarProcesso(currentPage)">
+           <ModalDetalhesProcesso tipo="cadastrar" @listarProcesso="listarProcesso(currentPage)">
               <template v-slot:buttons>
                  <b-button class="bordered" @click="$bvModal.hide('modal-cadastro-processo')">Fechar</b-button>
               </template>
@@ -307,7 +307,7 @@
         </b-modal>
         <!-- DETALHES DO PROCESSO -->
         <b-modal id="modal-editar-processo" size="lg" centered title="Editar Processo" hide-footer>
-          <ModalDetalhesProcesso tipo="editar" :idProcesso="idProcessoModal">
+          <ModalDetalhesProcesso tipo="editar" :idProcesso="idProcessoModal" @listarProcesso="listarProcesso(currentPage)">
             <template v-slot:buttons>
                 <b-button class="bordered" @click="$bvModal.hide('modal-editar-processo')">Fechar</b-button>
             </template>
@@ -324,7 +324,7 @@
 
         <!-- ANDAMENTO PROCESSO - ALTERAR STATUS -->
         <b-modal id="modal-andamento-processo" centered title="Alterar Situação do Processo" hide-footer>         
-            <ModalAndamentoProcesso >
+            <ModalAndamentoProcesso  @listarProcesso="listarProcesso(currentPage)">
             <template v-slot:buttons>
                 <b-button class="bordered" @click="$bvModal.hide('modal-andamento-processo')">Fechar</b-button>
             </template>
@@ -334,12 +334,12 @@
         
         <!-- TRAMITAÇÕES DO PROCESSO -->
         <b-modal id="modal-tramitacoes-processo" size="lg" centered title="Tramitações do Processo" hide-footer>
-          <ModalTramitacoesProcesso>             
+          <ModalTramitacoesProcesso >             
           </ModalTramitacoesProcesso>
         </b-modal>
         <!-- REITERAR PROCESSO -->        
         <b-modal id="modal-cadastro-reiteracao" size="lg" centered title="Cadastro - Reiterar Processo" hide-footer>
-          <ModalReiteracaoProcesso> 
+          <ModalReiteracaoProcesso  @listarProcesso="listarProcesso(currentPage)"> 
             <template v-slot:buttons>
                 <b-button class="bordered" @click="$bvModal.hide('modal-cadastro-reiteracao')">Fechar</b-button>
             </template>            
@@ -347,7 +347,7 @@
         </b-modal>
 
         <b-modal id="modal-editar-reiteracao" size="lg" centered title="Edição - Reiterar Processo" hide-footer>
-          <ModalReiteracaoProcesso> 
+          <ModalReiteracaoProcesso  @listarProcesso="listarProcesso(currentPage)"> 
             <template v-slot:buttons>
                 <b-button class="bordered" @click="$bvModal.hide('modal-editar-reiteracao')">Fechar</b-button>
             </template>            
@@ -364,25 +364,24 @@
 
         <!-- ARQUIVAR PROCESSO -->
         <b-modal id="modal-arquivar-processo" centered title="Arquivar Processo" hide-footer>         
-            <ModalArquivarProcesso >
+            <ModalArquivarProcesso @listarProcesso="listarProcesso(currentPage)">
             <template v-slot:buttons>
                 <b-button class="bordered" @click="$bvModal.hide('modal-arquivar-processo')">Fechar</b-button>
             </template>
           </ModalArquivarProcesso> 
         </b-modal>
-        <!-- //modal -->
 
+        <!-- //modal -->
         <!-- DUPLICAR PROCESSO -->
-        <b-modal id="modal-duplicar-processo" size="lg" centered title="Duplicar Processo" hide-footer>
-          <!--<ModalDuplicarProcesso>            
-          </ModalDuplicarProcesso>-->
+        <!--<b-modal id="modal-duplicar-processo" size="lg" centered title="Duplicar Processo" hide-footer>
+         
             <ModalDetalhesProcesso tipo="duplicar">
             <template v-slot:buttons>
                 <b-button class="bordered" @click="$bvModal.hide('modal-duplicar-processo')">Fechar</b-button>
             </template>
           </ModalDetalhesProcesso>
-        </b-modal>
-        <!-- //modal -->
+        </b-modal> -->
+      
       
       </div>
     </b-container>

@@ -258,6 +258,23 @@ export default Vue.extend({
         
     },
     methods: {   
+        limparDadosAoDuplicar(){     
+            this.form.numProcessoSIGED = ""   
+            this.datas.dataProcessoSIGEDBR = ""
+            this.form.permanenciaSIGED = ""
+            this.form.caixaAtualSIGED = ""
+            this.form.tramitacaoSIGED = ""
+
+            this.form.numProcedimento = ""
+           
+            this.exibirRegistroSIGED = false
+  
+            //acao para atualizar dados na tela
+            this.form.requerSIGED = true
+            this.exibirCampoSIGED()
+            this.form.requerSIGED = false
+            this.exibirCampoSIGED()
+        },
         buscarDadosSiged(){ 
             
            if(!this.form.numProcessoSIGED){
@@ -467,7 +484,12 @@ export default Vue.extend({
             } else {
                 this.exibirRegistroSIGED = false;
             }
-        },       
+        },     
+        
+        ocultarCampoSIGED(): void {           
+            this.exibirRegistroSIGED = false;
+        },     
+        
     },
    
 });

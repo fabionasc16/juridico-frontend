@@ -1,5 +1,10 @@
-<template>
+<template>       
     <div>
+        <div class="py-2 mt-10" align="right">                         
+            <b-button class="bordered ml-2 mr-2" type="button" 
+            variant="primary" v-if="!formDados.disabledAll && tipo == 'editar'"
+            @click="duplicar()">Duplicar</b-button>                                                         
+        </div>   
         <!-- CARD DE EDIÇÃO -->
             <div class="col-12">
                 <b-form @submit.prevent="submit">
@@ -22,10 +27,10 @@
                         <detalhes-processo  ref='formDetalhes' />       
                     </div>                                
                         
-                    <div class="py-2 mt-10" align="right">  
-                       <b-button class="bordered ml-2 mr-2" type="button" variant="primary" v-if="!formDados.disabledAll">Duplicar</b-button>                                             
-                       <slot name="buttons"></slot>
-                       <b-button class="bordered ml-2" type="submit" variant="success" v-if="!formDados.disabledAll">Salvar</b-button>
+                    <div class="py-2 mt-10" align="right">                                                 
+                        <slot name="buttons"></slot>
+                        <b-button class="bordered ml-2" type="submit" variant="success" 
+                          v-if="!formDados.disabledAll">Salvar</b-button>                                               
                     </div>                
                 </b-form>
             </div>
@@ -77,7 +82,8 @@ export default Vue.extend({
             alert: false as boolean,  
             formDados: {} as any,  
             carregarForm: {} as Processo,
-            buttonDisabled: false as boolean,             
+            buttonDisabled: false as boolean,    
+            opcaoDuplicar: false as boolean,         
         }
     },    
 
@@ -86,7 +92,7 @@ export default Vue.extend({
         //pega os dados do componente filho (detalhes do processo)
         this.formDados = this.$refs.formDetalhes   
         
-        console.log("> ",this.formDados)
+       // console.log("> ",this.formDados)
 
         if(this.tipo == 'visualizar') {
             this.formDados.disabledAll = true
@@ -96,22 +102,23 @@ export default Vue.extend({
         }       
 
         if(this.tipo == 'editar') {           
-            this.carregarDados();      
-            return;
-        }
-        
-        if(this.tipo == 'duplicar') {           
-            this.carregarDadosDuplicados();             
-            return;  
-        }      
+            this.carregarDados();   
+        }        
+         
     }, 
             
     methods: {
+        duplicar() {          
+            this.formDados =  this.$refs.formDetalhes                             
+            this.formDados.limparDadosAoDuplicar()    
+            this.formDados.ocultarCampoSIGED()       
+            this.opcaoDuplicar = true   
+        },
         submit() {            
             //pegar todos os valores já para armazenar
-            this.formDados.getValues()            
+            this.formDados.getValues() 
 
-            let acao = this.idProcesso ? "put" : "post"
+            let acao = (!this.idProcesso || this.opcaoDuplicar) ? "post" : "put"
             let url ="processos"
 
             if(acao == 'post') {
@@ -128,7 +135,13 @@ export default Vue.extend({
             
               RestApiService.salvar(url, this.formDados.form, acao, this.idProcesso)
                 .then((res) => {
-                    if (acao == "put") {
+                    if(this.opcaoDuplicar) {
+                        this.adicionarAlert(
+                            "success",
+                            "Registro duplicado com sucesso!"
+                        );
+                    }
+                    else if (acao == "put") {
                         this.adicionarAlert(
                             "success",
                             "Atualização realizada com sucesso!"
@@ -179,13 +192,12 @@ export default Vue.extend({
             this.loading = true;
 
             //this.formDados.form.objeto = 'abc'
-            //console.log('carregar: ',this.formDados.form )
-            
+            //console.log('carregar: ',this.formDados.form )           
             
             RestApiService.get("processos/id", this.idProcesso)
                 .then((res: any) => {
 
-               console.log("edit",res.data)
+                //console.log("edit",res.data)
 
                 this.formDados.form.idProcesso =   res.data.id_processo                
                 this.formDados.form.numProcedimento = res.data.num_procedimento
@@ -242,41 +254,9 @@ export default Vue.extend({
                 );               
             })
             .finally(() => {
-                this.loading = false;
+                this.loading = false;               
             });
         },
-
-        carregarDadosDuplicados(): void {
-            this.loading = true;         
-            
-            RestApiService.get("processo/listid", this.idProcesso)
-                .then((res: any) => {
-              
-                this.formDados.form.idTipoProcesso =  res.data.idTipoProcesso              
-                this.formDados.form.idOrgaoDemandante = res.data.orgaoSelecionado.value               
-                this.formDados.form.idAssunto =  res.data.value
-                this.formDados.form.idClassificacao = res.data.idClassificacao
-                this.formDados.form.objeto =  res.data.objeto 
-                this.formDados.form.idResponsavel = res.data.value
-                this.formDados.form.descricao = res.data.descricao 
-                this.formDados.form.sigiloso = res.data.sigiloso
-                this.formDados.form.observacao = res.data.observacao    
-                
-                //formatar datas para formato br
-                this.formDados.formatDatasEnToBr()
-            })
-            .catch((e) => {
-              /*  this.adicionarAlert(
-                    "alert",
-                    "Houve um erro ao carregar os dados do paciente. Tente novamente!"
-                );*/
-          
-            })
-            .finally(() => {
-                this.loading = false;
-            });
-        },
-
 
         validarCampos(): boolean {
 
@@ -373,12 +353,13 @@ export default Vue.extend({
         fechaAlert(): void {
             this.alert = false;
 
+
             if(this.Message[0].type == 'success') {
                 this.$bvModal.hide('modal-cadastro-processo')
                 this.$bvModal.hide('modal-editar-processo')
                 this.$emit("listarProcesso");
             }   
-        },  
+        },          
        
     },
    
