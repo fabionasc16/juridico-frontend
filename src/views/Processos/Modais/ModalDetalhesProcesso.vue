@@ -2,7 +2,7 @@
     <div>
         <div class="py-2 mt-10" align="right">                         
             <b-button class="bordered ml-2 mr-2" type="button" 
-            variant="primary" v-if="!formDados.disabledAll && tipo == 'editar'"
+            variant="primary" v-if="!formDados.disabledAll && tipo == 'editar' && !opcaoDuplicar"
             @click="duplicar()">Duplicar</b-button>                                                         
         </div>   
         <!-- CARD DE EDIÇÃO -->
@@ -89,6 +89,7 @@ export default Vue.extend({
 
     mounted() {
         this.isLoading = false
+
         //pega os dados do componente filho (detalhes do processo)
         this.formDados = this.$refs.formDetalhes   
         
@@ -112,7 +113,8 @@ export default Vue.extend({
             this.formDados =  this.$refs.formDetalhes                             
             this.formDados.limparDadosAoDuplicar()    
             this.formDados.ocultarCampoSIGED()       
-            this.opcaoDuplicar = true   
+            this.opcaoDuplicar = true  
+            this.$emit('alterarTitulo', 'Duplicar Processo') 
         },
         submit() {            
             //pegar todos os valores já para armazenar

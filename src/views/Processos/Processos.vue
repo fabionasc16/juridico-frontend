@@ -306,8 +306,10 @@
           
         </b-modal>
         <!-- DETALHES DO PROCESSO -->
-        <b-modal id="modal-editar-processo" size="lg" centered title="Editar Processo" hide-footer>
-          <ModalDetalhesProcesso tipo="editar" :idProcesso="idProcessoModal" @listarProcesso="listarProcesso(currentPage)">
+        <b-modal id="modal-editar-processo" size="lg" centered :title="titleModal || 'Editar Processo'" hide-footer>
+          <ModalDetalhesProcesso tipo="editar" :idProcesso="idProcessoModal"
+          @alterarTitulo="alterarTitulo" 
+          @listarProcesso="listarProcesso(currentPage)">
             <template v-slot:buttons>
                 <b-button class="bordered" @click="$bvModal.hide('modal-editar-processo')">Fechar</b-button>
             </template>
@@ -427,6 +429,7 @@ export default Vue.extend({
   data() {
     return {
       placeholderItem: '--Selecione--',
+      titleModal: "" as string,
       idProcessoModal: null as any,
       rows: 100,
       totalRows: null as any,
@@ -507,8 +510,12 @@ export default Vue.extend({
     this.carregarTipoProcesso()
   },
   methods: {
+    alterarTitulo(nome:string):void {
+      this.titleModal = nome
+    },
     abrirModal(modalname: string, idProcesso: number){
        // this.$refs[modalname]?.show()
+       this.titleModal = ''
        this.idProcessoModal = idProcesso
        this.$bvModal.show(modalname)      
     },
