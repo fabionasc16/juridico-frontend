@@ -33,7 +33,7 @@
                             </b-form-select>
                         </b-form-group>
                     </div>
-                    <div class="row" v-if="form.idStatusProcesso=='14'">    
+                    <div class="row" v-if="exibirData">    
                         <div class="col-7" style="margin-bottom:-10px">    
                             <b-form-group class="font">                                
                                 <label>Data Arquivamento SIGED: <span class="text-danger">*</span></label>
@@ -102,7 +102,9 @@ export default Vue.extend({
            // carregarForm: {} as Processo,  
             dataArquivamentoBR: "" as string,
             optionsStatusProcesso: [] as Array<StatusProcesso>, 
-            perPageListagens:1000,           
+            perPageListagens:1000,    
+            exibirData: false as boolean, 
+            statusAtual: null as any      
         }
     },    
 
@@ -117,6 +119,7 @@ export default Vue.extend({
         alteraStatus() {        
             this.dataArquivamentoBR = ""
             this.form.dataArquivamento = ""
+            this.form.idStatusProcesso == '14' ? this.exibirData = true : this.exibirData = false 
         },
         carregarDados(): void {       
             this.loading = true;          
@@ -130,6 +133,7 @@ export default Vue.extend({
                     this.form.idProcesso =   res.data.idProcesso               
                     this.form.dataArquivamento = res.data.dataArquivamento
                     this.form.idStatusProcesso = res.data.status.id_status
+                    this.statusAtual = res.data.status.id_status
 
                     //formatar datas para formato br
                     this.dataArquivamentoBR = res.data.dataArquivamento ? 
@@ -213,17 +217,24 @@ export default Vue.extend({
                 .finally(() => {
                 this.loading = false               
                 })
-        },
-        
+        },        
 
         validarCampos(): boolean {    
-            
+            this.Notificacao = [];
+
             if(!this.form.idStatusProcesso){
                 this.adicionarNotificacao(
                 "danger",
                 "Campo Status Processo é obrigatório!"
                 );
             }    
+
+            if(this.statusAtual != 10 && this.form.idStatusProcesso == 10) {
+                this.adicionarNotificacao(
+                "danger",
+                "Não é possível retornar ao status Recebido!"
+                );
+            }            
             
             if(this.form.idStatusProcesso=='14' && !this.dataArquivamentoBR){
                 this.adicionarNotificacao(
@@ -242,12 +253,7 @@ export default Vue.extend({
             if (this.Notificacao.length > 0) {
                     this.loading = false;
                     //ir para o início da página onde aparecem as mensagens
-                    window.scrollTo(0, 0);               
-
-                    /*this.adicionarAlert(
-                        "alert",
-                        "Realize as validações exibidas no topo desta página!"
-                    );*/
+                    window.scrollTo(0, 0);  
 
                     setTimeout(() => {
                     this.Notificacao = [];
