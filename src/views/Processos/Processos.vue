@@ -265,7 +265,7 @@
                   <b-list-group-item block class="btn-light text-dark btn-outline-danger m-0 p-1"
                         v-if="data.item.status.id_status=='14'" 
                          @listarProcesso="listarProcesso(currentPage)"
-                      @click="desarquivar(data.item.id_processo, data.item.num_procedimento, data.item.status.id_status, data.item)">
+                      @click="desarquivar(data.item)">
                     Desarquivar
                   </b-list-group-item>
 
@@ -446,6 +446,7 @@ export default Vue.extend({
       exibirRegistroSIGED: false as boolean,      
       pageOptions: [5, 10, 15, { value: 100, text: "Show a lot" }],
       form: {} as Processo,
+      formDesarquivado: {} as Processo,
       checkedProcessoSiged: false as boolean,
       checkedExpiraHoje: false as boolean,
       maisDetalhes: false as boolean,
@@ -534,7 +535,6 @@ export default Vue.extend({
       this.form.idTipoProcesso = this.tipoProcessoSelecionado.id_tipoprocesso
       this.form.statusProcesso = this.statusProcessoSelecionado.value
       this.form.statusPrazo    = this.statusPrazoSelecionado.value
-
     
       this.form.idOrgaoDemandante = this.orgaoDemandanteSelecionado.id_orgao
       this.form.idClassificacao   = this.classificacaoSelecionada.id_classificacao
@@ -675,32 +675,55 @@ export default Vue.extend({
       }
     },
 
-    desarquivar(id: any, data: any, status: string, dadosForm: any): void {
+    desarquivar(dadosForm: any): void {     
     
-    let message = 'Deseja realmente desarquivar processo Nº ' + data + '?'
+    let message = 'Deseja realmente desarquivar processo Nº ' + dadosForm.num_procedimento + '?'
+      
+    this.formDesarquivado.idProcesso = dadosForm.id_processo
+    this.formDesarquivado.dataArquivamento = ""
+    this.formDesarquivado.idStatusProcesso = 12 //Tramitando
 
-    if(confirm(message) && (status == 'Arquivado' || status == 'arquivado')) {
+    let url = "processos/atualiza-status?idProcesso="+dadosForm.id_processo;
+           
+    if(confirm(message) && (dadosForm.status.id_status == '14' )) {
     
-      RestApiService.update("processo", dadosForm)
+      RestApiService.patch(url, this.formDesarquivado)   
         .then((response: any) => {
-          this.loading = true;
-
+          this.loading = true;          
           this.adicionarAlert(
                   "success",
                   "Processo Desarquivado com sucesso!"
-          );          
+          );     
+          this.listarProcesso(this.currentPage)     
         })
-        .catch((e: Error) => {    
-           this.adicionarAlert(
-                  "alert",
-                  "Ocorreu um erro ao desarquivar processo! Contacte o administrador do sistema."
-          );
-        })
-        .finally(() => {
-          this.loading = false;
-        });   
+        .catch((e) => {
+                    this.loading = false;
 
-      console.log("Desarquivado.")
+                        if (e.message === "Network Error") {
+                            this.adicionarAlert(
+                            "alert",
+                            "Sem conexão de rede. Verifique sua conexão!"
+                            );
+                        } else if (
+                            e &&
+                            e.response &&
+                            e.response.data &&
+                            e.response.data.message
+                        ) {
+                            this.adicionarAlert(
+                            "alert",
+                            e.response.data.message
+                            );                       
+                        } else {
+                            this.adicionarAlert(
+                            "alert",
+                            "Ocorreu um erro ao desarquivar processo! Contacte o administrador do sistema."
+                            );                      
+                        }              
+                })
+          .finally(() => {
+            this.loading = false;
+          });        
     }
    },
 
