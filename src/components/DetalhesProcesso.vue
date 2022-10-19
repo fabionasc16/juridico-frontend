@@ -436,7 +436,7 @@ export default Vue.extend({
                 this.form.requerSIGED =  this.form.requerSIGED ? this.form.requerSIGED: false
                 this.form.numProcessoSIGED = this.form.numProcessoSIGED ? this.form.numProcessoSIGED: ""
                 this.form.dataProcessoSIGED = this.form.dataProcessoSIGED ?  this.form.dataProcessoSIGED : ""
-                this.form.permanenciaSIGED = this.form.permanenciaSIGED ? this.form.permanenciaSIGED: ""
+                this.form.permanenciaSIGED = this.form.permanenciaSIGED ? ""+this.form.permanenciaSIGED: ""
                 this.form.caixaAtualSIGED =  this.form.caixaAtualSIGED ?  this.form.caixaAtualSIGED : ""
                 this.form.tramitacaoSIGED =  this.form.tramitacaoSIGED ? this.form.tramitacaoSIGED : ""
 
