@@ -232,8 +232,10 @@
                   </b-list-group-item>
 
                   <!--status diferente de arquivado(14) --> 
-                  <b-list-group-item block v-b-modal.modal-andamento-processo class="btn-light btn-outline-dark m-0 p-1"
-                   v-if="data.item.status.id_status!='14'"  @listarProcesso="listarProcesso(currentPage)">
+                  <b-list-group-item block class="btn-light btn-outline-dark m-0 p-1"
+                   v-if="data.item.status.id_status!='14'"  
+                    @listarProcesso="listarProcesso(currentPage)"
+                    @click="abrirModal('modal-andamento-processo', data.item.id_processo)">
                     Alterar Situação
                   </b-list-group-item>
 
@@ -253,11 +255,11 @@
                   </b-list-group-item>-->
                   
                    <!--status diferente de arquivado(14) --> 
-                  <b-list-group-item block v-b-modal.modal-arquivar-processo 
+                 <!-- <b-list-group-item block v-b-modal.modal-arquivar-processo 
                      class="btn-light text-dark btn-outline-success m-0 p-1"
                      v-if="data.item.status.id_status!='14'">
                     Arquivar
-                  </b-list-group-item>
+                  </b-list-group-item>--> 
 
                   <!--status igual arquivado(14) --> 
                   <b-list-group-item block class="btn-light text-dark btn-outline-danger m-0 p-1"
@@ -326,7 +328,8 @@
 
         <!-- ANDAMENTO PROCESSO - ALTERAR STATUS -->
         <b-modal id="modal-andamento-processo" centered title="Alterar Situação do Processo" hide-footer>         
-            <ModalAndamentoProcesso  @listarProcesso="listarProcesso(currentPage)">
+            <ModalAndamentoProcesso  @listarProcesso="listarProcesso(currentPage)"
+              :idProcesso="idProcessoModal">
             <template v-slot:buttons>
                 <b-button class="bordered" @click="$bvModal.hide('modal-andamento-processo')">Fechar</b-button>
             </template>
@@ -365,13 +368,13 @@
         </b-modal>        
 
         <!-- ARQUIVAR PROCESSO -->
-        <b-modal id="modal-arquivar-processo" centered title="Arquivar Processo" hide-footer>         
+         <!-- <b-modal id="modal-arquivar-processo" centered title="Arquivar Processo" hide-footer>         
             <ModalArquivarProcesso @listarProcesso="listarProcesso(currentPage)">
             <template v-slot:buttons>
                 <b-button class="bordered" @click="$bvModal.hide('modal-arquivar-processo')">Fechar</b-button>
             </template>
           </ModalArquivarProcesso> 
-        </b-modal>
+        </b-modal>-->
 
         <!-- //modal -->
         <!-- DUPLICAR PROCESSO -->
@@ -394,7 +397,7 @@
 import Vue from "vue";
 import HeaderPage from '@/components/HeaderPage.vue';
 import ModalTramitacoesProcesso from './Modais/ModalTramitacoesProcesso.vue';
-import ModalArquivarProcesso from './Modais/ModalArquivarProcesso.vue';
+//import ModalArquivarProcesso from './Modais/ModalArquivarProcesso.vue';
 import ModalDetalhesProcesso from './Modais/ModalDetalhesProcesso.vue';
 import { mask } from "vue-the-mask";
 import { Processo } from '@/type/processo';
@@ -418,7 +421,7 @@ export default Vue.extend({
     HeaderPage,
     ModalTramitacoesProcesso,   
     ModalDetalhesProcesso,
-    ModalArquivarProcesso,
+  //ModalArquivarProcesso,
     Notifications,
     ModalReiteracaoProcesso,
     ModalVisualizarReiteracao,
@@ -430,7 +433,7 @@ export default Vue.extend({
     return {
       placeholderItem: '--Selecione--',
       titleModal: "" as string,
-      idProcessoModal: null as any,
+      idProcessoModal: null as any,     
       rows: 100,
       totalRows: null as any,
       perPage: 10,
@@ -516,7 +519,8 @@ export default Vue.extend({
     abrirModal(modalname: string, idProcesso: number){
        // this.$refs[modalname]?.show()
        this.titleModal = ''
-       this.idProcessoModal = idProcesso
+       this.idProcessoModal = idProcesso            
+     
        this.$bvModal.show(modalname)      
     },
     alterarProced(){
@@ -546,7 +550,7 @@ export default Vue.extend({
 
       RestApiService.get("processos", `?currentPage=${currentpage}`)
         .then((response: any) => {
-          console.log("Resp ", response.data.data)
+          console.log("Resp ", response.data)
           this.items = response.data.data
           this.perPage = response.data.perPage
           this.totalRows = response.data.total

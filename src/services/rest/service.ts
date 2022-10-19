@@ -47,6 +47,10 @@ class RestApiService {
     return http.put(`/${uri}/${data.id}`, JSON.stringify(data));
   }
 
+  public patch(uri: string, data: any): Promise<any> {
+    return http.patch(`/${uri}`, JSON.stringify(data));
+  }
+
   public upload(uri: string, data: any): Promise<any> {
     return http.put(`/${uri}/${data.id}`);
   }

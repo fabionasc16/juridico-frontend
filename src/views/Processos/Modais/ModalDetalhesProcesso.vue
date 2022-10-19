@@ -1,10 +1,5 @@
 <template>       
-    <div>
-        <div class="py-2 mt-10" align="right">                         
-            <b-button class="bordered ml-2 mr-2" type="button" 
-            variant="primary" v-if="!formDados.disabledAll && tipo == 'editar' && !opcaoDuplicar"
-            @click="duplicar()">Duplicar</b-button>                                                         
-        </div>   
+    <div>        
         <!-- CARD DE EDIÇÃO -->
             <div class="col-12">
                 <b-form @submit.prevent="submit">
@@ -24,7 +19,19 @@
                     </b-form-group>-->
 
                     <div v-show="!isLoading"> 
-                        <detalhes-processo  ref='formDetalhes' />       
+                        
+                        <b-tabs content-class="mt-3">
+                            <b-tab title="Processo" active> 
+                                <div class="py-2 mt-10" align="right">                         
+                                    <b-button class="bordered ml-2 mr-2" type="button" 
+                                    variant="primary" v-if="!formDados.disabledAll && tipo == 'editar' && !opcaoDuplicar"
+                                    @click="duplicar()">Duplicar</b-button>                                                         
+                                </div>   
+                                <detalhes-processo  ref='formDetalhes' />   </b-tab>
+
+                            <b-tab title="Reiteração"><p>I'm the second tab</p></b-tab>                          
+                        </b-tabs>  
+                    
                     </div>                                
                         
                     <div class="py-2 mt-10" align="right">                                                 
@@ -104,8 +111,7 @@ export default Vue.extend({
 
         if(this.tipo == 'editar') {           
             this.carregarDados();   
-        }        
-         
+        }       
     }, 
             
     methods: {
@@ -354,8 +360,7 @@ export default Vue.extend({
 
         fechaAlert(): void {
             this.alert = false;
-
-
+            
             if(this.Message[0].type == 'success') {
                 this.$bvModal.hide('modal-cadastro-processo')
                 this.$bvModal.hide('modal-editar-processo')
