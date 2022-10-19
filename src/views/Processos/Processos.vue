@@ -694,7 +694,7 @@ export default Vue.extend({
                   "success",
                   "Processo Desarquivado com sucesso!"
           );     
-          this.listarProcesso(this.currentPage)     
+           this.listarProcesso(this.currentPage)     
         })
         .catch((e) => {
                     this.loading = false;

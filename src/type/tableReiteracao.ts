@@ -26,7 +26,7 @@ export const FieldsTableReiteracao =
             label: 'Data Processo',
             sortable: true,
         }, 
-        {
+      /*  {
             key: 'dataRecebimento',
             label: 'Data Recebimento',
             sortable: true,
@@ -35,13 +35,13 @@ export const FieldsTableReiteracao =
             key: 'horaRecebimento',
             label: 'Hora Recebimento',
             sortable: true,
-        }, 
+        }, */
         {
             key: 'numProcessoSIGED',
             label: 'Processo SIGED',
             sortable: true,
         },
-        {
+        /*{
             key: 'prazoTotal',
             label: 'Prazo (Dias Úteis)',
             sortable: true,
@@ -50,10 +50,10 @@ export const FieldsTableReiteracao =
             key: 'diasRestantes',
             label: 'Dias a Expirar (Corridos)',
             sortable: true,
-        }, 
+        },*/ 
         {
-            key: 'statusPrazo',
-            label: 'Status Prazo',
+            key: 'status',
+            label: 'Status',
             sortable: true,
         },  
 
