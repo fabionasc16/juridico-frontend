@@ -342,14 +342,26 @@
           <ModalTramitacoesProcesso >             
           </ModalTramitacoesProcesso>
         </b-modal>
+
+
+
         <!-- REITERAR PROCESSO -->        
-        <b-modal id="modal-cadastro-reiteracao" size="lg" centered title="Cadastro - Reiterar Processo" hide-footer>
-          <ModalReiteracaoProcesso  @listarProcesso="listarProcesso(currentPage)"> 
+        <!-- <b-modal id="modal-cadastro-reiteracao" size="lg" centered title="Cadastro - Reiterar Processo" hide-footer>-->
+         <!-- <ModalReiteracaoProcesso  @listarProcesso="listarProcesso(currentPage)"> 
             <template v-slot:buttons>
                 <b-button class="bordered" @click="$bvModal.hide('modal-cadastro-reiteracao')">Fechar</b-button>
             </template>            
-          </ModalReiteracaoProcesso>
-        </b-modal>
+          </ModalReiteracaoProcesso> -->
+
+          <!-- <ModalReiteracoes  @listarProcesso="listarProcesso(currentPage)"          
+          :idProcesso="idProcessoModal"> 
+            <template v-slot:buttons>
+                <b-button class="bordered" @click="$bvModal.hide('modal-cadastro-reiteracao')">Fechar</b-button>
+            </template>            
+          </ModalReiteracoes>
+        </b-modal> -->
+
+        
 
         <b-modal id="modal-editar-reiteracao" size="lg" centered title="Edição - Reiterar Processo" hide-footer>
           <ModalReiteracaoProcesso  @listarProcesso="listarProcesso(currentPage)"> 
@@ -405,30 +417,34 @@ import { StatusProcessoSeeder } from "@/type/statusProcesso";
 import { StatusPrazoSeeder } from "@/type/statusPrazo";
 import { CaixaSigedSeeder } from "@/type/caixaSiged";
 import { FieldsTableProcesso } from "@/type/tableProcesso";
-import ModalReiteracaoProcesso from './Modais/ModalReiteracaoProcesso.vue';
-import ModalVisualizarReiteracao from './Modais/ModalVisualizarReiteracao.vue';
-import ModalAndamentoProcesso from './Modais/ModalAndamentoProcesso.vue';
-import RestApiService from "@/services/rest/service";
 
+import ModalReiteracaoProcesso from './Modais/ModalReiteracaoProcesso.vue';
+import ModalVisualizarReiteracao from './Modais/old_ModalVisualizarReiteracao.vue';
+import ModalAndamentoProcesso from './Modais/ModalAndamentoProcesso.vue';
+
+import RestApiService from "@/services/rest/service";
 import Notifications from "@/components/Notifications.vue";
 import { Notificacao } from "@/type/notificacao";
 import ReturnMessage from "@/components/ReturnMessage.vue";
 import LoadingSpinner from "@/components/LoadingSpinner.vue";
 
+import ModalReiteracoes from "./Modais/ModalReiteracoes.vue";
+
 export default Vue.extend({
   directives: { mask },
   components: {
     HeaderPage,
-    ModalTramitacoesProcesso,   
+    ModalTramitacoesProcesso,
     ModalDetalhesProcesso,
-  //ModalArquivarProcesso,
+    //ModalArquivarProcesso,
     Notifications,
     ModalReiteracaoProcesso,
     ModalVisualizarReiteracao,
     ModalAndamentoProcesso,
     ReturnMessage,
     LoadingSpinner,
-  }, 
+    ModalReiteracoes
+}, 
   data() {
     return {
       placeholderItem: '--Selecione--',

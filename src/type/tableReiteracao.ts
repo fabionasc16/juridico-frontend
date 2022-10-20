@@ -17,12 +17,12 @@ export const FieldsTableReiteracao =
             sortable: false,
         },
         {
-            key: 'numProcedimento',
+            key: 'num_procedimento',
             label: 'Nº Procedimento',
             sortable: true
         },
         {
-            key: 'dataProcesso',
+            key: 'data_processo',
             label: 'Data Processo',
             sortable: true,
         }, 
@@ -37,25 +37,25 @@ export const FieldsTableReiteracao =
             sortable: true,
         }, */
         {
-            key: 'numProcessoSIGED',
+            key: 'numero_siged',
             label: 'Processo SIGED',
             sortable: true,
         },
-        /*{
-            key: 'prazoTotal',
+        {
+            key: 'prazo',
             label: 'Prazo (Dias Úteis)',
             sortable: true,
         },  
-        {
+        /*{
             key: 'diasRestantes',
             label: 'Dias a Expirar (Corridos)',
             sortable: true,
         },*/ 
-        {
-            key: 'status',
+       /* {
+            key: 'idStatus',
             label: 'Status',
             sortable: true,
-        },  
+        }, */
 
 
         

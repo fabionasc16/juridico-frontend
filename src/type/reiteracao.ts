@@ -1,12 +1,13 @@
 export type Reiteracao = { 
     idReiteracao: string,
-    numProcessoSIGED: string,
+    numeroProcedimento: string,
+    numeroSIGED:string,
     dataProcesso: string,
-    prazoTotal: string,
-    statusReiteracao: any, 
+    prazoProcesso: number,
+    idStatus: number,
     dataRecebimento: string,
     horaRecebimento: string,
-    descricao: string,
-    idProcesso: string    
+    reiteracao: string, //descrição
+    idProcesso: number    
 };
 

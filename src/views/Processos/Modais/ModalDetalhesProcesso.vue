@@ -37,7 +37,7 @@
                         </b-tab>
 
                             <b-tab title="Reiteração" v-if="idProcesso">
-                                <reiteracoes></reiteracoes>
+                                <reiteracoes :idProcesso="idProcesso"> </reiteracoes>
                             </b-tab>                          
                         </b-tabs>                      
                     </div>                                

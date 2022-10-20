@@ -1,7 +1,5 @@
 <template>
-    <div>   
-    
-
+    <div>      
     <!-- CARD DA TABELA DO PROCESSO -->
     <div class="card p-0 mt-10">
         <!-- CABEÇALHO DA TABELA (Espaço reservado para incluir ícones) -->
@@ -21,10 +19,20 @@
                 <div class="col-1 position-relative mt-3 mb-3" align="center"> 
                     <b-form-group label="" class="btn text-primary position-absolute top-50 start-50 translate-middle">
                     <div class="h3">
-                        <b-icon-plus-circle v-b-modal.modal-cadastro-reiteracao v-b-tooltip.hover.topleft="'Adicionar Reiteração'"></b-icon-plus-circle>
+                        <b-icon-plus-circle v-b-modal.modal-cadastro-reiteracao v-b-tooltip.hover.topleft="'Adicionar Reiteração'">
+                        </b-icon-plus-circle>
                     </div>
                     </b-form-group>
                 </div>
+
+
+                <b-list-group-item block class="btn-light btn-outline-dark m-0 p-1"                 
+                    @click="abrirModal('modal-editar-processo')"                    
+                    > <!--@listarProcesso="listarProcesso(currentPage)"-->
+                    Editar
+                  </b-list-group-item>
+
+
             </div>
         </div>
         <!-- TABELA -->
@@ -53,8 +61,8 @@
                     </template>
             </b-table-lite>
 
-            <div class="m-3 text-center" v-if="!items">
-              <label>Nenhum registro encontrado.</label>
+            <div class="m-3 text-center" v-if="items.length==0">
+              <label>Nenhum registro encontrado</label>
             </div>  
         </div>
         <!-- RODAPÉ DA TABELA (Espaço reservado para incluir ícones) -->
@@ -70,7 +78,21 @@
         <div class="py-2 mt-10 mr-3" align="right">                        
             <b-button class="bordered" @click="$bvModal.hide('modal-visualizar-reiteracao')">Fechar</b-button>
         </div>
-    </div>     
+    </div> 
+
+
+    <!-- Modal Reiteracoes -->
+    <b-modal id="modal-cadastro-reiteracao" size="lg" centered title="Cadastro - Reiterar Processo" hide-footer>
+              <ModalReiteracoes :idProcesso="idProcesso"  @listarReiteracoes=listarReiteracoes(currentPage)> 
+                  <template v-slot:buttons>
+                      <b-button class="bordered" @click="$bvModal.hide('modal-cadastro-reiteracao')">Fechar</b-button>
+                  </template>     
+                </ModalReiteracoes>
+    </b-modal>
+
+
+
+
    </div>     
 </template>
 
@@ -84,8 +106,19 @@ import {FieldsTableReiteracao} from "@/type/tableReiteracao"
 import {TableReiteracaoSeeder} from "@/type/tableReiteracao"
 import RestApiService from "@/services/rest/service";
 
+import ModalReiteracoes from "./Modais/ModalReiteracoes.vue";
+
 export default Vue.extend({
     directives: { mask },
+    components: {
+        HeaderPage,
+        BIconSearch,
+        BIconJournalText,
+        BIconPlusCircle,
+        BIconInfoCircle,
+        Notifications,
+        ModalReiteracoes
+    },
     data() {
         return {           
             rows: 100,
@@ -96,13 +129,21 @@ export default Vue.extend({
             perPage: 10,
             pageOptions: [5, 10, 15, { value: 100, text: "Show a lot" }],     
             fields: FieldsTableReiteracao,
-            items: [] as Array<String>,
+            items: [] as Array<String>
         };
     },
+    props: ['idProcesso'],
     mounted(){
         this.listarReiteracoes(this.currentPage)
     },
     methods: {    
+        abrirModal(modalname: string){
+       
+       alert("here")     
+                
+     
+       this.$bvModal.show(modalname)      
+    },
         
     listarReiteracoes(currentpage: number): void {
     //  this.loading = true
@@ -128,14 +169,7 @@ export default Vue.extend({
     },
      
     },
-    components: {
-        HeaderPage,
-        BIconSearch,
-        BIconJournalText,
-        BIconPlusCircle,
-        BIconInfoCircle,
-        Notifications,
-    }
+    
 });
 </script>
 
