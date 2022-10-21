@@ -203,9 +203,7 @@
               </template>
              
               <!-- BOTÕES DE AÇÕES -->
-              <template v-slot:cell(botaoAction)="data">
-
-              
+              <template v-slot:cell(botaoAction)="data">              
 
                 <!-- BOTÃO DROPDOWN -->
                 <b-dropdown variant="dark" class="p0m0" size="sm"  data-toggle="dropdown" >
@@ -244,10 +242,10 @@
                     Tramitações
                   </b-list-group-item>  
 
-                  <b-list-group-item block v-b-modal.modal-visualizar-reiteracao 
+                 <!--  <b-list-group-item block v-b-modal.modal-visualizar-reiteracao 
                      @listarProcesso="listarProcesso(currentPage)" class="btn-light btn-outline-dark m-0 p-1">
                     Reiterações
-                  </b-list-group-item>
+                  </b-list-group-item> -->
 
                   <!--<b-list-group-item block v-b-modal.modal-duplicar-processo 
                      @listarProcesso="listarProcesso(currentPage)" class="btn-light btn-outline-dark m-0 p-1">
@@ -274,7 +272,7 @@
                       @listarProcesso="listarProcesso(currentPage)"
                       v-if="data.item.status.id_status=='10'"
                       @click="excluir(data.item.id_processo, data.item.num_procedimento, data.item.status.id_status)">
-                    Excluir {{data.item.desc_status}}
+                    Excluir
                   </b-list-group-item>
                 </b-dropdown>
               </template>             
@@ -334,24 +332,33 @@
                 <b-button class="bordered" @click="$bvModal.hide('modal-andamento-processo')">Fechar</b-button>
             </template>
           </ModalAndamentoProcesso> 
-        </b-modal>
-            
+        </b-modal>            
         
         <!-- TRAMITAÇÕES DO PROCESSO -->
         <b-modal id="modal-tramitacoes-processo" size="lg" centered title="Tramitações do Processo" hide-footer>
           <ModalTramitacoesProcesso >             
           </ModalTramitacoesProcesso>
         </b-modal>
+
         <!-- REITERAR PROCESSO -->        
-        <b-modal id="modal-cadastro-reiteracao" size="lg" centered title="Cadastro - Reiterar Processo" hide-footer>
-          <ModalReiteracaoProcesso  @listarProcesso="listarProcesso(currentPage)"> 
+        <!-- <b-modal id="modal-cadastro-reiteracao" size="lg" centered title="Cadastro - Reiterar Processo" hide-footer>-->
+         <!-- <ModalReiteracaoProcesso  @listarProcesso="listarProcesso(currentPage)"> 
             <template v-slot:buttons>
                 <b-button class="bordered" @click="$bvModal.hide('modal-cadastro-reiteracao')">Fechar</b-button>
             </template>            
-          </ModalReiteracaoProcesso>
-        </b-modal>
+          </ModalReiteracaoProcesso> -->
 
-        <b-modal id="modal-editar-reiteracao" size="lg" centered title="Edição - Reiterar Processo" hide-footer>
+          <!-- <ModalReiteracoes  @listarProcesso="listarProcesso(currentPage)"          
+          :idProcesso="idProcessoModal"> 
+            <template v-slot:buttons>
+                <b-button class="bordered" @click="$bvModal.hide('modal-cadastro-reiteracao')">Fechar</b-button>
+            </template>            
+          </ModalReiteracoes>
+        </b-modal> -->
+
+        
+
+        <!--<b-modal id="modal-editar-reiteracao" size="lg" centered title="Edição - Reiterar Processo" hide-footer>
           <ModalReiteracaoProcesso  @listarProcesso="listarProcesso(currentPage)"> 
             <template v-slot:buttons>
                 <b-button class="bordered" @click="$bvModal.hide('modal-editar-reiteracao')">Fechar</b-button>
@@ -365,7 +372,7 @@
                 <b-button class="bordered" @click="$bvModal.hide('modal-visualizar-reiteracao')">Fechar</b-button>
             </template>            
           </ModalVisualizarReiteracao>
-        </b-modal>        
+        </b-modal> -->     
 
         <!-- ARQUIVAR PROCESSO -->
          <!-- <b-modal id="modal-arquivar-processo" centered title="Arquivar Processo" hide-footer>         
@@ -405,30 +412,34 @@ import { StatusProcessoSeeder } from "@/type/statusProcesso";
 import { StatusPrazoSeeder } from "@/type/statusPrazo";
 import { CaixaSigedSeeder } from "@/type/caixaSiged";
 import { FieldsTableProcesso } from "@/type/tableProcesso";
-import ModalReiteracaoProcesso from './Modais/ModalReiteracaoProcesso.vue';
-import ModalVisualizarReiteracao from './Modais/ModalVisualizarReiteracao.vue';
-import ModalAndamentoProcesso from './Modais/ModalAndamentoProcesso.vue';
-import RestApiService from "@/services/rest/service";
 
+//import ModalReiteracaoProcesso from './Modais/old_ModalReiteracaoProcesso.vue';
+//import ModalVisualizarReiteracao from './Modais/old_ModalVisualizarReiteracao.vue';
+import ModalAndamentoProcesso from './Modais/ModalAndamentoProcesso.vue';
+
+import RestApiService from "@/services/rest/service";
 import Notifications from "@/components/Notifications.vue";
 import { Notificacao } from "@/type/notificacao";
 import ReturnMessage from "@/components/ReturnMessage.vue";
 import LoadingSpinner from "@/components/LoadingSpinner.vue";
 
+import ModalReiteracoes from "./Modais/ModalReiteracoes.vue";
+
 export default Vue.extend({
   directives: { mask },
   components: {
     HeaderPage,
-    ModalTramitacoesProcesso,   
+    ModalTramitacoesProcesso,
     ModalDetalhesProcesso,
-  //ModalArquivarProcesso,
+    //ModalArquivarProcesso,
     Notifications,
-    ModalReiteracaoProcesso,
-    ModalVisualizarReiteracao,
+    // ModalReiteracaoProcesso,
+    //ModalVisualizarReiteracao,
     ModalAndamentoProcesso,
     ReturnMessage,
     LoadingSpinner,
-  }, 
+    ModalReiteracoes
+}, 
   data() {
     return {
       placeholderItem: '--Selecione--',
@@ -694,7 +705,7 @@ export default Vue.extend({
                   "success",
                   "Processo Desarquivado com sucesso!"
           );     
-          this.listarProcesso(this.currentPage)     
+           this.listarProcesso(this.currentPage)     
         })
         .catch((e) => {
                     this.loading = false;
@@ -755,8 +766,8 @@ export default Vue.extend({
         .finally(() => {
           this.loading = false;
         });  
-    } 
-   },
+      } 
+    },
 
     colorReiteracao(reiteracao: any) : any {
             if(reiteracao > 0) {

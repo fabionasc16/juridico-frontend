@@ -23,22 +23,26 @@
                         <b-tabs content-class="mt-3">
                             <b-tab title="Processo" active> 
                                 <div class="py-2 mt-10" align="right">                         
-                                    <b-button class="bordered ml-2 mr-2" type="button" 
+                                    <b-button class="bordered ml-2 mr-2 btn-sm" type="button" 
                                     variant="primary" v-if="!formDados.disabledAll && tipo == 'editar' && !opcaoDuplicar"
                                     @click="duplicar()">Duplicar</b-button>                                                         
                                 </div>   
-                                <detalhes-processo  ref='formDetalhes' />   </b-tab>
+                                <detalhes-processo  ref='formDetalhes' />                               
+                            
+                                <div class="py-2 mt-10" align="right">                                                 
+                                    <slot name="buttons"></slot>
+                                    <b-button class="bordered ml-2" type="submit" variant="success" 
+                                    v-if="!formDados.disabledAll">Salvar</b-button>                                               
+                                </div> 
+                        </b-tab>
 
-                            <b-tab title="Reiteração"><p>I'm the second tab</p></b-tab>                          
-                        </b-tabs>  
-                    
+                            <b-tab title="Reiteração" v-if="idProcesso">
+                                <reiteracoes :idProcesso="idProcesso" :tipo="tipo"> </reiteracoes>
+                            </b-tab>                          
+                        </b-tabs>                      
                     </div>                                
                         
-                    <div class="py-2 mt-10" align="right">                                                 
-                        <slot name="buttons"></slot>
-                        <b-button class="bordered ml-2" type="submit" variant="success" 
-                          v-if="!formDados.disabledAll">Salvar</b-button>                                               
-                    </div>                
+                                  
                 </b-form>
             </div>
 
@@ -59,6 +63,8 @@ import LoadingSpinner from "@/components/LoadingSpinner.vue";
 import DetalhesProcesso from "../../../components/DetalhesProcesso.vue";
 import { Processo } from '@/type/processo';
 
+import Reiteracoes from "@/views/Processos/Reiteracoes.vue"
+
 export default Vue.extend({
     directives: { mask },
     components: {
@@ -70,14 +76,16 @@ export default Vue.extend({
         Notifications,
         ReturnMessage,
         LoadingSpinner,
-        DetalhesProcesso
+        DetalhesProcesso,
+        Reiteracoes
     },
     mixins: [        
         dataMixin,
     ],
     props: {
     tipo: String,
-    idProcesso: Number
+    idProcesso: Number,
+    idReiteracaoModal: Number
     },
     data() {
         return {
@@ -92,8 +100,7 @@ export default Vue.extend({
             buttonDisabled: false as boolean,    
             opcaoDuplicar: false as boolean,         
         }
-    },    
-
+    },
     mounted() {
         this.isLoading = false
 
