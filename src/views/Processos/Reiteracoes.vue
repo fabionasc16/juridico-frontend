@@ -12,7 +12,7 @@
                 <!-- TÍTULO -->
                 <div class="col-10 mt-1" align="start">
                     <div class="row position-relative">
-                        <h5>123456/7890-12</h5>
+                        <h5>Reiterações</h5>
                     </div>
                 </div>
                 <!-- ÍCONE Plus-Circle -->
@@ -24,22 +24,17 @@
                     </div>
                     </b-form-group>
                 </div>
-
-
-                <b-list-group-item block class="btn-light btn-outline-dark m-0 p-1"                 
-                    @click="abrirModal('modal-editar-processo')"                    
-                    > <!--@listarProcesso="listarProcesso(currentPage)"-->
-                    Editar
-                  </b-list-group-item>
-
-
             </div>
         </div>
         <!-- TABELA -->
         <div>
             <b-table-lite small striped hover responsive class="m-0" head-variant="dark"
-                :current-page="currentPage" :per-page="perPage" :sticky-header="stickyHeader"
+                :current-page="currentPage" :per-page="perPage" 
                 :no-border-collapse="noCollapse" :items="items" :fields="fields">
+
+             <template v-slot:cell(data_processo)="data">
+                 {{data.item.data_processo ? formatarDataBr(data.item.data_processo) : ''}}
+             </template>   
 
               <!-- BOTÕES DE AÇÕES -->
               <template v-slot:cell(botaoAction)="data">
@@ -52,10 +47,24 @@
                     </template>
 
                     <!-- ITENS DO DROPDOWN -->                
-                    <b-list-group-item block v-b-modal.modal-editar-reiteracao 
-                      class="btn-light btn-outline-dark m-0 p-1">
-                        Editar
-                    </b-list-group-item>
+                    <b-list-group-item block class="btn-light btn-outline-dark m-0 p-1"                 
+                    @click="abrirModal('modal-editar-reiteracao', data.item.id_reiteracao)"  
+                    tipo="editar"> 
+                    Editar
+                  </b-list-group-item>
+
+                  <b-list-group-item block class="btn-light btn-outline-dark m-0 p-1"                 
+                    @click="abrirModal('modal-visualizar-reiteracao', data.item.id_reiteracao)"
+                    tipo="visualizar"> 
+                    Visualizar
+                  </b-list-group-item>                 
+
+                  <b-list-group-item block class="btn-light text-dark btn-outline-danger m-0 p-1"                 
+                      @listarProcesso="listarReiteracoes(currentPage)"                     
+                      @click="excluir(data.item.id_reiteracao, data.item.num_procedimento)">
+                    Excluir
+                  </b-list-group-item>
+
 
                     </b-dropdown>
                     </template>
@@ -69,17 +78,21 @@
         <div class="card-footer m-0 px-1 pt-1">
             <!-- PAGINAÇÃO -->
             <div class="col-12 m-0 px-1 pt-1">
-                <b-pagination pills align="right" size="sm" v-model="currentPage" :total-rows="rows"
-                    :per-page="perPage">
+                <b-pagination pills align="right" size="sm" v-model="currentPage" 
+                @change="listarReiteracoes"
+                :total-rows="totalRows" :per-page="perPage" v-show="totalRows">
                 </b-pagination>
             </div>
         </div>
 
         <div class="py-2 mt-10 mr-3" align="right">                        
-            <b-button class="bordered" @click="$bvModal.hide('modal-visualizar-reiteracao')">Fechar</b-button>
+            <b-button class="bordered" v-show="tipo=='editar'"
+               @click="$bvModal.hide('modal-editar-processo')">Fechar</b-button>
+            <b-button class="bordered"
+              v-show="tipo=='visualizar'"
+              @click="$bvModal.hide('modal-visualizar-processo')">Fechar</b-button>
         </div>
     </div> 
-
 
     <!-- Modal Reiteracoes -->
     <b-modal id="modal-cadastro-reiteracao" size="lg" centered title="Cadastro - Reiterar Processo" hide-footer>
@@ -87,11 +100,27 @@
                   <template v-slot:buttons>
                       <b-button class="bordered" @click="$bvModal.hide('modal-cadastro-reiteracao')">Fechar</b-button>
                   </template>     
-                </ModalReiteracoes>
+              </ModalReiteracoes>
     </b-modal>
+    <b-modal id="modal-editar-reiteracao" size="lg" centered title="Edição - Reiterar Processo" hide-footer>
+          <ModalReiteracoes  :idProcesso="idProcesso"  @listarReiteracoes=listarReiteracoes(currentPage)
+             :idReiteracao="idReiteracaoModal"
+             tipo="editar"> 
+            <template v-slot:buttons>
+                <b-button class="bordered" @click="$bvModal.hide('modal-editar-reiteracao')">Fechar</b-button>
+            </template>            
+          </ModalReiteracoes>
+        </b-modal>
 
-
-
+        <b-modal id="modal-visualizar-reiteracao" size="lg" centered title="Reiterações do Processo" hide-footer>
+          <ModalReiteracoes :idProcesso="idProcesso" 
+            :idReiteracao="idReiteracaoModal"
+            tipo="visualizar">  
+            <template v-slot:buttons>
+                <b-button class="bordered" @click="$bvModal.hide('modal-visualizar-reiteracao')">Fechar</b-button>
+            </template>            
+          </ModalReiteracoes>
+        </b-modal>     
 
    </div>     
 </template>
@@ -105,11 +134,15 @@ import { BIconSearch, BIconPlusCircle, BIconInfoCircle, BIconJournalText } from 
 import {FieldsTableReiteracao} from "@/type/tableReiteracao"
 import {TableReiteracaoSeeder} from "@/type/tableReiteracao"
 import RestApiService from "@/services/rest/service";
+import dataMixin from "@/mixins/dataMixin";
 
 import ModalReiteracoes from "./Modais/ModalReiteracoes.vue";
 
 export default Vue.extend({
     directives: { mask },
+    mixins: [        
+        dataMixin,
+    ], 
     components: {
         HeaderPage,
         BIconSearch,
@@ -129,26 +162,25 @@ export default Vue.extend({
             perPage: 10,
             pageOptions: [5, 10, 15, { value: 100, text: "Show a lot" }],     
             fields: FieldsTableReiteracao,
-            items: [] as Array<String>
+            items: [] as Array<String>,
+            idReiteracaoModal: null as any
         };
     },
-    props: ['idProcesso'],
+    props: ['idProcesso', 'tipo'],
     mounted(){
         this.listarReiteracoes(this.currentPage)
     },
     methods: {    
-        abrirModal(modalname: string){
-       
-       alert("here")     
-                
-     
-       this.$bvModal.show(modalname)      
+        abrirModal(modalname: string, idReiteracao: number){  
+            this.$bvModal.show(modalname) 
+            this.idReiteracaoModal = idReiteracao     
     },
         
     listarReiteracoes(currentpage: number): void {
-    //  this.loading = true
+        //  this.loading = true
 
-      RestApiService.get("reiteracoes", `?currentPage=${currentpage}`)
+        //tem que ajustar para trazer por processo
+        RestApiService.get("reiteracoes", `?currentPage=${currentpage}`)
         .then((response: any) => {
           console.log("Resp> ", response.data)
           this.items = response.data.data
@@ -166,8 +198,34 @@ export default Vue.extend({
          // this.loading = false
          // this.limparNotificacao();
         })
-    },
-     
+    },   
+    
+        excluir(id: any, data: any): void {
+            
+            let message = 'Deseja realmente excluir processo Nº ' + data + '?'
+          
+            RestApiService.delete("reiteracoes", id)
+                .then((response: any) => {
+              //  this.loading = true;
+
+               /* this.adicionarAlert(
+                        "success",
+                        "Exclusão realizada com sucesso!"
+                );*/ 
+                
+                this.listarReiteracoes(this.currentPage)
+                })
+                .catch((e: Error) => {    
+                   /* this.adicionarAlert(
+                            "alert",
+                            "Ocorreu um erro ao excluir registro!"
+                    );*/
+                })
+                .finally(() => {
+                //this.loading = false;
+                });               
+        },
+
     },
     
 });

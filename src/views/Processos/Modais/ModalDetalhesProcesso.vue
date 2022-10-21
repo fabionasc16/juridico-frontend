@@ -37,7 +37,7 @@
                         </b-tab>
 
                             <b-tab title="Reiteração" v-if="idProcesso">
-                                <reiteracoes :idProcesso="idProcesso"> </reiteracoes>
+                                <reiteracoes :idProcesso="idProcesso" :tipo="tipo"> </reiteracoes>
                             </b-tab>                          
                         </b-tabs>                      
                     </div>                                
@@ -84,7 +84,8 @@ export default Vue.extend({
     ],
     props: {
     tipo: String,
-    idProcesso: Number
+    idProcesso: Number,
+    idReiteracaoModal: Number
     },
     data() {
         return {
@@ -99,8 +100,7 @@ export default Vue.extend({
             buttonDisabled: false as boolean,    
             opcaoDuplicar: false as boolean,         
         }
-    },    
-
+    },
     mounted() {
         this.isLoading = false
 
