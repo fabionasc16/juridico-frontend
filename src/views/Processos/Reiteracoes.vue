@@ -4,6 +4,20 @@
     <div class="card p-0 mt-10">
         <!-- CABEÇALHO DA TABELA (Espaço reservado para incluir ícones) -->
         <div class="card-header" align="right">
+
+            <!-- NOTIFICAÇÕES -->       
+         <notifications :notifications="Notificacao"></notifications>      
+
+        <div v-if="alert">
+            <ReturnMessage :message="Message" :fechaAlert="fechaAlert"></ReturnMessage>
+        </div>          
+
+        <div v-if="loading">
+            <LoadingSpinner></LoadingSpinner>
+        </div>
+
+
+
             <div class="row">
                 <!-- ÍCONE Journal-Text -->
                 <div class="col-1 text-blue h2 p0m0" align="center" label="Reiterações">
@@ -129,14 +143,19 @@
 import Vue from "vue";
 import HeaderPage from '@/components/HeaderPage.vue';
 import { mask } from "vue-the-mask";
-import Notifications from "@/components/Notifications.vue";
 import { BIconSearch, BIconPlusCircle, BIconInfoCircle, BIconJournalText } from 'bootstrap-vue'
 import {FieldsTableReiteracao} from "@/type/tableReiteracao"
 import {TableReiteracaoSeeder} from "@/type/tableReiteracao"
-import RestApiService from "@/services/rest/service";
 import dataMixin from "@/mixins/dataMixin";
 
+import RestApiService from "@/services/rest/service";
+import Notifications from "@/components/Notifications.vue";
+import { Notificacao } from "@/type/notificacao";
+import ReturnMessage from "@/components/ReturnMessage.vue";
+import LoadingSpinner from "@/components/LoadingSpinner.vue";
+
 import ModalReiteracoes from "./Modais/ModalReiteracoes.vue";
+
 
 export default Vue.extend({
     directives: { mask },
@@ -148,9 +167,11 @@ export default Vue.extend({
         BIconSearch,
         BIconJournalText,
         BIconPlusCircle,
-        BIconInfoCircle,
+        BIconInfoCircle,        
+        ModalReiteracoes,
         Notifications,
-        ModalReiteracoes
+        ReturnMessage,
+        LoadingSpinner,
     },
     data() {
         return {           
@@ -163,7 +184,13 @@ export default Vue.extend({
             pageOptions: [5, 10, 15, { value: 100, text: "Show a lot" }],     
             fields: FieldsTableReiteracao,
             items: [] as Array<String>,
-            idReiteracaoModal: null as any
+            idReiteracaoModal: null as any,
+
+            Notificacao: [] as Array<Notificacao>,
+            Message: [] as Array<Notificacao>,
+            loading: false as boolean,
+            alert: false as boolean,   
+            
         };
     },
     props: ['idProcesso', 'tipo'],
@@ -212,10 +239,18 @@ export default Vue.extend({
                         "success",
                         "Exclusão realizada com sucesso!"
                 );*/ 
+                    this.Notificacao.push({
+                        type: "success",
+                        message: "Exclusão realizada com sucesso!"            
+                    }) 
                 
-                this.listarReiteracoes(this.currentPage)
+                    this.listarReiteracoes(this.currentPage)
                 })
-                .catch((e: Error) => {    
+                .catch((e: Error) => {   
+                    this.Notificacao.push({
+                        type: "danger",
+                        message: "Ocorreu um erro ao excluir registro!"            
+                    }) 
                    /* this.adicionarAlert(
                             "alert",
                             "Ocorreu um erro ao excluir registro!"
@@ -223,9 +258,17 @@ export default Vue.extend({
                 })
                 .finally(() => {
                 //this.loading = false;
+                 this.limparNotificacao();
                 });               
         },
 
+        limparNotificacao(): void {
+            if (this.Notificacao.length > 0) {
+                setTimeout(() => {
+                this.Notificacao = [];
+                }, 3000);
+            }
+        },
     },
     
 });
