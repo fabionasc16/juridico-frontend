@@ -268,8 +268,8 @@
                   </b-list-group-item>
 
                   <!--status igual a recebido (10) --> 
-                  <b-list-group-item block 
-                      v-b-modal.modal-excluir
+                  <b-list-group-item block                     
+                      @click="abrirModal('modal-excluir', data.item.id_processo)"
                       class="btn-light text-dark btn-outline-danger m-0 p-1"                 
                       @listarProcesso="listarProcesso(currentPage)"
                       v-if="data.item.status.id_status=='10'">                      
@@ -341,12 +341,11 @@
           <ModalTramitacoesProcesso >             
           </ModalTramitacoesProcesso>
         </b-modal>
-
-
-       <!-- @click="abrirModal('modal-editar-processo', data.item.id_processo)"
+        
+        
         <ModalExcluir pergunta="o processo ">
 
-        </ModalExcluir>-->
+        </ModalExcluir>
 
         <!-- REITERAR PROCESSO -->        
         <!-- <b-modal id="modal-cadastro-reiteracao" size="lg" centered title="Cadastro - Reiterar Processo" hide-footer>-->
@@ -543,8 +542,10 @@ export default Vue.extend({
        // this.$refs[modalname]?.show()
        this.titleModal = ''
        this.idProcessoModal = idProcesso            
-     
+            
        this.$bvModal.show(modalname)      
+
+       console.log(modalname)
     },
     alterarProced(){
      this.form.numProcessoSIGED=""
