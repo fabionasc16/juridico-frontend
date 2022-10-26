@@ -180,9 +180,9 @@
           </div>
           <!-- TABELA -->
           <div>
-            <b-table-lite small striped hover responsive class="m-0 table-responsive" head-variant="dark" 
+            <b-table-lite small striped hover class="m-0" head-variant="dark" 
               :current-page="currentPage"
-              :per-page="perPage"  :items="items"
+              :per-page="perPage" :items="items"
               :fields="fields">
 
               <template v-slot:cell(statusProcesso)="data">
@@ -268,12 +268,14 @@
                   </b-list-group-item>
 
                   <!--status igual a recebido (10) --> 
-                  <b-list-group-item block class="btn-light text-dark btn-outline-danger m-0 p-1"                 
+                  <b-list-group-item block 
+                      v-b-modal.modal-excluir
+                      class="btn-light text-dark btn-outline-danger m-0 p-1"                 
                       @listarProcesso="listarProcesso(currentPage)"
-                      v-if="data.item.status.id_status=='10'"
-                      @click="excluir(data.item.id_processo, data.item.num_procedimento, data.item.status.id_status)">
+                      v-if="data.item.status.id_status=='10'">                      
                     Excluir
                   </b-list-group-item>
+                    <!--@click="excluir(data.item.id_processo, data.item.num_procedimento, data.item.status.id_status)">-->
                 </b-dropdown>
               </template>             
             </b-table-lite>
@@ -339,6 +341,12 @@
           <ModalTramitacoesProcesso >             
           </ModalTramitacoesProcesso>
         </b-modal>
+
+
+       <!-- @click="abrirModal('modal-editar-processo', data.item.id_processo)"
+        <ModalExcluir pergunta="o processo ">
+
+        </ModalExcluir>-->
 
         <!-- REITERAR PROCESSO -->        
         <!-- <b-modal id="modal-cadastro-reiteracao" size="lg" centered title="Cadastro - Reiterar Processo" hide-footer>-->
@@ -425,6 +433,8 @@ import LoadingSpinner from "@/components/LoadingSpinner.vue";
 
 import ModalReiteracoes from "./Modais/ModalReiteracoes.vue";
 
+import ModalExcluir from "@/components/ModalExcluir.vue"
+
 export default Vue.extend({
   directives: { mask },
   components: {
@@ -438,7 +448,8 @@ export default Vue.extend({
     ModalAndamentoProcesso,
     ReturnMessage,
     LoadingSpinner,
-    ModalReiteracoes
+    ModalReiteracoes,
+    ModalExcluir
 }, 
   data() {
     return {

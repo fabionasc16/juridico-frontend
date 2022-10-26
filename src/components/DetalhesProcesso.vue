@@ -483,12 +483,21 @@ export default Vue.extend({
                 this.exibirRegistroSIGED = true;
             } else {
                 this.exibirRegistroSIGED = false;
+                this.limparDadosSIGED()
             }
         },     
         
         ocultarCampoSIGED(): void {           
             this.exibirRegistroSIGED = false;
-        },     
+        },   
+        
+        limparDadosSIGED(){     
+            this.form.numProcessoSIGED = ""   
+            this.datas.dataProcessoSIGEDBR = ""
+            this.form.permanenciaSIGED = ""
+            this.form.caixaAtualSIGED = ""
+            this.form.tramitacaoSIGED = "" 
+        },
         
     },
    

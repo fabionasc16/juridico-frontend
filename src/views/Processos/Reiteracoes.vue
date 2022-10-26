@@ -2,22 +2,20 @@
     <div>      
     <!-- CARD DA TABELA DO PROCESSO -->
     <div class="card p-0 mt-10">
-        <!-- CABEÇALHO DA TABELA (Espaço reservado para incluir ícones) -->
-        <div class="card-header" align="right">
 
             <!-- NOTIFICAÇÕES -->       
-         <notifications :notifications="Notificacao"></notifications>      
+            <notifications :notifications="Notificacao"></notifications>      
 
-        <div v-if="alert">
-            <ReturnMessage :message="Message" :fechaAlert="fechaAlert"></ReturnMessage>
-        </div>          
+            <div v-if="alert">
+                <ReturnMessage :message="Message" :fechaAlert="fechaAlert"></ReturnMessage>
+            </div>          
 
-        <div v-if="loading">
-            <LoadingSpinner></LoadingSpinner>
-        </div>
-
-
-
+            <div v-if="loading">
+                <LoadingSpinner></LoadingSpinner>
+            </div>        
+        
+        <!-- CABEÇALHO DA TABELA (Espaço reservado para incluir ícones) -->
+        <div class="card-header" align="right">
             <div class="row">
                 <!-- ÍCONE Journal-Text -->
                 <div class="col-1 text-blue h2 p0m0" align="center" label="Reiterações">
@@ -41,7 +39,7 @@
             </div>
         </div>
         <!-- TABELA -->
-        <div>
+        <div>            
             <b-table-lite small striped hover responsive class="m-0" head-variant="dark"
                 :current-page="currentPage" :per-page="perPage" 
                 :no-border-collapse="noCollapse" :items="items" :fields="fields">
@@ -51,7 +49,7 @@
              </template>   
 
               <!-- BOTÕES DE AÇÕES -->
-              <template v-slot:cell(botaoAction)="data">
+                <template v-slot:cell(botaoAction)="data">
 
                     <!-- BOTÃO DROPDOWN -->
                     <b-dropdown variant="dark" class="p0m0" size="sm">
@@ -79,9 +77,8 @@
                     Excluir
                   </b-list-group-item>
 
-
-                    </b-dropdown>
-                    </template>
+                </b-dropdown>
+                </template>
             </b-table-lite>
 
             <div class="m-3 text-center" v-if="items.length==0">
@@ -145,7 +142,6 @@ import HeaderPage from '@/components/HeaderPage.vue';
 import { mask } from "vue-the-mask";
 import { BIconSearch, BIconPlusCircle, BIconInfoCircle, BIconJournalText } from 'bootstrap-vue'
 import {FieldsTableReiteracao} from "@/type/tableReiteracao"
-import {TableReiteracaoSeeder} from "@/type/tableReiteracao"
 import dataMixin from "@/mixins/dataMixin";
 
 import RestApiService from "@/services/rest/service";
@@ -207,10 +203,10 @@ export default Vue.extend({
         //  this.loading = true
 
         //tem que ajustar para trazer por processo
-        RestApiService.get("reiteracoes", `?currentPage=${currentpage}`)
+        RestApiService.get("reiteracoes/processo", `${this.idProcesso}?currentPage=${currentpage}`)
         .then((response: any) => {
           console.log("Resp> ", response.data)
-          this.items = response.data.data
+          this.items = response.data
           this.perPage = response.data.perPage
           this.totalRows = response.data.total
         })
