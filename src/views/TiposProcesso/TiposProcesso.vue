@@ -78,7 +78,7 @@
           </div>
           <!-- TABELA -->
           <div>
-            <b-table-lite small striped hover responsive class="m-0" head-variant="dark" :current-page="currentPage"
+            <b-table-lite small striped hover class="m-0" head-variant="dark" :current-page="currentPage"
               :per-page="perPage" :no-border-collapse="noCollapse" :items="items"
               :fields="fields">      
                  
@@ -103,7 +103,14 @@
                      class="btn-light btn-outline-dark m-0 p-1">
                     Visualizar
                   </b-list-group-item>                 
-                  <b-list-group-item block class="btn-light text-dark btn-outline-danger m-0 p-1" @click="excluir(data.item.id_tipoprocesso, data.item.desc_tipoprocesso)">
+               <!--   <b-list-group-item block class="btn-light text-dark btn-outline-danger m-0 p-1" @click="excluir(data.item.id_tipoprocesso, data.item.desc_tipoprocesso)">
+                    Excluir
+                  </b-list-group-item> -->
+
+                  <b-list-group-item block                     
+                      @click="abrirModal('modal-excluir', data.item.id_tipoprocesso, data.item.desc_tipoprocesso)"
+                      class="btn-light text-dark btn-outline-danger m-0 p-1"                 
+                      @listarTiposProcesso="listarTiposProcesso(currentPage)">                      
                     Excluir
                   </b-list-group-item>
                 </b-dropdown>
@@ -149,6 +156,14 @@
           </ModalCadastroTipoProcesso>
         </b-modal>     
 
+        <ModalExcluir :pergunta="`o tipo de processo ${tipoProcessoModal}`">
+           <template v-slot:buttons>
+                <b-button variant="danger" class="bordered" 
+                @click="excluir(idTipoProcesso)"
+                >Excluir</b-button>
+            </template>   
+        </ModalExcluir>
+
         <!-- //MODAL -->
 
       </div>
@@ -171,6 +186,7 @@ import ReturnMessage from "@/components/ReturnMessage.vue";
 import LoadingSpinner from "@/components/LoadingSpinner.vue";
 
 import ModalCadastroTipoProcesso from "./Modais/ModalCadastroTipoProcesso.vue";
+import ModalExcluir from "@/components/ModalExcluir.vue"
 
 export default Vue.extend({
   directives: { mask },
@@ -180,6 +196,7 @@ export default Vue.extend({
     ReturnMessage,
     LoadingSpinner,  
     ModalCadastroTipoProcesso,
+    ModalExcluir
 },
   mixins: [        
         dataMixin,
@@ -187,6 +204,7 @@ export default Vue.extend({
   data() {
     return {
       idTipoProcesso: null as any, //para modal
+      tipoProcessoModal: "" as string, //para modal
       rows: 100,
       currentPage: 1,
       totalRows: 1,
@@ -212,6 +230,12 @@ export default Vue.extend({
      
   },
   methods: {
+    abrirModal(modalname: string, idTipoProcesso: number, dado?: any){
+       
+       this.idTipoProcesso = idTipoProcesso            
+       this.tipoProcessoModal = dado
+       this.$bvModal.show(modalname)            
+    },
     editarTipoProcesso(id: number): void {
         this.idTipoProcesso = id
         this.$bvModal.show('modal-editar-tipoprocesso')       
@@ -289,11 +313,8 @@ export default Vue.extend({
       
     },   
 
-    excluir(id: any, data: any): void {
-    
-      let message = 'Deseja realmente excluir tipo de processo ' + data + '?'
-
-      if(confirm(message)) {
+    excluir(id: any, data: any): void {    
+        this.$bvModal.hide('modal-excluir')  
       
         RestApiService.delete("tipos-processo", id)
           .then((response: any) => {
@@ -315,7 +336,7 @@ export default Vue.extend({
           .finally(() => {
             this.loading = false;
           });         
-      }
+      
     },
 
     adicionarAlert(tipo: string, mensagem: string): void {

@@ -40,7 +40,7 @@
         </div>
         <!-- TABELA -->
         <div>            
-            <b-table-lite small striped hover responsive class="m-0" head-variant="dark"
+            <b-table-lite small striped hover class="m-0" head-variant="dark"
                 :current-page="currentPage" :per-page="perPage" 
                 :no-border-collapse="noCollapse" :items="items" :fields="fields">
 
@@ -71,12 +71,19 @@
                     Visualizar
                   </b-list-group-item>                 
 
-                  <b-list-group-item block class="btn-light text-dark btn-outline-danger m-0 p-1"                 
+                  <!--<b-list-group-item block class="btn-light text-dark btn-outline-danger m-0 p-1"                 
                       @listarProcesso="listarReiteracoes(currentPage)"                     
                       @click="excluir(data.item.id_reiteracao, data.item.num_procedimento)">
                     Excluir
-                  </b-list-group-item>
+                  </b-list-group-item>-->
 
+                  <b-list-group-item block                     
+                      @click="abrirModal('modal-excluir', data.item.id_reiteracao, data.item.num_procedimento)"
+                      class="btn-light text-dark btn-outline-danger m-0 p-1"                 
+                      @listarReiteracoes="listarReiteracoes(currentPage)">                      
+                    Excluir
+                  </b-list-group-item>
+                  
                 </b-dropdown>
                 </template>
             </b-table-lite>
@@ -131,7 +138,16 @@
                 <b-button class="bordered" @click="$bvModal.hide('modal-visualizar-reiteracao')">Fechar</b-button>
             </template>            
           </ModalReiteracoes>
-        </b-modal>     
+        </b-modal>  
+        
+        <ModalExcluir :pergunta="`o processo ${numProcedimentoModal}`">
+           <template v-slot:buttons>
+                <b-button variant="danger" class="bordered" 
+                @click="excluir(idReiteracaoModal)"
+                >Excluir</b-button>
+            </template>   
+        </ModalExcluir>
+
 
    </div>     
 </template>
@@ -151,7 +167,7 @@ import ReturnMessage from "@/components/ReturnMessage.vue";
 import LoadingSpinner from "@/components/LoadingSpinner.vue";
 
 import ModalReiteracoes from "./Modais/ModalReiteracoes.vue";
-
+import ModalExcluir from "@/components/ModalExcluir.vue"
 
 export default Vue.extend({
     directives: { mask },
@@ -168,6 +184,7 @@ export default Vue.extend({
         Notifications,
         ReturnMessage,
         LoadingSpinner,
+        ModalExcluir
     },
     data() {
         return {           
@@ -181,12 +198,12 @@ export default Vue.extend({
             fields: FieldsTableReiteracao,
             items: [] as Array<String>,
             idReiteracaoModal: null as any,
+            numProcedimentoModal: null as any,
 
             Notificacao: [] as Array<Notificacao>,
             Message: [] as Array<Notificacao>,
             loading: false as boolean,
-            alert: false as boolean,   
-            
+            alert: false as boolean,            
         };
     },
     props: ['idProcesso', 'tipo'],
@@ -194,19 +211,18 @@ export default Vue.extend({
         this.listarReiteracoes(this.currentPage)
     },
     methods: {    
-        abrirModal(modalname: string, idReiteracao: number){  
+    abrirModal(modalname: string, idReiteracao: number, dado?:any){  
             this.$bvModal.show(modalname) 
-            this.idReiteracaoModal = idReiteracao     
+            this.idReiteracaoModal = idReiteracao 
+            this.numProcedimentoModal = dado    
     },
         
-    listarReiteracoes(currentpage: number): void {
-        //  this.loading = true
-
-        //tem que ajustar para trazer por processo
+    listarReiteracoes(currentpage: number): void {        
+       
         RestApiService.get("reiteracoes/processo", `${this.idProcesso}?currentPage=${currentpage}`)
         .then((response: any) => {
           console.log("Resp> ", response.data)
-          this.items = response.data
+          this.items = response.data.data
           this.perPage = response.data.perPage
           this.totalRows = response.data.total
         })
@@ -217,44 +233,43 @@ export default Vue.extend({
           })*/
           console.log(e)
         })
-        .finally(() => {
-         // this.loading = false
+        .finally(() => {        
          // this.limparNotificacao();
         })
     },   
     
-        excluir(id: any, data: any): void {
-            
-            let message = 'Deseja realmente excluir processo Nº ' + data + '?'
-          
+        excluir(id: any): void {   
+            this.$bvModal.hide('modal-excluir')  
+
             RestApiService.delete("reiteracoes", id)
                 .then((response: any) => {
-              //  this.loading = true;
+              
+              
+                this.adicionarAlert(
+                  "success",
+                  "Exclusão realizada com sucesso!"
+                ); 
 
-               /* this.adicionarAlert(
-                        "success",
-                        "Exclusão realizada com sucesso!"
-                );*/ 
-                    this.Notificacao.push({
+                   /* this.Notificacao.push({
                         type: "success",
                         message: "Exclusão realizada com sucesso!"            
-                    }) 
+                    }) */
                 
                     this.listarReiteracoes(this.currentPage)
                 })
                 .catch((e: Error) => {   
-                    this.Notificacao.push({
+                    this.adicionarAlert(
+                        "alert",
+                        "Ocorreu um erro ao excluir registro!"
+                    );
+
+                   /* this.Notificacao.push({
                         type: "danger",
                         message: "Ocorreu um erro ao excluir registro!"            
-                    }) 
-                   /* this.adicionarAlert(
-                            "alert",
-                            "Ocorreu um erro ao excluir registro!"
-                    );*/
+                    })    */               
                 })
-                .finally(() => {
-                //this.loading = false;
-                 this.limparNotificacao();
+                .finally(() => {                
+                    this.limparNotificacao();
                 });               
         },
 
@@ -265,6 +280,26 @@ export default Vue.extend({
                 }, 3000);
             }
         },
+
+        adicionarAlert(tipo: string, mensagem: string): void {
+            this.Message = []        
+            this.Message.push({
+                type: tipo,
+                message: mensagem,
+            });
+            this.alert = true;
+       },
+
+        adicionarNotificacao(tipo: string, mensagem: string): void {
+            this.Notificacao.push({
+                type: tipo,
+                message: mensagem,
+            });
+        },
+
+        fechaAlert(): void {
+            this.alert = false;
+    },
     },
     
 });

@@ -187,7 +187,7 @@
               :fields="fields">
 
               <template v-slot:cell(statusProcesso)="data">
-                <b-badge :variant="colorStatusProcesso(data.item.statusProcesso)">{{data.item.statusProcesso}}</b-badge>            
+                <b-badge :variant="colorStatusProcesso(data.item.statusProcesso)">{{data.item.statusProcesso}}ads</b-badge>            
               </template>
 
               <template v-slot:cell(diasRestantes)="data">
@@ -344,7 +344,7 @@
         </b-modal>
         
         
-        <ModalExcluir :pergunta="`o processo ${numProcedimentoModal}`" @excluir="excluir">
+        <ModalExcluir :pergunta="`o processo ${numProcedimentoModal}`">
            <template v-slot:buttons>
                 <b-button variant="danger" class="bordered" 
                 @click="excluir(idProcessoModal)"
@@ -831,10 +831,10 @@ export default Vue.extend({
     colorStatusProcesso(status: string) : any {
 
           switch(status){
-                case "Tramitando": return "warning"; break;
-                case "Distribuído": return "info"; break;
-                case "Arquivado": return "dark"; break;
-                case "Respondendo": return "primary"; break;
+                case "12": return "warning"; break;//tramitando
+                case "11": return "info"; break;//distribuido
+                case "14": return "dark"; break;//arquivado
+                case "13": return "primary"; break;//respondendo
                 default: ""; break;
           }        
     },
