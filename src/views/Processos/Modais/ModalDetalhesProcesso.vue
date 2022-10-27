@@ -34,9 +34,9 @@
                                     <b-button class="bordered ml-2" type="submit" variant="success" 
                                     v-if="!formDados.disabledAll">Salvar</b-button>                                               
                                 </div> 
-                        </b-tab>
-
-                            <b-tab title="Reiteração" v-if="idProcesso">
+                            </b-tab>
+                          
+                            <b-tab title="Reiteração" v-if="idProcesso && !opcaoDuplicar">
                                 <reiteracoes :idProcesso="idProcesso" :tipo="tipo"> </reiteracoes>
                             </b-tab>                          
                         </b-tabs>                      
@@ -89,7 +89,7 @@ export default Vue.extend({
     },
     data() {
         return {
-            show: false as boolean, 
+            show: false as boolean,           
             isLoading: true as boolean,           
             Notificacao: [] as Array<Notificacao>,
             Message: [] as Array<Notificacao>,
@@ -98,7 +98,7 @@ export default Vue.extend({
             formDados: {} as any,  
             carregarForm: {} as Processo,
             buttonDisabled: false as boolean,    
-            opcaoDuplicar: false as boolean,         
+            opcaoDuplicar: false as boolean,               
         }
     },
     mounted() {

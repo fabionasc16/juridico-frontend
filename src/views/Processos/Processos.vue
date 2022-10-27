@@ -157,6 +157,7 @@
           <!-- CABEÇALHO DA TABELA (Espaço reservado para incluir ícones) -->
           <div class="card-header" align="right">
             <div class="row">
+             
                 <!-- ÍCONE Journal-text -->
                 <div class="col-1 text-blue h2 p0m0" align="center" label="Processos Cadastrados">
                   <b-icon-journal-text>
@@ -180,9 +181,9 @@
           </div>
           <!-- TABELA -->
           <div>
-            <b-table-lite small striped hover responsive class="m-0 table-responsive" head-variant="dark" 
+            <b-table-lite small striped hover class="m-0" head-variant="dark" 
               :current-page="currentPage"
-              :per-page="perPage"  :items="items"
+              :per-page="perPage" :items="items"
               :fields="fields">
 
               <template v-slot:cell(statusProcesso)="data">
@@ -268,12 +269,14 @@
                   </b-list-group-item>
 
                   <!--status igual a recebido (10) --> 
-                  <b-list-group-item block class="btn-light text-dark btn-outline-danger m-0 p-1"                 
+                  <b-list-group-item block                     
+                      @click="abrirModal('modal-excluir', data.item.id_processo, data.item.num_procedimento)"
+                      class="btn-light text-dark btn-outline-danger m-0 p-1"                 
                       @listarProcesso="listarProcesso(currentPage)"
-                      v-if="data.item.status.id_status=='10'"
-                      @click="excluir(data.item.id_processo, data.item.num_procedimento, data.item.status.id_status)">
+                      v-if="data.item.status.id_status=='10'">                      
                     Excluir
                   </b-list-group-item>
+                    <!--@click="excluir(data.item.id_processo, data.item.num_procedimento, data.item.status.id_status)">-->
                 </b-dropdown>
               </template>             
             </b-table-lite>
@@ -339,6 +342,15 @@
           <ModalTramitacoesProcesso >             
           </ModalTramitacoesProcesso>
         </b-modal>
+        
+        
+        <ModalExcluir :pergunta="`o processo ${numProcedimentoModal}`" @excluir="excluir">
+           <template v-slot:buttons>
+                <b-button variant="danger" class="bordered" 
+                @click="excluir(idProcessoModal)"
+                >Excluir</b-button>
+            </template>   
+        </ModalExcluir>
 
         <!-- REITERAR PROCESSO -->        
         <!-- <b-modal id="modal-cadastro-reiteracao" size="lg" centered title="Cadastro - Reiterar Processo" hide-footer>-->
@@ -425,6 +437,8 @@ import LoadingSpinner from "@/components/LoadingSpinner.vue";
 
 import ModalReiteracoes from "./Modais/ModalReiteracoes.vue";
 
+import ModalExcluir from "@/components/ModalExcluir.vue"
+
 export default Vue.extend({
   directives: { mask },
   components: {
@@ -438,13 +452,15 @@ export default Vue.extend({
     ModalAndamentoProcesso,
     ReturnMessage,
     LoadingSpinner,
-    ModalReiteracoes
+    ModalReiteracoes,
+    ModalExcluir
 }, 
   data() {
     return {
       placeholderItem: '--Selecione--',
       titleModal: "" as string,
-      idProcessoModal: null as any,     
+      idProcessoModal: null as any,   
+      numProcedimentoModal: "" as string,  
       rows: 100,
       totalRows: null as any,
       perPage: 10,
@@ -528,12 +544,12 @@ export default Vue.extend({
     alterarTitulo(nome:string):void {
       this.titleModal = nome
     },
-    abrirModal(modalname: string, idProcesso: number){
+    abrirModal(modalname: string, idProcesso: number, dado?: any){
        // this.$refs[modalname]?.show()
        this.titleModal = ''
        this.idProcessoModal = idProcesso            
-     
-       this.$bvModal.show(modalname)      
+       this.numProcedimentoModal = dado
+       this.$bvModal.show(modalname)            
     },
     alterarProced(){
      this.form.numProcessoSIGED=""
@@ -557,7 +573,7 @@ export default Vue.extend({
     },
 
     listarProcesso(currentpage: number): void {
-      this.loading = true
+      this.loading = true     
 
       RestApiService.get("processos", `?currentPage=${currentpage}`)
         .then((response: any) => {
@@ -738,15 +754,10 @@ export default Vue.extend({
     }
    },
 
+  excluir(id: any){
+    this.$bvModal.hide('modal-excluir')  
 
-    excluir(id: any, data: any, status: string): void {
-    
-    let message = 'Deseja realmente excluir processo Nº ' + data + '?'
-
-    //status recebido
-    if(confirm(message) && (status == '10')) {
-    
-      RestApiService.delete("processos", id)
+    RestApiService.delete("processos", id)
         .then((response: any) => {
           this.loading = true;
 
@@ -765,10 +776,9 @@ export default Vue.extend({
         })
         .finally(() => {
           this.loading = false;
-        });  
-      } 
-    },
-
+        }); 
+   },
+ 
     colorReiteracao(reiteracao: any) : any {
             if(reiteracao > 0) {
               return 'info'

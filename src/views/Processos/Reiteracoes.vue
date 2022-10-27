@@ -2,6 +2,18 @@
     <div>      
     <!-- CARD DA TABELA DO PROCESSO -->
     <div class="card p-0 mt-10">
+
+            <!-- NOTIFICAÇÕES -->       
+            <notifications :notifications="Notificacao"></notifications>      
+
+            <div v-if="alert">
+                <ReturnMessage :message="Message" :fechaAlert="fechaAlert"></ReturnMessage>
+            </div>          
+
+            <div v-if="loading">
+                <LoadingSpinner></LoadingSpinner>
+            </div>        
+        
         <!-- CABEÇALHO DA TABELA (Espaço reservado para incluir ícones) -->
         <div class="card-header" align="right">
             <div class="row">
@@ -27,7 +39,7 @@
             </div>
         </div>
         <!-- TABELA -->
-        <div>
+        <div>            
             <b-table-lite small striped hover responsive class="m-0" head-variant="dark"
                 :current-page="currentPage" :per-page="perPage" 
                 :no-border-collapse="noCollapse" :items="items" :fields="fields">
@@ -37,7 +49,7 @@
              </template>   
 
               <!-- BOTÕES DE AÇÕES -->
-              <template v-slot:cell(botaoAction)="data">
+                <template v-slot:cell(botaoAction)="data">
 
                     <!-- BOTÃO DROPDOWN -->
                     <b-dropdown variant="dark" class="p0m0" size="sm">
@@ -65,9 +77,8 @@
                     Excluir
                   </b-list-group-item>
 
-
-                    </b-dropdown>
-                    </template>
+                </b-dropdown>
+                </template>
             </b-table-lite>
 
             <div class="m-3 text-center" v-if="items.length==0">
@@ -129,14 +140,18 @@
 import Vue from "vue";
 import HeaderPage from '@/components/HeaderPage.vue';
 import { mask } from "vue-the-mask";
-import Notifications from "@/components/Notifications.vue";
 import { BIconSearch, BIconPlusCircle, BIconInfoCircle, BIconJournalText } from 'bootstrap-vue'
 import {FieldsTableReiteracao} from "@/type/tableReiteracao"
-import {TableReiteracaoSeeder} from "@/type/tableReiteracao"
-import RestApiService from "@/services/rest/service";
 import dataMixin from "@/mixins/dataMixin";
 
+import RestApiService from "@/services/rest/service";
+import Notifications from "@/components/Notifications.vue";
+import { Notificacao } from "@/type/notificacao";
+import ReturnMessage from "@/components/ReturnMessage.vue";
+import LoadingSpinner from "@/components/LoadingSpinner.vue";
+
 import ModalReiteracoes from "./Modais/ModalReiteracoes.vue";
+
 
 export default Vue.extend({
     directives: { mask },
@@ -148,9 +163,11 @@ export default Vue.extend({
         BIconSearch,
         BIconJournalText,
         BIconPlusCircle,
-        BIconInfoCircle,
+        BIconInfoCircle,        
+        ModalReiteracoes,
         Notifications,
-        ModalReiteracoes
+        ReturnMessage,
+        LoadingSpinner,
     },
     data() {
         return {           
@@ -163,7 +180,13 @@ export default Vue.extend({
             pageOptions: [5, 10, 15, { value: 100, text: "Show a lot" }],     
             fields: FieldsTableReiteracao,
             items: [] as Array<String>,
-            idReiteracaoModal: null as any
+            idReiteracaoModal: null as any,
+
+            Notificacao: [] as Array<Notificacao>,
+            Message: [] as Array<Notificacao>,
+            loading: false as boolean,
+            alert: false as boolean,   
+            
         };
     },
     props: ['idProcesso', 'tipo'],
@@ -180,10 +203,10 @@ export default Vue.extend({
         //  this.loading = true
 
         //tem que ajustar para trazer por processo
-        RestApiService.get("reiteracoes", `?currentPage=${currentpage}`)
+        RestApiService.get("reiteracoes/processo", `${this.idProcesso}?currentPage=${currentpage}`)
         .then((response: any) => {
           console.log("Resp> ", response.data)
-          this.items = response.data.data
+          this.items = response.data
           this.perPage = response.data.perPage
           this.totalRows = response.data.total
         })
@@ -212,10 +235,18 @@ export default Vue.extend({
                         "success",
                         "Exclusão realizada com sucesso!"
                 );*/ 
+                    this.Notificacao.push({
+                        type: "success",
+                        message: "Exclusão realizada com sucesso!"            
+                    }) 
                 
-                this.listarReiteracoes(this.currentPage)
+                    this.listarReiteracoes(this.currentPage)
                 })
-                .catch((e: Error) => {    
+                .catch((e: Error) => {   
+                    this.Notificacao.push({
+                        type: "danger",
+                        message: "Ocorreu um erro ao excluir registro!"            
+                    }) 
                    /* this.adicionarAlert(
                             "alert",
                             "Ocorreu um erro ao excluir registro!"
@@ -223,9 +254,17 @@ export default Vue.extend({
                 })
                 .finally(() => {
                 //this.loading = false;
+                 this.limparNotificacao();
                 });               
         },
 
+        limparNotificacao(): void {
+            if (this.Notificacao.length > 0) {
+                setTimeout(() => {
+                this.Notificacao = [];
+                }, 3000);
+            }
+        },
     },
     
 });
