@@ -151,8 +151,8 @@ export default Vue.extend({
             this.loading = true;          
             
             RestApiService.get("tipos-processo/id", this.id)
-                .then((res: any) => {
-                this.form.id_tipoprocesso =   res.data.id_tipoprocesso                
+                .then((res: any) => {                 
+                this.form =  res.data                
             })
             .catch((e) => {
                 this.adicionarAlert(

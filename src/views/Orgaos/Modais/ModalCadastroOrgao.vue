@@ -193,22 +193,19 @@ export default Vue.extend({
             this.loading = true;       
                         
             RestApiService.get("orgaos-demandantes/id", this.id)
-                .then((res: any) => {          
-
+                .then((res: any) => {   
                 this.form.idOrgao =  res.data.id_orgao 
                 this.form.orgaoDemandante = res.data.orgao_demandante
                 this.form.siglaOrgao =  res.data.sigla_orgao
                 this.form.esferaOrgao = res.data.esfera_orgao
-                this.form.orgaoControle = res.data.orgao_controle
-                this.form.orgaoJustica = res.data.orgao_justica               
-               
+                this.form.orgaoControle = res.data.orgao_controle == 'S' ? true : false
+                this.form.orgaoJustica = res.data.orgao_justica == 'S' ? true : false  
             })
             .catch((e) => {
                    this.adicionarAlert(
                     "alert",
                     "Houve um erro ao carregar os dados. Tente novamente!"
-                );              
-          
+                );
             })
             .finally(() => {
                 this.loading = false;
