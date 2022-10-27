@@ -16,12 +16,12 @@
 
                 <b-form @submit.prevent="submit">
 
-                    <b-form-group class="titulo" label="Informações pessoais" label-size="lg">
+                   <!-- <b-form-group class="titulo" label="Informações pessoais" label-size="lg">
                         <hr />
-                    </b-form-group>
+                    </b-form-group> -->
 
                     <!-- 1ª LINHA (CPF + NOME) -->
-                    <div class="row">
+                    <div class="row mt-3" >
                         <b-form-group class="font col-sm-5 col-md-5 col-lg-5">
                            <label>CPF<span class="text-danger">*</span>:</label>
                             <b-form-input :placeholder="'Digite seu CPF '" type="text" v-model="form.cpfResponsavel"

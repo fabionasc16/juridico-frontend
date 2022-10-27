@@ -99,10 +99,28 @@
                      class="btn-light btn-outline-dark m-0 p-1">
                     Visualizar
                   </b-list-group-item>                 
-                  <b-list-group-item block class="btn-light text-dark btn-outline-danger m-0 p-1" @click="excluir(data.item.id_responsavel, data.item.nome_responsavel)">
+                 <!-- <b-list-group-item block class="btn-light text-dark btn-outline-danger m-0 p-1" @click="excluir(data.item.id_responsavel, data.item.nome_responsavel)">
                     Excluir
-                  </b-list-group-item>
+                  </b-list-group-item>-->
+
+                  <b-list-group-item block                     
+                      @click="abrirModal('modal-excluir', data.item.id_responsavel, data.item.nome_responsavel)"
+                      class="btn-light text-dark btn-outline-danger m-0 p-1"                 
+                      @listarResponsaveis="listarResponsaveis(currentPage)"
+                      >                      
+                    Excluir
+                  </b-list-group-item>                    
+
                 </b-dropdown>
+
+
+                   <ModalExcluir :pergunta="`o responsável ${nomeResponsavelModal}`">
+                    <template v-slot:buttons>
+                          <b-button variant="danger" class="bordered" 
+                          @click="excluir(idResponsavel)"
+                          >Excluir</b-button>
+                      </template>   
+                  </ModalExcluir>
               </template>                                 
             </b-table-lite>
           </div>
@@ -171,6 +189,8 @@ import LoadingSpinner from "@/components/LoadingSpinner.vue";
 
 import RestApiService from "@/services/rest/service";
 
+import ModalExcluir from "@/components/ModalExcluir.vue"
+
 export default Vue.extend({
   directives: { mask },
   components: {
@@ -183,10 +203,12 @@ export default Vue.extend({
     ModalCadastroResponsavel,
     ReturnMessage,
     LoadingSpinner,
+    ModalExcluir
   },
   data() {
     return {
       idResponsavel: null as any, //para modal
+      nomeResponsavelModal: "" as string,
       rows: 100,
       currentPage: 1,
       totalRows: null as any,
@@ -213,6 +235,12 @@ export default Vue.extend({
       
       console.log(JSON.stringify(this.form))
     },  
+    abrirModal(modalname: string, idResponsavel: number, dado?: any){
+     
+       this.idResponsavel = idResponsavel         
+       this.nomeResponsavelModal = dado
+       this.$bvModal.show(modalname)            
+    },
 
     editarResponsavel(id: number): void {
         this.idResponsavel = id
@@ -247,7 +275,32 @@ export default Vue.extend({
       this.$router.push("/");
     },
 
-    excluir(id: any, nome: string): void {
+    excluir(id: any){
+    this.$bvModal.hide('modal-excluir')  
+
+    RestApiService.delete("responsaveis", id)
+        .then((response: any) => {
+          this.loading = true;
+
+          this.adicionarAlert(
+                  "success",
+                  "Exclusão realizada com sucesso!"
+          ); 
+          
+          this.listarResponsaveis(this.currentPage)
+        })
+        .catch((e: Error) => {    
+           this.adicionarAlert(
+                  "alert",
+                  "Ocorreu um erro ao excluir registro!"
+          );
+        })
+        .finally(() => {
+          this.loading = false;
+        }); 
+   },
+
+   /* excluir(id: any, nome: string): void {
     
       let message = 'Deseja realmente excluir responsável ' + nome + '?'
 
@@ -272,7 +325,7 @@ export default Vue.extend({
             this.loading = false
           });
       }
-    },
+    },*/
 
     adicionarAlert(tipo: string, mensagem: string): void {
             this.Message = []        

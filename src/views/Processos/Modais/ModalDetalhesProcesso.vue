@@ -58,6 +58,7 @@ import { BIconSearch, BIconPlusCircle, BIconInfoCircle, BIconJournalPlus } from 
 import { Notificacao } from "@/type/notificacao";
 import ReturnMessage from "@/components/ReturnMessage.vue";
 import dataMixin from "@/mixins/dataMixin";
+import prazoMixin from "@/mixins/prazoMixin";
 import RestApiService from "@/services/rest/service";
 import LoadingSpinner from "@/components/LoadingSpinner.vue";
 import DetalhesProcesso from "../../../components/DetalhesProcesso.vue";
@@ -81,6 +82,7 @@ export default Vue.extend({
     },
     mixins: [        
         dataMixin,
+        prazoMixin
     ],
     props: {
     tipo: String,
@@ -137,9 +139,10 @@ export default Vue.extend({
             let url ="processos"
 
             if(acao == 'post') {
-                this.formDados.form.statusProcesso = 10 
-                this.formDados.form.statusPrazo = "TESTE APAGAR" //apagar quando André deixar padrão               
+                this.formDados.form.statusProcesso = 10 //recebido                            
             }
+
+            this.formDados.form.statusPrazo = ""+prazoMixin.methods.statusPrazo(this.formDados.form.prazoTotal)
 
      
             if (this.validarCampos()) { 
