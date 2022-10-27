@@ -182,11 +182,11 @@ export default Vue.extend({
         carregarDados(): void {
             this.loading = true;          
             
-            RestApiService.get("feriado/listid", this.id)
+            RestApiService.get("feriados/id", this.id)
                 .then((res: any) => {
 
-                this.form.id_feriado =   res.data.idProcesso 
-                this.form.tipoFeriado =  res.data.idTipoFeriado
+                this.form.id_feriado =   res.data.id_feriado 
+                this.form.tipoFeriado =  res.data.tipoFeriado
                 this.form.dataFeriado = res.data.data
                 this.form.descFeriado = res.data.descricao    
 
