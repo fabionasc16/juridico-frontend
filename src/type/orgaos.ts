@@ -13,8 +13,8 @@ export type OrgaoCadastro = {
   orgaoDemandante: string;
   siglaOrgao: string;
   esferaOrgao: string;
-  orgaoControle: string;
-  orgaoJustica: string;
+  orgaoControle: any;
+  orgaoJustica: any;
 };
 
 /*export const OrgaosSeeder: Array<Orgaos> = [
