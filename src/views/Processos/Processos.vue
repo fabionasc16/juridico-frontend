@@ -187,7 +187,7 @@
               :fields="fields">
 
               <template v-slot:cell(statusProcesso)="data">
-                <b-badge :variant="colorStatusProcesso(data.item.statusProcesso)">{{data.item.statusProcesso}}ads</b-badge>            
+                <b-badge :variant="colorStatusProcesso(data.item.statusProcesso)">{{data.item.statusProcesso}}</b-badge>            
               </template>
 
               <template v-slot:cell(diasRestantes)="data">
