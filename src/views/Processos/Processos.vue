@@ -6,6 +6,7 @@
           <hr />
           </b-form-group>
         </div>
+    </div>
 
          <!-- NOTIFICAÇÕES -->       
         <notifications :notifications="Notificacao"></notifications>     
@@ -18,7 +19,7 @@
             <LoadingSpinner></LoadingSpinner>
         </div>
 
-    </div>
+    
 
 
      <!-- FORMULÁRIO DE CONSULTA DO PROCESSO -->

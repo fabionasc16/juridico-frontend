@@ -7,7 +7,7 @@
             <hr />
            </b-form-group>
         </div>
-
+     </div>
           <!-- NOTIFICAÇÕES -->       
           <notifications :notifications="Notificacao"></notifications>      
 
@@ -18,7 +18,7 @@
           <div v-if="loading">
               <LoadingSpinner></LoadingSpinner>
           </div>
-    </div>
+   
 
      <!-- FORMULÁRIO DE CONSULTA -->       
      <b-form @submit.prevent="submit" class="mb-5">
