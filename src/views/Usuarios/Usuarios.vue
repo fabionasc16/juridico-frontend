@@ -1,13 +1,16 @@
 <template>
-  <div>
-    <b-container fluid>
-      <div class="row">
-        <b-form-group class="titulo m-0" label="Consulta de Usuário" label-size="lg">
-          <hr />
-        </b-form-group>
 
-        <!-- 1ª LINHA (CPF + NOME + BOTÃO) -->
-        <div class="row">
+<div class="container fluid">
+      <div class="row">
+          <div class="col-12" style="margin-top: 20px">
+            <b-form-group class="titulo m-0" label="Consulta de Usuário" label-size="lg">
+              <hr />
+            </b-form-group>
+          </div>
+      </div>
+
+       <!-- 1ª LINHA (CPF + NOME + BOTÃO) -->
+       <div class="row">
           <!-- (CPF) -->
           <div class="col-3">
             <b-form-group label="CPF:" class="font">
@@ -31,6 +34,8 @@
             </b-form-group>
           </div>
         </div>
+
+
 
         <!-- CARD DA TABELA DE USUÁRIOS-->
         <div class="card p-0 m-0"> 
@@ -69,6 +74,7 @@
           </div>
         </div>
 
+
         <!-- MODAL -->
 
         <b-modal id="modal-cadastro-usuario" size="lg" centered title="Cadastro do Usuario">
@@ -76,10 +82,11 @@
           </ModalCadastroUsuario>
         </b-modal>
 
-        <!-- //modal -->
-      </div>
-    </b-container>
-  </div>
+        <!-- Modal -->
+
+</div><!-- container fluid -->
+
+
 </template>
 
 <script lang="ts">

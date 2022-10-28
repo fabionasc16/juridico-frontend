@@ -1,25 +1,26 @@
 <template>
-  <div>
-    <b-container fluid>
+    <div class="container fluid">
       <div class="row">
-        <b-form-group class="titulo m-0" label="Consulta de Feriados" label-size="lg">
-          <hr />
-        </b-form-group>
+          <div class="col-12" style="margin-top: 20px">
+            <b-form-group class="titulo m-0" label="Consulta de Feriados" label-size="lg">
+              <hr />
+            </b-form-group>
+          </div>
 
-        <!-- NOTIFICAÇÕES -->       
-        <notifications :notifications="Notificacao"></notifications>      
+            <!-- NOTIFICAÇÕES -->       
+            <notifications :notifications="Notificacao"></notifications>      
 
-        <div v-if="alert">
-            <ReturnMessage :message="Message" :fechaAlert="fechaAlert"></ReturnMessage>
-        </div>          
+            <div v-if="alert">
+                <ReturnMessage :message="Message" :fechaAlert="fechaAlert"></ReturnMessage>
+            </div>          
 
-        <div v-if="loading">
-            <LoadingSpinner></LoadingSpinner>
-        </div>
+            <div v-if="loading">
+                <LoadingSpinner></LoadingSpinner>
+            </div>
+       </div>
 
-        <!-- FORMULÁRIO DE CONSULTA -->       
-        <b-form @submit.prevent="listarFeriados" class="mb-5">
-
+       <!-- FORMULÁRIO DE CONSULTA -->       
+       <b-form @submit.prevent="listarFeriados" class="mb-5">
             <div class="row">               
                 <div class="col-3">
                   <b-form-group label="Data:" class="font">
@@ -50,8 +51,8 @@
                         <b-icon-search v-b-tooltip.hover.topleft="'Consultar'"></b-icon-search>
                       </b-button>               
                   </b-form-group>               
-          </div>
-        </div>
+            </div>
+            </div>
         </b-form>
 
         <!-- CARD DA TABELA -->
@@ -82,7 +83,7 @@
           </div>
           <!-- TABELA -->
           <div>
-            <b-table-lite small striped hover responsive class="m-0" head-variant="dark" :current-page="currentPage"
+            <b-table-lite small striped hover class="m-0" head-variant="dark" :current-page="currentPage"
               :per-page="perPage" :no-border-collapse="noCollapse" :items="items"
               :fields="fields">      
 
@@ -132,7 +133,7 @@
         
          <!-- MODAL -->
 
-          <b-modal id="modal-cadastro-feriado" centered title="Cadastro de Feriado" hide-footer>
+         <b-modal id="modal-cadastro-feriado" centered title="Cadastro de Feriado" hide-footer>
           <ModalCadastroFeriado  @listarFeriados="listarFeriados(currentPage)" > 
             <template v-slot:buttons tipo="cadastrar"> 
                 <b-button class="bordered" @click="$bvModal.hide('modal-cadastro-feriado')">Fechar</b-button>
@@ -146,13 +147,18 @@
                 <b-button class="bordered" @click="$bvModal.hide('modal-editar-feriado')">Fechar</b-button>
             </template>           
           </ModalCadastroFeriado>
-        </b-modal>    
-
+        </b-modal>   
+        
+        <b-modal id="modal-visualizar-feriado" centered title="Visualizar Feriado" hide-footer>
+          <ModalCadastroFeriado tipo="visualizar" :id="idFeriado">  
+            <template v-slot:buttons> 
+                <b-button class="bordered" @click="$bvModal.hide('modal-visualizar-feriado')">Fechar</b-button>
+            </template>           
+          </ModalCadastroFeriado>
+        </b-modal>   
         <!-- //MODAL -->
 
-      </div>
-    </b-container>
-  </div>
+  </div> <!--container fluid-->  
 </template>
 
 <script lang="ts">

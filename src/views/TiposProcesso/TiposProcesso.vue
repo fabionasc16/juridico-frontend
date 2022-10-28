@@ -1,12 +1,13 @@
 <template>
-  <div>
-    <b-container fluid>
+  <div class="container fluid">
       <div class="row">
-        <b-form-group class="titulo m-0" label="Consulta de Tipos de Processo" label-size="lg">
-          <hr />
-        </b-form-group>
+          <div class="col-12" style="margin-top: 20px">
+            <b-form-group class="titulo m-0" label="Consulta de Tipos de Processo" label-size="lg">
+              <hr />
+            </b-form-group>
+          </div>
 
-        <!-- NOTIFICAÇÕES -->       
+           <!-- NOTIFICAÇÕES -->       
         <notifications :notifications="Notificacao"></notifications>      
 
         <div v-if="alert">
@@ -16,39 +17,40 @@
         <div v-if="loading">
             <LoadingSpinner></LoadingSpinner>
         </div>
+      </div>
 
-        <!-- FORMULÁRIO DE CONSULTA -->       
-        <b-form @submit.prevent="search" class="mb-5">
+      <!-- FORMULÁRIO DE CONSULTA -->       
+      <b-form @submit.prevent="search" class="mb-5">
+          <div class="row">               
+              <div class="col-3">
+                <b-form-group label="Tipo Processo:" class="font">
+                    
+                      <b-input-group>  
+                        <b-form-input class="bordered margin-field" type="text"
+                                  v-model="busca"
+                        ></b-form-input>   
 
-            <div class="row">               
-                <div class="col-3">
-                  <b-form-group label="Tipo Processo:" class="font">
-                      
-                        <b-input-group>  
-                          <b-form-input class="bordered margin-field" type="text"
-                                    v-model="busca"
-                          ></b-form-input>   
+                        <b-input-group-append>                
+                          <b-input-group-text @click="busca=''">
+                            <b-icon icon="x" />
+                          </b-input-group-text>
+                        </b-input-group-append>
+                      </b-input-group>
 
-                          <b-input-group-append>                
-                            <b-input-group-text @click="busca=''">
-                              <b-icon icon="x" />
-                            </b-input-group-text>
-                          </b-input-group-append>
-                        </b-input-group>
-
-                  </b-form-group>
-                </div>   
-                
-                <!-- ÍCONE DA LUPA -->
-                <div class="col-2 justify-content-center">
-                  <b-form-group label="Consultar" class="font text-white">                    
-                      <b-button class="h2" type="submit">
-                        <b-icon-search v-b-tooltip.hover.topleft="'Consultar'"></b-icon-search>
-                      </b-button>               
-                  </b-form-group>               
+                </b-form-group>
+              </div>   
+              
+              <!-- ÍCONE DA LUPA -->
+              <div class="col-2 justify-content-center">
+                <b-form-group label="Consultar" class="font text-white">                    
+                    <b-button class="h2" type="submit">
+                      <b-icon-search v-b-tooltip.hover.topleft="'Consultar'"></b-icon-search>
+                    </b-button>               
+                </b-form-group>               
           </div>
-        </div>
-        </b-form>
+          </div>
+    </b-form>
+       
 
         <!-- CARD DA TABELA -->
         <div class="card p-0 m-0">
@@ -128,11 +130,12 @@
             </div>
           </div> 
            <div>&nbsp <b>Total Registros:</b> {{totalRows}}</div>  
-        </div>       
-        
+        </div>    
+      
+
          <!-- MODAL -->
 
-          <b-modal id="modal-cadastro-tipoprocesso" centered title="Cadastro de Tipo de Processo" hide-footer>
+         <b-modal id="modal-cadastro-tipoprocesso" centered title="Cadastro de Tipo de Processo" hide-footer>
           <ModalCadastroTipoProcesso  @listarTiposProcesso="listarTiposProcesso(currentPage)" > 
             <template v-slot:buttons tipo="cadastrar"> 
                 <b-button class="bordered" @click="$bvModal.hide('modal-cadastro-tipoprocesso')">Fechar</b-button>
@@ -166,9 +169,8 @@
 
         <!-- //MODAL -->
 
-      </div>
-    </b-container>
-  </div>
+  </div><!--container fluid-->
+ 
 </template>
 
 <script lang="ts">
