@@ -112,15 +112,7 @@
                   </b-list-group-item>                    
 
                 </b-dropdown>
-
-
-                   <ModalExcluir :pergunta="`o responsável ${nomeResponsavelModal}`">
-                    <template v-slot:buttons>
-                          <b-button variant="danger" class="bordered" 
-                          @click="excluir(idResponsavel)"
-                          >Excluir</b-button>
-                      </template>   
-                  </ModalExcluir>
+                  
               </template>                                 
             </b-table-lite>
           </div>
@@ -163,6 +155,14 @@
             </template>           
           </ModalCadastroResponsavel>
         </b-modal>
+
+        <ModalExcluir :pergunta="`o responsável ${nomeResponsavelModal}`">
+                    <template v-slot:buttons>
+                          <b-button variant="danger" class="bordered" 
+                          @click="excluir(idResponsavel)"
+                          >Excluir</b-button>
+                      </template>   
+        </ModalExcluir>
 
         <!-- //MODAL -->
 

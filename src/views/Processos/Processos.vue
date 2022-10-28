@@ -344,13 +344,13 @@
         </b-modal>
         
         
-        <ModalExcluir :pergunta="`o processo ${numProcedimentoModal}`">
+        <!--<ModalExcluir :pergunta="`o processo ${numProcedimentoModal}`">
            <template v-slot:buttons>
                 <b-button variant="danger" class="bordered" 
                 @click="excluir(idProcessoModal)"
                 >Excluir</b-button>
             </template>   
-        </ModalExcluir>
+        </ModalExcluir>-->
 
         <!-- REITERAR PROCESSO -->        
         <!-- <b-modal id="modal-cadastro-reiteracao" size="lg" centered title="Cadastro - Reiterar Processo" hide-footer>-->
