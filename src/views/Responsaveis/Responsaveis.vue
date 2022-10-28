@@ -1,13 +1,14 @@
 <template>
-  <div>
-    <b-container fluid>
-      <div class="row">
-        <b-form-group class="titulo m-0" label="Consulta de Responsáveis" label-size="lg">
-          <hr />
-        </b-form-group>
+  <div class="container fluid">
+    <div class="row">
+        <div class="col-12" style="margin-top: 20px">
+          <b-form-group class="titulo m-0" label="Consulta de Responsáveis" label-size="lg">
+            <hr />
+          </b-form-group>
+        </div>
 
-          <!-- NOTIFICAÇÕES -->       
-         <notifications :notifications="Notificacao"></notifications>      
+        <!-- NOTIFICAÇÕES -->       
+        <notifications :notifications="Notificacao"></notifications>      
 
         <div v-if="alert">
             <ReturnMessage :message="Message" :fechaAlert="fechaAlert"></ReturnMessage>
@@ -15,11 +16,12 @@
 
         <div v-if="loading">
             <LoadingSpinner></LoadingSpinner>
-        </div>
+        </div>  
+    </div>
+
 
         <!-- FORMULÁRIO DE CONSULTA -->       
         <b-form @submit.prevent="submit" class="mb-5">
-
             <div class="row">
                 <!-- (CPF) -->
                 <div class="col-3">
@@ -42,8 +44,8 @@
                         <b-icon-search v-b-tooltip.hover.topleft="'Consultar'"></b-icon-search>
                       </b-button>               
                   </b-form-group>               
-          </div>
-        </div>
+                </div>
+            </div>
         </b-form>
 
 
@@ -67,7 +69,7 @@
               <div class="col-1 position-relative" align="center"> 
                 <b-form-group label="" class="btn text-primary position-absolute top-50 start-50 translate-middle">
                   <div class="h3">
-                    <b-icon-plus-circle v-b-modal.modal-cadastro-responsavel v-b-tooltip.hover.topleft="'Adicionar Responsável'"></b-icon-plus-circle>
+                    <b-icon-plus-circle class="mr-3" v-b-modal.modal-cadastro-responsavel v-b-tooltip.hover.topleft="'Adicionar Responsável'"></b-icon-plus-circle>
                   </div>
                 </b-form-group>
               </div>
@@ -126,12 +128,11 @@
               </b-pagination>               
             </div>           
           </div>
-          <div>&nbsp <b>Total Registros:</b> {{totalRows}}</div>    
-             
-        </div>       
-        
-         <!-- MODAL -->
+          <div>&nbsp <b>Total Registros:</b> {{totalRows}}</div>
+        <!-- table -->
+    </div><!-- card -->
 
+        <!-- MODAL -->
         <b-modal id="modal-cadastro-responsavel" size="lg" centered title="Cadastro do Responsável" hide-footer>
           <ModalCadastroResponsavel  @listarResponsaveis="listarResponsaveis(currentPage)" tipo="cadastrar"> 
             <template v-slot:buttons> 
@@ -163,13 +164,13 @@
                           >Excluir</b-button>
                       </template>   
         </ModalExcluir>
-
         <!-- //MODAL -->
 
 
-      </div>
-    </b-container>
-  </div>
+</div><!-- container fluid -->
+
+
+
 </template>
 
 <script lang="ts">

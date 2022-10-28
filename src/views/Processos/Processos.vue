@@ -1,13 +1,14 @@
 <template>
-  <div>
-    <b-container fluid>
-      <div class="row">
-        <b-form-group class="titulo m-0" label="Consulta de Processos" label-size="lg">
+ <div class="container fluid">
+    <div class="row">
+        <div class="col-12" style="margin-top: 20px">
+          <b-form-group class="titulo m-0" label="Consulta de Processos" label-size="lg">
           <hr />
-        </b-form-group>
+          </b-form-group>
+        </div>
 
          <!-- NOTIFICAÇÕES -->       
-         <notifications :notifications="Notificacao"></notifications>      
+        <notifications :notifications="Notificacao"></notifications>     
 
         <div v-if="alert">
             <ReturnMessage :message="Message" :fechaAlert="fechaAlert"></ReturnMessage>
@@ -17,9 +18,11 @@
             <LoadingSpinner></LoadingSpinner>
         </div>
 
+    </div>
 
-        <!-- FORMULÁRIO DE CONSULTA DO PROCESSO -->
-        <b-form  @submit.prevent="submit">
+
+     <!-- FORMULÁRIO DE CONSULTA DO PROCESSO -->
+     <b-form  @submit.prevent="submit">
           <!-- 1ª LINHA (3 CAIXAS + ÍCONE) -->
           <div class="row">
             <!-- 1ª LINHA (3 CAIXAS) -->
@@ -152,8 +155,8 @@
           </div>
         </b-form>
 
-        <!-- CARD DA TABELA DO PROCESSO -->
-        <div class="card p-0 m-0">
+         <!-- CARD DA TABELA DO PROCESSO -->
+         <div class="card p-0 m-0">
           <!-- CABEÇALHO DA TABELA (Espaço reservado para incluir ícones) -->
           <div class="card-header" align="right">
             <div class="row">
@@ -298,7 +301,7 @@
           </div>
         </div>
 
-        <!-- MODAL -->
+          <!-- MODAL -->
         <!-- CADASTRO DO PROCESSO -->
         <b-modal id="modal-cadastro-processo" size="lg" centered title="Cadastro do Processo" hide-footer>       
            <ModalDetalhesProcesso tipo="cadastrar" @listarProcesso="listarProcesso(currentPage)">
@@ -344,13 +347,13 @@
         </b-modal>
         
         
-        <!--<ModalExcluir :pergunta="`o processo ${numProcedimentoModal}`">
+        <ModalExcluir :pergunta="`o processo ${numProcedimentoModal}`">
            <template v-slot:buttons>
                 <b-button variant="danger" class="bordered" 
                 @click="excluir(idProcessoModal)"
                 >Excluir</b-button>
             </template>   
-        </ModalExcluir>-->
+        </ModalExcluir>
 
         <!-- REITERAR PROCESSO -->        
         <!-- <b-modal id="modal-cadastro-reiteracao" size="lg" centered title="Cadastro - Reiterar Processo" hide-footer>-->
@@ -367,7 +370,6 @@
             </template>            
           </ModalReiteracoes>
         </b-modal> -->
-
         
 
         <!--<b-modal id="modal-editar-reiteracao" size="lg" centered title="Edição - Reiterar Processo" hide-footer>
@@ -405,11 +407,9 @@
             </template>
           </ModalDetalhesProcesso>
         </b-modal> -->
-      
-      
-      </div>
-    </b-container>
-  </div>
+
+    </div><!--container fluid-->
+  
 </template>
 
 <script lang="ts">

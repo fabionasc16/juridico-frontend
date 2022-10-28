@@ -1,47 +1,49 @@
 <template>
-  <div>
-    <b-container fluid>
-      <div class="row">
-        <b-form-group class="titulo m-0" label="Consulta de Órgão Demandante" label-size="lg">
-          <hr />
-        </b-form-group>
+
+<div class="container fluid">
+    <div class="row">
+        <div class="col-12" style="margin-top: 20px">
+            <b-form-group class="titulo m-0" label="Consulta de Órgão Demandante" label-size="lg">
+            <hr />
+           </b-form-group>
+        </div>
 
           <!-- NOTIFICAÇÕES -->       
-         <notifications :notifications="Notificacao"></notifications>      
+          <notifications :notifications="Notificacao"></notifications>      
 
-        <div v-if="alert">
-            <ReturnMessage :message="Message" :fechaAlert="fechaAlert"></ReturnMessage>
-        </div>          
+          <div v-if="alert">
+              <ReturnMessage :message="Message" :fechaAlert="fechaAlert"></ReturnMessage>
+          </div>          
 
-        <div v-if="loading">
-            <LoadingSpinner></LoadingSpinner>
-        </div>
-
-        <!-- FORMULÁRIO DE CONSULTA -->       
-        <b-form @submit.prevent="submit" class="mb-5">
-
-            <div class="row">               
-                <!-- (NOME) -->
-                <div class="col-4"> 
-                  <b-form-group label="Nome:" class="font">
-                    <b-form-input :placeholder="'Digite Nome do Órgão Demandante'" type="text" v-model="form.orgaoDemandante">
-                    </b-form-input>
-                  </b-form-group>
-                </div>
-                <!-- ÍCONE DA LUPA -->
-                <div class="col-2 justify-content-center">
-                  <b-form-group label="Consultar" class="font text-white">                    
-                      <b-button class="h2" type="submit">
-                        <b-icon-search v-b-tooltip.hover.topleft="'Consultar'"></b-icon-search>
-                      </b-button>               
-                  </b-form-group>               
+          <div v-if="loading">
+              <LoadingSpinner></LoadingSpinner>
           </div>
-        </div>
-        </b-form>
+    </div>
+
+     <!-- FORMULÁRIO DE CONSULTA -->       
+     <b-form @submit.prevent="submit" class="mb-5">
+          <div class="row">               
+              <!-- (NOME) -->
+              <div class="col-4"> 
+                <b-form-group label="Nome:" class="font">
+                  <b-form-input :placeholder="'Digite Nome do Órgão Demandante'" type="text" v-model="form.orgaoDemandante">
+                  </b-form-input>
+                </b-form-group>
+              </div>
+              <!-- ÍCONE DA LUPA -->
+              <div class="col-2 justify-content-center">
+                <b-form-group label="Consultar" class="font text-white">                    
+                    <b-button class="h2" type="submit">
+                      <b-icon-search v-b-tooltip.hover.topleft="'Consultar'"></b-icon-search>
+                    </b-button>               
+                </b-form-group>               
+             </div>
+          </div>
+     </b-form>
 
 
-        <!-- CARD DA TABELA -->
-        <div class="card p-0 m-0">
+     <!-- CARD DA TABELA -->
+     <div class="card p-0 m-0">
           <!-- CABEÇALHO DA TABELA (Espaço reservado para incluir ícones) -->
           <div class="card-header" align="right">
             <div class="row">
@@ -109,13 +111,11 @@
               </b-pagination>               
             </div>           
           </div>
-          <div>&nbsp <b>Total Registros:</b> {{totalRows}}</div>    
-             
-        </div>       
+          <div>&nbsp <b>Total Registros:</b> {{totalRows}}</div>  
+     </div>       
         
-         <!-- MODAL -->
-
-        <b-modal id="modal-cadastro-orgao" size="lg" centered title="Cadastro do Órgão Demandante" hide-footer>
+      <!-- MODAL -->
+      <b-modal id="modal-cadastro-orgao" size="lg" centered title="Cadastro do Órgão Demandante" hide-footer>
           <ModalCadastroOrgao  @listarOrgaos="listarOrgaos(currentPage)" tipo="cadastrar"> 
             <template v-slot:buttons> 
                 <b-button class="bordered" @click="$bvModal.hide('modal-cadastro-orgao')">Fechar</b-button>
@@ -138,13 +138,10 @@
             </template>           
           </ModalCadastroOrgao>
         </b-modal>
+      <!-- //MODAL -->
 
-        <!-- //MODAL -->
-
-
-      </div>
-    </b-container>
-  </div>
+</div> <!--container fluid-->
+  
 </template>
 
 <script lang="ts">
