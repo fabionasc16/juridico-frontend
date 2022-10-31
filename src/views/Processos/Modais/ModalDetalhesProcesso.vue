@@ -12,11 +12,7 @@
 
                     <div v-if="loading">
                         <LoadingSpinner></LoadingSpinner>
-                    </div>
-                    
-                    <!--<b-form-group class="titulo m-0 p-0" label="Informações de entrada do processo" label-size="lg">
-                        <hr />
-                    </b-form-group>-->
+                    </div>   
 
                     <div v-show="!isLoading"> 
                         
@@ -40,9 +36,7 @@
                                 <reiteracoes :idProcesso="idProcesso" :tipo="tipo"> </reiteracoes>
                             </b-tab>                          
                         </b-tabs>                      
-                    </div>                                
-                        
-                                  
+                    </div>                                     
                 </b-form>
             </div>
 
@@ -107,9 +101,7 @@ export default Vue.extend({
         this.isLoading = false
 
         //pega os dados do componente filho (detalhes do processo)
-        this.formDados = this.$refs.formDetalhes   
-        
-       // console.log("> ",this.formDados)
+        this.formDados = this.$refs.formDetalhes  
 
         if(this.tipo == 'visualizar') {
             this.formDados.disabledAll = true
@@ -144,8 +136,7 @@ export default Vue.extend({
 
             this.formDados.form.statusPrazo = ""+prazoMixin.methods.statusPrazo(this.formDados.form.prazoTotal)
 
-     
-            if (this.validarCampos()) { 
+             if (this.validarCampos()) { 
 
               console.log('JSON: ',JSON.stringify(this.formDados.form))
               
@@ -213,9 +204,7 @@ export default Vue.extend({
             //console.log('carregar: ',this.formDados.form )           
             
             RestApiService.get("processos/id", this.idProcesso)
-                .then((res: any) => {
-
-                //console.log("edit",res.data)
+                .then((res: any) => {               
 
                 this.formDados.form.idProcesso =   res.data.id_processo                
                 this.formDados.form.numProcedimento = res.data.num_procedimento
