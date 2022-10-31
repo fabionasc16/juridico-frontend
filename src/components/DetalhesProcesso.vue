@@ -136,11 +136,7 @@
                                 </b-form-group>
                             </div>
 
-                            <div class="row">
-                                <!-- <b-form-group class="titulo col-sm-12 col-md-12 col-lg-12" label="Dados do SIGED:"
-                                    label-size="lg">
-                                    <hr />
-                                </b-form-group>-->
+                            <div class="row">                              
                                 <h5 class="mt-3">Dados do SIGED:</h5>
                                  <hr />
 

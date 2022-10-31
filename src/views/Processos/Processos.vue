@@ -17,28 +17,26 @@
 
         <div v-if="loading">
             <LoadingSpinner></LoadingSpinner>
-        </div>
-
-    
-
+        </div>   
 
      <!-- FORMULÁRIO DE CONSULTA DO PROCESSO -->
-     <b-form  @submit.prevent="submit">
+     <b-form  @submit.prevent="search">
           <!-- 1ª LINHA (3 CAIXAS + ÍCONE) -->
           <div class="row">
             <!-- 1ª LINHA (3 CAIXAS) -->
             <div class="col-10">
               <div class="row">            
 
-                <b-form-group append="m" class="font col-sm-3 col-md-3 col-lg-3">
+                <b-form-group append="m" class="font col-sm-4 col-md-4 col-lg-4">
                    
                   <b-form-checkbox switch class="font" v-model="checkedProcessoSiged" @change="alterarProced">                      
                     <label v-if="checkedProcessoSiged">Nº Procedimento:</label> 
                     <label v-else>Nº SIGED:</label>                       
                   </b-form-checkbox>                            
 
-                  <b-form-input v-if="checkedProcessoSiged" size="md" type="text" v-model="form.numProcedimento" autofocus></b-form-input>
-                  <b-form-input v-else size="md" type="text" v-model="form.numProcessoSIGED" v-mask="'######/####-##'" autofocus></b-form-input>
+                  <b-form-input v-show="checkedProcessoSiged" size="md" type="text" v-model="form.numProcedimento" autofocus></b-form-input>
+                  <b-form-input v-show="!checkedProcessoSiged" size="md" type="text" v-model="form.numProcessoSIGED" v-mask="'##.##.######.######/####-##'" autofocus></b-form-input>
+                  <!-- v-mask="'######/####-##'" -->
                 </b-form-group>
 
                 <b-form-group label="Assunto:" append="m" class="font col-sm-5 col-md-5 col-lg-5">
@@ -50,7 +48,7 @@
                                 v-model="assuntoSelecionado"/>                                          
                 </b-form-group>
 
-                <b-form-group label="Caixa SIGED:" append="m" class="font col-sm-4 col-md-4 col-lg-4">
+                <b-form-group label="Caixa SIGED:" append="m" class="font col-sm-3 col-md-3 col-lg-3">
                   <v-select style="font-size: 0.85rem" :options="optionsCaixa" class="font" label="texto"
                                         v-model="caixaSigedSelecionada"/>
                   <!--<b-form-input size="md" type="text" v-model="form.caixaSIGED" v-mask=""></b-form-input>-->                 
@@ -63,22 +61,13 @@
   
                 <b-button class="h2" type="submit">
                   <b-icon-search v-b-tooltip.hover.topleft="'Consultar'"></b-icon-search>
-                </b-button>
-
-                <!--<div class="h2" type="button" style="color: gray;" @click="submit">
-                    <b-icon-search v-b-tooltip.hover.topleft="'Consultar'"></b-icon-search>
-                </div>-->
+                </b-button>              
               </b-form-group>
             </div>
           </div>
 
           <!-- 2ª LINHA (2 BOTÕES) -->
-          <div class="row" align-h="between">
-            <!--<div class="col-6">
-              <b-form-checkbox switch class="font">
-                Consultar Nº de Processo Externo
-              </b-form-checkbox>
-            </div>-->
+          <div class="row" align-h="between">            
             <div class="col-11 mb-3">
               <b-form-checkbox v-model="maisDetalhes" @change="exibeMaisDetalhes()" switch class="font text-end">
                 + Filtros
@@ -113,8 +102,9 @@
 
                 <b-form-group label="Status Processo:" append="m" class="font col-sm-3 col-md-3 col-lg-3"
                   v-show="exibirMaisDetalhes">                 
-                  <v-select style="font-size: 0.85rem" :options="optionsStatusProcesso" class="font" label="texto"
-                                        v-model="statusProcessoSelecionado"/>
+                  <v-select style="font-size: 0.85rem" :options="optionsStatusProcesso" class="font" label="desc_status"
+                          value="id_status"
+                          v-model="statusProcessoSelecionado"/>
                 </b-form-group>
 
                  <b-form-group append="m" class="font col-sm-3 col-md-3 col-lg-3"
@@ -126,8 +116,9 @@
                     </b-form-checkbox> -->
 
                   <label>Status Prazo:</label>   
-                  <v-select v-if="!checkedExpiraHoje" style="font-size: 0.85rem" :options="optionsStatusPrazo" class="font" label="texto"
-                                        v-model="statusPrazoSelecionado"/>
+                  <v-select v-if="!checkedExpiraHoje" style="font-size: 0.85rem" :options="optionsStatusPrazo" class="font" label="desc_status"
+                           value="id_status"
+                           v-model="statusPrazoSelecionado"/>
                 </b-form-group>
                 
 
@@ -300,6 +291,7 @@
               </b-pagination>
             </div>
           </div>
+          <div>&nbsp <b>Total Registros:</b> {{totalRows}}</div>
         </div>
 
           <!-- MODAL -->
@@ -371,32 +363,7 @@
             </template>            
           </ModalReiteracoes>
         </b-modal> -->
-        
-
-        <!--<b-modal id="modal-editar-reiteracao" size="lg" centered title="Edição - Reiterar Processo" hide-footer>
-          <ModalReiteracaoProcesso  @listarProcesso="listarProcesso(currentPage)"> 
-            <template v-slot:buttons>
-                <b-button class="bordered" @click="$bvModal.hide('modal-editar-reiteracao')">Fechar</b-button>
-            </template>            
-          </ModalReiteracaoProcesso>
-        </b-modal>
-
-        <b-modal id="modal-visualizar-reiteracao" size="lg" centered title="Reiterações do Processo" hide-footer>
-          <ModalVisualizarReiteracao> 
-            <template v-slot:buttons>
-                <b-button class="bordered" @click="$bvModal.hide('modal-visualizar-reiteracao')">Fechar</b-button>
-            </template>            
-          </ModalVisualizarReiteracao>
-        </b-modal> -->     
-
-        <!-- ARQUIVAR PROCESSO -->
-         <!-- <b-modal id="modal-arquivar-processo" centered title="Arquivar Processo" hide-footer>         
-            <ModalArquivarProcesso @listarProcesso="listarProcesso(currentPage)">
-            <template v-slot:buttons>
-                <b-button class="bordered" @click="$bvModal.hide('modal-arquivar-processo')">Fechar</b-button>
-            </template>
-          </ModalArquivarProcesso> 
-        </b-modal>-->
+                     
 
         <!-- //modal -->
         <!-- DUPLICAR PROCESSO -->
@@ -417,7 +384,6 @@
 import Vue from "vue";
 import HeaderPage from '@/components/HeaderPage.vue';
 import ModalTramitacoesProcesso from './Modais/ModalTramitacoesProcesso.vue';
-//import ModalArquivarProcesso from './Modais/ModalArquivarProcesso.vue';
 import ModalDetalhesProcesso from './Modais/ModalDetalhesProcesso.vue';
 import { mask } from "vue-the-mask";
 import { Processo } from '@/type/processo';
@@ -425,9 +391,6 @@ import { StatusProcessoSeeder } from "@/type/statusProcesso";
 import { StatusPrazoSeeder } from "@/type/statusPrazo";
 import { CaixaSigedSeeder } from "@/type/caixaSiged";
 import { FieldsTableProcesso } from "@/type/tableProcesso";
-
-//import ModalReiteracaoProcesso from './Modais/old_ModalReiteracaoProcesso.vue';
-//import ModalVisualizarReiteracao from './Modais/old_ModalVisualizarReiteracao.vue';
 import ModalAndamentoProcesso from './Modais/ModalAndamentoProcesso.vue';
 
 import RestApiService from "@/services/rest/service";
@@ -437,7 +400,6 @@ import ReturnMessage from "@/components/ReturnMessage.vue";
 import LoadingSpinner from "@/components/LoadingSpinner.vue";
 
 import ModalReiteracoes from "./Modais/ModalReiteracoes.vue";
-
 import ModalExcluir from "@/components/ModalExcluir.vue"
 
 export default Vue.extend({
@@ -446,10 +408,7 @@ export default Vue.extend({
     HeaderPage,
     ModalTramitacoesProcesso,
     ModalDetalhesProcesso,
-    //ModalArquivarProcesso,
-    Notifications,
-    // ModalReiteracaoProcesso,
-    //ModalVisualizarReiteracao,
+    Notifications, 
     ModalAndamentoProcesso,
     ReturnMessage,
     LoadingSpinner,
@@ -469,8 +428,7 @@ export default Vue.extend({
       stickyHeader: true,
       noCollapse: true,
       show: false as boolean,
-      exibirMaisDetalhes: false as boolean,
-      exibirRegistroPrazo: false as boolean,
+      exibirMaisDetalhes: false as boolean,      
       exibirRegistroSIGED: false as boolean,      
       pageOptions: [5, 10, 15, { value: 100, text: "Show a lot" }],
       form: {} as Processo,
@@ -480,9 +438,7 @@ export default Vue.extend({
       maisDetalhes: false as boolean,
       fields: FieldsTableProcesso, //nome das colunas da tabela  
       items: [] as Array<String>,
-      
-      optionsStatusProcesso: StatusProcessoSeeder,
-      optionsStatusPrazo: StatusPrazoSeeder,    
+
       optionsCaixa: CaixaSigedSeeder,  
 
       optionsOrgaoDemandante: [] as Array<String>,
@@ -490,6 +446,8 @@ export default Vue.extend({
       optionsAssunto: [] as Array<String>,
       optionsClassificacao: [] as Array<String>,
       optionsResponsavel: [] as Array<String>,
+      optionsStatusProcesso: [] as Array<String>,
+      optionsStatusPrazo: [] as Array<String>,    
 
       Notificacao: [] as Array<Notificacao>,
       Message: [] as Array<Notificacao>,
@@ -503,12 +461,12 @@ export default Vue.extend({
         id_tipoprocesso: "" as any,
       },
       statusProcessoSelecionado: {
-        texto: "-- Selecione --" as string,
-        value: "" as any,
+        desc_status: "-- Selecione --" as string,
+        id_status: "" as any,
       },
       statusPrazoSelecionado: {
-        texto: "-- Selecione --" as string,
-        value: "" as string,
+        desc_status: "-- Selecione --" as string,
+        id_status: "" as string,
       },
       orgaoDemandanteSelecionado: {
         orgao_demandante: "-- Selecione --" as string,
@@ -529,17 +487,19 @@ export default Vue.extend({
       caixaSigedSelecionada: {
         texto: "-- Selecione --" as string,
         value: "" as string,
-      },    
+      },      
     };
   },
     
   mounted() {
-    this.listarProcesso(this.currentPage)
+    this.listarProcesso(this.currentPage)    
     this.carregarResponsavel()
     this.carregarClassificacao()
     this.carregarAssunto()
     this.carregarOrgaosDemandantes()
     this.carregarTipoProcesso()
+    this.carregarStatusProcesso()
+    this.carregarStatusPrazo()
   },
   methods: {
     alterarTitulo(nome:string):void {
@@ -556,7 +516,7 @@ export default Vue.extend({
      this.form.numProcessoSIGED=""
      this.form.numProcedimento=""
     },
-    submit() {
+   /* submit() {
       alert("enviar");
 
       //pegar o id dos options   
@@ -571,12 +531,15 @@ export default Vue.extend({
       this.form.caixaAtualSIGED = this.caixaSigedSelecionada.value
      
       console.log(JSON.stringify(this.form))
-    },
+    },*/
 
     listarProcesso(currentpage: number): void {
       this.loading = true     
 
-      RestApiService.get("processos", `?currentPage=${currentpage}`)
+      let busca = {}
+
+      //RestApiService.get("processos", `?currentPage=${currentpage}`)
+      RestApiService.post3("processos/list", `?currentPage=${currentpage}`, busca)
         .then((response: any) => {
           console.log("Resp ", response.data)
           this.items = response.data.data
@@ -596,13 +559,57 @@ export default Vue.extend({
         })
     },
 
+    search() {
+      
+      let busca = {
+        numProcedimento : this.form.numProcedimento ? this.form.numProcedimento : "",
+        numProcessoSIGED : this.form.numProcessoSIGED ? this.form.numProcessoSIGED : "",
+        idAssunto : this.assuntoSelecionado ? this.assuntoSelecionado.id_assunto : "",
+        caixaAtualSIGED : this.caixaSigedSelecionada ? this.caixaSigedSelecionada.value : "",
+        idOrgaoDemandante : this.orgaoDemandanteSelecionado ? this.orgaoDemandanteSelecionado.id_orgao : "",
+        idTipoProcesso  :  this.tipoProcessoSelecionado ? this.tipoProcessoSelecionado.id_tipoprocesso : "",
+        statusProcesso : this.statusProcessoSelecionado ? this.statusProcessoSelecionado.id_status : "",
+        statusPrazo : this.statusPrazoSelecionado ? (this.statusPrazoSelecionado.id_status).toString() : "",
+        idClassificacao:  this.classificacaoSelecionada ? this.classificacaoSelecionada.id_classificacao : "",
+        idResponsavel: this.responsavelSelecionado ? this.responsavelSelecionado.id_responsavel : ""
+      }      
+ 
+      console.log("busca ", JSON.stringify(busca))
+     
+        RestApiService.post("processos/list", busca)
+          .then((response: any) => { 
+            
+           // console.log("Consulta",JSON.stringify(response.data))
+           
+            this.items = response.data.data;
+            this.perPage = response.data.perPage;
+            this.totalRows = response.data.total;
+
+          })
+          .catch((e) => {
+            if (e.message.length > 0) {
+              this.Notificacao.push({
+                type: "danger",
+                message: e.response.data.message,
+              });
+              this.limparNotificacao();
+              return false;
+            }
+          });
+      
+    },
+
+
      carregarResponsavel(): void {
       this.loading = true   
 
-        RestApiService.get(
+       /* RestApiService.get(
           "responsaveis",
           `?currentPage=1&perPage=${this.perPageListagens}`
-        )
+        )*/
+        let busca = {}
+
+        RestApiService.post("responsaveis/list?currentPage=1&perPage=30000", busca)
         .then((response: any) => {        
           this.optionsResponsavel = response.data.data     
         })
@@ -614,6 +621,44 @@ export default Vue.extend({
           this.limparNotificacao();
         })
     },
+
+    carregarStatusProcesso(): void {
+      this.loading = true   
+
+        RestApiService.get(
+          "status/aplicacaostatUs",
+          `?aplicaA=PROCESSO`
+        )
+        .then((response: any) => {                
+          this.optionsStatusProcesso = response.data     
+        })
+        .catch((e) => {          
+          console.log(e)
+        })
+        .finally(() => {
+          this.loading = false
+          this.limparNotificacao();
+        })
+    },   
+    
+    carregarStatusPrazo(): void {
+      this.loading = true   
+
+        RestApiService.get(
+          "status/aplicacaostatUs",
+          `?aplicaA=PRAZO_PROCESSO`
+        )
+        .then((response: any) => {                
+          this.optionsStatusPrazo = response.data     
+        })
+        .catch((e) => {          
+          console.log(e)
+        })
+        .finally(() => {
+          this.loading = false
+          this.limparNotificacao();
+        })
+    },     
 
     carregarClassificacao(): void {
       this.loading = true
@@ -848,15 +893,7 @@ export default Vue.extend({
         this.exibirMaisDetalhes = false;
       }
     },
-   /*  exibirCampoPrazo(): void {
-      if (
-        this.form.monitoraPrazo == "sim"
-      ) {
-        this.exibirRegistroPrazo = true;
-      } else {
-        this.exibirRegistroPrazo = false;
-      }
-    }, */
+   
     exibirCampoSIGED(): void {
       if (
         this.form.requerSIGED === true
@@ -886,10 +923,7 @@ export default Vue.extend({
     fechaAlert(): void {
             this.alert = false;
     }, 
-
-    voltar(): void {
-      this.$router.push("/");
-    }
+    
   },
   
 });
