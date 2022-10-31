@@ -145,6 +145,14 @@
               </div>
             </div>
           </div>
+
+          <!-- limpar campos de pesquisa-->
+          <!--<div class="row">
+            <div class="col-12">
+              <b-button class="bordered ml-2 sm" type="button" variant="warning"       
+                                @click="">Limpar</b-button>  
+            </div>
+          </div>-->
         </b-form>
 
          <!-- CARD DA TABELA DO PROCESSO -->
@@ -236,17 +244,7 @@
                   <b-list-group-item block v-b-modal.modal-tramitacoes-processo 
                      @listarProcesso="listarProcesso(currentPage)" class="btn-light btn-outline-dark m-0 p-1">
                     Tramitações
-                  </b-list-group-item>  
-
-                 <!--  <b-list-group-item block v-b-modal.modal-visualizar-reiteracao 
-                     @listarProcesso="listarProcesso(currentPage)" class="btn-light btn-outline-dark m-0 p-1">
-                    Reiterações
-                  </b-list-group-item> -->
-
-                  <!--<b-list-group-item block v-b-modal.modal-duplicar-processo 
-                     @listarProcesso="listarProcesso(currentPage)" class="btn-light btn-outline-dark m-0 p-1">
-                    Duplicar
-                  </b-list-group-item>-->
+                  </b-list-group-item>                   
                   
                    <!--status diferente de arquivado(14) --> 
                  <!-- <b-list-group-item block v-b-modal.modal-arquivar-processo 
@@ -538,7 +536,6 @@ export default Vue.extend({
 
       let busca = {}
 
-      //RestApiService.get("processos", `?currentPage=${currentpage}`)
       RestApiService.post3("processos/list", `?currentPage=${currentpage}`, busca)
         .then((response: any) => {
           console.log("Resp ", response.data)
@@ -557,10 +554,9 @@ export default Vue.extend({
           this.loading = false
           this.limparNotificacao();
         })
-    },
+    },   
 
-    search() {
-      
+    search() {      
       let busca = {
         numProcedimento : this.form.numProcedimento ? this.form.numProcedimento : "",
         numProcessoSIGED : this.form.numProcessoSIGED ? this.form.numProcessoSIGED : "",
@@ -577,28 +573,25 @@ export default Vue.extend({
       console.log("busca ", JSON.stringify(busca))
      
         RestApiService.post("processos/list", busca)
-          .then((response: any) => { 
-            
-           // console.log("Consulta",JSON.stringify(response.data))
-           
+          .then((response: any) => {            
             this.items = response.data.data;
             this.perPage = response.data.perPage;
             this.totalRows = response.data.total;
-
           })
           .catch((e) => {
             if (e.message.length > 0) {
               this.Notificacao.push({
                 type: "danger",
                 message: e.response.data.message,
-              });
-              this.limparNotificacao();
+              });              
               return false;
             }
-          });
-      
-    },
-
+          })
+          .finally(() => {
+            this.loading = false
+            this.limparNotificacao();
+          });      
+     },
 
      carregarResponsavel(): void {
       this.loading = true   

@@ -356,11 +356,10 @@ export default Vue.extend({
         },
         listarResponsaveis() {            
 
-             RestApiService.get(
-                "responsaveis",
-                `?currentPage=1&perPage=${this.perPageListagens}`
-                )                 
-                .then((response) => {
+            let busca = {}
+
+            RestApiService.post("responsaveis/list?currentPage=1&perPage=30000", busca)             
+                .then((response) => {                    
                     this.optionsResponsavel = response.data.data                    
                 })
                 .catch((e) => {
