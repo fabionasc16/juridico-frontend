@@ -179,60 +179,7 @@ export default Vue.extend({
                  return false
              }
              return true
-        },
-
-        /*buscarDadosSiged(){ 
-            
-            if(!this.form.numProcessoSIGED){
-                 this.datas.dataProcessoSIGEDBR = ""
-                 this.form.permanenciaSIGED = ""
-                 this.form.caixaAtualSIGED = ""
-                 this.form.tramitacaoSIGED = ""
-                 this.messageSiged=""
-                 this.showMessageSiged = false
-            }
-            else{ 
-                 RestApiService.buscarProcessoSiged(this.form.numProcessoSIGED)
-                 .then((response) => { 
-                             this.datas.dataProcessoSIGEDBR = response.data.dataProcesso ? 
-                                 dataMixin.methods.formatarDataBr(response.data.dataProcesso) : "";  
-                             this.form.permanenciaSIGED = response.data.tempoPermanencia
-                             this.form.caixaAtualSIGED = response.data.caixaAtual
-                             this.form.tramitacaoSIGED = response.data.eventoTramitacao
-                         })
-                         .catch((e) => {
-                            this.showMessageSiged = true                           
-                            this.messageSiged= 'Ocorreu um erro ao buscar dados do SIGED.'
-                            
-                            console.log( e.message )
-                 })
-            }
- 
-         }, */
-
-       
-        //pegar valores para mandar na request
-        /*getValues() {
-                this.formatDatasBrToEn()               
-
-                this.form.idProcesso =   this.form.idProcesso ? this.form.idProcesso : ""
-                this.form.numProcedimento = this.form.numProcedimento ? this.form.numProcedimento: ""               
-                this.form.prazoTotal =  this.form.prazoTotal ? this.form.prazoTotal : ""               
-                this.form.dataProcesso = this.form.dataProcesso ? this.form.dataProcesso: ""
-                this.form.dataRecebimento = this.form.dataRecebimento ? this.form.dataRecebimento: ""
-                this.form.horaRecebimento =  this.form.horaRecebimento ? this.form.horaRecebimento  : "" 
-                this.form.numProcessoSIGED = this.form.numProcessoSIGED ? this.form.numProcessoSIGED: ""
-             
-               
-                this.form.reiteracao = this.form.reiteracao ?  this.form.reiteracao: ""
-                this.form.dataLimitePrazo =  this.form.dataLimitePrazo? this.form.dataLimitePrazo: ""
-                
-                this.form.statusPrazo =  this.form.statusPrazo ?  this.form.statusPrazo: ""
-                //this.form.statusProcesso = this.form.statusProcesso ? this.form.statusProcesso : ""                          
-            
-        },*/
-
-
+        },        
 
 
        //Antes *********

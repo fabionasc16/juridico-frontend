@@ -28,8 +28,8 @@
                     </div>
                 </div>
                 <!-- ÍCONE Plus-Circle -->
-                <div class="col-1 position-relative mt-3 mb-3" align="center"> 
-                    <b-form-group label="" class="btn text-primary position-absolute top-50 start-50 translate-middle">
+                <div  align="center"><!--position-relative class="col-1 mt-3 mb-3"-->
+                    <b-form-group label="" class="btn text-primary position-absolute">
                     <div class="h3">
                         <b-icon-plus-circle v-b-modal.modal-cadastro-reiteracao v-b-tooltip.hover.topleft="'Adicionar Reiteração'">
                         </b-icon-plus-circle>
