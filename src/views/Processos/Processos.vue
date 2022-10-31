@@ -492,8 +492,7 @@ export default Vue.extend({
   },
     
   mounted() {
-    //this.listarProcesso(this.currentPage)
-    //this.search()
+    this.listarProcesso(this.currentPage)    
     this.carregarResponsavel()
     this.carregarClassificacao()
     this.carregarAssunto()
@@ -537,8 +536,10 @@ export default Vue.extend({
     listarProcesso(currentpage: number): void {
       this.loading = true     
 
+      let busca = {}
+
       //RestApiService.get("processos", `?currentPage=${currentpage}`)
-      RestApiService.post("processos/list", '')
+      RestApiService.post3("processos/list", `?currentPage=${currentpage}`, busca)
         .then((response: any) => {
           console.log("Resp ", response.data)
           this.items = response.data.data
@@ -571,17 +572,10 @@ export default Vue.extend({
         statusPrazo : this.statusPrazoSelecionado ? (this.statusPrazoSelecionado.id_status).toString() : "",
         idClassificacao:  this.classificacaoSelecionada ? this.classificacaoSelecionada.id_classificacao : "",
         idResponsavel: this.responsavelSelecionado ? this.responsavelSelecionado.id_responsavel : ""
-      }
-      
-      //[this.busca.numProcedimento]  
-     // let formBusca = busca//JSON.stringify(busca)
-
-    //  console.log(this.form.numProcedimento)
-      //alert("search")
-      console.log("bsca ", JSON.stringify(busca))
-      if (!busca) {
-      //  this.listarProcesso(this.currentPage);
-      } else {
+      }      
+ 
+      console.log("busca ", JSON.stringify(busca))
+     
         RestApiService.post("processos/list", busca)
           .then((response: any) => { 
             
@@ -602,7 +596,7 @@ export default Vue.extend({
               return false;
             }
           });
-      }
+      
     },
 
 
