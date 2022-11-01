@@ -255,7 +255,10 @@ export default Vue.extend({
 
     listarResponsaveis(currentpage: number) : void {
       this.loading = true
-      RestApiService.get("responsaveis", `?currentPage=${currentpage}`)
+      //RestApiService.get("responsaveis", `?currentPage=${currentpage}`)
+      let busca = {}
+
+      RestApiService.post3("responsaveis/list", `?currentPage=${currentpage}`, busca) 
         .then((response: any) => {
           this.items = response.data.data
           this.perPage = response.data.perPage
@@ -263,11 +266,15 @@ export default Vue.extend({
         })
         .catch((e: Error) => {
           console.log(e)
-          this.adicionarNotificacao('danger', 'Não foi possível carregar a listagem!')         
+          //this.adicionarNotificacao('danger', 'Não foi possível carregar a listagem!') 
+          this.Notificacao.push({
+            type: "danger",
+            message: "Não foi possível carregar a listagem!"            
+          })        
           return false;
         })
         .finally(() => {
-           this.loading = false;
+           this.loading = false;       
         });
 
     },
