@@ -48,11 +48,13 @@
                                 v-model="assuntoSelecionado"/>                                          
                 </b-form-group>
 
-                <b-form-group label="Caixa SIGED:" append="m" class="font col-sm-3 col-md-3 col-lg-3">
-                  <v-select style="font-size: 0.85rem" :options="optionsCaixa" class="font" label="texto"
-                                        v-model="caixaSigedSelecionada"/>
-                  <!--<b-form-input size="md" type="text" v-model="form.caixaSIGED" v-mask=""></b-form-input>-->                 
-                </b-form-group>
+                <b-form-group label="Status Processo:" append="m" class="font col-sm-3 col-md-3 col-lg-3"
+                  >                 
+                  <v-select style="font-size: 0.85rem" :options="optionsStatusProcesso" class="font" label="desc_status"
+                          value="id_status"
+                          v-model="statusProcessoSelecionado"/>
+                </b-form-group>             
+                
               </div>
             </div>
             <!-- ÍCONE DA LUPA -->
@@ -100,12 +102,7 @@
                                         v-model="tipoProcessoSelecionado"/>  
                 </b-form-group>
 
-                <b-form-group label="Status Processo:" append="m" class="font col-sm-3 col-md-3 col-lg-3"
-                  v-show="exibirMaisDetalhes">                 
-                  <v-select style="font-size: 0.85rem" :options="optionsStatusProcesso" class="font" label="desc_status"
-                          value="id_status"
-                          v-model="statusProcessoSelecionado"/>
-                </b-form-group>
+               
 
                  <b-form-group append="m" class="font col-sm-3 col-md-3 col-lg-3"
                   v-show="exibirMaisDetalhes">  
@@ -140,6 +137,13 @@
                                         value="id_responsavel"    
                                         placeholder="--Selecione--"                                     
                                         v-model="responsavelSelecionado"/>
+                </b-form-group>
+
+                <b-form-group label="Caixa SIGED:" append="m" class="font col-sm-9 col-md-9 col-lg-9" v-show="exibirMaisDetalhes">
+                  <v-select style="font-size: 0.85rem" :options="optionsCaixa" class="font" label="caixa_atual_siged"
+                  id="caixa_atual_siged"                  
+                  v-model="caixaSigedSelecionada"/>
+                  <!--<b-form-input size="md" type="text" v-model="form.caixaSIGED" v-mask=""></b-form-input>-->                 
                 </b-form-group>
                   
               </div>
@@ -244,22 +248,7 @@
                   <b-list-group-item block v-b-modal.modal-tramitacoes-processo 
                      @listarProcesso="listarProcesso(currentPage)" class="btn-light btn-outline-dark m-0 p-1">
                     Tramitações
-                  </b-list-group-item>                   
-                  
-                 <!--status diferente de arquivado(14) --> 
-                 <!-- <b-list-group-item block v-b-modal.modal-arquivar-processo 
-                     class="btn-light text-dark btn-outline-success m-0 p-1"
-                     v-if="data.item.status.id_status!='14'">
-                    Arquivar
-                  </b-list-group-item>--> 
-
-                  <!--status igual arquivado(14) --> 
-                  <!--<b-list-group-item block class="btn-light text-dark btn-outline-danger m-0 p-1"
-                        v-if="data.item.status.id_status=='14'" 
-                         @listarProcesso="listarProcesso(currentPage)"
-                      @click="desarquivar(data.item)">
-                    Desarquivar
-                  </b-list-group-item>-->
+                  </b-list-group-item>         
 
                   <b-list-group-item block class="btn-light text-dark btn-outline-danger m-0 p-1"
                         @click="abrirModal('modal-mensagem', data.item.id_processo, data.item.num_procedimento)"
@@ -306,8 +295,7 @@
               <template v-slot:buttons>
                  <b-button class="bordered" @click="$bvModal.hide('modal-cadastro-processo')">Fechar</b-button>
               </template>
-           </ModalDetalhesProcesso>
-          
+           </ModalDetalhesProcesso>          
         </b-modal>
         <!-- DETALHES DO PROCESSO -->
         <b-modal id="modal-editar-processo" size="lg" centered :title="titleModal || 'Editar Processo'" hide-footer>
@@ -361,8 +349,6 @@
                 >Desarquivar</b-button>
             </template>   
         </ModalMensagem>       
-
-
     </div><!--container fluid-->
   
 </template>
@@ -432,15 +418,14 @@ export default Vue.extend({
       fields: FieldsTableProcesso, //nome das colunas da tabela  
       items: [] as Array<String>,
 
-      optionsCaixa: CaixaSigedSeeder,  
-
       optionsOrgaoDemandante: [] as Array<String>,
       optionsTipoProcesso: [] as Array<String>,
       optionsAssunto: [] as Array<String>,
       optionsClassificacao: [] as Array<String>,
       optionsResponsavel: [] as Array<String>,
       optionsStatusProcesso: [] as Array<String>,
-      optionsStatusPrazo: [] as Array<String>,    
+      optionsStatusPrazo: [] as Array<String>,   
+      optionsCaixa: [] as Array<String>, 
 
       Notificacao: [] as Array<Notificacao>,
       Message: [] as Array<Notificacao>,
@@ -477,10 +462,11 @@ export default Vue.extend({
         id_assunto: "" as string,
         desc_assunto: "-- Selecione --" as string,        
       },
-      caixaSigedSelecionada: {
+      caixaSigedSelecionada: {        
         texto: "-- Selecione --" as string,
         value: "" as string,
-      },      
+      }, 
+        
     };
   },
     
@@ -493,6 +479,7 @@ export default Vue.extend({
     this.carregarTipoProcesso()
     this.carregarStatusProcesso()
     this.carregarStatusPrazo()
+    this.carregarCaixaSiged()
   },
   methods: {
     alterarTitulo(nome:string):void {
@@ -513,7 +500,6 @@ export default Vue.extend({
         let diferencaDias = dataMixin.methods.diferencaEntreDataAtual(dataAExpirar) 
         return diferencaDias 
     },
-
     calcularDiasAExpirarDesc(dataAExpirar: any): any{
         let diferencaDias = dataMixin.methods.diferencaEntreDataAtual(dataAExpirar) 
  
@@ -532,8 +518,7 @@ export default Vue.extend({
         }*/
 
         return diferencaDias + " dias"
-    },
-   
+    },   
     listarProcesso(currentpage: number): void {
       this.loading = true     
 
@@ -608,6 +593,23 @@ export default Vue.extend({
         RestApiService.post("responsaveis/list?currentPage=1&perPage=30000", busca)
         .then((response: any) => {        
           this.optionsResponsavel = response.data.data     
+        })
+        .catch((e) => {          
+          console.log(e)
+        })
+        .finally(() => {
+          this.loading = false
+          this.limparNotificacao();
+        })
+    },
+
+    carregarCaixaSiged(): void {
+      this.loading = true   
+
+        RestApiService.get("processos/caixas-siged", 
+          `?currentPage=1&perPage=${this.perPageListagens}`)
+        .then((response: any) => {        
+          this.optionsCaixa = response.data     
         })
         .catch((e) => {          
           console.log(e)
