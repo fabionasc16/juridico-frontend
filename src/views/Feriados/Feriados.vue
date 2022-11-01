@@ -240,8 +240,11 @@ export default Vue.extend({
      
       this.loading = true;  
        
-        RestApiService.get(
-          "feriados", `?currentPage=${currentpage}`)
+        //RestApiService.get("feriados", `?currentPage=${currentpage}`)
+
+        let busca = {}
+
+        RestApiService.post3("feriados/list", `?currentPage=${currentpage}`, busca) 
           .then((response: any) => {
             this.items = response.data.data;
             this.perPage = response.data.perPage;
