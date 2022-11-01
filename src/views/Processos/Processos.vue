@@ -142,8 +142,7 @@
                 <b-form-group label="Caixa SIGED:" append="m" class="font col-sm-9 col-md-9 col-lg-9" v-show="exibirMaisDetalhes">
                   <v-select style="font-size: 0.85rem" :options="optionsCaixa" class="font" label="caixa_atual_siged"
                   id="caixa_atual_siged"                  
-                  v-model="caixaSigedSelecionada"/>
-                  <!--<b-form-input size="md" type="text" v-model="form.caixaSIGED" v-mask=""></b-form-input>-->                 
+                  v-model="caixaSigedSelecionada"/>                 
                 </b-form-group>
                   
               </div>
@@ -462,9 +461,8 @@ export default Vue.extend({
         id_assunto: "" as string,
         desc_assunto: "-- Selecione --" as string,        
       },
-      caixaSigedSelecionada: {        
-        texto: "-- Selecione --" as string,
-        value: "" as string,
+      caixaSigedSelecionada: {               
+        caixa_atual_siged: "" as string,
       }, 
         
     };
@@ -549,7 +547,7 @@ export default Vue.extend({
         numProcedimento : this.form.numProcedimento ? this.form.numProcedimento : "",
         numProcessoSIGED : this.form.numProcessoSIGED ? this.form.numProcessoSIGED : "",
         idAssunto : this.assuntoSelecionado ? this.assuntoSelecionado.id_assunto : "",
-        caixaAtualSIGED : this.caixaSigedSelecionada ? this.caixaSigedSelecionada.value : "",
+        caixaAtualSIGED : this.caixaSigedSelecionada ? this.caixaSigedSelecionada.caixa_atual_siged : "",
         idOrgaoDemandante : this.orgaoDemandanteSelecionado ? this.orgaoDemandanteSelecionado.id_orgao : "",
         idTipoProcesso  :  this.tipoProcessoSelecionado ? this.tipoProcessoSelecionado.id_tipoprocesso : "",
         statusProcesso : this.statusProcessoSelecionado ? this.statusProcessoSelecionado.id_status : "",
