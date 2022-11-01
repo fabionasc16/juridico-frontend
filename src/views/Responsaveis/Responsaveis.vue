@@ -21,19 +21,19 @@
 
 
         <!-- FORMULÁRIO DE CONSULTA -->       
-        <b-form @submit.prevent="submit" class="mb-5">
+        <b-form @submit.prevent="search" class="mb-5">
             <div class="row">
                 <!-- (CPF) -->
                 <div class="col-3">
                   <b-form-group label="CPF:" class="font">
-                    <b-form-input :placeholder="'Digite seu CPF '" type="text" v-model="form.cpfUsuario"
+                    <b-form-input :placeholder="'Digite seu CPF '" type="text" v-model="form.cpf_responsavel"
                       v-mask="'###.###.###-##'"></b-form-input>
                   </b-form-group>
                 </div>
                 <!-- (NOME) -->
                 <div class="col-4"> 
                   <b-form-group label="Nome:" class="font">
-                    <b-form-input :placeholder="'Digite seu Nome'" type="text" v-model="form.nomeUsuario">
+                    <b-form-input :placeholder="'Digite seu Nome'" type="text" v-model="form.nome_responsavel">
                     </b-form-input>
                   </b-form-group>
                 </div>
@@ -230,12 +230,7 @@ export default Vue.extend({
   mounted() {
     this.listarResponsaveis(this.currentPage)
   },
-  methods: {
-    submit() {
-      alert("pesquisar");
-      
-      console.log(JSON.stringify(this.form))
-    },  
+  methods: {  
     abrirModal(modalname: string, idResponsavel: number, dado?: any){
      
        this.idResponsavel = idResponsavel         
@@ -276,12 +271,42 @@ export default Vue.extend({
         .finally(() => {
            this.loading = false;       
         });
+    },
 
-    },
+    search() {      
+
+      const cpf =  this.form.cpf_responsavel ? 
+           this.form.cpf_responsavel.replace(/[^\d]+/g, "") : ""
+
+      let busca = {
+        cpfResponsavel : cpf,
+        nomeResponsavel : this.form.nome_responsavel ? this.form.nome_responsavel : "",      
+      }      
+ 
+      console.log("busca ", JSON.stringify(busca))
+     
+        RestApiService.post("responsaveis/list", busca)
+          .then((response: any) => {            
+            this.items = response.data.data;
+            this.perPage = response.data.perPage;
+            this.totalRows = response.data.total;
+          })
+          .catch((e) => {
+            if (e.message.length > 0) {
+              this.Notificacao.push({
+                type: "danger",
+                message: e.response.data.message,
+              });              
+              return false;
+            }
+          })
+          .finally(() => {
+            this.loading = false          
+          });      
+     },
+
    
-    voltar(): void {
-      this.$router.push("/");
-    },
+    
 
     excluir(id: any){
     this.$bvModal.hide('modal-excluir')  
