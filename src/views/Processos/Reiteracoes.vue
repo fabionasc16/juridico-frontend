@@ -28,7 +28,7 @@
                     </div>
                 </div>
                 <!-- ÍCONE Plus-Circle -->
-                <div  align="center"><!--position-relative class="col-1 mt-3 mb-3"-->
+                <div  align="center" v-if="tipo!='visualizar'"><!--position-relative class="col-1 mt-3 mb-3"-->
                     <b-form-group label="" class="btn text-primary position-absolute">
                     <div class="h3">
                         <b-icon-plus-circle v-b-modal.modal-cadastro-reiteracao v-b-tooltip.hover.topleft="'Adicionar Reiteração'">
@@ -61,7 +61,7 @@
                     <!-- ITENS DO DROPDOWN -->                
                     <b-list-group-item block class="btn-light btn-outline-dark m-0 p-1"                 
                     @click="abrirModal('modal-editar-reiteracao', data.item.id_reiteracao)"  
-                    tipo="editar"> 
+                    tipo="editar" v-if="tipo!='visualizar'"> 
                     Editar
                   </b-list-group-item>
 
@@ -80,7 +80,7 @@
                   <b-list-group-item block                     
                       @click="abrirModal('modal-excluir', data.item.id_reiteracao, data.item.num_procedimento)"
                       class="btn-light text-dark btn-outline-danger m-0 p-1"                 
-                      @listarReiteracoes="listarReiteracoes(currentPage)">                      
+                      @listarReiteracoes="listarReiteracoes(currentPage)" v-if="tipo!='visualizar'">                      
                     Excluir
                   </b-list-group-item>
                   

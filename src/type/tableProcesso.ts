@@ -55,12 +55,12 @@ export const FieldsTableProcesso =
           sortable: true,
         },  
         {
-          key: 'diasRestantes',
+          key: 'diasAExpirar',
           label: 'Dias a Expirar (Corridos)',
           sortable: true,
         }, 
         {
-          key: 'qtdReiteracao',
+          key: 'reiteracoes',
           label: 'Reiteração',
           sortable: true,
         }, 

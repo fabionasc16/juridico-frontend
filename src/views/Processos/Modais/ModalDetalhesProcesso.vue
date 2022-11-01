@@ -33,7 +33,8 @@
                             </b-tab>
                           
                             <b-tab title="Reiteração" v-if="idProcesso && !opcaoDuplicar">
-                                <reiteracoes :idProcesso="idProcesso" :tipo="tipo"> </reiteracoes>
+                                <reiteracoes :idProcesso="idProcesso" 
+                                  :tipo="tipo"> </reiteracoes>
                             </b-tab>                          
                         </b-tabs>                      
                     </div>                                     
