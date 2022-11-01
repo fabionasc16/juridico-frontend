@@ -189,21 +189,21 @@
               :per-page="perPage" :items="items"
               :fields="fields">
 
-              <template v-slot:cell(statusProcesso)="data">
-                <b-badge :variant="colorStatusProcesso(data.item.statusProcesso)">{{data.item.statusProcesso}}</b-badge>            
+              <template v-slot:cell(status.desc_status)="data">
+                <b-badge :variant="colorStatusProcesso(data.item.status.id_status)">
+                     {{data.item.status.desc_status}}</b-badge>            
               </template>
 
-              <template v-slot:cell(diasRestantes)="data">
-                <b-badge :variant="colorDiasRestantes(data.item.diasRestantes)">
-                   {{data.item.diasRestantes}}
+              <template v-slot:cell(diasAExpirar)="data">
+                <b-badge :variant="colorDiasRestantes(data.item.dia_limite_prazo)">
+                   {{calcularDiasAExpirarDesc(data.item.dia_limite_prazo)}}                   
+                </b-badge>                    
+              </template>             
+
+              <template v-slot:cell(reiteracoes)="data">  
+                <b-badge :variant="colorReiteracao(data.item._count.Reiteracao)">
+                    {{data.item._count.Reiteracao}}
                 </b-badge>
-              </template>
-
-              <template v-slot:cell(qtdReiteracao)="data">  
-                  <b-badge :variant="colorReiteracao(data.item.qtdReiteracao)">{{data.item.qtdReiteracao}}</b-badge>
-                  <!--<a href="#" v-b-modal.modal-visualizar-reiteracao>
-                     <b-badge :variant="colorReiteracao(data.item.qtdReiteracao)">{{data.item.qtdReiteracao}}</b-badge>
-                  </a>-->
               </template>
              
               <!-- BOTÕES DE AÇÕES -->
@@ -246,7 +246,7 @@
                     Tramitações
                   </b-list-group-item>                   
                   
-                   <!--status diferente de arquivado(14) --> 
+                 <!--status diferente de arquivado(14) --> 
                  <!-- <b-list-group-item block v-b-modal.modal-arquivar-processo 
                      class="btn-light text-dark btn-outline-success m-0 p-1"
                      v-if="data.item.status.id_status!='14'">
@@ -259,6 +259,13 @@
                          @listarProcesso="listarProcesso(currentPage)"
                       @click="desarquivar(data.item)">
                     Desarquivar
+                  </b-list-group-item>
+
+                  <b-list-group-item block class="btn-light text-dark btn-outline-danger m-0 p-1"
+                        @click="abrirModal('modal-mensagem', data.item.id_processo)"
+                        v-if="data.item.status.id_status=='14'" 
+                        @listarProcesso="listarProcesso(currentPage)">
+                    Desarquivar 2
                   </b-list-group-item>
 
                   <!--status igual a recebido (10) --> 
@@ -344,35 +351,17 @@
                 @click="excluir(idProcessoModal)"
                 >Excluir</b-button>
             </template>   
-        </ModalExcluir>
+        </ModalExcluir>    
+        
+        <ModalMensagem title="Desarquivar processo"
+           pergunta="Deseja realmente desarquivar o processo?">
+           <template v-slot:buttons>
+                <b-button variant="danger" class="bordered" 
+                @click="excluir(idProcessoModal)"
+                >Excluir</b-button>
+            </template>   
+        </ModalMensagem>       
 
-        <!-- REITERAR PROCESSO -->        
-        <!-- <b-modal id="modal-cadastro-reiteracao" size="lg" centered title="Cadastro - Reiterar Processo" hide-footer>-->
-         <!-- <ModalReiteracaoProcesso  @listarProcesso="listarProcesso(currentPage)"> 
-            <template v-slot:buttons>
-                <b-button class="bordered" @click="$bvModal.hide('modal-cadastro-reiteracao')">Fechar</b-button>
-            </template>            
-          </ModalReiteracaoProcesso> -->
-
-          <!-- <ModalReiteracoes  @listarProcesso="listarProcesso(currentPage)"          
-          :idProcesso="idProcessoModal"> 
-            <template v-slot:buttons>
-                <b-button class="bordered" @click="$bvModal.hide('modal-cadastro-reiteracao')">Fechar</b-button>
-            </template>            
-          </ModalReiteracoes>
-        </b-modal> -->
-                     
-
-        <!-- //modal -->
-        <!-- DUPLICAR PROCESSO -->
-        <!--<b-modal id="modal-duplicar-processo" size="lg" centered title="Duplicar Processo" hide-footer>
-         
-            <ModalDetalhesProcesso tipo="duplicar">
-            <template v-slot:buttons>
-                <b-button class="bordered" @click="$bvModal.hide('modal-duplicar-processo')">Fechar</b-button>
-            </template>
-          </ModalDetalhesProcesso>
-        </b-modal> -->
 
     </div><!--container fluid-->
   
@@ -399,6 +388,8 @@ import LoadingSpinner from "@/components/LoadingSpinner.vue";
 
 import ModalReiteracoes from "./Modais/ModalReiteracoes.vue";
 import ModalExcluir from "@/components/ModalExcluir.vue"
+import ModalMensagem from "@/components/ModalMensagem.vue"
+import dataMixin from "@/mixins/dataMixin";
 
 export default Vue.extend({
   directives: { mask },
@@ -411,8 +402,12 @@ export default Vue.extend({
     ReturnMessage,
     LoadingSpinner,
     ModalReiteracoes,
-    ModalExcluir
-}, 
+    ModalExcluir,
+    ModalMensagem
+  }, 
+  mixins: [        
+    dataMixin,
+  ],  
   data() {
     return {
       placeholderItem: '--Selecione--',
@@ -514,23 +509,27 @@ export default Vue.extend({
      this.form.numProcessoSIGED=""
      this.form.numProcedimento=""
     },
-   /* submit() {
-      alert("enviar");
+    calcularDiasAExpirar(dataAExpirar: any): any{
+        let diferencaDias = dataMixin.methods.diferencaEntreDataAtual(dataAExpirar) 
+        return diferencaDias 
+    },
 
-      //pegar o id dos options   
-      this.form.idTipoProcesso = this.tipoProcessoSelecionado.id_tipoprocesso
-      this.form.statusProcesso = this.statusProcessoSelecionado.value
-      this.form.statusPrazo    = this.statusPrazoSelecionado.value
-    
-      this.form.idOrgaoDemandante = this.orgaoDemandanteSelecionado.id_orgao
-      this.form.idClassificacao   = this.classificacaoSelecionada.id_classificacao
-      this.form.idResponsavel   = this.responsavelSelecionado.id_responsavel
-      this.form.idAssunto       = this.assuntoSelecionado.id_assunto
-      this.form.caixaAtualSIGED = this.caixaSigedSelecionada.value
-     
-      console.log(JSON.stringify(this.form))
-    },*/
+    calcularDiasAExpirarDesc(dataAExpirar: any): any{
+        let diferencaDias = dataMixin.methods.diferencaEntreDataAtual(dataAExpirar) 
+ 
+        if(!diferencaDias){
+          return ""
+        }
+        if(diferencaDias >-365 && diferencaDias < 0 ){
+          return "Expirado ("+-diferencaDias+" dias)"
+        }
+        if(diferencaDias < -365){
+          return "Expirado (+1 ano)"
+        }
 
+        return diferencaDias + " dias"
+    },
+   
     listarProcesso(currentpage: number): void {
       this.loading = true     
 
@@ -826,7 +825,9 @@ export default Vue.extend({
             return "light"            
     },
     //dias corridos
-    colorDiasRestantes(prazo: any) : any {
+    colorDiasRestantes(DataLimitePrazo: any) : any {
+
+            const prazo = this.calcularDiasAExpirar(DataLimitePrazo)
 
             if(prazo < 0) {
               return "dark" 
@@ -867,13 +868,13 @@ export default Vue.extend({
             return ""
             
     },
-    colorStatusProcesso(status: string) : any {
+    colorStatusProcesso(status: number) : any {
 
           switch(status){
-                case "12": return "warning"; break;//tramitando
-                case "11": return "info"; break;//distribuido
-                case "14": return "dark"; break;//arquivado
-                case "13": return "primary"; break;//respondendo
+                case 12: return "warning"; break;//tramitando
+                case 11: return "info"; break;//distribuido
+                case 14: return "dark"; break;//arquivado
+                case 13: return "primary"; break;//respondendo
                 default: ""; break;
           }        
     },
