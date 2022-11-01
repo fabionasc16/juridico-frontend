@@ -254,18 +254,18 @@
                   </b-list-group-item>--> 
 
                   <!--status igual arquivado(14) --> 
-                  <b-list-group-item block class="btn-light text-dark btn-outline-danger m-0 p-1"
+                  <!--<b-list-group-item block class="btn-light text-dark btn-outline-danger m-0 p-1"
                         v-if="data.item.status.id_status=='14'" 
                          @listarProcesso="listarProcesso(currentPage)"
                       @click="desarquivar(data.item)">
                     Desarquivar
-                  </b-list-group-item>
+                  </b-list-group-item>-->
 
                   <b-list-group-item block class="btn-light text-dark btn-outline-danger m-0 p-1"
-                        @click="abrirModal('modal-mensagem', data.item.id_processo)"
+                        @click="abrirModal('modal-mensagem', data.item.id_processo, data.item.num_procedimento)"
                         v-if="data.item.status.id_status=='14'" 
                         @listarProcesso="listarProcesso(currentPage)">
-                    Desarquivar 2
+                    Desarquivar
                   </b-list-group-item>
 
                   <!--status igual a recebido (10) --> 
@@ -353,12 +353,12 @@
             </template>   
         </ModalExcluir>    
         
-        <ModalMensagem title="Desarquivar processo"
-           pergunta="Deseja realmente desarquivar o processo?">
+        <ModalMensagem title="Desarquivar processo" 
+           :pergunta="`Deseja realmente desarquivar o processo ${numProcedimentoModal}?`">
            <template v-slot:buttons>
                 <b-button variant="danger" class="bordered" 
-                @click="excluir(idProcessoModal)"
-                >Excluir</b-button>
+                @click="desarquivar(idProcessoModal)"
+                >Desarquivar</b-button>
             </template>   
         </ModalMensagem>       
 
@@ -498,11 +498,11 @@ export default Vue.extend({
     alterarTitulo(nome:string):void {
       this.titleModal = nome
     },
-    abrirModal(modalname: string, idProcesso: number, dado?: any){
+    abrirModal(modalname: string, idProcesso: number, numProcedimento?: any, status?:any){
        // this.$refs[modalname]?.show()
        this.titleModal = ''
        this.idProcessoModal = idProcesso            
-       this.numProcedimentoModal = dado
+       this.numProcedimentoModal = numProcedimento
        this.$bvModal.show(modalname)            
     },
     alterarProced(){
@@ -520,12 +520,16 @@ export default Vue.extend({
         if(!diferencaDias){
           return ""
         }
-        if(diferencaDias >-365 && diferencaDias < 0 ){
+        if(diferencaDias < 0 ){
+          return "Expirado"
+        }
+        
+        /*if(diferencaDias >-365 && diferencaDias < 0 ){
           return "Expirado ("+-diferencaDias+" dias)"
         }
         if(diferencaDias < -365){
           return "Expirado (+1 ano)"
-        }
+        }*/
 
         return diferencaDias + " dias"
     },
@@ -740,18 +744,15 @@ export default Vue.extend({
       }
     },
 
-    desarquivar(dadosForm: any): void {     
-    
-    let message = 'Deseja realmente desarquivar processo Nº ' + dadosForm.num_procedimento + '?'
+    desarquivar(id_processo: any): void {     
+      this.$bvModal.hide('modal-mensagem')    
       
-    this.formDesarquivado.idProcesso = dadosForm.id_processo
-    this.formDesarquivado.dataArquivamento = ""
-    this.formDesarquivado.idStatusProcesso = 12 //Tramitando
+      this.formDesarquivado.idProcesso = id_processo
+      this.formDesarquivado.dataArquivamento = ""
+      this.formDesarquivado.idStatusProcesso = 12 //Tramitando
 
-    let url = "processos/atualiza-status?idProcesso="+dadosForm.id_processo;
-           
-    if(confirm(message) && (dadosForm.status.id_status == '14' )) {
-    
+      let url = "processos/atualiza-status?idProcesso="+id_processo;                 
+
       RestApiService.patch(url, this.formDesarquivado)   
         .then((response: any) => {
           this.loading = true;          
@@ -789,7 +790,7 @@ export default Vue.extend({
           .finally(() => {
             this.loading = false;
           });        
-    }
+    
    },
 
   excluir(id: any){
