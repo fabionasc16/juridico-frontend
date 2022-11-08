@@ -34,8 +34,8 @@
                           
                         <b-form-group class="font col-sm-3 col-md-3 col-lg-3">
                             <label>Data do Processo: <span class="text-danger">*</span></label>
-                            <b-form-input class="bordered margin-field" type="text" v-model="datas.dataProcessoBR" placeholder="dd/mm/aaaa"
-                                v-mask="'##/##/####'" :disabled="disabledAll" required></b-form-input>                          
+                            <b-form-input class="bordered margin-field" type="data" v-model="datas.dataProcessoBR" placeholder="dd/mm/aaaa"
+                                v-mask="'##/##/####'" v-validate="{ date_format: 'dd/MM/yyyy', date_between:['01/01/1990',maxStartDate] }" :disabled="disabledAll" required></b-form-input>                          
                         </b-form-group>
 
                         <b-form-group class="font col-sm-3 col-md-3 col-lg-3">
@@ -51,7 +51,7 @@
 
                         <b-form-group label="Data Final Limite:" class="font col-sm-3 col-md-3 col-lg-3">
                             <b-form-input class="bordered margin-field" type="text" v-model="datas.dataLimitePrazoBR" placeholder="dd/mm/aaaa"
-                                v-mask="'##/##/####'" :disabled="disabledAll"></b-form-input>                          
+                                v-mask="'##/##/####'" disabled ></b-form-input>                          
                         </b-form-group>
 
                         <b-form-group label="Valor Multa:" class="font col-sm-4 col-md-4 col-lg-4">
