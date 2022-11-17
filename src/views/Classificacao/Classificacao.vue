@@ -99,12 +99,7 @@
                       <b-list-group-item block
                          class="btn-light btn-outline-dark m-0 p-1" @click="editarClassificacao(data.item.id_classificacao)">
                         Editar
-                      </b-list-group-item>  
-                      <b-list-group-item block 
-                         @click="visualizarClassificacao(data.item.id_classificacao)"
-                         class="btn-light btn-outline-dark m-0 p-1">
-                        Visualizar
-                      </b-list-group-item>                 
+                      </b-list-group-item>                   
                       <b-list-group-item block class="btn-light text-dark btn-outline-danger m-0 p-1" @click="excluir(data.item.id_classificacao, data.item.descClassificacao)">
                         Excluir
                       </b-list-group-item>
@@ -138,14 +133,6 @@
               <ModalCadastroClassificacao @listarClassificacao="listarClassificacao(currentPage)" tipo="editar" :id="id_classificacao">  
                 <template v-slot:buttons> 
                     <b-button class="bordered" @click="$bvModal.hide('modal-editar-classificacao')">Fechar</b-button>
-                </template>           
-              </ModalCadastroClassificacao>
-            </b-modal>
-    
-            <b-modal id="modal-visualizar-classificacao" size="lg" centered title="Visualizar Classificação" hide-footer>
-              <ModalCadastroClassificacao tipo="visualizar" :id="id_classificacao"> 
-                <template v-slot:buttons> 
-                    <b-button class="bordered" @click="$bvModal.hide('modal-visualizar-classificacao')">Fechar</b-button>
                 </template>           
               </ModalCadastroClassificacao>
             </b-modal>
@@ -221,11 +208,6 @@
     editarClassificacao(id: number): void {
         this.id_classificacao = id
         this.$bvModal.show('modal-editar-classificacao')       
-    },
-
-    visualizarClassificacao(id: number): void {
-        this.id_classificacao = id
-        this.$bvModal.show('modal-visualizar-tipoprocesso')
     },
    
     search():void {

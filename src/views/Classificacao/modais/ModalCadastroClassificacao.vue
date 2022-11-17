@@ -155,13 +155,13 @@ export default Vue.extend({
         carregarDados(): void {
             this.loading = true;          
             
-            RestApiService.get("classificacoes", this.id)
+            RestApiService.get("classificacoes/id", this.id)
                 .then((res: any) => {                 
-                this.form =  res.data                
+                this.form.descClassificacao =  res.data.desc_classificacao               
             })
             .catch((e) => {
                 this.adicionarAlert(
-                    "alert",
+                        "alert",
                     "Houve um erro ao carregar os dados. Tente novamente!"
                 );
           
