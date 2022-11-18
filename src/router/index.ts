@@ -17,7 +17,11 @@ const routes: Array<RouteConfig> = [
   { path: '/feriados', name: 'Feriados', component: () => import('../views/Feriados/Feriados.vue') },
   { path: '/orgaos', name: 'Órgãos Demandantes', component: () => import('../views/Orgaos/Orgaos.vue') },
   { path: '/tiposprocesso', name: 'Tipos Processo', component: () => import('../views/TiposProcesso/TiposProcesso.vue') },
+
+  { path: '/assuntos', name: 'Assuntos', component: () => import('../views/Assuntos/Assuntos.vue') },
+
   { path: '/classificacoes', name: 'Classificação', component: () => import('../views/Classificacao/Classificacao.vue') },
+
 ]
 
 const router = new VueRouter({
