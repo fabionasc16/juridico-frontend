@@ -1,4 +1,4 @@
-# ticados2
+# juridicos-frontend
 
 ## Project setup
 ```

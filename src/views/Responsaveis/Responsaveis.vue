@@ -1,26 +1,39 @@
 <template>
-  <div>
-    <b-container fluid>
-      <div class="row">
-        <b-form-group class="titulo m-0" label="Consulta de Responsáveis" label-size="lg">
-          <hr />
-        </b-form-group>
+  <div class="container fluid">
+    <div class="row">
+        <div class="col-12" style="margin-top: 20px">
+          <b-form-group class="titulo m-0" label="Consulta de Responsáveis" label-size="lg">
+            <hr />
+          </b-form-group>
+        </div>
+    </div>
+        <!-- NOTIFICAÇÕES -->       
+        <notifications :notifications="Notificacao"></notifications>      
+
+        <div v-if="alert">
+            <ReturnMessage :message="Message" :fechaAlert="fechaAlert"></ReturnMessage>
+        </div>          
+
+        <div v-if="loading">
+            <LoadingSpinner></LoadingSpinner>
+        </div>  
+    
+
 
         <!-- FORMULÁRIO DE CONSULTA -->       
-        <b-form @submit.prevent="submit" class="mb-5">
-
+        <b-form @submit.prevent="search" class="mb-5">
             <div class="row">
                 <!-- (CPF) -->
                 <div class="col-3">
                   <b-form-group label="CPF:" class="font">
-                    <b-form-input :placeholder="'Digite seu CPF '" type="text" v-model="form.cpfUsuario"
+                    <b-form-input :placeholder="'Digite seu CPF '" type="text" v-model="form.cpf_responsavel"
                       v-mask="'###.###.###-##'"></b-form-input>
                   </b-form-group>
                 </div>
                 <!-- (NOME) -->
                 <div class="col-4"> 
                   <b-form-group label="Nome:" class="font">
-                    <b-form-input :placeholder="'Digite seu Nome'" type="text" v-model="form.nomeUsuario">
+                    <b-form-input :placeholder="'Digite seu Nome'" type="text" v-model="form.nome_responsavel">
                     </b-form-input>
                   </b-form-group>
                 </div>
@@ -31,8 +44,8 @@
                         <b-icon-search v-b-tooltip.hover.topleft="'Consultar'"></b-icon-search>
                       </b-button>               
                   </b-form-group>               
-          </div>
-        </div>
+                </div>
+            </div>
         </b-form>
 
 
@@ -45,7 +58,7 @@
                 <div class="col-1 text-blue h2 p0m0" align="center" label="Responsáveis Cadastrados">
                   <b-icon-journal-text>
                   </b-icon-journal-text>
-                </div>
+                </div>                
               <!-- TÍTULO -->
               <div class="col-10 mt-1" align="start">
                 <div class="row position-relative">
@@ -56,7 +69,7 @@
               <div class="col-1 position-relative" align="center"> 
                 <b-form-group label="" class="btn text-primary position-absolute top-50 start-50 translate-middle">
                   <div class="h3">
-                    <b-icon-plus-circle v-b-modal.modal-cadastro-responsavel v-b-tooltip.hover.topleft="'Adicionar Responsável'"></b-icon-plus-circle>
+                    <b-icon-plus-circle class="mr-3" v-b-modal.modal-cadastro-responsavel v-b-tooltip.hover.topleft="'Adicionar Responsável'"></b-icon-plus-circle>
                   </div>
                 </b-form-group>
               </div>
@@ -64,10 +77,10 @@
           </div>
           <!-- TABELA -->
           <div>
-            <b-table-lite small striped hover responsive class="m-0" head-variant="dark" :current-page="currentPage"
-              :per-page="perPage" :sticky-header="stickyHeader" :no-border-collapse="noCollapse" :items="items"
+            <b-table-lite small striped hover class="m-0" head-variant="dark" :current-page="currentPage"
+              :per-page="perPage" :no-border-collapse="noCollapse" :items="items"
               :fields="fields">            
-             
+            
               <!-- BOTÕES DE AÇÕES -->
               <template v-slot:cell(botaoAction)="data">
 
@@ -79,30 +92,49 @@
                   </template>
 
                   <!-- ITENS DO DROPDOWN -->                
-                  <b-list-group-item block v-b-modal.modal-editar-responsavel class="btn-light btn-outline-dark m-0 p-1">
+                  <b-list-group-item block
+                     class="btn-light btn-outline-dark m-0 p-1" @click="editarResponsavel(data.item.id_responsavel)">
                     Editar
+                  </b-list-group-item>  
+                  <b-list-group-item block 
+                     @click="visualizarResponsavel(data.item.id_responsavel)"
+                     class="btn-light btn-outline-dark m-0 p-1">
+                    Visualizar
                   </b-list-group-item>                 
-                  <b-list-group-item block class="btn-light text-dark btn-outline-danger m-0 p-1" @click="excluir(data.item.nome)">
+                 <!-- <b-list-group-item block class="btn-light text-dark btn-outline-danger m-0 p-1" @click="excluir(data.item.id_responsavel, data.item.nome_responsavel)">
                     Excluir
-                  </b-list-group-item>
+                  </b-list-group-item>-->
+
+                  <b-list-group-item block                     
+                      @click="abrirModal('modal-excluir', data.item.id_responsavel, data.item.nome_responsavel)"
+                      class="btn-light text-dark btn-outline-danger m-0 p-1"                 
+                      @listarResponsaveis="listarResponsaveis(currentPage)"
+                      >                      
+                    Excluir
+                  </b-list-group-item>                    
+
                 </b-dropdown>
-              </template>
+                  
+              </template>                                 
             </b-table-lite>
           </div>
           <!-- RODAPÉ DA TABELA (Espaço reservado para incluir ícones) -->
           <div class="card-footer m-0 px-1 pt-1">
             <!-- PAGINAÇÃO -->
-            <div class="col-12 m-0 px-1 pt-1">
-              <b-pagination pills align="right" size="sm" v-model="currentPage" :total-rows="rows" :per-page="perPage">
-              </b-pagination>
-            </div>
+            <div class="col-12 m-0 px-1 pt-1">              
+              <b-pagination pills align="right" size="sm" v-model="currentPage" 
+                @change="listarResponsaveis"              
+                :total-rows="totalRows" :per-page="perPage"  v-show="totalRows">
+              </b-pagination>               
+            </div>           
           </div>
-        </div>       
-        
-         <!-- MODAL -->
+          <div>&nbsp <b>Total Registros:</b> {{totalRows}}</div>
+        <!-- table -->
+    </div><!-- card -->
 
+        <!-- MODAL -->
         <b-modal id="modal-cadastro-responsavel" size="lg" centered title="Cadastro do Responsável" hide-footer>
-          <ModalCadastroResponsavel> 
+          <ModalCadastroResponsavel  @listarResponsaveis="listarResponsaveis(currentPage)" tipo="cadastrar"> 
             <template v-slot:buttons> 
                 <b-button class="bordered" @click="$bvModal.hide('modal-cadastro-responsavel')">Fechar</b-button>
             </template>           
@@ -110,19 +142,35 @@
         </b-modal>
 
         <b-modal id="modal-editar-responsavel" size="lg" centered title="Editar Responsável" hide-footer>
-          <ModalCadastroResponsavel>  
+          <ModalCadastroResponsavel @listarResponsaveis="listarResponsaveis(currentPage)" tipo="editar" :id="idResponsavel">  
             <template v-slot:buttons> 
                 <b-button class="bordered" @click="$bvModal.hide('modal-editar-responsavel')">Fechar</b-button>
             </template>           
           </ModalCadastroResponsavel>
         </b-modal>
 
+        <b-modal id="modal-visualizar-responsavel" size="lg" centered title="Visualizar Responsável" hide-footer>
+          <ModalCadastroResponsavel tipo="visualizar" :id="idResponsavel"> 
+            <template v-slot:buttons> 
+                <b-button class="bordered" @click="$bvModal.hide('modal-visualizar-responsavel')">Fechar</b-button>
+            </template>           
+          </ModalCadastroResponsavel>
+        </b-modal>
+
+        <ModalExcluir :pergunta="`o responsável ${nomeResponsavelModal}`">
+                    <template v-slot:buttons>
+                          <b-button variant="danger" class="bordered" 
+                          @click="excluir(idResponsavel)"
+                          >Excluir</b-button>
+                      </template>   
+        </ModalExcluir>
         <!-- //MODAL -->
 
 
-      </div>
-    </b-container>
-  </div>
+</div><!-- container fluid -->
+
+
+
 </template>
 
 <script lang="ts">
@@ -131,12 +179,18 @@ import Vue from "vue";
 import HeaderPage from '@/components/HeaderPage.vue';
 import ModalCadastroResponsavel from './Modais/ModalCadastroResponsavel.vue';
 import { mask } from "vue-the-mask";
-import Notifications from "@/components/Notifications.vue";
-import { Notificacao } from "@/type/notificacao";
 import { Responsavel } from '@/type/responsavel';
-import { TableResponsaveisSeeder } from '@/type/tableResponsavel';
 import { FieldsTableResponsavel } from "@/type/tableResponsavel";
 import { BIconSearch, BIconPlusCircle, BIconInfoCircle, BIconJournalText } from 'bootstrap-vue'
+
+import Notifications from "@/components/Notifications.vue";
+import { Notificacao } from "@/type/notificacao";
+import ReturnMessage from "@/components/ReturnMessage.vue";
+import LoadingSpinner from "@/components/LoadingSpinner.vue";
+
+import RestApiService from "@/services/rest/service";
+
+import ModalExcluir from "@/components/ModalExcluir.vue"
 
 export default Vue.extend({
   directives: { mask },
@@ -147,45 +201,184 @@ export default Vue.extend({
     BIconPlusCircle,
     BIconInfoCircle,
     Notifications,
-    ModalCadastroResponsavel
+    ModalCadastroResponsavel,
+    ReturnMessage,
+    LoadingSpinner,
+    ModalExcluir
   },
   data() {
     return {
+      idResponsavel: null as any, //para modal
+      nomeResponsavelModal: "" as string,
       rows: 100,
       currentPage: 1,
-      totalRows: 1,
-      perPage: 5,
+      totalRows: null as any,
+      perPage: 10,
+      items: [] as Array<String>,  
       pageOptions: [5, 10, 15, { value: 100, text: "Show a lot" }],
       form: {} as Responsavel,
-      fields: FieldsTableResponsavel, //nome das colunas da tabela
-      items:  TableResponsaveisSeeder, 
+      fields: FieldsTableResponsavel, //nome das colunas da tabela     
       stickyHeader: true,
       noCollapse: true,
+
+      Notificacao: [] as Array<Notificacao>,
+      Message: [] as Array<Notificacao>,
+      loading: false as boolean,
+      alert: false as boolean,   
     };
   },
   mounted() {
-    this.totalRows = this.items.length
-     
+    this.listarResponsaveis(this.currentPage)
   },
-  methods: {
-    submit() {
-      alert("pesquisar");
-      
-      console.log(JSON.stringify(this.form))
-    },  
-   
-    voltar(): void {
-      this.$router.push("/");
+  methods: {  
+    abrirModal(modalname: string, idResponsavel: number, dado?: any){
+     
+       this.idResponsavel = idResponsavel         
+       this.nomeResponsavelModal = dado
+       this.$bvModal.show(modalname)            
     },
 
-    excluir(data: any): void {
+    editarResponsavel(id: number): void {
+        this.idResponsavel = id
+        this.$bvModal.show('modal-editar-responsavel')       
+    },
+
+    visualizarResponsavel(id: number): void {
+        this.idResponsavel = id
+        this.$bvModal.show('modal-visualizar-responsavel')
+    },
+
+    listarResponsaveis(currentpage: number) : void {
+      this.loading = true
+      //RestApiService.get("responsaveis", `?currentPage=${currentpage}`)
+      let busca = {}
+
+      RestApiService.post3("responsaveis/list", `?currentPage=${currentpage}`, busca) 
+        .then((response: any) => {
+          this.items = response.data.data
+          this.perPage = response.data.perPage
+          this.totalRows = response.data.total          
+        })
+        .catch((e: Error) => {
+          console.log(e)
+          //this.adicionarNotificacao('danger', 'Não foi possível carregar a listagem!') 
+          this.Notificacao.push({
+            type: "danger",
+            message: "Não foi possível carregar a listagem!"            
+          })        
+          return false;
+        })
+        .finally(() => {
+           this.loading = false;       
+        });
+    },
+
+    search() {      
+
+      const cpf =  this.form.cpf_responsavel ? 
+           this.form.cpf_responsavel.replace(/[^\d]+/g, "") : ""
+
+      let busca = {
+        cpfResponsavel : cpf,
+        nomeResponsavel : this.form.nome_responsavel ? this.form.nome_responsavel : "",      
+      }      
+ 
+      console.log("busca ", JSON.stringify(busca))
+     
+        RestApiService.post("responsaveis/list", busca)
+          .then((response: any) => {            
+            this.items = response.data.data;
+            this.perPage = response.data.perPage;
+            this.totalRows = response.data.total;
+          })
+          .catch((e) => {
+            if (e.message.length > 0) {
+              this.Notificacao.push({
+                type: "danger",
+                message: e.response.data.message,
+              });              
+              return false;
+            }
+          })
+          .finally(() => {
+            this.loading = false          
+          });      
+     },
+
+   
     
-      let message = 'Deseja realmente excluir responsável ' + data + '?'
+
+    excluir(id: any){
+    this.$bvModal.hide('modal-excluir')  
+
+    RestApiService.delete("responsaveis", id)
+        .then((response: any) => {
+          this.loading = true;
+
+          this.adicionarAlert(
+                  "success",
+                  "Exclusão realizada com sucesso!"
+          ); 
+          
+          this.listarResponsaveis(this.currentPage)
+        })
+        .catch((e: Error) => {    
+           this.adicionarAlert(
+                  "alert",
+                  "Ocorreu um erro ao excluir registro!"
+          );
+        })
+        .finally(() => {
+          this.loading = false;
+        }); 
+   },
+
+   /* excluir(id: any, nome: string): void {
+    
+      let message = 'Deseja realmente excluir responsável ' + nome + '?'
 
       if(confirm(message)) {
-        console.log("Excluído")
+        RestApiService.delete("responsaveis", id)
+          .then((response: any) =>{
+              this.loading = true
+              this.adicionarAlert(
+                  "success",
+                  "Exclusão realizada com sucesso!"
+              );
+
+             this.listarResponsaveis(this.currentPage)
+          })
+          .catch((e: Error) => {
+             this.adicionarAlert(
+                  "alert",
+                  "Ocorreu um erro ao excluir registro!"
+              );
+          })
+          .finally(() => {
+            this.loading = false
+          });
       }
-    }
+    },*/
+
+    adicionarAlert(tipo: string, mensagem: string): void {
+            this.Message = []        
+            this.Message.push({
+                type: tipo,
+                message: mensagem,
+            });
+            this.alert = true;
+    },
+
+    adicionarNotificacao(tipo: string, mensagem: string): void {
+        this.Notificacao.push({
+            type: tipo,
+            message: mensagem,
+        });
+    },
+
+    fechaAlert(): void {
+            this.alert = false;
+    }, 
   },
  
 });

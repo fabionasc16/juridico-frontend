@@ -16,48 +16,53 @@
 
                 <b-form @submit.prevent="submit">
 
-                    <b-form-group class="titulo" label="Informações pessoais" label-size="lg">
+                   <!-- <b-form-group class="titulo" label="Informações pessoais" label-size="lg">
                         <hr />
-                    </b-form-group>
+                    </b-form-group> -->
 
                     <!-- 1ª LINHA (CPF + NOME) -->
-                    <div class="row">
+                    <div class="row mt-3" >
                         <b-form-group class="font col-sm-5 col-md-5 col-lg-5">
                            <label>CPF<span class="text-danger">*</span>:</label>
-                            <b-form-input :placeholder="'Digite seu CPF '" type="text" v-model="form.cpf"
-                                v-mask="'###.###.###-##'" required></b-form-input>
+                            <b-form-input :placeholder="'Digite seu CPF '" type="text" v-model="form.cpfResponsavel"
+                                v-mask="'###.###.###-##'" required :disabled="disabledAll"></b-form-input>
                         </b-form-group>
 
                         <b-form-group class="font col-sm-7 col-md-7 col-lg-7">
                             <label>Nome completo<span class="text-danger">*</span>:</label>
                             <b-form-input :placeholder="'Digite seu Nome Completo'" type="text"
-                                v-model="form.nome" required>
+                                v-model="form.nomeResponsavel" required :disabled="disabledAll">
                             </b-form-input>
                         </b-form-group>
                     </div>
                     <div class="row">
                         <!-- 2ª LINHA  -->
-                        <b-form-group label="Telefone:" class="font col-sm-5 col-md-5 col-lg-5">
+                        <b-form-group class="font col-sm-5 col-md-5 col-lg-5">
+                            <label>Telefone<span class="text-danger">*</span>:</label>
                             <b-form-input :placeholder="'(00) 00000-0000'" type="text"
-                                v-model="form.telefone" v-mask="'(##) #####-####'"></b-form-input>
+                                v-model="form.telefone" v-mask="'(##) #####-####'" required :disabled="disabledAll"></b-form-input>
                         </b-form-group>
 
-                        <b-form-group label="Email:" class="font col-sm-7 col-md-7 col-lg-7">
-                            <b-form-input :placeholder="'Digite seu Email'" type="email" v-model="form.email">
+                        <b-form-group class="font col-sm-7 col-md-7 col-lg-7">
+                            <label>Email<span class="text-danger">*</span>:</label>
+                            <b-form-input :placeholder="'Digite seu Email'" type="email" v-model="form.email" required
+                              :disabled="disabledAll">
                             </b-form-input>
                         </b-form-group>
                     </div>
                     <div class="row">
                         <!-- 3ª LINHA  -->                      
-                        <b-form-group label="Registro OAB:" class="font col-sm-5 col-md-5 col-lg-5">
-                            <b-form-input :placeholder="'Digite seu Registro OAB'" type="text" v-model="form.registroOAB">
+                        <b-form-group class="font col-sm-5 col-md-5 col-lg-5">
+                             <label>Registro OAB:<span class="text-danger">*</span>:</label>
+                            <b-form-input :placeholder="'Digite seu Registro OAB'" type="text" v-model="form.registroOAB"
+                             required :disabled="disabledAll">
                             </b-form-input>
                         </b-form-group>
                     </div>
 
                     <div class="py-2 mt-10" align="right">                        
                        <slot name="buttons"></slot>
-                       <b-button class="bordered ml-2" type="submit" variant="success">Salvar</b-button>
+                       <b-button v-if="!disabledAll" class="bordered ml-2" type="submit" variant="success">Salvar</b-button>
                     </div>
 
                 </b-form>
@@ -73,7 +78,7 @@ import HeaderPage from '@/components/HeaderPage.vue';
 import { mask } from "vue-the-mask";
 import Notifications from "@/components/Notifications.vue";
 import { BIconSearch, BIconPlusCircle, BIconInfoCircle, BIconJournalPlus } from 'bootstrap-vue'
-import { Responsavel } from '@/type/responsavel';
+import { ResponsavelCadastro } from '@/type/responsavel';
 import { Notificacao } from "@/type/notificacao";
 import ReturnMessage from "@/components/ReturnMessage.vue";
 import RestApiService from "@/services/rest/service";
@@ -93,15 +98,16 @@ export default Vue.extend({
         ReturnMessage,
         LoadingSpinner,
     },
-    props: ['id'],
+    props: ['id', 'tipo'],
     data() {
         return {
+            disabledAll: false as boolean,
             rows: 100,
             currentPage: 1,
-            stickyHeader: true,
-            noCollapse: true,
+            stickyHeader: true as boolean,
+            noCollapse: true as boolean,
             show: false as boolean,
-            form: {} as Responsavel,      
+            form: {} as ResponsavelCadastro,      
             Notificacao: [] as Array<Notificacao>,
             Message: [] as Array<Notificacao>,
             loading: false as boolean,
@@ -111,18 +117,20 @@ export default Vue.extend({
     },
     mounted() {
         this.isLoading = false
-        
-           /* const path = this.$route.path;
-            const acao = "/editar";
 
-            if (path.includes(acao)) {
-                this.carregarDados();            
-            }*/          
+        if(this.tipo == 'editar') {
+            this.carregarDados();   
+        }      
+
+        if(this.tipo == 'visualizar'){
+            this.carregarDados();  
+            this.disabledAll = true; 
+        }
     }, 
     methods: {
          submit() {
             let acao = this.id ? "put" : "post"
-            let url = this.id ? "responsavel/update" : "responsavel";
+            let url = "responsaveis";           
                     
             if (this.validarCampos()) { 
 
@@ -130,7 +138,7 @@ export default Vue.extend({
               
               this.loading = true  
             
-              RestApiService.salvar(url, this.form, acao)
+              RestApiService.salvar(url, this.form, acao, this.form.idResponsavel)
                 .then((res) => {
                     if (acao == "put") {
                         this.adicionarAlert(
@@ -142,7 +150,7 @@ export default Vue.extend({
                             "success",
                             "Cadastro realizado com sucesso!"
                         );
-                    }                   
+                    } 
                 }) 
                 .catch((e) => {
                         if (e.message === "Network Error") {
@@ -179,51 +187,50 @@ export default Vue.extend({
             }                  
         },
 
-        carregarDados(): void {
+         carregarDados(): void {
             this.loading = true;       
                         
-            RestApiService.get("responsavel/listid", this.id)
+            RestApiService.get("responsaveis/id", this.id)
                 .then((res: any) => {          
 
-                this.form.idResponsavel =  res.data.idResponsavel 
-                this.form.nome = res.data.nome
-                this.form.cpf =  res.data.cpf
+                this.form.idResponsavel =  res.data.id_responsavel 
+                this.form.nomeResponsavel = res.data.nome_responsavel
+                this.form.cpfResponsavel =  res.data.cpf_responsavel
                 this.form.telefone = res.data.telefone
                 this.form.email = res.data.email
-                this.form.registroOAB = res.data.registroOAB               
+                this.form.registroOAB = res.data.registro_oab               
                
             })
             .catch((e) => {
-                /*  this.adicionarAlert(
+                   this.adicionarAlert(
                     "alert",
                     "Houve um erro ao carregar os dados. Tente novamente!"
-                );*/
+                );
           
             })
             .finally(() => {
                 this.loading = false;
             });
         },
-       
-
+             
         validarCampos(): boolean {
             this.Notificacao = [];
 
-            if (!this.form.nome) {
+            if (!this.form.nomeResponsavel) {
                 this.adicionarNotificacao(
                 "danger",
                 "Nome é obrigatório!"
                 );
             }
 
-           if(!this.form.cpf){
+           if(!this.form.cpfResponsavel){
                 this.adicionarNotificacao(
                 "danger",
                 "CPF é obrigatório!"
                 );
             }     
         
-            if(this.form.cpf && !ValidarCpfMixin.methods.validarCpf(this.form.cpf)){
+            if(this.form.cpfResponsavel && !ValidarCpfMixin.methods.validarCpf(this.form.cpfResponsavel)){
                 this.adicionarNotificacao(
                 "danger",
                 "CPF inválido!"
@@ -267,7 +274,13 @@ export default Vue.extend({
 
         fechaAlert(): void {
             this.alert = false;
+             if(this.Message[0].type == 'success') {
+                this.$bvModal.hide('modal-cadastro-responsavel')
+                this.$bvModal.hide('modal-editar-responsavel')
+                this.$emit("listarResponsaveis");
+             }
         },  
+       
 
     },
    

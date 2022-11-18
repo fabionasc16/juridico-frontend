@@ -21,13 +21,14 @@ export type Processo = {
     dataLimitePrazo: string,
     diasPercorridos: string,
     diasExpirados: string,
-    statusPrazo: string,
-    statusProcesso: string,
+    statusPrazo?: string, //apagar depois
+    statusProcesso?: string, //apagar depois
     idStatusPrazo: any,
     idStatusProcesso: any, 
     sigiloso: boolean,
     observacao: string,   
-    valorMulta?: string,
+    valorMulta: number,
     reiteracao?: string,
     dataArquivamento?: string,
+    diasCorridos: boolean,
 };

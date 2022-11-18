@@ -62,6 +62,21 @@ const dataMixin = {
       return true;
     },
 
+
+    diferencaEntreDataAtual(dateLimiteString: string) {
+      const now = new Date(); // Data de hoje
+      const past = new Date(dateLimiteString); // Outra data no passado   
+      const diff = Math.abs(past.getTime() - now.getTime()); // Subtrai uma data pela outra
+      const days = Math.ceil(diff / (1000 * 60 * 60 * 24)); // Divide o total pelo total de milisegundos correspondentes a 1 dia. (1000 milisegundos = 1 segundo).
+      
+      if (now.getTime() > past.getTime()) {
+         return days * -1
+      }
+      return days
+
+      //https://metring.com.br/diferenca-entre-datas-em-javascript#:~:text=Essencialmente%2C%20para%20descobrir%20a%20diferen%C3%A7a,subtra%C3%A7%C3%A3o%20em%20um%20formato%20leg%C3%ADvel.
+    }
+
   },
 };
 

@@ -1,9 +1,23 @@
 export type Orgaos = {
-  texto: string;
-  value: number;
+  id_orgao: number;
+  orgao_demandante: string;
+  sigla_orgao: string;
+  esfera_orgao: string;
+  orgao_controle: string;
+  orgao_justica: string;
+
 };
 
-export const OrgaosSeeder: Array<Orgaos> = [
+export type OrgaoCadastro = { 
+  idOrgao: number;
+  orgaoDemandante: string;
+  siglaOrgao: string;
+  esferaOrgao: string;
+  orgaoControle: any;
+  orgaoJustica: any;
+};
+
+/*export const OrgaosSeeder: Array<Orgaos> = [
   { texto: "DPE", value: 1 },
   { texto: "Delegacia de Polícia", value: 2 },
   { texto: "FVS", value: 3 },
@@ -38,42 +52,4 @@ export const OrgaosSeeder: Array<Orgaos> = [
   { texto: "Câmara Municipal de Manaus", value: 32 },
   { texto: "Conselho Tutelar", value: 33 },
 ];
-
-/*
-export const OrgaosSeeder: Array<Orgaos> = [
-  { texto: "DPE", value: "DPE" },
-  { texto: "Delegacia de Polícia", value: "DelPolicia" },
-  { texto: "FVS", value: "FVS" },
-  { texto: "SPA", value: "SPA" },
-  { texto: "TCE", value: "TCE" },
-  { texto: "MPC", value: "MPC" },
-  { texto: "MPE", value: "MPE" },
-  { texto: "MPF", value: "MPF" },
-  { texto: "MPT", value: "MPT" },
-  { texto: "TCU", value: "TCU" },
-  { texto: "Ministério da Saúde", value: "Minist.Saude" },
-  { texto: "CRM", value: "CRM" },
-  { texto: "CEMA", value: "CEMA" },
-  { texto: "DPU", value: "DPU" },
-  { texto: "Casa Civil", value: "CasaCivil" },
-  { texto: "ALEAM", value: "ALEAM" },
-  { texto: "SEINFRA", value: "SEINFRA" },
-  { texto: "Serviço Social", value: "Serv.Social" },
-  { texto: "SEJUSC", value: "SEJUSC" },
-  { texto: "SESAI", value: "SESAI" },
-  { texto: "HPS Platão Araújo", value: "HPSPlataoAraujo" },
-  { texto: "HPS 28 de Agosto", value: "HPS28Agosto" },
-  { texto: "PGE", value: "PGE" },
-  { texto: "CGE", value: "CGE" },
-  { texto: "CGJ", value: "CGJ" },
-  { texto: "CGU", value: "CGU" },
-  { texto: "ALEAM - CPI da Saúde", value: "ALEAMcpiSaude" },
-  { texto: "Petição Advogado", value: "PeticaoADV" },
-  { texto: "Camara dos Deputados Federais", value: "CamaraDepFed" },
-  { texto: "Polícia Federal", value: "PolFed" },
-  { texto: "Comitê de Crise - COVID 19", value: "ComiteCriseCOVID" },
-  { texto: "Câmara Municipal de Manaus", value: "CamaraMunManaus" },
-  { texto: "Conselho Tutelar", value: "ConselhoTutelar" },
-];
 */
-             

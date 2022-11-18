@@ -11,23 +11,29 @@
 
                     <div v-if="loading">
                         <LoadingSpinner></LoadingSpinner>
-                    </div>
-                    
-                    <div class="row">
+                    </div>   
 
+                    <div class="row">                      
                         <b-form-group append="m" class="font col-7 col-sm-7 col-md-7 col-lg-7"
-                        >             
+                        >  
+                            <label><b>Nº Procedimento:</b></label> 
+                            {{form.numProcedimento}}
+                        </b-form-group>
+                    </div>                        
+                    <div class="row">
+                        <b-form-group append="m" class="font col-7 col-sm-7 col-md-7 col-lg-7"
+                        >                       
                         <label>Status Processo: <span class="text-danger">*</span></label> 
-                             <b-form-select v-model="form.idStatusProcesso " @change="alteraStatus($event)">
+                             <b-form-select v-model="form.idStatusProcesso" @change="alteraStatus($event)">
                                 <b-form-select-option value="">-- Selecione --</b-form-select-option>
-                                <b-form-select-option v-for="option in optionsStatusProcesso" 
-                                  :value="option.value" 
-                                   :key="option.value"> {{ option.texto }}
+                                <b-form-select-option v-for="option in optionsStatusProcesso"                                
+                                   :value="option.id_status" 
+                                   :key="option.id_status"> {{ option.desc_status }}
                                 </b-form-select-option>                                
                             </b-form-select>
                         </b-form-group>
                     </div>
-                    <div class="row" v-if="form.idStatusProcesso=='5'">    
+                    <div class="row" v-if="exibirData">    
                         <div class="col-7" style="margin-bottom:-10px">    
                             <b-form-group class="font">                                
                                 <label>Data Arquivamento SIGED: <span class="text-danger">*</span></label>
@@ -65,7 +71,7 @@ import RestApiService from "@/services/rest/service";
 import LoadingSpinner from "@/components/LoadingSpinner.vue";
 import DetalhesProcesso from "../../../components/DetalhesProcesso.vue";
 import { Processo } from '@/type/processo';
-import { StatusProcessoSeeder } from "@/type/statusProcesso";
+import { StatusProcesso } from "@/type/statusProcesso";
 
 export default Vue.extend({
     directives: { mask },
@@ -83,7 +89,7 @@ export default Vue.extend({
     mixins: [        
         dataMixin,
     ],
-    props: ["id"],
+    props: ["idProcesso"],
     data() {
         return {
             show: false as boolean, 
@@ -93,63 +99,77 @@ export default Vue.extend({
             loading: false as boolean,
             alert: false as boolean,  
             form: {} as Processo,  
-            carregarForm: {} as Processo,  
+           // carregarForm: {} as Processo,  
             dataArquivamentoBR: "" as string,
-            optionsStatusProcesso: StatusProcessoSeeder,  
-            /*statusProcessoSelecionado: {
-                texto: "-- Selecione --" as string,
-                value: "" as string,
-            }, */
+            optionsStatusProcesso: [] as Array<StatusProcesso>, 
+            perPageListagens:1000,    
+            exibirData: false as boolean, 
+            statusAtual: null as any      
         }
     },    
 
     mounted() {
         this.isLoading = false
-    
-           /* const path = this.$route.path;
-            const acao = "/editar";
-
-            if (path.includes(acao)) {
-                this.carregarDados();            
-            }*/
-
-       // this.carregarDados();            
-    
+        this.carregarDados()    
+       
+        this.carregarStatusPrazo()       
     }, 
             
     methods: {    
         alteraStatus() {        
             this.dataArquivamentoBR = ""
             this.form.dataArquivamento = ""
+            this.form.idStatusProcesso == '14' ? this.exibirData = true : this.exibirData = false 
         },
-        submit() {
-            let acao = this.id ? "put" : "post"
-            let url = this.id ? "processo/update" : "processo";
+        carregarDados(): void {       
+            this.loading = true;          
+            
+            RestApiService.get("processos/id", this.idProcesso)
+                .then((res: any) => {
 
+                    console.log('res2 ', res.data.status.id_status)                    
+
+                    this.form.numProcedimento = res.data.num_procedimento                   
+                    this.form.idProcesso =   res.data.idProcesso               
+                    this.form.dataArquivamento = res.data.dataArquivamento
+                    this.form.idStatusProcesso = res.data.status.id_status
+                    this.statusAtual = res.data.status.id_status
+
+                    //formatar datas para formato br
+                    this.dataArquivamentoBR = res.data.dataArquivamento ? 
+                    dataMixin.methods.formatarDataBr(res.data.dataArquivamento) : "";                    
+                                 
+            })
+            .catch((e) => {
+                this.adicionarAlert(
+                    "alert",
+                    "Houve um erro ao carregar os dados. Tente novamente!"
+                );
+          
+            })
+            .finally(() => {
+                this.loading = false;
+            });
+        },
+        submit() {            
+            let url = "processos/atualiza-status?idProcesso="+this.idProcesso;
+            this.form.idProcesso = this.idProcesso
+            
             this.loading = true  
            
-            if (this.validarCampos()) { 
+            if (this.validarCampos()) {                
 
                 this.form.dataArquivamento = this.dataArquivamentoBR ? 
                    dataMixin.methods.dataFormatEn(this.dataArquivamentoBR) : "";
-
-                //this.form.idStatusProcesso = this.statusProcessoSelecionado               
                 
-                console.log('JSON: ',JSON.stringify(this.form))
+              console.log('JSON: ',JSON.stringify(this.form))
             
-              RestApiService.salvar(url, this.form, acao)
-                .then((res) => {
-                    if (acao == "put") {
+              RestApiService.patch(url, this.form )
+                .then((res) => {                   
                         this.adicionarAlert(
                             "success",
                             "Atualização realizada com sucesso!"
-                        );
-                    } else {
-                        this.adicionarAlert(
-                            "success",
-                            "Cadastro realizado com sucesso!"
-                        );
-                    }                   
+                        );                                
                 }) 
                 .catch((e) => {
                     this.loading = false;
@@ -179,46 +199,44 @@ export default Vue.extend({
                 .finally(() => {
                     this.loading = false;
                 });
-
-            }else{
-                this.loading = false  
-                this.adicionarAlert(
-                    "alert",
-                    "Realize as validações exibidas no topo desta página!"
-                );
-            }                  
+            }                 
         },
+        carregarStatusPrazo(): void {
+            this.loading = true   
 
-        carregarDados(): void {
-            this.loading = true;          
-            
-            RestApiService.get("processo/listid", this.id)
-                .then((res: any) => {
+                RestApiService.get(
+                "status/aplicacaostatus",
+                `?aplicaA=PROCESSO&currentPage=1&perPage=${this.perPageListagens}`
+                )
+                .then((response: any) => {        
+                  this.optionsStatusProcesso = response.data 
+                })
+                .catch((e) => {          
+                console.log(e)
+                })
+                .finally(() => {
+                this.loading = false               
+                })
+        },        
 
-                this.form.idProcesso =   res.data.idProcesso               
-                this.form.dataArquivamento = res.data.dataArquivamento
-                this.form.statusProcesso = res.data.statusProcesso
-             
-                //formatar datas para formato br
-                this.dataArquivamentoBR = res.data.dataArquivamento ? 
-                   dataMixin.methods.formatarDataBr(res.data.dataArquivamento) : "";               
-               
-            })
-            .catch((e) => {
-                this.adicionarAlert(
-                    "alert",
-                    "Houve um erro ao carregar os dados. Tente novamente!"
+        validarCampos(): boolean {    
+            this.Notificacao = [];
+
+            if(!this.form.idStatusProcesso){
+                this.adicionarNotificacao(
+                "danger",
+                "Campo Status Processo é obrigatório!"
                 );
-          
-            })
-            .finally(() => {
-                this.loading = false;
-            });
-        },
+            }    
 
-        validarCampos(): boolean {     
+            if(this.statusAtual != 10 && this.form.idStatusProcesso == 10) {
+                this.adicionarNotificacao(
+                "danger",
+                "Não é possível retornar ao status Recebido!"
+                );
+            }            
             
-            if(this.form.idStatusProcesso=='5' && !this.dataArquivamentoBR){
+            if(this.form.idStatusProcesso=='14' && !this.dataArquivamentoBR){
                 this.adicionarNotificacao(
                 "danger",
                 "Campo Data é obrigatório!"
@@ -235,12 +253,7 @@ export default Vue.extend({
             if (this.Notificacao.length > 0) {
                     this.loading = false;
                     //ir para o início da página onde aparecem as mensagens
-                    window.scrollTo(0, 0);               
-
-                    this.adicionarAlert(
-                        "alert",
-                        "Realize as validações exibidas no topo desta página!"
-                    );
+                    window.scrollTo(0, 0);  
 
                     setTimeout(() => {
                     this.Notificacao = [];
@@ -249,10 +262,7 @@ export default Vue.extend({
                 } else {
                     return true;
             }
-
-        },
-
-       
+        },      
 
         adicionarAlert(tipo: string, mensagem: string): void {
             this.Message = []        
@@ -272,6 +282,11 @@ export default Vue.extend({
 
         fechaAlert(): void {
             this.alert = false;
+
+            if(this.Message[0].type == 'success') {
+                this.$bvModal.hide('modal-andamento-processo')               
+                this.$emit("listarProcesso");
+            }   
         },  
        
     },

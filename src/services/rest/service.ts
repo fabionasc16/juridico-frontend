@@ -27,24 +27,44 @@ class RestApiService {
     return http.post(`/${uri}/${params}`);
   }
 
+  public post3(uri: string, params: any, data: any): Promise<any> {
+    return http.post(`/${uri}/${params}`, JSON.stringify(data));
+  }
+
   public get(uri: string, params: any): Promise<any> {
     return http.get(`/${uri}/${params}`);
   }
+
+  public buscarProcessoSiged(params: any): Promise<any> {
+    return http.get(`/processos/busca-processo?numero_processo=${params}`);
+  }   
   
   public getCpf(uri: string, params: any): Promise<any> {
     return http.get(`/${uri}/cpf/query?cpf_usuario=${params}`);
   }
 
+  public getFeatures(uri: string): Promise<any> {
+    return http.get(`/${uri}`);
+  } 
+
   public update(uri: string, data: any): Promise<any> {
     return http.put(`/${uri}/${data.id}`, JSON.stringify(data));
+  }
+
+  public patch(uri: string, data: any): Promise<any> {
+    return http.patch(`/${uri}`, JSON.stringify(data));
   }
 
   public upload(uri: string, data: any): Promise<any> {
     return http.put(`/${uri}/${data.id}`);
   }
 
-  public salvar(uri: string, data: any, acao: string): Promise<any> {
+  public salvar(uri: string, data: any, acao: string, id?:any): Promise<any> {
     if (acao == "post") return http.post(`/${uri}`, JSON.stringify(data));
+    
+    else if(acao == "put" && id)
+       return http.put(`/${uri}/${id}`, JSON.stringify(data));//quando o id vem do back com outro nome
+
     else return http.put(`/${uri}/${data.id}`, JSON.stringify(data));
   }
 
