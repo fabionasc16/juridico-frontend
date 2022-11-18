@@ -160,6 +160,7 @@ export default Vue.extend({
             
             RestApiService.get("assuntos/id", this.id)
                 .then((res: any) => {     
+                this.form.id_assunto = res.data.id_assunto    
                 this.form.codigoSIGED = res.data.codigo_siged  
                 this.form.descricaoAssunto =  res.data.desc_assunto                
             })

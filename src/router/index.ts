@@ -17,11 +17,11 @@ const routes: Array<RouteConfig> = [
   { path: '/feriados', name: 'Feriados', component: () => import('../views/Feriados/Feriados.vue') },
   { path: '/orgaos', name: 'Órgãos Demandantes', component: () => import('../views/Orgaos/Orgaos.vue') },
   { path: '/tiposprocesso', name: 'Tipos Processo', component: () => import('../views/TiposProcesso/TiposProcesso.vue') },
-<<<<<<< HEAD
-  { path: '/assuntos', name: 'Assuntos', component: () => import('../views/Assuntos/Assuntos.vue') }
-=======
+
+  { path: '/assuntos', name: 'Assuntos', component: () => import('../views/Assuntos/Assuntos.vue') },
+
   { path: '/classificacoes', name: 'Classificação', component: () => import('../views/Classificacao/Classificacao.vue') },
->>>>>>> 0e83e4861b9a08b5317d8c198b0fa38e9e3c9adb
+
 ]
 
 const router = new VueRouter({

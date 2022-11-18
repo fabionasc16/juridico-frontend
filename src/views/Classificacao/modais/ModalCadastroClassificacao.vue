@@ -156,7 +156,8 @@ export default Vue.extend({
             this.loading = true;          
             
             RestApiService.get("classificacoes/id", this.id)
-                .then((res: any) => {                 
+                .then((res: any) => {
+                this.form.id_classificacao = res.data.id_classificacao                     
                 this.form.descClassificacao =  res.data.desc_classificacao               
             })
             .catch((e) => {

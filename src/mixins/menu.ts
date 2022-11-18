@@ -44,15 +44,16 @@ const menusMixin = {
 				meta: { menu: "Cadastros" }
 			},
 			{
-<<<<<<< HEAD
+			
 				name: "Assuntos",
 				path: "/assuntos",
 				meta: { menu: "Cadastros"}
-=======
+			},
+			{
 				name: "Classificação",
 				path: "/classificacoes",
 				meta: { menu: "Cadastros" }
->>>>>>> 0e83e4861b9a08b5317d8c198b0fa38e9e3c9adb
+				
 			}
 			] as Array<RouteConfig>
 		}
