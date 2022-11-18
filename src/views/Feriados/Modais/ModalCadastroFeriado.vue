@@ -186,13 +186,13 @@ export default Vue.extend({
                 .then((res: any) => {
 
                 this.form.id_feriado =   res.data.id_feriado 
-                this.form.tipoFeriado =  res.data.tipoFeriado
+                this.form.tipoFeriado =  res.data.tipo_feriado
                 this.form.dataFeriado = res.data.data
-                this.form.descFeriado = res.data.descricao    
+                this.form.descFeriado = res.data.desc_feriado    
 
                 //formatar datas para formato br
-                this.dataFeriadoBR = res.data.data ? 
-                   dataMixin.methods.formatarDataBr(res.data.data) : "";              
+                this.dataFeriadoBR = res.data.data_feriado ? 
+                   dataMixin.methods.formatarDataBr(res.data.data_feriado) : "";              
                
             })
             .catch((e) => {

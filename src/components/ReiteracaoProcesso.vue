@@ -21,9 +21,9 @@
                             placeholder="em dias úteis"></b-form-input>
                         </b-form-group>
 
-                        <b-form-group label="Data Final Limite:" class="font col-sm-3 col-md-3 col-lg-3">
+                        <b-form-group label="Data Final Limite:"  class="font col-sm-3 col-md-3 col-lg-3">
                             <b-form-input class="bordered margin-field" type="text" v-model="datas.dataLimitePrazoBR" placeholder="dd/mm/aaaa"
-                                v-mask="'##/##/####'"></b-form-input>                          
+                                v-mask="'##/##/####'" ></b-form-input>                          
                         </b-form-group>
                     </div>
 
@@ -84,6 +84,7 @@ export default Vue.extend({
                 dataProcessoBR: "" as string,
                 dataRecebimentoBR: "" as string,
                 dataLimitePrazoBR: "" as string,
+                disabledAll: false as boolean
             },           
             form: {} as Processo, 
         }       

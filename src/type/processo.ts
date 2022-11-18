@@ -30,4 +30,5 @@ export type Processo = {
     valorMulta: number,
     reiteracao?: string,
     dataArquivamento?: string,
+    diasCorridos: boolean,
 };

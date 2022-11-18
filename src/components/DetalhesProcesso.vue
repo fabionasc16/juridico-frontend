@@ -1,7 +1,7 @@
 <template>
     <div>
                     <div class="row">
-                        <b-form-group class="font col-sm-5 col-md-5 col-lg-5">
+                        <b-form-group class="font col-sm-5 col-md-5 col-lg-4">
                             <label>Nº Procedimento: <span class="text-danger">*</span></label>
                             <b-form-input type="text" v-model="form.numProcedimento" required
                              placeholder="Procedimento/Expediente" autofocus :disabled="disabledAll"></b-form-input>                             
@@ -17,12 +17,17 @@
                             </b-form-select>
                         </b-form-group>
 
-                        <b-form-group class="font col-sm-3 col-md-3 col-lg-3">
+                        <b-form-group class="font col-sm-3 col-md-3 col-lg-2">
                             <label>Prazo total: <span class="text-danger">*</span></label>
                             <b-form-input type="text" v-model="form.prazoTotal" required
                             v-mask="'######'" 
-                            placeholder="em dias úteis" :disabled="disabledAll"></b-form-input>
+                            placeholder="dias úteis" :disabled="disabledAll"></b-form-input>
                         </b-form-group>
+
+                        <b-form-checkbox v-model="form.diasCorridos" switch :disabled="disabledAll"
+                            class="font col-sm-1 col-md-1 col-lg-3">Dias corridos
+                         </b-form-checkbox>
+
                     </div>
 
                     <div class="row">
@@ -34,8 +39,8 @@
                           
                         <b-form-group class="font col-sm-3 col-md-3 col-lg-3">
                             <label>Data do Processo: <span class="text-danger">*</span></label>
-                            <b-form-input class="bordered margin-field" type="text" v-model="datas.dataProcessoBR" placeholder="dd/mm/aaaa"
-                                v-mask="'##/##/####'" :disabled="disabledAll" required></b-form-input>                          
+                            <b-form-input class="bordered margin-field" type="data" v-model="datas.dataProcessoBR" placeholder="dd/mm/aaaa"
+                                v-mask="'##/##/####'" v-validate="{ date_format: 'dd/MM/yyyy', date_between:['01/01/1990',maxStartDate] }" :disabled="disabledAll" required></b-form-input>                          
                         </b-form-group>
 
                         <b-form-group class="font col-sm-3 col-md-3 col-lg-3">
@@ -51,7 +56,7 @@
 
                         <b-form-group label="Data Final Limite:" class="font col-sm-3 col-md-3 col-lg-3">
                             <b-form-input class="bordered margin-field" type="text" v-model="datas.dataLimitePrazoBR" placeholder="dd/mm/aaaa"
-                                v-mask="'##/##/####'" :disabled="disabledAll"></b-form-input>                          
+                                v-mask="'##/##/####'" disabled ></b-form-input>                          
                         </b-form-group>
 
                         <b-form-group label="Valor Multa:" class="font col-sm-4 col-md-4 col-lg-4">
@@ -422,7 +427,8 @@ export default Vue.extend({
                 this.form.idProcesso =   this.form.idProcesso ? this.form.idProcesso : ""
                 this.form.numProcedimento = this.form.numProcedimento ? this.form.numProcedimento: ""               
                 this.form.prazoTotal =  this.form.prazoTotal ? this.form.prazoTotal : ""
-            
+
+                this.form.diasCorridos = this.form.diasCorridos ? this.form.diasCorridos: false  
                 this.form.dataProcesso = this.form.dataProcesso ? this.form.dataProcesso: ""
                 this.form.dataRecebimento = this.form.dataRecebimento ? this.form.dataRecebimento: ""
                 this.form.horaRecebimento =  this.form.horaRecebimento ? this.form.horaRecebimento  : ""
