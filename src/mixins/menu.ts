@@ -42,6 +42,11 @@ const menusMixin = {
 				name: "Usuários",
 				path: "/usuarios",
 				meta: { menu: "Cadastros" }
+			},
+			{
+				name: "Assuntos",
+				path: "/assuntos",
+				meta: { menu: "Cadastros"}
 			}
 			] as Array<RouteConfig>
 		}
