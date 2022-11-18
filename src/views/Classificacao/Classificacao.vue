@@ -18,6 +18,7 @@
               <div v-if="loading">
                   <LoadingSpinner></LoadingSpinner>
               </div>
+              
        
     
          <!-- FORMULÁRIO DE CONSULTA -->       
