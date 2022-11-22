@@ -2,7 +2,7 @@
   <div class="container fluid">
       <div class="row">
           <div class="col-12" style="margin-top: 20px">
-            <b-form-group class="titulo m-0" label="Consulta de assuntos" label-size="lg">
+            <b-form-group class="titulo m-0" label="Consulta de Assuntos" label-size="lg">
               <hr />
             </b-form-group>
           </div>
@@ -30,29 +30,23 @@
                   </b-form-group>
                 </div>   --> 
                 <div class="col-3">
-                  <!--<b-form-group label="Assunto:" class="font">
-                    <b-form-select :options="optionsAssunto" 
+                  <b-form-group label="Assunto:" class="font">
+                    <v-select style="font-size: 0.85rem" :options="optionsAssunto" 
                                 class="font" 
                                 label="desc_assunto"
                                 value="id_assunto"    
-                                placeholder="--Selecione--"      
+                                placeholder="--Selecione--"     
                                 v-model="assuntoSelecionado"/>                                          
-                  </b-form-group>   -->          
-                  <b-form-group label="Assunto:" class="font">
+                  </b-form-group>          
+                  <!--<b-form-group label="Assunto:" class="font">
                       <b-form-select v-model="form.id_assunto">
                           <b-form-select-option value="">-- Selecione --</b-form-select-option>
                           <b-form-select-option v-for="option in optionsTipoAssunto" :value="option.value"
                               :key="option.texto"> {{ option.texto }}
                           </b-form-select-option>                                
                       </b-form-select>
-                  </b-form-group>
-                </div>      
-                <!--<div class="col-2">
-                  <b-form-group label="Ano:" class="font">
-                      <b-form-input class="bordered margin-field" type="text" v-model="form.ano" placeholder="aaaa"
-                                v-mask="'####'"></b-form-input>   
-                  </b-form-group>
-                </div> -->
+                  </b-form-group>-->
+                </div>
                 
                 <!-- ÍCONE DA LUPA -->
                 <div class="col-2 justify-content-center">
@@ -221,23 +215,59 @@ export default Vue.extend({
      
       stickyHeader: true,
       noCollapse: true,
+      optionsAssunto: [] as Array<String>,
       dataFeriadoBR: "" as string,
       optionsTipoAssunto: TipoAssuntoSeeder,
+      perPageListagens:30000,
 
       items: [] as Array<Assunto>,
 
       Notificacao: [] as Array<Notificacao>,
       Message: [] as Array<Notificacao>,
       loading: false as boolean,
-      alert: false as boolean,       
+      alert: false as boolean,    
+      
+      assuntoSelecionado: {
+        id_assunto: "" as string,
+        desc_assunto: "-- Selecione --" as string,        
+      },
       
     };
   },
   mounted() {   
     this.listarAssuntos(this.currentPage);
+    this.carregarAssunto()
      
   },
   methods: {
+    search() {
+      let busca = {      
+        idAssunto : this.assuntoSelecionado ? this.assuntoSelecionado.id_assunto : ""
+    }      
+
+      console.log("busca ", JSON.stringify(busca))
+      
+          RestApiService.post("assuntos", busca)
+            .then((response: any) => {    
+              this.optionsTipoAssunto = response.data.data;        
+              this.items = response.data.data;
+              this.perPage = response.data.perPage;
+              this.totalRows = response.data.total;
+            })
+            .catch((e) => {
+              if (e.message.length > 0) {
+                this.Notificacao.push({
+                  type: "danger",
+                  message: e.response.data.message,
+                });              
+                return false;
+              }
+            })
+            .finally(() => {
+              this.loading = false
+              this.limparNotificacao();
+            });      
+    },
     editarAssunto(id: number): void {
         this.idAssunto = id
         this.$bvModal.show('modal-editar-assunto')      
@@ -320,6 +350,35 @@ export default Vue.extend({
                 return true;
       }
       
+    },
+
+
+    carregarAssunto(): void {
+      this.loading = true
+     
+      RestApiService.get(
+          "assuntos",
+          `?currentPage=1&perPage=${this.perPageListagens}`
+        )
+        .then((response: any) => {         
+          this.optionsAssunto = response.data.data
+        
+        })
+        .catch((e) => {
+          console.log(e)
+        })
+        .finally(() => {
+          this.loading = false
+          this.limparNotificacao();
+        })
+    },
+
+    limparNotificacao(): void {
+      if (this.Notificacao.length > 0) {
+        setTimeout(() => {
+          this.Notificacao = [];
+        }, 3000);
+      }
     },
    
     voltar(): void {
