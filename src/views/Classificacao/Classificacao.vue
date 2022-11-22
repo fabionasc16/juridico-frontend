@@ -218,7 +218,7 @@
         this.listarClassificacao(this.currentPage);
       } else {
         RestApiService.get(
-          "classificacaoes",
+          "classificacoes",
           `?currentPage=${this.currentPage}&search=${this.busca}`
         )
           .then((response: any) => {
