@@ -10,6 +10,11 @@ import router from './router'
 import store from './store'
 import 'animate.css'
 import 'axios'
+import Auth from "./layout/Auth.vue";
+import home from "./layout/Root.vue";
+
+Vue.component("Unlogged", Auth);
+Vue.component("logged", home);
 
 //import HighchartsVue from 'highcharts-vue'
 import vSelect from 'vue-select'
