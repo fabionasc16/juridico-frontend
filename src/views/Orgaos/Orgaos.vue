@@ -26,7 +26,7 @@
               <!-- (NOME) -->
               <div class="col-4"> 
                 <b-form-group label="Nome:" class="font">
-                  <b-form-input :placeholder="'Digite Nome do Órgão Demandante'" type="text" v-model="form.orgaoDemandante">
+                  <b-form-input :placeholder="'Digite Nome do Órgão Demandante'" type="text" v-model="busca">
                   </b-form-input>
                 </b-form-group>
               </div>
@@ -179,6 +179,7 @@ export default Vue.extend({
       idOrgao: null as any, //para modal
       rows: 100,
       currentPage: 1,
+      busca: "" as string,
       totalRows: null as any,
       perPage: 10,
       items: [] as Array<String>,  
@@ -199,11 +200,28 @@ export default Vue.extend({
   },
   methods: {
     submit() {
-      alert("pesquisar");
-      
-      console.log(JSON.stringify(this.form))
-    },  
+      console.log(JSON.stringify(this.busca))
 
+      if (!this.busca) {
+        this.listarOrgaos(this.currentPage);
+      } else {
+        RestApiService.get(
+          "orgaos-demandantes",
+          `?currentPage=${this.currentPage}&search=${this.busca}`
+        )
+          .then((response: any) => {
+            this.perPage = response.data.perPage;
+            this.items = response.data.data;
+            this.totalRows = response.data.total;
+          })
+          .catch((e) => {
+            this.adicionarAlert(
+                            "alert",
+                            "Ocorreu um erro ao realizar a pesquisa!"
+                            );         
+          });
+      }
+    },
     editarOrgao(id: number): void {
         this.idOrgao = id
         this.$bvModal.show('modal-editar-orgao')       
