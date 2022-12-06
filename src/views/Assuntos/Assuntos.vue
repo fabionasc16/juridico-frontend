@@ -21,14 +21,14 @@
        
 
        <!-- FORMULÁRIO DE CONSULTA -->       
-       <b-form @submit.prevent="listarAssuntos" class="mb-5">
+       <b-form @submit.prevent="listarAssuntos(currentPage)" class="mb-5">
             <div class="row">               
                 <!--<div class="col-3">
                   <b-form-group label="Data:" class="font">
                       <b-form-input class="bordered margin-field" type="text" v-model="dataFeriadoBR" placeholder="dd/mm/aaaa"
                                 v-mask="'##/##/####'"></b-form-input>   
                   </b-form-group>
-                </div>   --> 
+                </div>   -->
                 <div class="col-3">
                   <b-form-group label="Assunto:" class="font">
                     <v-select style="font-size: 0.85rem" :options="optionsAssunto" 
@@ -91,10 +91,10 @@
               :per-page="perPage" :no-border-collapse="noCollapse" :items="items"
               :fields="fields">      
 
-              <!-- DATA FERIADO -->
+              <!-- DATA FERIADO 
               <template v-slot:cell(data_feriado)="data">
                  {{formatarDataBr(data.item.data_assunto)}}
-              </template>   
+              </template>   -->
                            
               <!-- BOTÕES DE AÇÕES -->
               <template v-slot:cell(botaoAction)="data">
@@ -242,7 +242,8 @@ export default Vue.extend({
   methods: {
     search() {
       let busca = {      
-        idAssunto : this.assuntoSelecionado ? this.assuntoSelecionado.id_assunto : ""
+        idAssunto : this.assuntoSelecionado ? this.assuntoSelecionado.id_assunto : "",
+                
     }      
 
       console.log("busca ", JSON.stringify(busca))
@@ -286,8 +287,13 @@ export default Vue.extend({
         //RestApiService.get("feriados", `?currentPage=${currentpage}`)
 
         let busca = {}
+        let query = ''
+        console.log(currentpage)
+        if (this.assuntoSelecionado){
+          query = `&search=${this.assuntoSelecionado.id_assunto}`
+        }
 
-        RestApiService.get("assuntos", `?currentPage=${currentpage}`)
+        RestApiService.get("assuntos", `?currentPage=${currentpage}${query}`)
           .then((response: any) => {
             this.optionsTipoAssunto = response.data.data;
             this.items = response.data.data;
