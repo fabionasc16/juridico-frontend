@@ -107,7 +107,7 @@
         this.showError = false;
         let cpf = this.form.user_formatado.replace(/[^\d]+/g, '')
         this.form.user = cpf
-        if (!this.form.user || !this.form.password || !this.form.user_unit) {
+        if (!this.form.user || !this.form.password) {
           this.message = 'Preencha todos os campos!';
           this.showError = true;
           //alert('Preencha todos os campos!')

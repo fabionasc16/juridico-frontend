@@ -6,6 +6,8 @@ Vue.use(VueRouter)
 
 const routes: Array<RouteConfig> = [
   { path: '/', name: 'Login', meta: { layout: "Unlogged", requiresAuth: false }, component: () => import('../views/Auth/Login.vue') },
+  { path: '/esqueciSenha', name: 'Esqueci a senha', meta: { layout: "Unlogged", requiresAuth: false }, component: () => import('../views/Auth/ForgetPassword.vue') },
+  { path: '/alterarSenha', name: 'Alterar a senha', meta: { layout: "Unlogged", requiresAuth: false }, component: () => import('../views/Auth/ChangePassword.vue') },
   { path: '/home', name: 'Home', meta: { layout: "logged", requiresAuth: false}, component: () => import('../views/PaginaInicial.vue') },
   { path: '/usuarios', name: 'Usuários', meta: { layout: "logged", requiresAuth: false}, component: () => import(/* webpackChunkName: "about" */ '../views/Usuarios/Usuarios.vue') },
   { path: '/processos', name: 'Processos', meta: { layout: "logged", requiresAuth: false}, component: () => import('../views/Processos/Processos.vue') },
