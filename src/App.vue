@@ -1,9 +1,9 @@
 <template>
-  <layout>
-    <transition name="slide-fade" >
-      <router-view route="/home"></router-view>
+  <component :is="this.$route.meta.layout">
+    <transition appear enter-active-class="animate__animated animate__fadeIn">
+      <router-view />
     </transition>
-  </layout>
+  </component>
 </template>
 <script lang="ts">
 import Vue from 'vue'

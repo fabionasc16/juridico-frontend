@@ -123,7 +123,7 @@
                   v-show="exibirMaisDetalhes">
                   <v-select style="font-size: 0.85rem" :options="optionsClassificacao" 
                                         class="font" 
-                                        label="descClassificacao"
+                                        label="desc_classificacao"
                                         value="id_classificacao"    
                                         placeholder="--Selecione--"                                     
                                         v-model="classificacaoSelecionada"/>
@@ -139,9 +139,21 @@
                                         v-model="responsavelSelecionado"/>
                 </b-form-group>
 
-                <b-form-group label="Caixa SIGED:" append="m" class="font col-sm-9 col-md-9 col-lg-9" v-show="exibirMaisDetalhes">
+                <b-form-group label="Caixa SIGED:" append="m" class="font col-sm-3 col-md-3 col-lg-3" v-show="exibirMaisDetalhes">
                   <v-select style="font-size: 0.85rem" :options="optionsCaixa" class="font" label="caixa_atual_siged"
                   id="caixa_atual_siged"                  
+                  v-model="caixaSigedSelecionada"/>                 
+                </b-form-group>
+
+                <b-form-group label="Descrição:" append="m" class="font col-sm-3 col-md-3 col-lg-3" v-show="exibirMaisDetalhes" >
+                  <v-select style="font-size: 0.85rem" :options="optionsDescricao" class="font" label="descricao"
+                  id="descricao"                  
+                  v-model="caixaSigedSelecionada"/>                 
+                </b-form-group>
+
+                <b-form-group label="Objeto:" append="m" class="font col-sm-3 col-md-3 col-lg-3" v-show="exibirMaisDetalhes">
+                  <v-select style="font-size: 0.85rem" :options="optionsObjeto" class="font" label="objeto"
+                  id="objeto"                  
                   v-model="caixaSigedSelecionada"/>                 
                 </b-form-group>
                   
@@ -425,7 +437,8 @@ export default Vue.extend({
       optionsStatusProcesso: [] as Array<String>,
       optionsStatusPrazo: [] as Array<String>,   
       optionsCaixa: [] as Array<String>, 
-
+      optionsDescricao: [] as Array<String>,
+      optionsObjeto: [] as Array<String>,  
       Notificacao: [] as Array<Notificacao>,
       Message: [] as Array<Notificacao>,
       loading: false as boolean,
@@ -463,7 +476,13 @@ export default Vue.extend({
       },
       caixaSigedSelecionada: {               
         caixa_atual_siged: "" as string,
-      }, 
+      },
+      descricao: {               
+        descricao: "" as string,
+      },
+      objeto: {               
+        objeto: "" as string,
+      },   
         
     };
   },
@@ -553,7 +572,9 @@ export default Vue.extend({
         statusProcesso : this.statusProcessoSelecionado ? this.statusProcessoSelecionado.id_status : "",
         statusPrazo : this.statusPrazoSelecionado ? (this.statusPrazoSelecionado.id_status).toString() : "",
         idClassificacao:  this.classificacaoSelecionada ? this.classificacaoSelecionada.id_classificacao : "",
-        idResponsavel: this.responsavelSelecionado ? this.responsavelSelecionado.id_responsavel : ""
+        idResponsavel: this.responsavelSelecionado ? this.responsavelSelecionado.id_responsavel : "",
+        descricao : this.form.descricao ? this.form.descricao : "",
+        objeto : this.form.objeto ? this.form.objeto : "",
       }      
  
       console.log("busca ", JSON.stringify(busca))

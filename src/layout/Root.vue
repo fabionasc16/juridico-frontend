@@ -66,7 +66,8 @@ export default Vue.extend({
         min-height: 100vh;  
     }
     .sidebar{
-        background-color: #293258;
+        background-color: #081570;
+        /*background-color: #293258;*/
     }
     .content{
         background-color: white;
