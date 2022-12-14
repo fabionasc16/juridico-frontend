@@ -24,14 +24,14 @@
        <b-form @submit.prevent="listarFeriados" class="mb-5">
             <div class="row">               
                 <div class="col-3">
-                  <b-form-group label="Data:" class="font">
+                  <b-form-group label="Data:" class="font"> 
                       <b-form-input class="bordered margin-field" type="text" v-model="dataFeriadoBR" placeholder="dd/mm/aaaa"
                                 v-mask="'##/##/####'"></b-form-input>   
                   </b-form-group>
                 </div>    
                 <div class="col-3">             
                   <b-form-group label="Tipo:" class="font">
-                      <b-form-select v-model="form.idTipoFeriado">
+                      <b-form-select v-model="tipoFeridoSearch">
                           <b-form-select-option value="">-- Selecione --</b-form-select-option>
                           <b-form-select-option v-for="option in optionsTipoFeriado" :value="option.value"
                               :key="option.value"> {{ option.texto }}
@@ -41,7 +41,7 @@
                 </div>      
                 <div class="col-2">
                   <b-form-group label="Ano:" class="font">
-                      <b-form-input class="bordered margin-field" type="text" v-model="form.ano" placeholder="aaaa"
+                      <b-form-input class="bordered margin-field" type="text" v-model="anoFeriadoSearch" placeholder="aaaa"
                                 v-mask="'####'"></b-form-input>   
                   </b-form-group>
                 </div>    
@@ -210,6 +210,9 @@ export default Vue.extend({
       stickyHeader: true,
       noCollapse: true,
       dataFeriadoBR: "" as string,
+      tipoFeridoSearch: "" as string,
+      anoFeriadoSearch: "" as any,
+
       optionsTipoFeriado: TipoFeriadoSeeder, 
 
       items: [] as Array<Feriado>,
@@ -242,14 +245,22 @@ export default Vue.extend({
        
         //RestApiService.get("feriados", `?currentPage=${currentpage}`)
 
-        let busca = {}
+        let busca = {               
+          //dataFeriado : this.dataFeriadoBR ? this.dataFeriadoBR : "",
+         // dataFeriado: '2022-10-12'
+          //tipoFeriado: this.tipoFeridoSearch ? this.tipoFeridoSearch: "",
+          //anoFeriado: this.anoFeriadoSearch ? Number(this.anoFeriadoSearch) : ""         
+        }     
 
-        RestApiService.post3("feriados/list", `?currentPage=${currentpage}`, busca) 
+        console.log("busca result: ", JSON.stringify(busca))
+
+        RestApiService.post("feriados/list?currentPage=1", busca) 
           .then((response: any) => {
             this.items = response.data.data;
             this.perPage = response.data.perPage;
             this.totalRows = response.data.total;
 
+          console.log("busca result", JSON.stringify( response.data.data))
           })
           .catch((e) => {
             if (e.message === "Network Error") {
