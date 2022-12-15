@@ -21,17 +21,17 @@
        
 
        <!-- FORMULÁRIO DE CONSULTA -->       
-       <b-form @submit.prevent="listarFeriados" class="mb-5">
+       <b-form @submit.prevent="listarFeriados(currentPage)" class="mb-5">
             <div class="row">               
-                <div class="col-3">
-                  <b-form-group label="Data:" class="font">
+                <div class="col-xs-3 col-md-3">
+                  <b-form-group label="Data:" class="font"> 
                       <b-form-input class="bordered margin-field" type="text" v-model="dataFeriadoBR" placeholder="dd/mm/aaaa"
                                 v-mask="'##/##/####'"></b-form-input>   
                   </b-form-group>
                 </div>    
-                <div class="col-3">             
+                <div class="col-xs-3 col-md-3">             
                   <b-form-group label="Tipo:" class="font">
-                      <b-form-select v-model="form.idTipoFeriado">
+                      <b-form-select v-model="tipoFeridoSearch">
                           <b-form-select-option value="">-- Selecione --</b-form-select-option>
                           <b-form-select-option v-for="option in optionsTipoFeriado" :value="option.value"
                               :key="option.value"> {{ option.texto }}
@@ -39,9 +39,9 @@
                       </b-form-select>
                   </b-form-group>
                 </div>      
-                <div class="col-2">
+                <div class="col-xs-3 col-md-3">
                   <b-form-group label="Ano:" class="font">
-                      <b-form-input class="bordered margin-field" type="text" v-model="form.ano" placeholder="aaaa"
+                      <b-form-input class="bordered margin-field" type="text" v-model="anoFeriadoSearch" placeholder="aaaa"
                                 v-mask="'####'"></b-form-input>   
                   </b-form-group>
                 </div>    
@@ -57,31 +57,21 @@
         </b-form>
 
         <!-- CARD DA TABELA -->
-        <div class="card p-0 m-0">
-          <!-- CABEÇALHO DA TABELA (Espaço reservado para incluir ícones) -->
-          <div class="card-header" align="right">
-            <div class="row">
-                <!-- ÍCONE Journal-text -->
-                <div class="col-1 text-blue h2 p0m0" align="center" label="Feriados Cadastrados">
-                  <b-icon-journal-text>
-                  </b-icon-journal-text>
-                </div>
-              <!-- TÍTULO -->
-              <div class="col-10 mt-1" align="start">
-                <div class="row position-relative">
-                  <h5>Feriados Cadastrados</h5>
-                </div>
-              </div>
-              <!-- ÍCONE Plus-Circle -->
-              <div class="col-1 position-relative" align="center"> 
-                <b-form-group label="" class="btn text-primary position-absolute top-50 start-50 translate-middle">
-                  <div class="h3">
-                    <b-icon-plus-circle v-b-modal.modal-cadastro-feriado v-b-tooltip.hover.topleft="'Adicionar Feriado'"></b-icon-plus-circle>
-                  </div>
-                </b-form-group>
-              </div>
+        <div class="card-table p-0 m-0">    
+          <!-- TOPO TABELA-->
+          <div class="topo-table">
+       
+            <div class="desc-topo-table">
+              <b-icon-journal-text class="icon-topo-table"></b-icon-journal-text> 
+              <span class="title-topo-table">Feriados Cadastrados</span>
+            </div>                      
+
+            <div class="button-topo-table">
+              <b-icon-plus-circle v-b-modal.modal-cadastro-feriado v-b-tooltip.hover.topleft="'Adicionar Feriado'"></b-icon-plus-circle>
             </div>
-          </div>
+
+          </div>        
+
           <!-- TABELA -->
           <div>
             <b-table-lite small striped hover class="m-0" head-variant="dark" :current-page="currentPage"
@@ -164,7 +154,6 @@
 
 <script lang="ts">
 import Vue from "vue";
-//import axios from "axios";
 import HeaderPage from '@/components/HeaderPage.vue';
 import { mask } from "vue-the-mask";
 import { Feriado } from '@/type/feriado';
@@ -202,14 +191,17 @@ export default Vue.extend({
       rows: 100,
       currentPage: 1,
       totalRows: 1,
-      perPage: 5,
-      pageOptions: [5, 10, 15, { value: 100, text: "Show a lot" }],     
+      perPage: 10, 
+      totalPageSearch: 0, //total de registros na paginacao corrente   
       form: {} as Feriado,
       fields: FieldsTableFeriado, //nome das colunas da tabela
      
       stickyHeader: true,
       noCollapse: true,
       dataFeriadoBR: "" as string,
+      tipoFeridoSearch: "" as string,
+      anoFeriadoSearch: "" as any,
+
       optionsTipoFeriado: TipoFeriadoSeeder, 
 
       items: [] as Array<Feriado>,
@@ -239,17 +231,30 @@ export default Vue.extend({
     listarFeriados(currentpage: number) : void { 
      
       this.loading = true;  
+
+      if(this.dataFeriadoBR && !dataMixin.methods.validarData(this.dataFeriadoBR)){
+        this.adicionarAlert(
+                            "alert",
+                            "A data informada é inválida!"
+                            ); 
+        this.loading = false;
+        return;
+      }
+
+        let busca = { 
+          dataFeriado : this.dataFeriadoBR ? dataMixin.methods.dataFormatEn(this.dataFeriadoBR) : "",
+          tipoFeriado: this.tipoFeridoSearch ? this.tipoFeridoSearch: "",
+          anoFeriado: this.anoFeriadoSearch ? Number(this.anoFeriadoSearch) : ""         
+        }  
        
-        //RestApiService.get("feriados", `?currentPage=${currentpage}`)
-
-        let busca = {}
-
-        RestApiService.post3("feriados/list", `?currentPage=${currentpage}`, busca) 
-          .then((response: any) => {
-            this.items = response.data.data;
+        let url = "feriados/list?currentPage="+currentpage+"&perPage="+`${this.perPage}`
+       
+        RestApiService.post(url, busca) 
+          .then((response: any) => {            
+            this.items = response.data.data;          
             this.perPage = response.data.perPage;
-            this.totalRows = response.data.total;
-
+            this.totalRows = response.data.total;  
+            this.totalPageSearch = response.data.data.length            
           })
           .catch((e) => {
             if (e.message === "Network Error") {
@@ -325,8 +330,13 @@ export default Vue.extend({
             this.adicionarAlert(
                     "success",
                     "Exclusão realizada com sucesso!"
-            );  
-            
+            );             
+          
+            //se excluir último registro de uma página, retornar para a primeira
+            if(this.totalPageSearch == 1) {
+              this.currentPage = 1
+            }          
+
             this.listarFeriados(this.currentPage)
           })
           .catch((e: Error) => {    
@@ -392,4 +402,41 @@ export default Vue.extend({
 .custom-select-sm {
   height: calc(2em + 0.5rem + 2px);
 }
+
+/* Cabeçalho da tabela */
+.topo-table {
+  display: flex;
+  justify-content: space-between;  
+  align-items: center;
+  padding: 1px 10px; /* top bottom / right left */
+  background-color: rgba(0, 0, 0, .03);
+  border: 1px solid rgba(0,0,0, .125); 
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+}
+
+.icon-topo-table { 
+  font-size: 2rem;  
+}
+
+.title-topo-table {
+  font-size: 1.2rem;
+  padding-left: 10px;
+  font-weight: 100;
+  flex-grow: 1;  
+  font-family: "Mulish", sans-serif;
+  align-self: center;
+}
+
+.button-topo-table {
+  font-size: 2.2rem;
+  color: #007bff;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.button-topo-table:hover {
+  color: #5cabff;
+}
+
 </style>

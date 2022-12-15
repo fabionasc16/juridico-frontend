@@ -217,7 +217,7 @@ export default Vue.extend({
     listarOrgaos(currentpage: number) : void {
       this.loading = true
       RestApiService.get("orgaos-demandantes", `?currentPage=${currentpage}`)
-        .then((response: any) => {
+        .then((response: any) => {         
           this.items = response.data.data
           this.perPage = response.data.perPage
           this.totalRows = response.data.total          
