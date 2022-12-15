@@ -4,10 +4,10 @@
       <span class="text-center col-12">Sistema de Acompanhamento de Processos Extra Judicais</span>
       <slot></slot>      
       <b-dropdown class="dropdown" size="sm" variant="outline-light">
-        <template #button-content>
-          <span>
-              Nome do usuario
-          </span>
+        <template #button-content>        
+          <span v-if="getUsuarioNome != ''">
+            {{ getUsuarioNome }}
+          </span>        
         </template>
         <b-dropdown-divider />
         <b-dropdown-item to="/alterarSenha"> Alterar Senha </b-dropdown-item>
@@ -30,7 +30,7 @@ export default Vue.extend({
     };
   },
    computed: {
-    ...mapGetters("usuario", ["getUsuarioNome"]),
+    ...mapGetters("usuario", ["getUsuarioNome", "getUsuarioUnidade"]),
   },
   methods: {
     ...mapActions("usuario", ["deslogarUsuario"]),
