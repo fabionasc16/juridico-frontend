@@ -2,6 +2,7 @@
   <div class="sticky-top" style="width: 100%;">
     <div class="header px-4">
       <slot></slot>
+      
       <b-dropdown class="dropdown" size="sm" variant="outline-light">
           <template #button-content>
             <span>
@@ -9,11 +10,10 @@
             </span>
           </template>
           <b-dropdown-divider />
-          <b-dropdown-item>
-            Logout
-          </b-dropdown-item>
-      </b-dropdown>
-    </div>
+        <b-dropdown-item to="/alterarSenha"> Alterar Senha </b-dropdown-item>
+        <b-dropdown-item @click="logOut"> Logout </b-dropdown-item>
+      </b-dropdown>    
+      </div>
     <div class="breadcumb">
       {{this.$route.name}}
     </div>
@@ -21,8 +21,24 @@
 </template>
 <script lang="ts">
 import Vue from "vue";
+import { mapGetters, mapActions } from "vuex";
 
 export default Vue.extend({
+  data() {
+    return {
+      usuario: [],
+    };
+  },
+   computed: {
+    ...mapGetters("usuario", ["getUsuarioNome"]),
+  },
+  methods: {
+    ...mapActions("usuario", ["deslogarUsuario"]),
+
+    logOut() {
+      this.deslogarUsuario(), this.$router.push({ name: "Login" });
+    },
+  },
 
 });
 </script>

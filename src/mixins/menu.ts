@@ -5,7 +5,7 @@ const menusMixin = {
 			commonMenus: [
 			{
 				name: "Página Inicial",
-				path: "/",
+				path: "/home",
 				meta: { menu: "" }
 			},
 			{
