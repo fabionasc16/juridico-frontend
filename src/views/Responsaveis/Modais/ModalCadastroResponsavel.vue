@@ -255,7 +255,6 @@ export default Vue.extend({
             }
         },
 
-
         adicionarAlert(tipo: string, mensagem: string): void {
             this.Message = []        
             this.Message.push({
@@ -280,10 +279,7 @@ export default Vue.extend({
                 this.$emit("listarResponsaveis");
              }
         },  
-       
-
-    },
-   
+    },   
 });
 </script>
 

@@ -2,7 +2,7 @@ import axios from "axios";
 import { environment } from "../../environments/environment";
 import store from "@/store";
 
-const apiUrl = environment.apiURL;
+const apiUrl = environment.apiURLSSO2;
 
 const http = axios.create({
   baseURL: `${apiUrl}`,

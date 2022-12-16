@@ -107,4 +107,3 @@
     vertical-align: middle;
   }
   </style>
-  

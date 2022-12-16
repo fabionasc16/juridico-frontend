@@ -427,6 +427,7 @@ export default Vue.extend({
                 this.form.idProcesso =   this.form.idProcesso ? this.form.idProcesso : ""
                 this.form.numProcedimento = this.form.numProcedimento ? this.form.numProcedimento: ""               
                 this.form.prazoTotal =  this.form.prazoTotal ? this.form.prazoTotal : ""
+                this.form.diasCorridos = this.form.diasCorridos ? this.form.diasCorridos: false
 
                 this.form.diasCorridos = this.form.diasCorridos ? this.form.diasCorridos: false  
                 this.form.dataProcesso = this.form.dataProcesso ? this.form.dataProcesso: ""

@@ -12,8 +12,8 @@
         <b-dropdown-divider />
         <b-dropdown-item to="/alterarSenha"> Alterar Senha </b-dropdown-item>
         <b-dropdown-item @click="logOut"> Logout </b-dropdown-item>
-      </b-dropdown>
-    </div>
+      </b-dropdown>    
+      </div>
     <div class="breadcumb">
       {{ this.$route.name }}
     </div>

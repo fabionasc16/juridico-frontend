@@ -223,7 +223,8 @@ export default Vue.extend({
                 this.formDados.form.dataProcesso = res.data.data_processo
                 this.formDados.form.dataRecebimento = res.data.data_recebimento
                 this.formDados.form.horaRecebimento =  res.data.hora_recebimento
-               
+                this.formDados.form.diasCorridos = res.data.diasCorridos
+
                 this.formDados.form.idClassificacao = res.data.fk_classificacao
                 this.formDados.form.objeto =  res.data.objeto
                 this.formDados.form.requerSIGED = res.data.requer_siged
@@ -242,6 +243,9 @@ export default Vue.extend({
                 this.formDados.form.observacao = res.data.observacao    
 
                 this.formDados.form.valorMulta = res.data.valor_multa
+
+                this.formDados.form.diasCorridos =                    
+                   (res.data.diasCorridos && res.data.diasCorridos=='S' ? true : false)   
 
                 this.formDados.form.sigiloso =                    
                    (res.data.sigiloso && res.data.sigiloso=='S' ? true : false)
