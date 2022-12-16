@@ -33,7 +33,7 @@
                 </b-pagination>
             </div>
         </div>
-        c57nq0
+        
         <div class="py-2 mt-10 mr-3" align="right">                        
             <b-button class="bordered" @click="$bvModal.hide('modal-tramitacoes-processo')">Fechar</b-button>
         </div>
@@ -83,14 +83,14 @@ export default Vue.extend({
                 this.form.eventoTramitacao = res.data.data_processo
                 this.form.entradaSetor = res.data.prazo
                 this.form.permanencia = res.data.numero_siged
-                this.form.reiteracao = res.data.reiteracao  
+                //this.form.reiteracao = res.data.reiteracao  
 
             })
             .catch((e) => {
-                   this.adicionarAlert(
+               /*    this.adicionarAlert(
                     "alert",
                     "Houve um erro ao carregar os dados. Tente novamente!"
-                );              
+                );*/              
           
             })
             .finally(() => {
