@@ -8,7 +8,7 @@ class RestApiService {
   private apiUrl = environment.apiURL;
 
   public postLogin(uri: string, data: any): Promise<any> {
-    return http.post(`/${uri}`, JSON.stringify(data));
+    return http3.post(`/${uri}`, JSON.stringify(data));
   }
 
   public getUnidades(uri: string, params: any): Promise<any> {

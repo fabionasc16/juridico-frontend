@@ -18,8 +18,7 @@
               <div class="col-md-5">
                 <div class="form-block">
                   <div class="text-center mb-4">
-                    <h5><strong>Informe seus dados para acesso</strong></h5>
-                    <!-- <p class="mb-4">Lorem ipsum dolor sit amet elit. Sapiente sit aut eos consectetur adipisicing.</p> -->
+                    <h5><strong>Informe seus dados para acesso</strong></h5>                  
                   </div>
                   <div>
                       <b-alert :show="showError"
@@ -114,15 +113,20 @@
           return false
         } else {
           this.form.user = cpf
+          this.form.user_unit = '6399e95caa133b62db284f5d'
           this.efetuarLogin(this.form)
             .then((res) => {
-              this.$router.push({ path: '/home' })
+              this.$router.push({ path: '/processos' })
             })
             .catch(error => {
-              console.log(error.response.data.message)
+             if(error.response.status == '404'){
+                this.message = 'Ocorreu um erro na conexão do sistema.'  
+                this.showError = true;
+                return;               
+              }          
+              
               this.message = error.response.data.message
-              this.showError = true;
-              console.log( this.showError )
+              this.showError = true;   
               
             })
         }
