@@ -1,5 +1,5 @@
 <template>
-  <component :is="this.$route.meta.layout">
+ <component :is="this.$route.meta.layout">
     <transition appear enter-active-class="animate__animated animate__fadeIn">
       <router-view />
     </transition>

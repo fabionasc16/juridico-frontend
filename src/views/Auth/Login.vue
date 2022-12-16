@@ -270,4 +270,3 @@
     text-align: center;
   }
   </style>
-  
