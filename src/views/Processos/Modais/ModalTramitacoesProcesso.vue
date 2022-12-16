@@ -12,7 +12,7 @@
                 <!-- TÍTULO -->
                 <div class="col-10 mt-1" align="start">
                     <div class="row position-relative">
-                        <h5>123456/7890-12</h5>
+                        <h5>{{numProcessoSIGED}}</h5>
                     </div>
                 </div>
             </div>
@@ -33,7 +33,7 @@
                 </b-pagination>
             </div>
         </div>
-
+        c57nq0
         <div class="py-2 mt-10 mr-3" align="right">                        
             <b-button class="bordered" @click="$bvModal.hide('modal-tramitacoes-processo')">Fechar</b-button>
         </div>
@@ -51,9 +51,12 @@ import Notifications from "@/components/Notifications.vue";
 import { BIconSearch, BIconPlusCircle, BIconInfoCircle, BIconJournalText } from 'bootstrap-vue'
 import {FieldsTableTramitacao} from "@/type/tableTramitacao"
 import {TableTramitacaoSeeder} from "@/type/tableTramitacao"
+import RestApiService from "@/services/rest/service";
+import { Tramitacao } from '@/type/tramitacao';
 
 export default Vue.extend({
     directives: { mask },
+    props: ['idProcesso'],
     data() {
         return {           
             rows: 100,
@@ -65,10 +68,35 @@ export default Vue.extend({
             pageOptions: [5, 10, 15, { value: 100, text: "Show a lot" }],     
             fields: FieldsTableTramitacao,
             items: TableTramitacaoSeeder,
+            loading: false as boolean,
+            form: {} as Tramitacao,
         };
     },
     methods: {       
-     
+        carregarDados(): void {
+            this.loading = true;       
+                        
+            RestApiService.get("processos/movimentacoes-processo", this.idProcesso)
+                .then((res: any) => {          
+
+                this.form.caixaSIGED = res.data.num_procedimento
+                this.form.eventoTramitacao = res.data.data_processo
+                this.form.entradaSetor = res.data.prazo
+                this.form.permanencia = res.data.numero_siged
+                this.form.reiteracao = res.data.reiteracao  
+
+            })
+            .catch((e) => {
+                   this.adicionarAlert(
+                    "alert",
+                    "Houve um erro ao carregar os dados. Tente novamente!"
+                );              
+          
+            })
+            .finally(() => {
+                this.loading = false;
+            });
+        },
     },
     components: {
         HeaderPage,
@@ -77,7 +105,9 @@ export default Vue.extend({
         BIconPlusCircle,
         BIconInfoCircle,
         Notifications,
-    }
+    },
+
+    
 });
 </script>
 
