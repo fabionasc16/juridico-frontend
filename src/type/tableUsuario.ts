@@ -30,6 +30,5 @@ export const FieldsTableUsuario =
           label: 'CPF',
           sortable: true,
         },
-        
-        
+              
         ];

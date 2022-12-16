@@ -75,7 +75,8 @@
           </div>
           <!-- TABELA -->
           <div> 
-            <b-table-lite small striped hover responsive class="m-0" head-variant="dark" :sticky-header="stickyHeader" 
+            <b-table-lite small striped hover responsive class="m-0" head-variant="dark" :current-page="currentPage"
+             :per-page="perPage" :sticky-header="stickyHeader" 
             :no-border-collapse="noCollapse" :items="items" :fields="fields">
               <!-- BOTÕES DE AÇÕES -->
               <template v-slot:cell(botaoAction)="data">
@@ -110,7 +111,7 @@
               <div class="col-12 m-0 px-1 pt-1"> 
                 <b-pagination pills align="right" size="sm" v-model="currentPage" 
                 @change="listarUsuarios" 
-                :total-rows="rows" :per-page="perPage"  v-show="totalRows">
+                :total-rows="totalRows" :per-page="perPage"  v-show="totalRows">
                 </b-pagination>
               </div>
           </div>
@@ -164,10 +165,30 @@ import { BIconSearch, BIconPlusCircle, BIconPerson} from 'bootstrap-vue';
 import { FieldsTableUsuario} from "@/type/tableUsuario";
 import LoadingSpinner from "@/components/LoadingSpinner.vue";
 import ReturnMessage from "@/components/ReturnMessage.vue";
+import ModalExcluir from "@/components/ModalExcluir.vue";
+import formatarDataBrMixin from "@/mixins/formatarDataBr";
+import ValidarDataMixin from "@/mixins/validarData";
+import ValidarCpfMixin from "@/mixins/validarCpfMixin";
+
+
 
 
 export default Vue.extend({
   directives: { mask },
+  components: {
+    HeaderPage,
+    Notifications,
+    ModalCadastroUsuario,
+    BIconSearch,
+    BIconPlusCircle,
+    BIconPerson,
+    LoadingSpinner,
+    ReturnMessage,
+    ModalExcluir,
+  },
+  mixins: [        
+    ValidarCpfMixin, ValidarDataMixin, formatarDataBrMixin
+  ],
   data() {
     return {
       id_usuario: null as any, //para modal
@@ -248,7 +269,8 @@ export default Vue.extend({
       }      
  
       console.log("busca ", JSON.stringify(busca))
-     
+      
+
         RestApiService.post("usuarios", busca)
           .then((response: any) => {            
             this.items = response.data.data;
@@ -278,14 +300,16 @@ export default Vue.extend({
         this.id_usuario = id
         this.$bvModal.show('modal-visualizar-usuario')
     },
+    
     listarUsuarios(currentpage: number) : void {
      
      this.loading = true;  
       
        RestApiService.get(
-         "usuarios", `?currentPage=${currentpage}`)
+         "usuarios/all", `?currentPage=${currentpage}`)
          .then((response: any) => {
            this.items = response.data.data;
+           console.log(response.data)
            this.perPage = response.data.perPage;
            this.totalRows = response.data.total;
 
@@ -311,7 +335,7 @@ export default Vue.extend({
                            "alert",
                            "Houve um erro. Não foi possível carregar a listagem!"
                            );                      
-                       }      
+                       }
          })
          .finally(() => {
            this.loading = false;          
@@ -324,7 +348,7 @@ export default Vue.extend({
 
     if(confirm(message)) {
     
-      RestApiService.delete("usuario", id)
+      RestApiService.delete("usuarios", id)
         .then((response: any) => {
           this.loading = true;
 
@@ -366,17 +390,7 @@ export default Vue.extend({
     voltar(): void {
       this.$router.push("/");
       }
-    },
-  components: {
-    HeaderPage,
-    Notifications,
-    ModalCadastroUsuario,
-    BIconSearch,
-    BIconPlusCircle,
-    BIconPerson,
-    LoadingSpinner,
-    ReturnMessage
-  }
+    },  
 });
 </script>
 

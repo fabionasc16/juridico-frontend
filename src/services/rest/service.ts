@@ -1,6 +1,6 @@
 import "axios";
 import { environment } from "../../environments/environment";
-import http3 from "./http_sipah";
+import http3 from "./http_sapej";
 import http2 from "./http_img";
 import http from "./http_sso";
 
@@ -38,6 +38,10 @@ class RestApiService {
   public buscarProcessoSiged(params: any): Promise<any> {
     return http.get(`/processos/busca-processo?numero_processo=${params}`);
   }   
+
+  public getSSO(uri: string, params: any): Promise<any> {
+    return http3.get(`/${uri}/${params}`);
+  }  
   
   public getCpf(uri: string, params: any): Promise<any> {
     return http.get(`/${uri}/cpf/query?cpf_usuario=${params}`);
