@@ -3,7 +3,7 @@ const menusMixin = {
 	data() {
 		return {
 			commonMenus: [
-			{
+			/*{
 				name: "Página Inicial",
 				path: "/home",
 				meta: { menu: "" }
@@ -12,7 +12,7 @@ const menusMixin = {
 				name: "Dashboard",
 				path: "/dashboard",
 				meta: { menu: "" }
-			},
+			},*/
 			{
 				name: "Processos",
 				path: "/processos",

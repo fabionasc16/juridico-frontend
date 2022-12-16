@@ -116,7 +116,7 @@
           this.form.user_unit = '6399e95caa133b62db284f5d'
           this.efetuarLogin(this.form)
             .then((res) => {
-              this.$router.push({ path: '/home' })
+              this.$router.push({ path: '/processos' })
             })
             .catch(error => {
              if(error.response.status == '404'){
