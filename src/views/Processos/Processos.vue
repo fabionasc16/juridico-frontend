@@ -123,7 +123,7 @@
                   v-show="exibirMaisDetalhes">
                   <v-select style="font-size: 0.85rem" :options="optionsClassificacao" 
                                         class="font" 
-                                        label="descClassificacao"
+                                        label="desc_classificacao"
                                         value="id_classificacao"    
                                         placeholder="--Selecione--"                                     
                                         v-model="classificacaoSelecionada"/>

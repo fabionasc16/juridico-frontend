@@ -1,16 +1,14 @@
 export type Usuario = {
     id: string;
+    unit_id: string;
     nome: string;
-    dataNascimento: string;
+    dataNascimentoBR: string;
     cpf: string;
     email: string;
     telefone: string;
     matriculaUsuario: string;
     cargoUsuario: string;
-    loginUsuario: string;
-    senhaUsuario: string;
-    confirmarSenha: string;
-
+    perfilUsuario: string;
     //rg = ""
   };
   
