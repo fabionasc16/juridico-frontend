@@ -35,7 +35,7 @@ export const FieldsTableProcesso =
     sortable: true,
   },
   {
-    key: 'classificacao.descClassificacao',
+    key: 'classificacao.desc_classificacao',
     label: 'Classificação',
     sortable: true,
   },
