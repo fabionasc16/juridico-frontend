@@ -306,7 +306,8 @@ export default Vue.extend({
      this.loading = true;  
       
        RestApiService.get(
-         "usuarios/all", `?currentPage=${currentpage}`)
+         //"usuarios/all", `?currentPage=${currentpage}`)
+         "usuarios/all", '?nomeSistema=SAPEJ')
          .then((response: any) => {
            this.items = response.data.data;
            console.log(response.data)

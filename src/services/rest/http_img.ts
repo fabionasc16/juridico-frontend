@@ -10,7 +10,7 @@ const http2 = axios.create({
     headers: { "Content-Type": "multipart/form-data" },
 });
 
-/*
+
 http2.interceptors.request.use(
     (config:any) => {
       const token = store.getters['usuario/getUsuarioToken']
@@ -33,7 +33,7 @@ http2.interceptors.response.use(
       return Promise.reject(err) // Returns the error information returned by the interface     
    }
 )
-*/
+
 
 export default http2;
 
