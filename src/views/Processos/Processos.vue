@@ -27,7 +27,7 @@
              <div class="col-10">
                <div class="row">            
  
-                 <b-form-group append="m" class="font col-sm-4 col-md-4 col-lg-4">
+                 <b-form-group append="m" class="font col-sm-6 col-md-5 col-lg-4">
                     
                    <b-form-checkbox switch class="font" v-model="checkedProcessoSiged" @change="alterarProced">                      
                      <label v-if="checkedProcessoSiged">Nº Procedimento:</label> 
@@ -39,7 +39,7 @@
                    <!-- v-mask="'######/####-##'" -->
                  </b-form-group>
  
-                 <b-form-group label="Assunto:" append="m" class="font col-sm-5 col-md-5 col-lg-5">
+                 <b-form-group label="Assunto:" append="m" class="font col-sm-6 col-md-5 col-lg-4">
                    <v-select style="font-size: 0.85rem" :options="optionsAssunto" 
                                  class="font" 
                                  label="desc_assunto"
@@ -48,7 +48,7 @@
                                  v-model="assuntoSelecionado"/>                                          
                  </b-form-group>
  
-                 <b-form-group label="Status Processo:" append="m" class="font col-sm-3 col-md-3 col-lg-3"
+                 <b-form-group label="Status Processo:" append="m" class="font col-sm-6 col-md-5 col-lg-4"
                    >                 
                    <v-select style="font-size: 0.85rem" :options="optionsStatusProcesso" class="font" label="desc_status"
                            value="id_status"
@@ -82,7 +82,7 @@
              <div class="col-12">
                <div class="row">
  
-                 <b-form-group label="Órgão Demandante:" append="m" class="font col-sm-3 col-md-3 col-lg-3"
+                 <b-form-group label="Órgão Demandante:" append="m" class="font col-sm-6 col-md-5 col-lg-4"
                    v-show="exibirMaisDetalhes">  
                      <v-select style="font-size: 0.85rem" :options="optionsOrgaoDemandante" 
                                          class="font" 
@@ -92,7 +92,7 @@
                                          v-model="orgaoDemandanteSelecionado"/>         
                  </b-form-group>
  
-                 <b-form-group label="Tipo do Processo:" append="m" class="font col-sm-3 col-md-3 col-lg-3"
+                 <b-form-group label="Tipo do Processo:" append="m" class="font col-sm-6 col-md-5 col-lg-4"
                    v-show="exibirMaisDetalhes"> 
                     <v-select style="font-size: 0.85rem" :options="optionsTipoProcesso" 
                                          class="font" 
@@ -104,7 +104,7 @@
  
                 
  
-                  <b-form-group append="m" class="font col-sm-3 col-md-3 col-lg-3"
+                  <b-form-group append="m" class="font col-sm-6 col-md-5 col-lg-4"
                    v-show="exibirMaisDetalhes">  
                    
                     <!-- <b-form-checkbox switch class="font" v-model="checkedExpiraHoje">                                         
@@ -119,7 +119,7 @@
                  </b-form-group>
                  
  
-                 <b-form-group label="Classificação:" append="m" class="font col-sm-3 col-md-3 col-lg-3"
+                 <b-form-group label="Classificação:" append="m" class="font col-sm-6 col-md-5 col-lg-4"
                    v-show="exibirMaisDetalhes">
                    <v-select style="font-size: 0.85rem" :options="optionsClassificacao" 
                                          class="font" 
@@ -129,7 +129,7 @@
                                          v-model="classificacaoSelecionada"/>
                  </b-form-group>
  
-                  <b-form-group label="Responsável:" append="m" class="font col-sm-3 col-md-3 col-lg-3"
+                  <b-form-group label="Responsável:" append="m" class="font col-sm-6 col-md-5 col-lg-4"
                    v-show="exibirMaisDetalhes">
                    <v-select style="font-size: 0.85rem" :options="optionsResponsavel" 
                                          class="font" 
@@ -139,19 +139,19 @@
                                          v-model="responsavelSelecionado"/>
                  </b-form-group>
  
-                 <b-form-group label="Caixa SIGED:" append="m" class="font col-sm-3 col-md-3 col-lg-3" v-show="exibirMaisDetalhes">
+                 <b-form-group label="Caixa SIGED:" append="m" class="font col-sm-6 col-md-5 col-lg-4" v-show="exibirMaisDetalhes">
                    <v-select style="font-size: 0.85rem" :options="optionsCaixa" class="font" label="caixa_atual_siged"
                    id="caixa_atual_siged"                  
                    v-model="caixaSigedSelecionada"/>                 
                  </b-form-group>
  
-                 <b-form-group label="Descrição:" append="m" class="font col-sm-3 col-md-3 col-lg-3" v-show="exibirMaisDetalhes">                            
+                 <b-form-group label="Descrição:" append="m" class="font col-sm-6 col-md-5 col-lg-4" v-show="exibirMaisDetalhes">                            
  
                   <b-form-input size="md" type="text" v-model="form.descricao" autofocus></b-form-input  >
 
                 </b-form-group>
 
-                <b-form-group label="Objeto:" append="m" class="font col-sm-3 col-md-3 col-lg-3" v-show="exibirMaisDetalhes">                            
+                <b-form-group label="Objeto:" append="m" class="font col-sm-6 col-md-5 col-lg-4" v-show="exibirMaisDetalhes">                            
  
                    <b-form-input size="md" type="text" v-model="form.objeto" autofocus></b-form-input  >
 
@@ -160,45 +160,27 @@
                </div>
              </div>
            </div>
- 
-           <!-- limpar campos de pesquisa-->
-           <!--<div class="row">
-             <div class="col-12">
-               <b-button class="bordered ml-2 sm" type="button" variant="warning"       
-                                 @click="">Limpar</b-button>  
-             </div>
-           </div>-->
+        
          </b-form>
- 
-          <!-- CARD DA TABELA DO PROCESSO -->
-          <div class="card p-0 m-0">
-           <!-- CABEÇALHO DA TABELA (Espaço reservado para incluir ícones) -->
-           <div class="card-header" align="right">
-             <div class="row">
-              
-                 <!-- ÍCONE Journal-text -->
-                 <div class="col-1 text-blue h2 p0m0" align="center" label="Processos Cadastrados">
-                   <b-icon-journal-text>
-                   </b-icon-journal-text>
-                 </div>
-               <!-- TÍTULO -->
-               <div class="col-10 mt-1" align="start">
-                 <div class="row position-relative">
-                   <h5>Processos Cadastrados</h5>
-                 </div>
-               </div>
-               <!-- ÍCONE Plus-Circle -->
-               <div class="col-1 position-relative" align="center"> 
-                 <b-form-group label="" class="btn text-primary position-absolute top-50 start-50 translate-middle">
-                   <div class="h3">
-                     <b-icon-plus-circle v-b-modal.modal-cadastro-processo v-b-tooltip.hover.topleft="'Adicionar Processo'"></b-icon-plus-circle>
-                   </div>
-                 </b-form-group>
-               </div>
-             </div>
-           </div>
-           <!-- TABELA -->
-           <div>
+
+
+          <!-- CARD DA TABELA -->
+        <div class="card-table p-0 m-0 table-responsive">    
+          <!-- TOPO TABELA-->
+          <div class="topo-table">
+       
+            <div class="desc-topo-table">
+              <b-icon-journal-text class="icon-topo-table"></b-icon-journal-text> 
+              <span class="title-topo-table">Processos Cadastrados</span>
+            </div>                      
+
+            <div class="button-topo-table">
+              <b-icon-plus-circle v-b-modal.modal-cadastro-processo v-b-tooltip.hover.topleft="'Adicionar Processo'"></b-icon-plus-circle>
+            </div>
+
+          </div>      
+           
+           <!-- TABELA -->           
              <b-table-lite small striped hover class="m-0" head-variant="dark" 
                :current-page="currentPage"
                :per-page="perPage" :items="items"
@@ -284,7 +266,7 @@
              <div class="m-3 text-center" v-if="!items">
                <label>Nenhum registro encontrado.</label>
              </div>         
-           </div>
+           
  
            <!-- RODAPÉ DA TABELA (Espaço reservado para incluir ícones) -->
            <div class="card-footer m-0 px-1 pt-1">
@@ -1007,5 +989,42 @@
  .custom-select-sm {
    height: calc(2em + 0.5rem + 2px);
  }
+
+
+/* Cabeçalho da tabela */
+.topo-table {
+  display: flex;
+  justify-content: space-between;  
+  align-items: center;
+  padding: 1px 10px; /* top bottom / right left */
+  background-color: rgba(0, 0, 0, .03);
+  border: 1px solid rgba(0,0,0, .125); 
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+}
+
+.icon-topo-table { 
+  font-size: 2rem;  
+}
+
+.title-topo-table {
+  font-size: 1.2rem;
+  padding-left: 10px;
+  font-weight: 100;
+  flex-grow: 1;  
+  font-family: "Mulish", sans-serif;
+  align-self: center;
+}
+
+.button-topo-table {
+  font-size: 2.2rem;
+  color: #007bff;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.button-topo-table:hover {
+  color: #5cabff;
+}
  </style>
  
