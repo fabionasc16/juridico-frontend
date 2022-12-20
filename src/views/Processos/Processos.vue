@@ -173,7 +173,7 @@
               <b-icon-journal-text class="icon-topo-table"></b-icon-journal-text> 
               <span class="title-topo-table">Processos Cadastrados</span>
             </div>                      
-
+           
             <div class="button-topo-table">
               <b-icon-plus-circle v-b-modal.modal-cadastro-processo v-b-tooltip.hover.topleft="'Adicionar Processo'"></b-icon-plus-circle>
             </div>
