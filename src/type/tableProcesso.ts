@@ -51,7 +51,7 @@ export const FieldsTableProcesso =
   },  
   {
     key: 'prazo_total',
-    label: 'Prazo (Dias Úteis)',
+    label: 'Prazo',
     sortable: true,
   },  
   {

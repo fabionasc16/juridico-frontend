@@ -261,12 +261,11 @@
                      <!--@click="excluir(data.item.id_processo, data.item.num_procedimento, data.item.status.id_status)">-->
                  </b-dropdown>
                </template>             
-             </b-table-lite>
- 
-             <div class="m-3 text-center" v-if="!items">
+             </b-table-lite> 
+
+             <div class="m-3 text-center" v-if="totalRows==0">
                <label>Nenhum registro encontrado.</label>
-             </div>         
-           
+             </div>                    
  
            <!-- RODAPÉ DA TABELA (Espaço reservado para incluir ícones) -->
            <div class="card-footer m-0 px-1 pt-1">
