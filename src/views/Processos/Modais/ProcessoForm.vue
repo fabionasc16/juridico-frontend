@@ -352,12 +352,11 @@ export default Vue.extend({
         },
         carregarDados(): void {
             this.loading = true;
-
-            //this.formDados.form.objeto = 'abc'
-            //console.log('carregar: ',this.formDados.form )           
             
             RestApiService.get("processos/id", this.idProcesso)
-                .then((res: any) => {               
+                .then((res: any) => {       
+                    
+                console.log(res.data)
 
                 this.form.idProcesso =   res.data.id_processo                
                 this.form.numProcedimento = res.data.num_procedimento              
@@ -393,21 +392,23 @@ export default Vue.extend({
                 // this.formDados.form.statusPrazo =  res.data.status_prazo
                 // this.formDados.form.statusProcesso = res.data.fk_status
 
-                this.form.diasCorridos = res.data.diasCorridos
+                this.form.diasCorridos = res.data.dias_corridos
+
+                console.log('dias corridos',   this.form.diasCorridos)
 
                 this.form.sigiloso = res.data.sigiloso
+
+                console.log('sigiloso',   this.form.sigiloso)
+
                 this.form.observacao = res.data.observacao    
 
                 this.form.valorMulta = res.data.valor_multa
 
                 this.form.diasCorridos =                    
-                   (res.data.diasCorridos && res.data.diasCorridos=='S' ? true : false)   
+                   (res.data.dias_corridos && res.data.dias_corridos=='S' ? true : false)   
 
-                /*this.formDados.form.sigiloso =                    
-                   (res.data.sigiloso && res.data.sigiloso=='S' ? true : false)*/
-
-                   this.form.sigiloso =                    
-                   (res.data.sigiloso && res.data.sigiloso=='S' ? true : false)
+                this.form.sigiloso =                    
+                (res.data.sigiloso && res.data.sigiloso=='S' ? true : false)
 
                 this.form.requerSIGED =                    
                 (res.data.requer_siged && res.data.requer_siged=='S' ? true : false)
