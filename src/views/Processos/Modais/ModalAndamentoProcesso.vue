@@ -69,7 +69,6 @@ import ReturnMessage from "@/components/ReturnMessage.vue";
 import dataMixin from "@/mixins/dataMixin";
 import RestApiService from "@/services/rest/service";
 import LoadingSpinner from "@/components/LoadingSpinner.vue";
-import DetalhesProcesso from "../../../components/DetalhesProcesso.vue";
 import { Processo } from '@/type/processo';
 import { StatusProcesso } from "@/type/statusProcesso";
 
@@ -84,7 +83,6 @@ export default Vue.extend({
         Notifications,
         ReturnMessage,
         LoadingSpinner,
-        DetalhesProcesso,
     },
     mixins: [        
         dataMixin,

@@ -48,7 +48,7 @@ import { Notificacao } from "@/type/notificacao";1
 import ReturnMessage from "@/components/ReturnMessage.vue";1
 import RestApiService from "@/services/rest/service";1
 import LoadingSpinner from "@/components/LoadingSpinner.vue";1
-import DetalhesProcesso from "@/components/DetalhesProcesso.vue";
+
 
 export default Vue.extend({
     directives: { mask },
@@ -61,7 +61,6 @@ export default Vue.extend({
         Notifications,
         ReturnMessage,
         LoadingSpinner,
-        DetalhesProcesso
     },
     props: ['id', 'tipo'],
     data() {

@@ -44,7 +44,6 @@ import ReturnMessage from "@/components/ReturnMessage.vue";
 import dataMixin from "@/mixins/dataMixin";
 import RestApiService from "@/services/rest/service";
 import LoadingSpinner from "@/components/LoadingSpinner.vue";
-import DetalhesProcesso from "../../../components/DetalhesProcesso.vue";
 import { TipoProcesso } from '@/type/tipoProcesso';
 
 export default Vue.extend({
@@ -58,7 +57,6 @@ export default Vue.extend({
         Notifications,
         ReturnMessage,
         LoadingSpinner,
-        DetalhesProcesso,
     },
     props: ["id", "tipo"],
     data() {

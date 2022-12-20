@@ -21,8 +21,8 @@ export type Processo = {
     dataLimitePrazo: string,
     diasPercorridos: string,
     diasExpirados: string,
-    statusPrazo?: string, //apagar depois
-    statusProcesso?: string, //apagar depois
+    statusPrazo?: string, 
+    statusProcesso?: any, 
     idStatusPrazo: any,
     idStatusProcesso: any, 
     sigiloso: boolean,
