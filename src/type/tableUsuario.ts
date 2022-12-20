@@ -6,29 +6,19 @@ export const FieldsTableUsuario =
           sortable: false,
         },
         {
-          key: 'nome',
+          key: 'user_name',
           label: 'Nome Completo',
           sortable: true
         },
         {
-          key: 'matriculaUsuario',
-          label: 'Matrícula',
-          sortable: true
-        },
-        {
-          key: 'cargoUsuario',
-          label: 'Cargo',
-          sortable: true
-        },
-        {
-          key: 'dataNascimento',
-          label: 'Data de Nascimento',
-          sortable: true
-        },
-        {
-          key: 'cpf',
+          key: 'user_cpf',
           label: 'CPF',
-          sortable: true,
-        },
-              
-        ];
+          sortable: true
+        },  
+        {
+          key: 'profiles[0].profile_name',
+          label: 'Perfil',
+          sortable: true
+        },        
+             
+];

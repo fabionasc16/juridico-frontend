@@ -206,53 +206,7 @@ export default Vue.extend({
       totalRows: null as any,
       form: {} as Usuario,
       items: [] as Array<Usuario>,
-      /*form: {
-        cpfUsuario: "" as string,
-        nomeUsuario: "" as string,
-        matriculaUsuario: "" as string,
-        cargoUsuario: "" as string,
-        loginUsuario: "" as string,
-        senhaUsuario: "" as string,
-      },*/
-      /*fields: [
-        {
-          key: 'botaoAction',
-          label: 'Ações',
-          sortable: false,
-        },
-        {
-          key: 'cpfUsuario',
-          label: 'CPF',
-          sortable: true
-        },
-        {
-          key: 'nomeUsuario',
-          label: 'Nome Completo',
-          sortable: true
-        },
-        {
-          key: 'matriculaUsuario',
-          label: 'Matrícula',
-          sortable: true,
-        },
-        {
-          key: 'cargoUsuario',
-          label: 'Cargo',
-          sortable: true,
-        },
-      ],
-      items: [
-        { isActive: true, cpfUsuario: "123.145.147-11", nomeUsuario: "Thaís Condida", matriculaUsuario: "12345-A", cargoUsuario: 'Advogado' },
-        { isActive: true, cpfUsuario: "154.478.459-89", nomeUsuario: "Chico Cunha", matriculaUsuario: "54321-A", cargoUsuario: 'Auxiliar' },
-        { isActive: true, cpfUsuario: "521.845.987.-14", nomeUsuario: "Pacífico Armando Guerra", matriculaUsuario: "12345-A", cargoUsuario: 'Estagiário' },
-        { isActive: true, cpfUsuario: "458.987.589-99", nomeUsuario: "Um Dois Três de Oliveira Quatro", matriculaUsuario: "12345-A", cargoUsuario: 'Diretor' },
-        { isActive: true, cpfUsuario: "154.623.352-13", nomeUsuario: "Vicente Mais ou  Menos de Souza", matriculaUsuario: "12345-A", cargoUsuario: 'Gerente' },
-        { isActive: true, cpfUsuario: "154.623.352-13", nomeUsuario: "Vicente Mais ou  Menos de Souza", matriculaUsuario: "12345-A", cargoUsuario: 'Gerente' },
-        { isActive: true, cpfUsuario: "154.623.352-13", nomeUsuario: "Vicente Mais ou  Menos de Souza", matriculaUsuario: "12345-A", cargoUsuario: 'Gerente' },
-        { isActive: true, cpfUsuario: "225.112.002-09", nomeUsuario: "Deyde Costa", matriculaUsuario: "12345-A", cargoUsuario: 'Advogada' },
-        { isActive: true, cpfUsuario: "007.007.007-07", nomeUsuario: "James Bond", matriculaUsuario: "007-A", cargoUsuario: 'Agente Secreto' }
-
-      ]*/
+   
     };
   },
   mounted() {
@@ -309,7 +263,7 @@ export default Vue.extend({
          //"usuarios/all", `?currentPage=${currentpage}`)
          "usuarios/all", '?nomeSistema=SAPEJ')
          .then((response: any) => {
-           this.items = response.data.data;
+           this.items = response.data;
            console.log(response.data)
            this.perPage = response.data.perPage;
            this.totalRows = response.data.total;
