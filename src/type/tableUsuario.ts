@@ -20,5 +20,11 @@ export const FieldsTableUsuario =
           label: 'Perfil',
           sortable: true
         },        
+        {
+          key: 'user_status',
+          label: 'Status',
+          sortable: true,
+          formatter: value => (value == 1 ? 'Ativo' : 'Inativo')
+        },
              
 ];
