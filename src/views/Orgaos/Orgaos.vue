@@ -94,9 +94,15 @@
                      class="btn-light btn-outline-dark m-0 p-1">
                     Visualizar
                   </b-list-group-item>                 
-                  <b-list-group-item block class="btn-light text-dark btn-outline-danger m-0 p-1" @click="excluir(data.item.id_orgao, data.item.orgao_demandante)">
+                  <!--<b-list-group-item block class="btn-light text-dark btn-outline-danger m-0 p-1" @click="excluir(data.item.id_orgao, data.item.orgao_demandante)">
                     Excluir
-                  </b-list-group-item>
+                  </b-list-group-item>-->
+                  <b-list-group-item block                     
+                       @click="abrirModal('modal-excluir', data.item.id_orgao, data.item.orgao_demandante)"
+                       class="btn-light text-dark btn-outline-danger m-0 p-1"                 
+                       @listarOrgaos="listarOrgaos(currentPage)">                      
+                     Excluir
+                   </b-list-group-item>
                 </b-dropdown>
               </template>                                 
             </b-table-lite>
@@ -138,6 +144,14 @@
             </template>           
           </ModalCadastroOrgao>
         </b-modal>
+
+        <ModalExcluir :pergunta="`o òrgão ${nomeOrgaoModal}`">
+            <template v-slot:buttons>
+                 <b-button variant="danger" class="bordered" 
+                 @click="excluir(idOrgao)"
+                 >Excluir</b-button>
+             </template>   
+         </ModalExcluir>
       <!-- //MODAL -->
 
 </div> <!--container fluid-->
@@ -153,13 +167,12 @@ import { mask } from "vue-the-mask";
 import { Orgaos } from '@/type/orgaos';
 import { FieldsTableOrgao } from "@/type/tableOrgaos";
 import { BIconSearch, BIconPlusCircle, BIconInfoCircle, BIconJournalText } from 'bootstrap-vue'
-
 import Notifications from "@/components/Notifications.vue";
 import { Notificacao } from "@/type/notificacao";
 import ReturnMessage from "@/components/ReturnMessage.vue";
 import LoadingSpinner from "@/components/LoadingSpinner.vue";
-
 import RestApiService from "@/services/rest/service";
+import ModalExcluir from "@/components/ModalExcluir.vue"
 
 export default Vue.extend({
   directives: { mask },
@@ -173,6 +186,7 @@ export default Vue.extend({
     ModalCadastroOrgao,
     ReturnMessage,
     LoadingSpinner,
+    ModalExcluir,
   },
   data() {
     return {
@@ -192,7 +206,10 @@ export default Vue.extend({
       Notificacao: [] as Array<Notificacao>,
       Message: [] as Array<Notificacao>,
       loading: false as boolean,
-      alert: false as boolean,   
+      alert: false as boolean,  
+      
+      nomeOrgaoModal: "" as string,
+      titleModal: "" as string,
     };
   },
   mounted() {
@@ -250,16 +267,18 @@ export default Vue.extend({
         });
 
     },
-   
-    voltar(): void {
-      this.$router.push("/");
+    
+    abrirModal(modalname: string, idOrgao: number, nomeOrgao?: any){      
+        this.titleModal = ''
+        this.idOrgao = idOrgao            
+        this.nomeOrgaoModal = nomeOrgao
+        this.$bvModal.show(modalname)            
     },
 
     excluir(id: any, nome: string): void {
-    
-      let message = 'Deseja realmente excluir órgão demandante ' + nome + '?'
 
-      if(confirm(message)) {
+        this.$bvModal.hide('modal-excluir') 
+     
         RestApiService.delete("orgaos-demandantes", id)
           .then((response: any) =>{
               this.loading = true
@@ -278,8 +297,7 @@ export default Vue.extend({
           })
           .finally(() => {
             this.loading = false
-          });
-      }
+          });      
     },
 
     adicionarAlert(tipo: string, mensagem: string): void {

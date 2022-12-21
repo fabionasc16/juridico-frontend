@@ -103,9 +103,17 @@
                      class="btn-light btn-outline-dark m-0 p-1">
                     Visualizar
                   </b-list-group-item>                 
-                  <b-list-group-item block class="btn-light text-dark btn-outline-danger m-0 p-1" @click="excluir(data.item.id_feriado, data.item.desc_feriado)">
+                  <!--<b-list-group-item block class="btn-light text-dark btn-outline-danger m-0 p-1" @click="excluir(data.item.id_feriado, data.item.desc_feriado)">
                     Excluir
-                  </b-list-group-item>
+                  </b-list-group-item>-->
+
+                  <b-list-group-item block                     
+                       @click="abrirModal('modal-excluir', data.item.id_feriado, data.item.desc_feriado)"
+                       class="btn-light text-dark btn-outline-danger m-0 p-1"                 
+                       @listarFeriados="listarFeriados(currentPage)">                      
+                     Excluir
+                   </b-list-group-item>
+
                 </b-dropdown>
               </template>
             </b-table-lite>
@@ -147,6 +155,15 @@
             </template>           
           </ModalCadastroFeriado>
         </b-modal>   
+
+
+        <ModalExcluir :pergunta="`o feriado ${nomeFeriadoModal}`">
+            <template v-slot:buttons>
+                 <b-button variant="danger" class="bordered" 
+                 @click="excluir(idFeriado)"
+                 >Excluir</b-button>
+             </template>   
+         </ModalExcluir>  
         <!-- //MODAL -->
 
   </div> <!--container fluid-->  
@@ -168,6 +185,7 @@ import { Notificacao } from "@/type/notificacao";
 import ReturnMessage from "@/components/ReturnMessage.vue";
 import LoadingSpinner from "@/components/LoadingSpinner.vue";
 import ModalCadastroFeriado from "./Modais/ModalCadastroFeriado.vue";
+import ModalExcluir from "@/components/ModalExcluir.vue"
 
 export default Vue.extend({
   directives: { mask },
@@ -180,7 +198,8 @@ export default Vue.extend({
     Notifications,
     ReturnMessage,
     LoadingSpinner,  
-    ModalCadastroFeriado
+    ModalCadastroFeriado,
+    ModalExcluir
 },
   mixins: [        
         dataMixin,
@@ -209,7 +228,10 @@ export default Vue.extend({
       Notificacao: [] as Array<Notificacao>,
       Message: [] as Array<Notificacao>,
       loading: false as boolean,
-      alert: false as boolean,      
+      alert: false as boolean,  
+      
+      nomeFeriadoModal: "" as string,
+      titleModal: "" as string,
       
     };
   },
@@ -313,17 +335,17 @@ export default Vue.extend({
       
     },
    
-    voltar(): void {
-      this.$router.push("/");
+    abrirModal(modalname: string, idFeriado: number, feriadodesc?: any){      
+        this.titleModal = ''
+        this.idFeriado = idFeriado            
+        this.nomeFeriadoModal = feriadodesc
+        this.$bvModal.show(modalname)            
     },
 
-    excluir(id: any, data: any): void {
-    
-      let message = 'Deseja realmente excluir feriado de ' + data + '?'
+    excluir(id: any): void { 
+      this.$bvModal.hide('modal-excluir') 
 
-      if(confirm(message)) {
-      
-        RestApiService.delete("feriados", id)
+      RestApiService.delete("feriados", id)
           .then((response: any) => {
             this.loading = true;
 
@@ -348,7 +370,7 @@ export default Vue.extend({
           .finally(() => {
             this.loading = false;
           });         
-      }
+      
     },
 
     adicionarAlert(tipo: string, mensagem: string): void {

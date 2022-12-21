@@ -90,11 +90,20 @@
                      class="btn-light btn-outline-dark m-0 p-1">
                     Visualizar
                   </b-list-group-item>                 
-                  <b-list-group-item block class="btn-light text-dark btn-outline-danger m-0 p-1" 
+                  <!--<b-list-group-item block class="btn-light text-dark btn-outline-danger m-0 p-1" 
                     @click="excluir(data.item._id, data.item.user_name)"
                     v-if="getUsuarioID != data.item._id">
                     Excluir
-                  </b-list-group-item>
+                  </b-list-group-item>-->
+
+                  <b-list-group-item block                     
+                       @click="abrirModal('modal-excluir', data.item._id, data.item.user_name)"
+                       class="btn-light text-dark btn-outline-danger m-0 p-1"                 
+                       @listarUsuarios="listarUsuarios(currentPage)"
+                       v-if="getUsuarioID != data.item._id">                      
+                     Excluir
+                   </b-list-group-item>
+
                 </b-dropdown>
               </template>
             </b-table-lite>
@@ -139,6 +148,14 @@
             </template>           
           </ModalCadastroUsuario>
         </b-modal>   
+
+         <ModalExcluir :pergunta="`o usuário ${nomeUsuarioModal}`">
+            <template v-slot:buttons>
+                 <b-button variant="danger" class="bordered" 
+                 @click="excluir(id_usuario)"
+                 >Excluir</b-button>
+             </template>   
+         </ModalExcluir>  
         <!-- //MODAL -->
   </div>
 </div>
@@ -160,7 +177,7 @@ import ReturnMessage from "@/components/ReturnMessage.vue";
 import LoadingSpinner from "@/components/LoadingSpinner.vue";
 import ModalCadastroUsuario from "./Modais/ModalCadastroUsuario.vue";
 import { mapGetters, mapActions } from "vuex";
-
+import ModalExcluir from "@/components/ModalExcluir.vue"
 
 export default Vue.extend({
   directives: { mask },
@@ -173,7 +190,8 @@ export default Vue.extend({
     Notifications,
     ReturnMessage,
     LoadingSpinner,  
-    ModalCadastroUsuario
+    ModalCadastroUsuario,
+    ModalExcluir
   },
   mixins: [        
         dataMixin,
@@ -199,7 +217,8 @@ export default Vue.extend({
       form: {} as Usuario,
       items: [] as Array<Usuario>,    
       totalPageSearch: 0, //total de registros na paginacao corrente 
-      
+      nomeUsuarioModal: "" as string,
+      titleModal: "" as string,
     };
   },
   mounted() {   
@@ -309,13 +328,17 @@ export default Vue.extend({
             });      
     },    
 
-    excluir(id: any, data: any): void {
-    
-      let message = 'Deseja realmente excluir usuário ' + data + '?'
+    abrirModal(modalname: string, idUsuario: number, nomeUsuario?: any){      
+        this.titleModal = ''
+        this.id_usuario = idUsuario            
+        this.nomeUsuarioModal = nomeUsuario
+        this.$bvModal.show(modalname)            
+    },
 
-      if(confirm(message)) {
-      
-        RestApiService.delete("usuarios", id)
+    excluir(id: any): void {
+      this.$bvModal.hide('modal-excluir')  
+              
+      RestApiService.delete("usuarios", id)
           .then((response: any) => {
             this.loading = true;
 
@@ -340,7 +363,7 @@ export default Vue.extend({
           .finally(() => {
             this.loading = false;
           });         
-      }
+      
     },
 
     adicionarAlert(tipo: string, mensagem: string): void {
