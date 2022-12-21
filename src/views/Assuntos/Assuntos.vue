@@ -116,9 +116,15 @@
                      class="btn-light btn-outline-dark m-0 p-1">
                     Visualizar
                    </b-list-group-item>          
-                  <b-list-group-item block class="btn-light text-dark btn-outline-danger m-0 p-1" @click="excluir(data.item.id_assunto, data.item.descricaoAssunto)">
+                  <!--<b-list-group-item block class="btn-light text-dark btn-outline-danger m-0 p-1" @click="excluir(data.item.id_assunto, data.item.descricaoAssunto)">
                     Excluir
-                  </b-list-group-item>
+                  </b-list-group-item>-->
+                  <b-list-group-item block                     
+                       @click="abrirModal('modal-excluir', data.item.id_assunto, data.item.desc_assunto)"
+                       class="btn-light text-dark btn-outline-danger m-0 p-1"                 
+                       @listarAssuntos="listarAssuntos(currentPage)">                      
+                     Excluir
+                   </b-list-group-item>
                 </b-dropdown>
               </template>
             </b-table-lite>
@@ -160,6 +166,14 @@
             </template>           
           </ModalCadastroAssunto>
         </b-modal>   
+
+        <ModalExcluir :pergunta="`o assunto ${nomeAssuntoModal}`">
+            <template v-slot:buttons>
+                 <b-button variant="danger" class="bordered" 
+                 @click="excluir(idAssunto)"
+                 >Excluir</b-button>
+             </template>   
+         </ModalExcluir>  
         <!-- //MODAL -->
 
   </div> <!--container fluid-->
@@ -231,6 +245,9 @@ export default Vue.extend({
         id_assunto: "" as string,
         desc_assunto: "-- Selecione --" as string,        
       },
+
+      nomeAssuntoModal: "" as string,
+      titleModal: "" as string,
       
     };
   },
@@ -326,8 +343,7 @@ export default Vue.extend({
           })
           .finally(() => {
             this.loading = false;          
-          });
-      
+          });      
     },
 
     validarCampos(): boolean {     
@@ -358,7 +374,6 @@ export default Vue.extend({
       
     },
 
-
     carregarAssunto(): void {
       this.loading = true
      
@@ -386,17 +401,17 @@ export default Vue.extend({
         }, 3000);
       }
     },
-   
-    voltar(): void {
-      this.$router.push("/");
+
+    abrirModal(modalname: string, idAssunto: number, nomeAssunto?: any){      
+        this.titleModal = ''
+        this.idAssunto = idAssunto            
+        this.nomeAssuntoModal = nomeAssunto
+        this.$bvModal.show(modalname)            
     },
 
-    excluir(id: any): void {
-    
-      let message = 'Deseja realmente excluir o assunto ? '
+    excluir(id: any): void {        
+        this.$bvModal.hide('modal-excluir')  
 
-      if(confirm(message)) {
-      
         RestApiService.delete("assuntos", id)
           .then((response: any) => {
             this.loading = true;
@@ -416,8 +431,7 @@ export default Vue.extend({
           })
           .finally(() => {
             this.loading = false;
-          });         
-      }
+          }); 
     },
 
     adicionarAlert(tipo: string, mensagem: string): void {
