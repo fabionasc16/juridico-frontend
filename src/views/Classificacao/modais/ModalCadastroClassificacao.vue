@@ -17,7 +17,7 @@
                 <b-form @submit.prevent="submit">                   
 
                     <!-- 1ª LINHA (CPF + NOME) -->
-                    <div class="col-10">   
+                    <div class="col-10" style="margin-top:15px">   
                             <b-form-group class="font">                                
                                 <label>Classificação: <span class="text-danger">*</span></label>
                                 <b-form-input class="bordered margin-field" type="text" v-model="form.descClassificacao"
@@ -96,9 +96,7 @@ export default Vue.extend({
             let acao = this.id ? "put" : "post"
             let url = "classificacoes";       
                                             
-            if (this.validarCampos()) { 
-
-              console.log('JSON: ',JSON.stringify(this.form))
+            if (this.validarCampos()) {            
               
               this.loading = true
             

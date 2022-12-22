@@ -102,7 +102,7 @@
                        @listarUsuarios="listarUsuarios(currentPage)"
                        v-if="getUsuarioID != data.item._id">                      
                      Excluir
-                   </b-list-group-item>
+                  </b-list-group-item>
 
                 </b-dropdown>
               </template>
