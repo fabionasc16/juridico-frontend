@@ -217,17 +217,14 @@ export default Vue.extend({
       dataFeriadoBR: "" as string,
       tipoFeridoSearch: "" as string,
       anoFeriadoSearch: "" as any,
-
       optionsTipoFeriado: TipoFeriadoSeeder, 
       items: [] as Array<Feriado>,
       Notificacao: [] as Array<Notificacao>,
       Message: [] as Array<Notificacao>,
       loading: false as boolean,
-      alert: false as boolean,  
-      
+      alert: false as boolean,        
       nomeFeriadoModal: "" as string,
-      titleModal: "" as string,
-      
+      titleModal: "" as string,      
     };
   },
   mounted() {   
@@ -245,8 +242,7 @@ export default Vue.extend({
         this.$bvModal.show('modal-visualizar-feriado')
     },
 
-    listarFeriados(currentpage: number) : void { 
-     
+    listarFeriados(currentpage: number) : void {      
       this.loading = true;  
 
       if(this.dataFeriadoBR && !dataMixin.methods.validarData(this.dataFeriadoBR)){
@@ -302,8 +298,7 @@ export default Vue.extend({
       
     },
 
-    validarCampos(): boolean {     
-
+    validarCampos(): boolean { 
       if(this.dataFeriadoBR && !dataMixin.methods.validarData(this.dataFeriadoBR) ) {
               this.adicionarNotificacao(
                     "danger",
@@ -339,7 +334,6 @@ export default Vue.extend({
 
     excluir(id: any): void { 
       this.$bvModal.hide('modal-excluir') 
-
       RestApiService.delete("feriados", id)
           .then((response: any) => {
             this.loading = true;

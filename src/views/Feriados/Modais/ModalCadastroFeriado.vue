@@ -123,10 +123,8 @@ export default Vue.extend({
 
             if (this.validarCampos()) { 
 
-                this.form.dataFeriado = this.dataFeriadoBR ? 
-                   dataMixin.methods.dataFormatEn(this.dataFeriadoBR) : "";
-
-                 console.log('JSON: ',JSON.stringify(this.form))
+            this.form.dataFeriado = this.dataFeriadoBR ? 
+                dataMixin.methods.dataFormatEn(this.dataFeriadoBR) : "";                
             
               RestApiService.salvar(url, this.form, acao, this.form.id_feriado)
                 .then((res) => {

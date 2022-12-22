@@ -92,10 +92,7 @@ export default Vue.extend({
 
             this.loading = true  
 
-            if (this.validarCampos()) { 
-
-              console.log('JSON: ',JSON.stringify(this.form))
-            
+            if (this.validarCampos()) {             
               RestApiService.salvar(url, this.form, acao, this.form.id_tipoprocesso)
                 .then((res) => {
                     if (acao == "put") {

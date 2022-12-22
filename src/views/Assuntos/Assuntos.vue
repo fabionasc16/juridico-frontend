@@ -205,17 +205,15 @@ export default Vue.extend({
     };
   },
   mounted() {   
-    this.listarAssuntos(this.currentPage);
-    this.carregarAssunto()
-     
+    this.listarAssuntos(this.currentPage); 
   },
   methods: {
     search() {
       let busca = {      
-        desc_assunto : this.assuntoPesquisa ? this.assuntoPesquisa : "",                
+        descricaoAssunto : this.assuntoPesquisa ? this.assuntoPesquisa : "",                
       }            
       
-      RestApiService.post("assuntos", busca)
+      RestApiService.post("assuntos/list", busca)
             .then((response: any) => { 
               console.log("search ", response.data.data) 
               this.items = response.data.data;
@@ -266,7 +264,10 @@ export default Vue.extend({
      
       this.loading = true;         
         
-        RestApiService.get("assuntos", `?currentPage=${currentpage}`)
+      let busca = {             
+      }            
+      
+        RestApiService.post3("assuntos/list", `?currentPage=${currentpage}`, busca)
           .then((response: any) => {
             console.log("listar ", response.data.data)          
             this.items = response.data.data;
@@ -330,27 +331,7 @@ export default Vue.extend({
       }
       
     },
-
-    carregarAssunto(): void {
-      this.loading = true
-     
-      RestApiService.get(
-          "assuntos",
-          `?currentPage=1&perPage=${this.perPageListagens}`
-        )
-        .then((response: any) => {         
-          this.optionsAssunto = response.data.data
-        
-        })
-        .catch((e) => {
-          console.log(e)
-        })
-        .finally(() => {
-          this.loading = false
-          this.limparNotificacao();
-        })
-    },
-
+    
     limparNotificacao(): void {
       if (this.Notificacao.length > 0) {
         setTimeout(() => {

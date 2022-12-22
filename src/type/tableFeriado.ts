@@ -5,6 +5,8 @@
         tipo: string,  
 };*/
 
+import { Value } from "sass";
+
 export const FieldsTableFeriado = 
     [   //NOMES DAS COLUNAS
         {
@@ -26,6 +28,7 @@ export const FieldsTableFeriado =
           key: 'tipo_feriado',
           label: 'Tipo',
           sortable: true,
+          formatter: value => value == 'MOVEL' ? 'MÓVEL' : value,
         },    
         
       ];

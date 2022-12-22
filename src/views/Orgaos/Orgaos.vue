@@ -1,5 +1,4 @@
 <template>
-
 <div class="container fluid">
     <div class="row">
         <div class="col-12" style="margin-top: 20px">
@@ -41,33 +40,21 @@
           </div>
      </b-form>
 
-
      <!-- CARD DA TABELA -->
-     <div class="card p-0 m-0">
-          <!-- CABEÇALHO DA TABELA (Espaço reservado para incluir ícones) -->
-          <div class="card-header" align="right">
-            <div class="row">
-                <!-- ÍCONE Journal-text -->
-                <div class="col-1 text-blue h2 p0m0" align="center" label="Responsáveis Cadastrados">
-                  <b-icon-journal-text>
-                  </b-icon-journal-text>
-                </div>                
-              <!-- TÍTULO -->
-              <div class="col-10 mt-1" align="start">
-                <div class="row position-relative">
-                  <h5>Órgãos Cadastrados</h5>
-                </div>
-              </div>
-              <!-- ÍCONE Plus-Circle -->
-              <div class="col-1 position-relative" align="center"> 
-                <b-form-group label="" class="btn text-primary position-absolute top-50 start-50 translate-middle">
-                  <div class="h3">
-                    <b-icon-plus-circle v-b-modal.modal-cadastro-orgao v-b-tooltip.hover.topleft="'Adicionar Órgão'"></b-icon-plus-circle>
-                  </div>
-                </b-form-group>
-              </div>
+      <div class="card-table p-0 m-0">    
+          <!-- TOPO TABELA-->
+          <div class="topo-table">
+       
+            <div class="desc-topo-table">
+              <b-icon-journal-text class="icon-topo-table"></b-icon-journal-text> 
+              <span class="title-topo-table">Órgãos Cadastrados</span>
+            </div>                      
+
+            <div class="button-topo-table">
+              <b-icon-plus-circle v-b-modal.modal-cadastro-orgao v-b-tooltip.hover.topleft="'Adicionar Órgão'"></b-icon-plus-circle>
             </div>
-          </div>
+
+          </div> 
           <!-- TABELA -->
           <div>
             <b-table-lite small striped hover class="m-0" head-variant="dark" :current-page="currentPage"
@@ -171,7 +158,6 @@ import ModalCadastroOrgao from './Modais/ModalCadastroOrgao.vue';
 import { mask } from "vue-the-mask";
 import { Orgaos } from '@/type/orgaos';
 import { FieldsTableOrgao } from "@/type/tableOrgaos";
-import { BIconSearch, BIconPlusCircle, BIconInfoCircle, BIconJournalText } from 'bootstrap-vue'
 import Notifications from "@/components/Notifications.vue";
 import { Notificacao } from "@/type/notificacao";
 import ReturnMessage from "@/components/ReturnMessage.vue";
@@ -182,11 +168,7 @@ import ModalExcluir from "@/components/ModalExcluir.vue"
 export default Vue.extend({
   directives: { mask },
   components: {
-    HeaderPage,   
-    BIconSearch,
-    BIconJournalText,
-    BIconPlusCircle,
-    BIconInfoCircle,
+    HeaderPage, 
     Notifications,
     ModalCadastroOrgao,
     ReturnMessage,
@@ -215,15 +197,14 @@ export default Vue.extend({
       
       nomeOrgaoModal: "" as string,
       titleModal: "" as string,
+      totalPageSearch: 0, //total de registros na paginacao corrente    
     };
   },
   mounted() {
     this.listarOrgaos(this.currentPage)
   },
   methods: {
-    submit() {
-      console.log(JSON.stringify(this.busca))
-
+    submit() {  
       if (!this.busca) {
         this.listarOrgaos(this.currentPage);
       } else {
@@ -235,6 +216,7 @@ export default Vue.extend({
             this.perPage = response.data.perPage;
             this.items = response.data.data;
             this.totalRows = response.data.total;
+            this.totalPageSearch = response.data.length  
           })
           .catch((e) => {
             this.adicionarAlert(
@@ -260,7 +242,8 @@ export default Vue.extend({
         .then((response: any) => {         
           this.items = response.data.data
           this.perPage = response.data.perPage
-          this.totalRows = response.data.total          
+          this.totalRows = response.data.total  
+          this.totalPageSearch = response.data.data.length               
         })
         .catch((e: Error) => {
           console.log(e)
@@ -280,7 +263,7 @@ export default Vue.extend({
         this.$bvModal.show(modalname)            
     },
 
-    excluir(id: any, nome: string): void {
+    excluir(id: any): void {
 
         this.$bvModal.hide('modal-excluir') 
      
@@ -292,7 +275,12 @@ export default Vue.extend({
                   "Exclusão realizada com sucesso!"
               );
 
-             this.listarOrgaos(this.currentPage)
+            //se excluir último registro de uma página, retornar para a primeira
+            if(this.totalPageSearch == 1) {
+              this.currentPage = 1
+            }  
+
+            this.listarOrgaos(this.currentPage)
           })
           .catch((e: Error) => {
              this.adicionarAlert(
@@ -355,5 +343,41 @@ export default Vue.extend({
 
 .custom-select-sm {
   height: calc(2em + 0.5rem + 2px);
+}
+
+/* Cabeçalho da tabela */
+.topo-table {
+  display: flex;
+  justify-content: space-between;  
+  align-items: center;
+  padding: 1px 10px; /* top bottom / right left */
+  background-color: rgba(0, 0, 0, .03);
+  border: 1px solid rgba(0,0,0, .125); 
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+}
+
+.icon-topo-table { 
+  font-size: 2rem;  
+}
+
+.title-topo-table {
+  font-size: 1.2rem;
+  padding-left: 10px;
+  font-weight: 100;
+  flex-grow: 1;  
+  font-family: "Mulish", sans-serif;
+  align-self: center;
+}
+
+.button-topo-table {
+  font-size: 2.2rem;
+  color: #007bff;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.button-topo-table:hover {
+  color: #5cabff;
 }
 </style>
