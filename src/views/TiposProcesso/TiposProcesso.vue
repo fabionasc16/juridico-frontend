@@ -218,7 +218,8 @@ export default Vue.extend({
       Notificacao: [] as Array<Notificacao>,
       Message: [] as Array<Notificacao>,
       loading: false as boolean,
-      alert: false as boolean,      
+      alert: false as boolean,    
+      totalPageSearch: 0, //total de registros na paginacao corrente   
       
     };
   },
@@ -244,9 +245,6 @@ export default Vue.extend({
     },
    
     search():void {
-
-      console.log(JSON.stringify(this.busca))
-
       if (!this.busca) {
         this.listarTiposProcesso(this.currentPage);
       } else {
@@ -258,6 +256,7 @@ export default Vue.extend({
             this.perPage = response.data.perPage;
             this.items = response.data.data;
             this.totalRows = response.data.total;
+            this.totalPageSearch = response.data.data.length  
           })
           .catch((e) => {
             this.adicionarAlert(
@@ -279,7 +278,7 @@ export default Vue.extend({
             this.items = response.data.data;
             this.perPage = response.data.perPage;
             this.totalRows = response.data.total;
-
+            this.totalPageSearch = response.data.data.length  
           })
           .catch((e) => {
             if (e.message === "Network Error") {
@@ -321,6 +320,11 @@ export default Vue.extend({
                     "success",
                     "Exclusão realizada com sucesso!"
             );  
+
+            //se excluir último registro de uma página, retornar para a primeira
+            if(this.totalPageSearch == 1) {
+              this.currentPage = 1
+            }  
             
             this.listarTiposProcesso(this.currentPage)
           })

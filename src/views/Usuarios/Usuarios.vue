@@ -289,7 +289,7 @@ export default Vue.extend({
               this.items = response.data;
               this.perPage = response.data.perPage;
               this.totalRows = response.data.total;
-              this.totalPageSearch = response.data.data.length              
+              this.totalPageSearch = response.data.length              
             })
             .catch((e) => {             
               if (e.message.length > 0) {
