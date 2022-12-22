@@ -21,80 +21,47 @@
        
 
        <!-- FORMULÁRIO DE CONSULTA -->       
-       <b-form @submit.prevent="listarAssuntos(currentPage)" class="mb-5">
-            <div class="row">               
-                <!--<div class="col-3">
-                  <b-form-group label="Data:" class="font">
-                      <b-form-input class="bordered margin-field" type="text" v-model="dataFeriadoBR" placeholder="dd/mm/aaaa"
-                                v-mask="'##/##/####'"></b-form-input>   
-                  </b-form-group>
-                </div>   -->
-                <div class="col-3">
+       <b-form @submit.prevent="search" class="mb-2">
+            <div class="row col-12">               
+              
+                <div class="col-sm-10 col-md-6 col-lg-4">
                   <b-form-group label="Assunto:" class="font">
-                    <v-select style="font-size: 0.85rem" :options="optionsAssunto" 
-                                class="font" 
-                                label="desc_assunto"
-                                value="id_assunto"    
-                                placeholder="--Selecione--"     
-                                v-model="assuntoSelecionado"/>                                          
-                  </b-form-group>          
-                  <!--<b-form-group label="Assunto:" class="font">
-                      <b-form-select v-model="form.id_assunto">
-                          <b-form-select-option value="">-- Selecione --</b-form-select-option>
-                          <b-form-select-option v-for="option in optionsTipoAssunto" :value="option.value"
-                              :key="option.texto"> {{ option.texto }}
-                          </b-form-select-option>                                
-                      </b-form-select>
-                  </b-form-group>-->
+                      <b-form-input class="bordered margin-field" type="text" v-model="assuntoPesquisa"
+                            ></b-form-input>   
+                  </b-form-group>
                 </div>
-                
+                            
                 <!-- ÍCONE DA LUPA -->
                 <div class="col-2 justify-content-center">
                   <b-form-group label="Consultar" class="font text-white">                    
-                      <b-button class="h2" type="submit">
+                      <b-button type="submit">
                         <b-icon-search v-b-tooltip.hover.topleft="'Consultar'"></b-icon-search>
                       </b-button>               
                   </b-form-group>               
-            </div>
-            </div>
+              </div>  
+            </div>        
         </b-form>
 
         <!-- CARD DA TABELA -->
-        <div class="card p-0 m-0">
-          <!-- CABEÇALHO DA TABELA (Espaço reservado para incluir ícones) -->
-          <div class="card-header" align="right">
-            <div class="row">
-                <!-- ÍCONE Journal-text -->
-                <div class="col-1 text-blue h2 p0m0" align="center" label="Assuntos Cadastrados">
-                  <b-icon-journal-text>
-                  </b-icon-journal-text>
-                </div>
-              <!-- TÍTULO -->
-              <div class="col-10 mt-1" align="start">
-                <div class="row position-relative">
-                  <h5>Assuntos Cadastrados</h5>
-                </div>
-              </div>
-              <!-- ÍCONE Plus-Circle -->
-              <div class="col-1 position-relative" align="center"> 
-                <b-form-group label="" class="btn text-primary position-absolute top-50 start-50 translate-middle">
-                  <div class="h3">
-                    <b-icon-plus-circle v-b-modal.modal-cadastro-assunto v-b-tooltip.hover.topleft="'Adicionar Assunto'"></b-icon-plus-circle>
-                  </div>
-                </b-form-group>
-              </div>
+        <div class="card-table p-0 m-0">    
+          <!-- TOPO TABELA-->
+          <div class="topo-table">
+       
+            <div class="desc-topo-table">
+              <b-icon-journal-text class="icon-topo-table"></b-icon-journal-text> 
+              <span class="title-topo-table">Assuntos Cadastrados</span>
+            </div>                      
+
+            <div class="button-topo-table">
+              <b-icon-plus-circle v-b-modal.modal-cadastro-assunto v-b-tooltip.hover.topleft="'Adicionar Assunto'"></b-icon-plus-circle>
             </div>
-          </div>
+
+          </div> 
           <!-- TABELA -->
           <div>
             <b-table-lite small striped hover class="m-0" head-variant="dark" :current-page="currentPage"
               :per-page="perPage" :no-border-collapse="noCollapse" :items="items"
-              :fields="fields">      
-
-              <!-- DATA FERIADO 
-              <template v-slot:cell(data_feriado)="data">
-                 {{formatarDataBr(data.item.data_assunto)}}
-              </template>   -->
+              :fields="fields">  
                            
               <!-- BOTÕES DE AÇÕES -->
               <template v-slot:cell(botaoAction)="data">
@@ -115,10 +82,7 @@
                      @click="visualizarAssunto(data.item.id_assunto)"
                      class="btn-light btn-outline-dark m-0 p-1">
                     Visualizar
-                   </b-list-group-item>          
-                  <!--<b-list-group-item block class="btn-light text-dark btn-outline-danger m-0 p-1" @click="excluir(data.item.id_assunto, data.item.descricaoAssunto)">
-                    Excluir
-                  </b-list-group-item>-->
+                   </b-list-group-item> 
                   <b-list-group-item block                     
                        @click="abrirModal('modal-excluir', data.item.id_assunto, data.item.desc_assunto)"
                        class="btn-light text-dark btn-outline-danger m-0 p-1"                 
@@ -129,6 +93,11 @@
               </template>
             </b-table-lite>
           </div>
+
+          <div class="m-3 text-center" v-if="totalRows==0">
+               <label>Nenhum registro encontrado.</label>
+          </div>       
+
           <!-- RODAPÉ DA TABELA (Espaço reservado para incluir ícones) -->
           <div class="card-footer m-0 px-1 pt-1">
             <!-- PAGINAÇÃO -->
@@ -142,7 +111,6 @@
         </div>       
         
          <!-- MODAL -->
-
          <b-modal id="modal-cadastro-assunto" centered title="Cadastro de Assunto" hide-footer>
           <ModalCadastroAssunto  @listarAssuntos="listarAssuntos(currentPage)" > 
             <template v-slot:buttons tipo="cadastrar"> 
@@ -181,16 +149,13 @@
 
 <script lang="ts">
 import Vue from "vue";
-//import axios from "axios";
 import HeaderPage from '@/components/HeaderPage.vue';
 import { mask } from "vue-the-mask";
 import { Assunto } from "@/type/assunto";
 import { FieldsTableAssunto } from "@/type/tableAssunto";
-import { BIconSearch, BIconPlusCircle, BIconInfoCircle, BIconJournalText } from 'bootstrap-vue'
 import dataMixin from "@/mixins/dataMixin";
 import { TipoAssuntoSeeder } from "@/type/tipoAssunto";
 import RestApiService from "@/services/rest/service";
-
 import Notifications from "@/components/Notifications.vue";
 import { Notificacao } from "@/type/notificacao";
 import ReturnMessage from "@/components/ReturnMessage.vue";
@@ -202,11 +167,7 @@ import ModalExcluir from "@/components/ModalExcluir.vue";
 export default Vue.extend({
   directives: { mask },
   components: {
-    HeaderPage,
-    BIconSearch,
-    BIconJournalText,
-    BIconPlusCircle,
-    BIconInfoCircle,
+    HeaderPage,    
     Notifications,
     ReturnMessage,
     LoadingSpinner,  
@@ -225,27 +186,19 @@ export default Vue.extend({
       perPage: 5,
       pageOptions: [5, 10, 15, { value: 100, text: "Show a lot" }],     
       form: {} as Assunto,
-      fields: FieldsTableAssunto, //nome das colunas da tabela
-     
+      fields: FieldsTableAssunto, //nome das colunas da tabela     
       stickyHeader: true,
       noCollapse: true,
       optionsAssunto: [] as Array<String>,
       dataFeriadoBR: "" as string,
-      optionsTipoAssunto: TipoAssuntoSeeder,
       perPageListagens:30000,
-
       items: [] as Array<Assunto>,
-
       Notificacao: [] as Array<Notificacao>,
       Message: [] as Array<Notificacao>,
       loading: false as boolean,
-      alert: false as boolean,    
-      
-      assuntoSelecionado: {
-        id_assunto: "" as string,
-        desc_assunto: "-- Selecione --" as string,        
-      },
-
+      alert: false as boolean,  
+      totalPageSearch: 0, //total de registros na paginacao corrente    
+      assuntoPesquisa: "" as string,
       nomeAssuntoModal: "" as string,
       titleModal: "" as string,
       
@@ -259,18 +212,16 @@ export default Vue.extend({
   methods: {
     search() {
       let busca = {      
-        idAssunto : this.assuntoSelecionado ? this.assuntoSelecionado.id_assunto : "",
-                
-    }      
-
-      console.log("busca ", JSON.stringify(busca))
+        desc_assunto : this.assuntoPesquisa ? this.assuntoPesquisa : "",                
+      }            
       
-          RestApiService.post("assuntos", busca)
-            .then((response: any) => {    
-              this.optionsTipoAssunto = response.data.data;        
+      RestApiService.post("assuntos", busca)
+            .then((response: any) => { 
+              console.log("search ", response.data.data) 
               this.items = response.data.data;
               this.perPage = response.data.perPage;
               this.totalRows = response.data.total;
+              this.totalPageSearch = response.data.data.length  
             })
             .catch((e) => {
               if (e.message.length > 0) {
@@ -279,7 +230,22 @@ export default Vue.extend({
                   message: e.response.data.message,
                 });              
                 return false;
-              }
+              }else if (
+                            e &&
+                            e.response &&
+                            e.response.data &&
+                            e.response.data.message
+                        ) {
+                            this.adicionarAlert(
+                            "alert",
+                            e.response.data.message
+                            );                       
+                        } else {
+                            this.adicionarAlert(
+                            "alert",
+                            "Houve um erro. Não foi possível carregar a listagem!"
+                            );                      
+                        } 
             })
             .finally(() => {
               this.loading = false
@@ -288,8 +254,7 @@ export default Vue.extend({
     },
     editarAssunto(id: number): void {
         this.idAssunto = id
-        this.$bvModal.show('modal-editar-assunto')      
-
+        this.$bvModal.show('modal-editar-assunto') 
     },
 
     visualizarAssunto(id: number): void {
@@ -299,23 +264,15 @@ export default Vue.extend({
 
     listarAssuntos(currentpage: number) : void { 
      
-      this.loading = true;  
-       
-        //RestApiService.get("feriados", `?currentPage=${currentpage}`)
-
-        let busca = {}
-        let query = ''
-        console.log(currentpage)
-        if (this.assuntoSelecionado){
-          query = `&search=${this.assuntoSelecionado.id_assunto}`
-        }
-
-        RestApiService.get("assuntos", `?currentPage=${currentpage}${query}`)
+      this.loading = true;         
+        
+        RestApiService.get("assuntos", `?currentPage=${currentpage}`)
           .then((response: any) => {
-            this.optionsTipoAssunto = response.data.data;
+            console.log("listar ", response.data.data)          
             this.items = response.data.data;
             this.perPage = response.data.perPage;
             this.totalRows = response.data.total;
+            this.totalPageSearch = response.data.data.length    
 
           })
           .catch((e) => {
@@ -420,6 +377,11 @@ export default Vue.extend({
                     "success",
                     "Exclusão realizada com sucesso!"
             );  
+
+             //se excluir último registro de uma página, retornar para a primeira
+             if(this.totalPageSearch == 1) {
+              this.currentPage = 1
+            }  
             
             this.listarAssuntos(this.currentPage)
           })
@@ -484,5 +446,41 @@ export default Vue.extend({
 
 .custom-select-sm {
   height: calc(2em + 0.5rem + 2px);
+}
+
+/* Cabeçalho da tabela */
+.topo-table {
+  display: flex;
+  justify-content: space-between;  
+  align-items: center;
+  padding: 1px 10px; /* top bottom / right left */
+  background-color: rgba(0, 0, 0, .03);
+  border: 1px solid rgba(0,0,0, .125); 
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+}
+
+.icon-topo-table { 
+  font-size: 2rem;  
+}
+
+.title-topo-table {
+  font-size: 1.2rem;
+  padding-left: 10px;
+  font-weight: 100;
+  flex-grow: 1;  
+  font-family: "Mulish", sans-serif;
+  align-self: center;
+}
+
+.button-topo-table {
+  font-size: 2.2rem;
+  color: #007bff;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.button-topo-table:hover {
+  color: #5cabff;
 }
 </style>

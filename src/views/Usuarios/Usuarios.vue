@@ -108,6 +108,11 @@
               </template>
             </b-table-lite>
           </div>
+
+          <div class="m-3 text-center" v-if="totalRows==0">
+               <label>Nenhum registro encontrado.</label>
+          </div>     
+            
           <!-- RODAPÉ DA TABELA (Espaço reservado para incluir ícones) -->
           <div class="card-footer m-0 px-1 pt-1">
             <!-- PAGINAÇÃO -->
@@ -167,10 +172,8 @@ import HeaderPage from '@/components/HeaderPage.vue';
 import { mask } from "vue-the-mask";
 import { Usuario } from '@/type/usuario';
 import { FieldsTableUsuario } from "@/type/tableUsuario";
-import { BIconSearch, BIconPlusCircle, BIconInfoCircle, BIconJournalText } from 'bootstrap-vue'
 import dataMixin from "@/mixins/dataMixin";
 import RestApiService from "@/services/rest/service";
-
 import Notifications from "@/components/Notifications.vue";
 import { Notificacao } from "@/type/notificacao";
 import ReturnMessage from "@/components/ReturnMessage.vue";
@@ -183,10 +186,6 @@ export default Vue.extend({
   directives: { mask },
   components: {
     HeaderPage,
-    BIconSearch,
-    BIconJournalText,
-    BIconPlusCircle,
-    BIconInfoCircle,
     Notifications,
     ReturnMessage,
     LoadingSpinner,  
@@ -245,9 +244,7 @@ export default Vue.extend({
             this.items = response.data;           
             this.perPage = response.data.perPage;
             this.totalRows = response.data.total;     
-            this.totalPageSearch = response.data.length      
-            
-            console.log( this.items )
+            this.totalPageSearch = response.data.length               
           })
           .catch((e) => {
             if (e.message === "Network Error") {
@@ -277,10 +274,7 @@ export default Vue.extend({
           });
       },
      
-      search() {    
-        
-        console.log("search")
-     
+      search() {  
         const cpf =  this.form.cpf ? 
             this.form.cpf.replace(/[^\d]+/g, "") : ""
 
@@ -295,11 +289,9 @@ export default Vue.extend({
               this.items = response.data;
               this.perPage = response.data.perPage;
               this.totalRows = response.data.total;
-              this.totalPageSearch = response.data.data.length 
-              console.log(response)
+              this.totalPageSearch = response.data.data.length              
             })
-            .catch((e) => {
-              console.log(e)
+            .catch((e) => {             
               if (e.message.length > 0) {
                 this.Notificacao.push({
                   type: "danger",

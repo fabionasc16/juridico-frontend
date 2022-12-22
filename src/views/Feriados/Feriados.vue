@@ -118,6 +118,9 @@
               </template>
             </b-table-lite>
           </div>
+          <div class="m-3 text-center" v-if="totalRows==0">
+               <label>Nenhum registro encontrado.</label>
+          </div>       
           <!-- RODAPÉ DA TABELA (Espaço reservado para incluir ícones) -->
           <div class="card-footer m-0 px-1 pt-1">
             <!-- PAGINAÇÃO -->
@@ -175,11 +178,9 @@ import HeaderPage from '@/components/HeaderPage.vue';
 import { mask } from "vue-the-mask";
 import { Feriado } from '@/type/feriado';
 import { FieldsTableFeriado } from "@/type/tableFeriado";
-import { BIconSearch, BIconPlusCircle, BIconInfoCircle, BIconJournalText } from 'bootstrap-vue'
 import dataMixin from "@/mixins/dataMixin";
 import { TipoFeriadoSeeder } from "@/type/tipoFeriado";
 import RestApiService from "@/services/rest/service";
-
 import Notifications from "@/components/Notifications.vue";
 import { Notificacao } from "@/type/notificacao";
 import ReturnMessage from "@/components/ReturnMessage.vue";
@@ -190,11 +191,7 @@ import ModalExcluir from "@/components/ModalExcluir.vue"
 export default Vue.extend({
   directives: { mask },
   components: {
-    HeaderPage,
-    BIconSearch,
-    BIconJournalText,
-    BIconPlusCircle,
-    BIconInfoCircle,
+    HeaderPage,  
     Notifications,
     ReturnMessage,
     LoadingSpinner,  
@@ -222,9 +219,7 @@ export default Vue.extend({
       anoFeriadoSearch: "" as any,
 
       optionsTipoFeriado: TipoFeriadoSeeder, 
-
       items: [] as Array<Feriado>,
-
       Notificacao: [] as Array<Notificacao>,
       Message: [] as Array<Notificacao>,
       loading: false as boolean,
