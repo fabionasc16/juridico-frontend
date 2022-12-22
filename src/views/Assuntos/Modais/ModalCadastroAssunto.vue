@@ -26,7 +26,9 @@
                             <b-form-group class="font">                                
                                 <label>Código do SIGED: <span class="text-danger">*</span></label>
                                 <b-form-input class="bordered margin-field" type="text" v-model="form.codigoSIGED"
-                                        :disabled="disabledAll" required></b-form-input>                          
+                                        :disabled="disabledAll"
+                                        v-mask="'##########'"
+                                        required></b-form-input>                          
                             </b-form-group>
                         </div>                    
                    </div>
@@ -45,7 +47,6 @@ import Vue from "vue";
 import HeaderPage from '@/components/HeaderPage.vue';
 import { mask } from "vue-the-mask";
 import Notifications from "@/components/Notifications.vue";
-import { BIconSearch, BIconPlusCircle, BIconInfoCircle, BIconJournalPlus } from 'bootstrap-vue'
 import { Notificacao } from "@/type/notificacao";
 import ReturnMessage from "@/components/ReturnMessage.vue";
 import dataMixin from "@/mixins/dataMixin";
@@ -57,11 +58,7 @@ import { TipoAssuntoSeeder } from "@/type/tipoAssunto";
 export default Vue.extend({
     directives: { mask },
     components: {
-        HeaderPage,
-        BIconSearch,
-        BIconJournalPlus,
-        BIconPlusCircle,
-        BIconInfoCircle,
+        HeaderPage,       
         Notifications,
         ReturnMessage,
         LoadingSpinner,                
@@ -101,9 +98,7 @@ export default Vue.extend({
 
             this.loading = true  
 
-            if (this.validarCampos()) { 
-
-              console.log('JSON: ',JSON.stringify(this.form))
+            if (this.validarCampos()) {          
               this.form.codigoSIGED =+ this.form.codigoSIGED
             
               RestApiService.salvar(url, this.form, acao, this.form.id_assunto)
@@ -171,8 +166,7 @@ export default Vue.extend({
                 );
           
             })
-            .finally(() => {
-                console.log('finally')
+            .finally(() => {    
                 this.loading = false;
             });
         },
