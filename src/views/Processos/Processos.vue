@@ -692,11 +692,9 @@
  
      carregarAssunto(): void {
        this.loading = true
-      
-       RestApiService.get(
-           "assuntos",
-           `?currentPage=1&perPage=${this.perPageListagens}`
-         )
+       
+       let busca ={}   
+       RestApiService.post3("assuntos/list", `?currentPage=1&perPage=${this.perPageListagens}`, busca)
          .then((response: any) => {         
            this.optionsAssunto = response.data.data
          

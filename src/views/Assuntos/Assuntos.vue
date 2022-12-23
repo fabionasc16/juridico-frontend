@@ -214,8 +214,7 @@ export default Vue.extend({
       }            
       
       RestApiService.post("assuntos/list", busca)
-            .then((response: any) => { 
-              console.log("search ", response.data.data) 
+            .then((response: any) => {              
               this.items = response.data.data;
               this.perPage = response.data.perPage;
               this.totalRows = response.data.total;
@@ -268,8 +267,7 @@ export default Vue.extend({
       }            
       
         RestApiService.post3("assuntos/list", `?currentPage=${currentpage}`, busca)
-          .then((response: any) => {
-            console.log("listar ", response.data.data)          
+          .then((response: any) => {    
             this.items = response.data.data;
             this.perPage = response.data.perPage;
             this.totalRows = response.data.total;
