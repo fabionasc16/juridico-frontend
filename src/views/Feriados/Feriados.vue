@@ -21,7 +21,7 @@
        
 
        <!-- FORMULÁRIO DE CONSULTA -->       
-       <b-form @submit.prevent="listarFeriados(currentPage)" class="mb-5">
+       <b-form @submit.prevent="search" class="mb-5">
             <div class="row">               
                 <div class="col-xs-3 col-md-3">
                   <b-form-group label="Data:" class="font"> 
@@ -240,7 +240,7 @@ export default Vue.extend({
         this.$bvModal.show('modal-visualizar-feriado')
     },
 
-    listarFeriados(currentpage: number) : void {      
+    search() : void {      
       this.loading = true;  
 
       if(this.dataFeriadoBR && !dataMixin.methods.validarData(this.dataFeriadoBR)){
@@ -258,14 +258,19 @@ export default Vue.extend({
           anoFeriado: this.anoFeriadoSearch ? Number(this.anoFeriadoSearch) : ""         
         }  
        
-        let url = "feriados/list?currentPage="+currentpage+"&perPage="+`${this.perPage}`
+        if(!this.dataFeriadoBR  && !this.tipoFeridoSearch && !this.anoFeriadoSearch ){       
+          this.currentPage = 1        
+        } 
+       
+        let url = "feriados/list?"+"&perPage="+`${this.perPage}`
        
         RestApiService.post(url, busca) 
           .then((response: any) => {            
             this.items = response.data.data;          
             this.perPage = response.data.perPage;
             this.totalRows = response.data.total;  
-            this.totalPageSearch = response.data.data.length            
+            this.totalPageSearch = response.data.data.length    
+            
           })
           .catch((e) => {
             if (e.message === "Network Error") {
@@ -294,6 +299,63 @@ export default Vue.extend({
             this.loading = false;          
           });
       
+    },
+
+    listarFeriados(currentpage: number) : void {      
+      this.loading = true;  
+
+      if(this.dataFeriadoBR && !dataMixin.methods.validarData(this.dataFeriadoBR)){
+        this.adicionarAlert(
+                            "alert",
+                            "A data informada é inválida!"
+                            ); 
+        this.loading = false;
+        return;
+      }
+
+      /*  let busca = { 
+          dataFeriado : this.dataFeriadoBR ? dataMixin.methods.dataFormatEn(this.dataFeriadoBR) : "",
+          tipoFeriado: this.tipoFeridoSearch ? this.tipoFeridoSearch: "",
+          anoFeriado: this.anoFeriadoSearch ? Number(this.anoFeriadoSearch) : ""         
+        }  */
+        let busca = {}
+       
+        let url = "feriados/list?currentPage="+currentpage+"&perPage="+`${this.perPage}`
+       
+        RestApiService.post(url, busca) 
+          .then((response: any) => {            
+            this.items = response.data.data;          
+            this.perPage = response.data.perPage;
+            this.totalRows = response.data.total;  
+            this.totalPageSearch = response.data.data.length    
+            
+          })
+          .catch((e) => {
+            if (e.message === "Network Error") {
+                            this.adicionarAlert(
+                            "alert",
+                            "Sem conexão de rede. Verifique sua conexão!"
+                            );
+                        } else if (
+                            e &&
+                            e.response &&
+                            e.response.data &&
+                            e.response.data.message
+                        ) {
+                            this.adicionarAlert(
+                            "alert",
+                            e.response.data.message
+                            );                       
+                        } else {
+                            this.adicionarAlert(
+                            "alert",
+                            "Houve um erro. Não foi possível carregar a listagem!"
+                            );                      
+                        }      
+          })
+          .finally(() => {
+            this.loading = false;          
+          });      
     },
 
     validarCampos(): boolean { 

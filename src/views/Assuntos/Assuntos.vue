@@ -213,6 +213,10 @@ export default Vue.extend({
         descricaoAssunto : this.assuntoPesquisa ? this.assuntoPesquisa : "",                
       }            
       
+      if(!this.assuntoPesquisa){       
+          this.currentPage = 1        
+      } 
+
       RestApiService.post("assuntos/list", busca)
             .then((response: any) => {              
               this.items = response.data.data;
