@@ -197,7 +197,7 @@ export default Vue.extend({
     LoadingSpinner,  
     ModalCadastroFeriado,
     ModalExcluir
-},
+  },
   mixins: [        
         dataMixin,
   ],  
@@ -228,15 +228,13 @@ export default Vue.extend({
     };
   },
   mounted() {   
-    this.listarFeriados(this.currentPage);
-     
+    this.listarFeriados(this.currentPage);     
   },
   methods: {
     editarFeriado(id: number): void {
         this.idFeriado = id
         this.$bvModal.show('modal-editar-feriado')       
     },
-
     visualizarFeriado(id: number): void {
         this.idFeriado = id
         this.$bvModal.show('modal-visualizar-feriado')

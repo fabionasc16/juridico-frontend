@@ -1,9 +1,12 @@
 export type Tramitacao = { 
     
     isActive: boolean,
-    caixaSIGED: string,
+    diasNoSetor: string,
     eventoTramitacao: string,
     entradaSetor: string,  
-    permanencia: string,  
+    permanencia: string, 
+
+
+
 };
 

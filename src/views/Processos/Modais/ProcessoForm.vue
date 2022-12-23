@@ -577,17 +577,20 @@ export default Vue.extend({
         }
         },
 
+        apagarDadosSiged() {
+            this.datas.dataProcessoSIGEDBR = ""
+            this.form.permanenciaSIGED = ""
+            this.form.caixaAtualSIGED = ""
+            this.form.tramitacaoSIGED = ""
+            this.messageSiged=""
+            this.showMessageSiged = false
+        },
+
         buscarDadosSiged(){ 
-            
-           if(!this.form.numProcessoSIGED){
-                this.datas.dataProcessoSIGEDBR = ""
-                this.form.permanenciaSIGED = ""
-                this.form.caixaAtualSIGED = ""
-                this.form.tramitacaoSIGED = ""
-                this.messageSiged=""
-                this.showMessageSiged = false
-           }
-           else{ 
+            this.apagarDadosSiged()
+          
+            this.loading = true;
+                
                 RestApiService.buscarProcessoSiged(this.form.numProcessoSIGED)
                 .then((response) => { 
                             this.datas.dataProcessoSIGEDBR = response.data.dataProcesso ? 
@@ -597,16 +600,16 @@ export default Vue.extend({
                             this.form.tramitacaoSIGED = response.data.eventoTramitacao
                         })
                         .catch((e) => {
-                           this.showMessageSiged = true                           
-                           this.messageSiged= 'Ocorreu um erro ao buscar dados do SIGED.'
-                           
-                           console.log( e.message )
+                           if(this.form.numProcessoSIGED) {  
+                            this.showMessageSiged = true                           
+                            this.messageSiged= 'Ocorreu um erro ao buscar dados do SIGED. Verifique se o número informado está correto e existe no SIGED.'    
+                           }
                 })
-           }
-
+                .finally(() => {
+                    this.loading = false;          
+            });
         },        
         listarOrgaos(){
-
             RestApiService.get(
                 "orgaos-demandantes",
                 `?currentPage=1&perPage=${this.perPageListagens}`
@@ -616,8 +619,7 @@ export default Vue.extend({
             })
             .catch((e) => {
                 // alert("Houve um erro ao carregar listagem")
-            })
-            
+            })            
         },
         listarAssuntos(){
 
