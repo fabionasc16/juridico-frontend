@@ -27,8 +27,7 @@
              <div class="col-10">
                <div class="row">            
  
-                 <b-form-group append="m" class="font col-sm-6 col-md-5 col-lg-4">
-                    
+                 <b-form-group append="m" class="font col-sm-6 col-md-5 col-lg-4">                    
                    <b-form-checkbox switch class="font" v-model="checkedProcessoSiged" @change="alterarProced">                      
                      <label v-if="checkedProcessoSiged">Nº Procedimento:</label> 
                      <label v-else>Nº SIGED:</label>                       
@@ -102,24 +101,16 @@
                                          v-model="tipoProcessoSelecionado"/>  
                  </b-form-group>
  
-                
- 
-                  <b-form-group append="m" class="font col-sm-6 col-md-5 col-lg-4"
+                <b-form-group append="m" class="font col-sm-6 col-md-5 col-lg-4"
                    v-show="exibirMaisDetalhes">  
-                   
-                    <!-- <b-form-checkbox switch class="font" v-model="checkedExpiraHoje">                                         
-                       <label v-if="checkedExpiraHoje">Expira Hoje</label>    
-                       <label v-else>Status Prazo:</label>                           
-                     </b-form-checkbox> -->
  
                    <label>Status Prazo:</label>   
                    <v-select v-if="!checkedExpiraHoje" style="font-size: 0.85rem" :options="optionsStatusPrazo" class="font" label="desc_status"
                             value="id_status"
                             v-model="statusPrazoSelecionado"/>
-                 </b-form-group>
-                 
+                </b-form-group>                
  
-                 <b-form-group label="Classificação:" append="m" class="font col-sm-6 col-md-5 col-lg-4"
+                <b-form-group label="Classificação:" append="m" class="font col-sm-6 col-md-5 col-lg-4"
                    v-show="exibirMaisDetalhes">
                    <v-select style="font-size: 0.85rem" :options="optionsClassificacao" 
                                          class="font" 
@@ -127,9 +118,9 @@
                                          value="id_classificacao"    
                                          placeholder="--Selecione--"                                     
                                          v-model="classificacaoSelecionada"/>
-                 </b-form-group>
+                </b-form-group>
  
-                  <b-form-group label="Responsável:" append="m" class="font col-sm-6 col-md-5 col-lg-4"
+                <b-form-group label="Responsável:" append="m" class="font col-sm-6 col-md-5 col-lg-4"
                    v-show="exibirMaisDetalhes">
                    <v-select style="font-size: 0.85rem" :options="optionsResponsavel" 
                                          class="font" 
@@ -137,34 +128,28 @@
                                          value="id_responsavel"    
                                          placeholder="--Selecione--"                                     
                                          v-model="responsavelSelecionado"/>
-                 </b-form-group>
+                </b-form-group>
  
-                 <b-form-group label="Caixa SIGED:" append="m" class="font col-sm-6 col-md-5 col-lg-4" v-show="exibirMaisDetalhes">
+                <b-form-group label="Caixa SIGED:" append="m" class="font col-sm-6 col-md-5 col-lg-4" v-show="exibirMaisDetalhes">
                    <v-select style="font-size: 0.85rem" :options="optionsCaixa" class="font" label="caixa_atual_siged"
                    id="caixa_atual_siged"                  
                    v-model="caixaSigedSelecionada"/>                 
-                 </b-form-group>
+                </b-form-group>
  
-                 <b-form-group label="Descrição:" append="m" class="font col-sm-6 col-md-5 col-lg-4" v-show="exibirMaisDetalhes">                            
- 
+                <b-form-group label="Descrição:" append="m" class="font col-sm-6 col-md-5 col-lg-4" v-show="exibirMaisDetalhes">                            
                   <b-form-input size="md" type="text" v-model="form.descricao" autofocus></b-form-input  >
-
                 </b-form-group>
 
                 <b-form-group label="Objeto:" append="m" class="font col-sm-6 col-md-5 col-lg-4" v-show="exibirMaisDetalhes">                            
- 
-                   <b-form-input size="md" type="text" v-model="form.objeto" autofocus></b-form-input  >
-
+                  <b-form-input size="md" type="text" v-model="form.objeto" autofocus></b-form-input  >
                 </b-form-group>
                    
                </div>
              </div>
            </div>
-        
          </b-form>
 
-
-          <!-- CARD DA TABELA -->
+        <!-- CARD DA TABELA -->
         <div class="card-table p-0 m-0 table-responsive">    
           <!-- TOPO TABELA-->
           <div class="topo-table">
@@ -177,7 +162,6 @@
             <div class="button-topo-table">
               <b-icon-plus-circle v-b-modal.modal-cadastro-processo v-b-tooltip.hover.topleft="'Adicionar Processo'"></b-icon-plus-circle>
             </div>
-
           </div>      
            
            <!-- TABELA -->           
@@ -239,7 +223,9 @@
                    </b-list-group-item>
  
                    <b-list-group-item block v-b-modal.modal-tramitacoes-processo 
-                      @listarProcesso="listarProcesso(currentPage)" class="btn-light btn-outline-dark m-0 p-1">
+                      v-show="data.item.numero_siged"
+                      @listarProcesso="listarProcesso(currentPage)" class="btn-light btn-outline-dark m-0 p-1"
+                      @click="abrirModal('modal-tramitacoes-processo',  data.item.id_processo, data.item.numero_siged)">
                      Tramitações
                    </b-list-group-item>         
  
@@ -319,12 +305,11 @@
          </b-modal>            
          
          <!-- TRAMITAÇÕES DO PROCESSO -->
-         <b-modal id="modal-tramitacoes-processo" size="lg" centered title="Tramitações do Processo" hide-footer>
+         <b-modal id="modal-tramitacoes-processo" size="xl" centered title="Tramitações do Processo" hide-footer>
            <ModalTramitacoesProcesso @listarProcesso="listarProcesso(currentPage)"
-               :idProcesso="idProcessoModal">             
+               :idProcesso="idProcessoModal" :numProcessoSIGED="numProcedimentoModal" >             
            </ModalTramitacoesProcesso>
-         </b-modal>
-         
+         </b-modal>         
          
          <ModalExcluir :pergunta="`o processo ${numProcedimentoModal}`">
             <template v-slot:buttons>
@@ -353,9 +338,6 @@
  import ModalDetalhesProcesso from './Modais/ModalDetalhesProcesso.vue';
  import { mask } from "vue-the-mask";
  import { Processo } from '@/type/processo';
- import { StatusProcessoSeeder } from "@/type/statusProcesso";
- import { StatusPrazoSeeder } from "@/type/statusPrazo";
- import { CaixaSigedSeeder } from "@/type/caixaSiged";
  import { FieldsTableProcesso } from "@/type/tableProcesso";
  import ModalAndamentoProcesso from './Modais/ModalAndamentoProcesso.vue';
  
@@ -519,23 +501,20 @@
          return diferencaDias + " dias"
      },   
      listarProcesso(currentpage: number): void {
-       this.loading = true     
- 
+       this.loading = true 
        let busca = {}
  
        RestApiService.post3("processos/list", `?currentPage=${currentpage}`, busca)
-         .then((response: any) => {
-           console.log("Resp ", response.data)
+         .then((response: any) => {           
            this.items = response.data.data
            this.perPage = response.data.perPage
-           this.totalRows = response.data.total
+           this.totalRows = response.data.total          
          })
          .catch((e) => {
            this.Notificacao.push({
              type: "danger",
              message: "Não foi possível carregar a listagem!"            
-           })
-           console.log(e)
+           })           
          })
          .finally(() => {
            this.loading = false
@@ -557,9 +536,7 @@
          idResponsavel: this.responsavelSelecionado ? this.responsavelSelecionado.id_responsavel : "",
          descricaoProcesso: this.form.descricao ? this.form.descricao : "",
          objetoProcesso: this.form.objeto ? this.form.objeto : "",
-       }      
-  
-       console.log("busca ", JSON.stringify(busca))
+       }       
       
          RestApiService.post("processos/list", busca)
            .then((response: any) => {            
