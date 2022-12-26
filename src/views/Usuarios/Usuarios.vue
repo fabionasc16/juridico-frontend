@@ -61,8 +61,7 @@
             <div class="button-topo-table">
               <b-icon-plus-circle v-b-modal.modal-cadastro-usuario v-b-tooltip.hover.topleft="'Adicionar Usuário'"></b-icon-plus-circle>
             </div>
-
-          </div>        
+          </div>       
 
           <!-- TABELA -->
           <div>
