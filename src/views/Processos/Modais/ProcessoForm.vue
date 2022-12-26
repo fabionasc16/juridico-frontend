@@ -621,19 +621,16 @@ export default Vue.extend({
                 // alert("Houve um erro ao carregar listagem")
             })            
         },
-        listarAssuntos(){
-
-            RestApiService.get(
-                "assuntos",
-                `?currentPage=1&perPage=${this.perPageListagens}`
-            )            
-            .then((response) => {
-                this.optionsAssunto = response.data.data                   
-            })
-            .catch((e) => {
-                // alert("Houve um erro ao carregar listagem")
-            })
-            
+        listarAssuntos(){  
+            let busca ={}   
+            RestApiService.post3("assuntos/list", `?currentPage=1&perPage=${this.perPageListagens}`, busca)
+                .then((response: any) => {         
+                this.optionsAssunto = response.data.data
+                
+                })
+                .catch((e) => {
+                console.log(e)
+                })  
         },
         listarTipoProcesso(){
             

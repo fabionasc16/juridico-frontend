@@ -20,12 +20,12 @@
    
 
      <!-- FORMULÁRIO DE CONSULTA -->       
-     <b-form @submit.prevent="submit" class="mb-5">
+     <b-form @submit.prevent="search" class="mb-5">
           <div class="row">               
               <!-- (NOME) -->
               <div class="col-4"> 
                 <b-form-group label="Nome:" class="font">
-                  <b-form-input :placeholder="'Digite Nome do Órgão Demandante'" type="text" v-model="busca">
+                  <b-form-input :placeholder="'Digite Nome do Órgão Demandante'" type="text" v-model="nomepesquisa">
                   </b-form-input>
                 </b-form-group>
               </div>
@@ -152,7 +152,6 @@
 
 <script lang="ts">
 import Vue from "vue";
-//import axios from "axios";
 import HeaderPage from '@/components/HeaderPage.vue';
 import ModalCadastroOrgao from './Modais/ModalCadastroOrgao.vue';
 import { mask } from "vue-the-mask";
@@ -180,7 +179,7 @@ export default Vue.extend({
       idOrgao: null as any, //para modal
       rows: 100,
       currentPage: 1,
-      busca: "" as string,
+      nomepesquisa: "" as string,
       totalRows: null as any,
       perPage: 10,
       items: [] as Array<String>,  
@@ -204,27 +203,33 @@ export default Vue.extend({
     this.listarOrgaos(this.currentPage)
   },
   methods: {
-    submit() {  
-      if (!this.busca) {
-        this.listarOrgaos(this.currentPage);
-      } else {
+    search() {       
+        this.loading = true
+
+        if(!this.nomepesquisa){       
+          this.currentPage = 1
+        }  
+
         RestApiService.get(
           "orgaos-demandantes",
-          `?currentPage=${this.currentPage}&search=${this.busca}`
+          `?search=${this.nomepesquisa}`
         )
           .then((response: any) => {
             this.perPage = response.data.perPage;
             this.items = response.data.data;
             this.totalRows = response.data.total;
-            this.totalPageSearch = response.data.length  
+            this.totalPageSearch = response.data.length           
           })
           .catch((e) => {
             this.adicionarAlert(
                             "alert",
                             "Ocorreu um erro ao realizar a pesquisa!"
                             );         
+          })
+          .finally(() => {
+            this.loading = false          
           });
-      }
+      
     },
     editarOrgao(id: number): void {
         this.idOrgao = id
