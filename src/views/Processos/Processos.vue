@@ -136,13 +136,15 @@
                    v-model="caixaSigedSelecionada"/>                 
                 </b-form-group>
  
-                <b-form-group label="Descrição:" append="m" class="font col-sm-6 col-md-5 col-lg-4" v-show="exibirMaisDetalhes">                            
+                <!--
+                  <b-form-group label="Descrição:" append="m" class="font col-sm-6 col-md-5 col-lg-4" v-show="exibirMaisDetalhes">                            
                   <b-form-input size="md" type="text" v-model="form.descricao" autofocus></b-form-input  >
                 </b-form-group>
 
                 <b-form-group label="Objeto:" append="m" class="font col-sm-6 col-md-5 col-lg-4" v-show="exibirMaisDetalhes">                            
                   <b-form-input size="md" type="text" v-model="form.objeto" autofocus></b-form-input  >
                 </b-form-group>
+              -->
                    
                </div>
              </div>
