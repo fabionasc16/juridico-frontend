@@ -856,19 +856,19 @@
              const prazo = this.calcularDiasAExpirar(DataLimitePrazo)
  
              if(prazo < 0) {
-               return "dark" 
+               return "dark" //9 expirado
              }
  
              if(prazo >= 0 && prazo < 4) {
-               return "danger" //desc_status = atenção
+               return "danger" //1 crítico
              }
  
              if(prazo >= 4 && prazo < 6 ) {
-               return "warning" //desc_status = atenção
+               return "warning" //2 atenção
              }
  
              if(prazo >= 6) {
-               return "success" 
+               return "success" //3 normal
              }
    
              return ""            
@@ -879,11 +879,11 @@
                return "Expirado" 
              }
  
-             if(prazo >= 0 && prazo <= 3) {
+             if(prazo >= 0 && prazo < 4) {
                return "Crítico"
              }
  
-             if(prazo >= 4 && prazo <= 5 ) {
+             if(prazo >= 4 && prazo < 6 ) {
                return "Atenção"
              }
  

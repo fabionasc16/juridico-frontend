@@ -392,16 +392,9 @@ export default Vue.extend({
                 // this.formDados.form.statusPrazo =  res.data.status_prazo
                 // this.formDados.form.statusProcesso = res.data.fk_status
 
-                this.form.diasCorridos = res.data.dias_corridos
-
-                console.log('dias corridos',   this.form.diasCorridos)
-
-                this.form.sigiloso = res.data.sigiloso
-
-                console.log('sigiloso',   this.form.sigiloso)
-
-                this.form.observacao = res.data.observacao    
-
+                this.form.diasCorridos = res.data.dias_corridos  
+                this.form.sigiloso = res.data.sigiloso  
+                this.form.observacao = res.data.observacao 
                 this.form.valorMulta = res.data.valor_multa
 
                 this.form.diasCorridos =                    
