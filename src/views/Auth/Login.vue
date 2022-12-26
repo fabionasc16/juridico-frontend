@@ -38,10 +38,10 @@
                       <b-form-input class="inputs font" type="password" v-model.trim="form.password">
                       </b-form-input>
                     </b-form-group>
-                    <div class="mb-3 text-right">
+                   <!-- <div class="mb-3 text-right">
                       <router-link style="color: grey; text-decoration: underline" to="/esqueciSenha">Esqueci a senha
                       </router-link>
-                    </div>
+                    </div>-->
                     <div class="text-center mb-2">
                       <input type="submit" value="Entrar" class="button-enter" />
                     </div>
