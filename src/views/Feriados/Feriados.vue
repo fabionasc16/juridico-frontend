@@ -312,12 +312,7 @@ export default Vue.extend({
         this.loading = false;
         return;
       }
-
-      /*  let busca = { 
-          dataFeriado : this.dataFeriadoBR ? dataMixin.methods.dataFormatEn(this.dataFeriadoBR) : "",
-          tipoFeriado: this.tipoFeridoSearch ? this.tipoFeridoSearch: "",
-          anoFeriado: this.anoFeriadoSearch ? Number(this.anoFeriadoSearch) : ""         
-        }  */
+      
         let busca = {}
        
         let url = "feriados/list?currentPage="+currentpage+"&perPage="+`${this.perPage}`

@@ -245,12 +245,15 @@ export default Vue.extend({
     },
    
     search():void {
-      if (!this.busca) {
-        this.listarTiposProcesso(this.currentPage);
-      } else {
+      this.loading = true
+
+      if(!this.busca){       
+        this.currentPage = 1
+      }  
+     
         RestApiService.get(
           "tipos-processo",
-          `?currentPage=${this.currentPage}&search=${this.busca}`
+          `?search=${this.busca}`
         )
           .then((response: any) => {
             this.perPage = response.data.perPage;
@@ -263,8 +266,11 @@ export default Vue.extend({
                             "alert",
                             "Ocorreu um erro ao realizar a pesquisa!"
                             );         
+          })
+          .finally(() => {
+            this.loading = false          
           });
-      }
+    
     },
 
 

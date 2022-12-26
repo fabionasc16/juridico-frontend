@@ -379,6 +379,7 @@
        totalRows: null as any,
        perPage: 10,
        currentPage: 1,
+       totalPageSearch: 0, //total de registros na paginacao corrente   
        stickyHeader: true,
        noCollapse: true,
        show: false as boolean,
@@ -508,7 +509,8 @@
          .then((response: any) => {           
            this.items = response.data.data
            this.perPage = response.data.perPage
-           this.totalRows = response.data.total          
+           this.totalRows = response.data.total   
+           this.totalPageSearch = response.data.data.length           
          })
          .catch((e) => {
            this.Notificacao.push({
@@ -536,13 +538,16 @@
          idResponsavel: this.responsavelSelecionado ? this.responsavelSelecionado.id_responsavel : "",
          descricaoProcesso: this.form.descricao ? this.form.descricao : "",
          objetoProcesso: this.form.objeto ? this.form.objeto : "",
-       }       
+       }           
+      
+         this.currentPage = 1               
       
          RestApiService.post("processos/list", busca)
            .then((response: any) => {            
              this.items = response.data.data;
              this.perPage = response.data.perPage;
              this.totalRows = response.data.total;
+             this.totalPageSearch = response.data.data.length    
            })
            .catch((e) => {
              if (e.message.length > 0) {
@@ -817,6 +822,11 @@
                    "Exclusão realizada com sucesso!"
            ); 
            
+           //se excluir último registro de uma página, retornar para a primeira
+           if(this.totalPageSearch == 1) {
+              this.currentPage = 1
+            }    
+
            this.listarProcesso(this.currentPage)
          })
          .catch((e: Error) => {    

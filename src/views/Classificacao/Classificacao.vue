@@ -218,12 +218,15 @@
    
     search():void {
 
-      if (!this.busca) {
-        this.listarClassificacao(this.currentPage);
-      } else {
+      this.loading = true
+
+        if(!this.busca){       
+          this.currentPage = 1
+        }  
+    
         RestApiService.get(
           "classificacoes",
-          `?currentPage=${this.currentPage}&search=${this.busca}`
+          `?search=${this.busca}`
         )
           .then((response: any) => {
             this.perPage = response.data.perPage;
@@ -236,8 +239,11 @@
                             "alert",
                             "Ocorreu um erro ao realizar a pesquisa!"
                             );         
+          })
+          .finally(() => {
+            this.loading = false          
           });
-      }
+      
     },
 
 

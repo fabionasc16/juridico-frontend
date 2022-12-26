@@ -228,6 +228,8 @@ export default Vue.extend({
       Message: [] as Array<Notificacao>,
       loading: false as boolean,
       alert: false as boolean,   
+
+      totalPageSearch: 0, //total de registros na paginacao corrente   
     };
   },
   mounted() {
@@ -260,7 +262,8 @@ export default Vue.extend({
         .then((response: any) => {
           this.items = response.data.data
           this.perPage = response.data.perPage
-          this.totalRows = response.data.total          
+          this.totalRows = response.data.total    
+          this.totalPageSearch = response.data.data.length          
         })
         .catch((e: Error) => {
           console.log(e)
@@ -284,15 +287,18 @@ export default Vue.extend({
       let busca = {
         cpfResponsavel : cpf,
         nomeResponsavel : this.form.nome_responsavel ? this.form.nome_responsavel : "",      
-      }      
- 
-      console.log("busca ", JSON.stringify(busca))
+      }   
+      
+      if(!this.form.cpf_responsavel   && !this.form.nome_responsavel ){       
+          this.currentPage = 1        
+        }    
      
         RestApiService.post("responsaveis/list", busca)
           .then((response: any) => {            
             this.items = response.data.data;
             this.perPage = response.data.perPage;
             this.totalRows = response.data.total;
+            this.totalPageSearch = response.data.data.length      
           })
           .catch((e) => {
             if (e.message.length > 0) {
@@ -322,6 +328,11 @@ export default Vue.extend({
                   "success",
                   "Exclusão realizada com sucesso!"
           ); 
+
+          //se excluir último registro de uma página, retornar para a primeira
+          if(this.totalPageSearch == 1) {
+            this.currentPage = 1
+          }  
           
           this.listarResponsaveis(this.currentPage)
         })
