@@ -646,6 +646,7 @@
          )
          .then((response: any) => {                
            this.optionsStatusProcesso = response.data     
+           console.log(response.data)
          })
          .catch((e) => {          
            console.log(e)
