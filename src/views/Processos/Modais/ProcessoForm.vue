@@ -603,9 +603,11 @@ export default Vue.extend({
             });
         },        
         listarOrgaos(){
-            RestApiService.get(
-                "orgaos-demandantes",
-                `?currentPage=1&perPage=${this.perPageListagens}`
+            let busca = {}
+            
+            RestApiService.post3(
+                "orgaos-demandantes/list",
+                `?currentPage=1&perPage=${this.perPageListagens}`, busca
             )
             .then((response) => {
                 this.optionsOrgaos = response.data.data                  

@@ -204,15 +204,21 @@ export default Vue.extend({
   },
   methods: {
     search() {       
-        this.loading = true
+        this.loading = true             
+
+        let busca = { 
+          orgaoDemandante: this.nomepesquisa? this.nomepesquisa : "",
+          //siglaOrgao:
+          //esferaOrgao:             
+        }  
 
         if(!this.nomepesquisa){       
           this.currentPage = 1
         }  
 
-        RestApiService.get(
-          "orgaos-demandantes",
-          `?search=${this.nomepesquisa}`
+        RestApiService.post(
+          "orgaos-demandantes/list",
+           busca
         )
           .then((response: any) => {
             this.perPage = response.data.perPage;
@@ -243,7 +249,8 @@ export default Vue.extend({
 
     listarOrgaos(currentpage: number) : void {
       this.loading = true
-      RestApiService.get("orgaos-demandantes", `?currentPage=${currentpage}`)
+      let busca={}
+      RestApiService.post3("orgaos-demandantes/list", `?currentPage=${currentpage}`, busca)
         .then((response: any) => {         
           this.items = response.data.data
           this.perPage = response.data.perPage
