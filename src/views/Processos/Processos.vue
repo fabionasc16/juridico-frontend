@@ -102,14 +102,17 @@
                  </b-form-group>
  
                 <b-form-group append="m" class="font col-sm-6 col-md-5 col-lg-4"
-                   v-show="exibirMaisDetalhes">  
- 
+                   v-show="exibirMaisDetalhes">   
                    <label>Status Prazo:</label>   
-                   <v-select v-if="!checkedExpiraHoje" style="font-size: 0.85rem" :options="optionsStatusPrazo" class="font" label="desc_status"
+                   <v-select v-if="!checkedExpiraHoje" style="font-size: 0.85rem" 
+                   :options="optionsStatusPrazo" class="font" label="desc_status"
                             value="id_status"
+                            placeholder="--Selecione--" 
                             v-model="statusPrazoSelecionado"/>
                 </b-form-group>                
- 
+             
+
+
                 <b-form-group label="Classificação:" append="m" class="font col-sm-6 col-md-5 col-lg-4"
                    v-show="exibirMaisDetalhes">
                    <v-select style="font-size: 0.85rem" :options="optionsClassificacao" 
@@ -423,7 +426,7 @@
        },
        statusPrazoSelecionado: {
          desc_status: "-- Selecione --" as string,
-         id_status: "" as string,
+         id_status: "" as any,
        },
        orgaoDemandanteSelecionado: {
          orgao_demandante: "-- Selecione --" as string,
@@ -486,11 +489,19 @@
      },
      calcularDiasAExpirarDesc(dataAExpirar: any): any{
          let diferencaDias = dataMixin.methods.diferencaEntreDataAtual(dataAExpirar) 
-  
+       
          if(!diferencaDias){
            return ""
          }
-         if(diferencaDias < 0 ){
+         if(diferencaDias == 1) {
+           return "1 dia"
+         }
+
+         if(diferencaDias == -1) {
+           return "Expira Hoje"
+         }
+
+         if(diferencaDias < -1 ){
            return "Expirado"
          }
          
@@ -512,7 +523,9 @@
            this.items = response.data.data
            this.perPage = response.data.perPage
            this.totalRows = response.data.total   
-           this.totalPageSearch = response.data.data.length           
+           this.totalPageSearch = response.data.data.length    
+           
+           console.log(response.data.data)
          })
          .catch((e) => {
            this.Notificacao.push({
@@ -535,13 +548,15 @@
          idOrgaoDemandante : this.orgaoDemandanteSelecionado ? this.orgaoDemandanteSelecionado.id_orgao : "",
          idTipoProcesso  :  this.tipoProcessoSelecionado ? this.tipoProcessoSelecionado.id_tipoprocesso : "",
          statusProcesso : this.statusProcessoSelecionado ? this.statusProcessoSelecionado.id_status : "",
-         statusPrazo : this.statusPrazoSelecionado ? (this.statusPrazoSelecionado.id_status).toString() : "",
+         statusPrazo : this.statusPrazoSelecionado ? (this.statusPrazoSelecionado.id_status) : "",
          idClassificacao:  this.classificacaoSelecionada ? this.classificacaoSelecionada.id_classificacao : "",
          idResponsavel: this.responsavelSelecionado ? this.responsavelSelecionado.id_responsavel : "",
          descricaoProcesso: this.form.descricao ? this.form.descricao : "",
          objetoProcesso: this.form.objeto ? this.form.objeto : "",
        }           
       
+       console.log('pesquisa status', this.statusPrazoSelecionado.id_status)
+
          this.currentPage = 1               
       
          RestApiService.post("processos/list", busca)
@@ -647,8 +662,7 @@
            `?aplicaA=PROCESSO`
          )
          .then((response: any) => {                
-           this.optionsStatusProcesso = response.data     
-           console.log(response.data)
+           this.optionsStatusProcesso = response.data                
          })
          .catch((e) => {          
            console.log(e)
@@ -667,7 +681,8 @@
            `?aplicaA=PRAZO_PROCESSO`
          )
          .then((response: any) => {                
-           this.optionsStatusPrazo = response.data     
+           this.optionsStatusPrazo = response.data   
+           console.log("listaprazo", this.optionsStatusPrazo)  
          })
          .catch((e) => {          
            console.log(e)
@@ -857,7 +872,11 @@
  
              const prazo = this.calcularDiasAExpirar(DataLimitePrazo)
  
-             if(prazo < 0) {
+             if(prazo == -1) {
+               return "danger" //expira hoje = crítico
+             }
+
+             if(prazo < -1) {
                return "dark" //9 expirado
              }
  
