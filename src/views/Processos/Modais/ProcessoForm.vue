@@ -430,9 +430,7 @@ export default Vue.extend({
 
             if(acao == 'post') {
                 this.form.statusProcesso = 10 //recebido                            
-            }
-
-            //this.form.statusPrazo = ""+prazoMixin.methods.statusPrazo(Number(this.form.prazoTotal))
+            }            
 
              if (this.validarCampos()) {          
               
