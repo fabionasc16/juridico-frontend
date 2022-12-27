@@ -64,6 +64,11 @@ export const FieldsTableProcesso =
     label: 'Reiteração',
     sortable: true,
   }, 
+  {
+    key: 'status_prazo',
+    label: 'Status Prazo',
+    sortable: true,
+  }, 
 
 ];
 

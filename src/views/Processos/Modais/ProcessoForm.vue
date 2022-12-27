@@ -213,7 +213,6 @@ import RestApiService from "@/services/rest/service";
 import Notifications from "@/components/Notifications.vue";
 import { Notificacao } from "@/type/notificacao";
 import dataMixin from "@/mixins/dataMixin";
-import prazoMixin from "@/mixins/prazoMixin";
 import ReturnMessage from "@/components/ReturnMessage.vue";
 import LoadingSpinner from "@/components/LoadingSpinner.vue";
 
@@ -231,7 +230,6 @@ export default Vue.extend({
     },
     mixins: [        
         dataMixin,
-        prazoMixin
     ],    
     props: {
     tipo: String,
@@ -434,7 +432,7 @@ export default Vue.extend({
                 this.form.statusProcesso = 10 //recebido                            
             }
 
-            this.form.statusPrazo = ""+prazoMixin.methods.statusPrazo(Number(this.form.prazoTotal))
+            //this.form.statusPrazo = ""+prazoMixin.methods.statusPrazo(Number(this.form.prazoTotal))
 
              if (this.validarCampos()) {          
               
