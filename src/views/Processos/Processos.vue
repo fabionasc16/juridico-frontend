@@ -719,9 +719,11 @@
       carregarOrgaosDemandantes(): void {
        this.loading = true
  
-         RestApiService.get(
-           "orgaos-demandantes",
-           `?currentPage=1&perPage=${this.perPageListagens}`
+        let busca = {}
+
+         RestApiService.post3(
+           "orgaos-demandantes/list",
+           `?currentPage=1&perPage=${this.perPageListagens}`, busca
          )      
          .then((response: any) => {         
            this.optionsOrgaoDemandante = response.data.data
