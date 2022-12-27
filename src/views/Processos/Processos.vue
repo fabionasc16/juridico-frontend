@@ -106,8 +106,7 @@
                    <label>Status Prazo:</label>   
                    <v-select v-if="!checkedExpiraHoje" style="font-size: 0.85rem" 
                    :options="optionsStatusPrazo" class="font" label="desc_status"
-                            value="id_status"
-                            placeholder="--Selecione--" 
+                            value="id_status"                            
                             v-model="statusPrazoSelecionado"/>
                 </b-form-group>                
              
@@ -523,9 +522,7 @@
            this.items = response.data.data
            this.perPage = response.data.perPage
            this.totalRows = response.data.total   
-           this.totalPageSearch = response.data.data.length    
-           
-           console.log(response.data.data)
+           this.totalPageSearch = response.data.data.length           
          })
          .catch((e) => {
            this.Notificacao.push({
@@ -548,14 +545,12 @@
          idOrgaoDemandante : this.orgaoDemandanteSelecionado ? this.orgaoDemandanteSelecionado.id_orgao : "",
          idTipoProcesso  :  this.tipoProcessoSelecionado ? this.tipoProcessoSelecionado.id_tipoprocesso : "",
          statusProcesso : this.statusProcessoSelecionado ? this.statusProcessoSelecionado.id_status : "",
-         statusPrazo : this.statusPrazoSelecionado ? (this.statusPrazoSelecionado.id_status) : "",
+         statusPrazo : (this.statusPrazoSelecionado && this.statusPrazoSelecionado.id_status) ? (this.statusPrazoSelecionado.id_status) : "",
          idClassificacao:  this.classificacaoSelecionada ? this.classificacaoSelecionada.id_classificacao : "",
          idResponsavel: this.responsavelSelecionado ? this.responsavelSelecionado.id_responsavel : "",
          descricaoProcesso: this.form.descricao ? this.form.descricao : "",
          objetoProcesso: this.form.objeto ? this.form.objeto : "",
-       }           
-      
-       console.log('pesquisa status', this.statusPrazoSelecionado.id_status)
+       }     
 
          this.currentPage = 1               
       
@@ -681,8 +676,7 @@
            `?aplicaA=PRAZO_PROCESSO`
          )
          .then((response: any) => {                
-           this.optionsStatusPrazo = response.data   
-           console.log("listaprazo", this.optionsStatusPrazo)  
+           this.optionsStatusPrazo = response.data             
          })
          .catch((e) => {          
            console.log(e)
