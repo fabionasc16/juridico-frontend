@@ -23,19 +23,19 @@
      <b-form @submit.prevent="search" class="mb-5">
           <div class="row">               
               <!-- (NOME) -->
-              <div class="col-md-6 col-lg-6"> 
+              <div class="col-md-6 col-lg-4"> 
                 <b-form-group label="Nome:" class="font">
                   <b-form-input :placeholder="'Digite Nome do Órgão Demandante'" type="text" v-model="nomepesquisa">
                   </b-form-input>
                 </b-form-group>
               </div>
-              <b-form-group class="font col-md-6 col-lg-6">
+              <b-form-group class="font col-md-6 col-lg-3">
                             <label>Sigla<span class="text-danger">*</span>:</label>
                             <b-form-input type="text"
                                 v-model="siglapesquisa"></b-form-input>
               </b-form-group>
 
-              <b-form-group class="font col-md-6 col-lg-6">
+              <b-form-group class="font col-md-6 col-lg-3">
                   <label>Esfera<span class="text-danger">*</span>:</label>
                   <b-form-input type="text"
                       v-model="esferapesquisa"></b-form-input>
