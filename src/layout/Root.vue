@@ -36,7 +36,7 @@
                 </b-collapse>
               </b-navbar>
 
-              <span class="text-center system-name">Sistema de Acompanhamento de Processos Extra Judicais</span>
+              <span class="text-center system-name">Sistema de Acompanhamento de Processos Extra Judiciais</span>
               <span class="text-center system-sigla">SAPEJ</span>
             
             </content-header>

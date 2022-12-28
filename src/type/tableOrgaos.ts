@@ -20,6 +20,11 @@ export const FieldsTableOrgao =
           sortable: true
         },
         {
+          key: 'sigla_orgao',
+          label: 'Sigla',
+          sortable: true
+        },
+        {
           key: 'esfera_orgao',
           label: 'Esfera',
           sortable: true
