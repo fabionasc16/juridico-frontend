@@ -23,20 +23,32 @@
      <b-form @submit.prevent="search" class="mb-5">
           <div class="row">               
               <!-- (NOME) -->
-              <div class="col-4"> 
+              <div class="col-md-6 col-lg-4"> 
                 <b-form-group label="Nome:" class="font">
                   <b-form-input :placeholder="'Digite Nome do Órgão Demandante'" type="text" v-model="nomepesquisa">
                   </b-form-input>
                 </b-form-group>
               </div>
+              <b-form-group class="font col-md-6 col-lg-3">
+                            <label>Sigla<span class="text-danger">*</span>:</label>
+                            <b-form-input type="text"
+                                v-model="siglapesquisa"></b-form-input>
+              </b-form-group>
+
+              <b-form-group class="font col-md-6 col-lg-3">
+                  <label>Esfera<span class="text-danger">*</span>:</label>
+                  <b-form-input type="text"
+                      v-model="esferapesquisa"></b-form-input>
+              </b-form-group>
               <!-- ÍCONE DA LUPA -->
-              <div class="col-2 justify-content-center">
-                <b-form-group label="Consultar" class="font text-white">                    
-                    <b-button class="h2" type="submit">
+             
+                <b-form-group class="font text-white col-lg-1 button-search">                    
+                    <b-button type="submit">
                       <b-icon-search v-b-tooltip.hover.topleft="'Consultar'"></b-icon-search>
                     </b-button>               
                 </b-form-group>               
-             </div>
+           
+              
           </div>
      </b-form>
 
@@ -180,6 +192,8 @@ export default Vue.extend({
       rows: 100,
       currentPage: 1,
       nomepesquisa: "" as string,
+      siglapesquisa: "" as string,
+      esferapesquisa: "" as string,
       totalRows: null as any,
       perPage: 10,
       items: [] as Array<String>,  
@@ -208,11 +222,11 @@ export default Vue.extend({
 
         let busca = { 
           orgaoDemandante: this.nomepesquisa? this.nomepesquisa : "",
-          //siglaOrgao:
-          //esferaOrgao:             
+          siglaOrgao: this.siglapesquisa? this.siglapesquisa : "",
+          esferaOrgao: this.esferapesquisa? this.esferapesquisa : "",        
         }  
 
-        if(!this.nomepesquisa){       
+        if(!this.nomepesquisa && !this.siglapesquisa && !this.esferapesquisa){       
           this.currentPage = 1
         }  
 
@@ -392,4 +406,14 @@ export default Vue.extend({
 .button-topo-table:hover {
   color: #5cabff;
 }
+
+
+@media(min-width: 992px)
+  {
+    .button-search {
+      margin-top: 32px
+    }
+  }
+
+
 </style>
