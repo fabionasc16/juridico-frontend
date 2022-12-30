@@ -18,40 +18,47 @@ O Projeto SAPEJ auxiliará o setor Jurídico no controle de processos provenient
 - `Funcionalidade 8`: Cadastro de Classificação
 
 ### Papéis no sistema
-- Administrador
+- `Administrador`:
+    <br>
     Tem acesso a todas as funcionalidades
+    <br>
 
-    SAPEJ_PROCESSO
-    SAPEJ_RESPONSAVEL
-    SAPEJ_FERIADO
-    SAPEJ_ORGAO
-    SAPEJ_TIPO_PROCESSO
-    SAPEJ_USUARIO
-    SAPEJ_ASSUNTO
-    SAPEJ_CLASSIFICACAO
-    SAPEJ_DASHBOARD
-    SAPEJ_ADMINISTRADOR
+    * SAPEJ_PROCESSO
+    * SAPEJ_RESPONSAVEL
+    * SAPEJ_FERIADO
+    * SAPEJ_ORGAO
+    * SAPEJ_TIPO_PROCESSO
+    * SAPEJ_USUARIO
+    * SAPEJ_ASSUNTO
+    * SAPEJ_CLASSIFICACAO
+    * SAPEJ_DASHBOARD
+    * SAPEJ_ADMINISTRADOR
 
-- Advogado
+- `Advogado`
+    <br>
     Ver todos os processos (mesmo os cadastrados pela recepção ou distribuídos para outros advogados),
     porém os que estão distribuídos para ele são ordenados no início.
+    <br>
     Não pode atualizar os processos não distribuídos para ele, mas ele pode alterar responsável.
+    <br>
 
-    SAPEJ_PROCESSO
-    SAPEJ_RESPONSAVEL
-    SAPEJ_FERIADO
-    SAPEJ_ORGAO
-    SAPEJ_TIPO_PROCESSO
-    SAPEJ_USUARIO
-    SAPEJ_ASSUNTO
-    SAPEJ_CLASSIFICACAO
-    SAPEJ_DASHBOARD
+    * SAPEJ_PROCESSO
+    * SAPEJ_RESPONSAVEL
+    * SAPEJ_FERIADO
+    * SAPEJ_ORGAO
+    * SAPEJ_TIPO_PROCESSO
+    * SAPEJ_USUARIO
+    * SAPEJ_ASSUNTO
+    * SAPEJ_CLASSIFICACAO
+    * SAPEJ_DASHBOARD
 
-- Recepção
+- `Recepção`:
+    <br>
     Pode ver os processos que ainda não foram distribuídos, ou seja, os processos com status Recebido, independente de quem cadastrou.
     Apenas quando estiver com status de Recebido, pode excluir processo.
+    <br>
 
-    SAPEJ_PROCESSO
+    * SAPEJ_PROCESSO
 
 # 📁 Acesso ao projeto master
 https://sistemas.saude.am.gov.br/sapej/index.html#/
