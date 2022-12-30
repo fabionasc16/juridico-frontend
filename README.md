@@ -6,6 +6,16 @@
 ## Descrição
 O Projeto SAPEJ auxiliará o setor Jurídico no controle de processos provenientes também de órgãos externos.
 
+<br>
+
+O cadastro do processo é realizado pela recepção do jurídico.<br>
+A recepção pode visualizar os processos até que sejam dstribuídos.<br>
+Para distribuir processo, a recepção informará um responsável, o qual é um advogado cadastrado,
+e após isso muda o status para 'Distribuído'. <br>
+O processo fica agora em responsabilidade do Advogado, o qual pode ser tramitado, respondido ou arquivado.<br>
+Esses processos cadastrados, podem ser vinculados a um número do Siged, então, é possível visualizar o andamento do mesmo no Siged através da tela de Tramitação.
+
+
 # :hammer: Funcionalidades do projeto
 
 - `Funcionalidade 1`: Processos
