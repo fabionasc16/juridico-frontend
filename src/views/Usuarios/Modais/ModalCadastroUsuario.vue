@@ -286,10 +286,18 @@ export default Vue.extend({
     
 
     salvar(acao: string): void {
-      this.loading = true  
+      this.loading = true       
 
       RestApiService.salvar("usuarios", this.form, acao, this.form.id)
         .then((res) => {         
+
+            if(acao == "post" && res && res.status && res.status == 204) {
+              this.adicionarAlert(
+                            "alert",
+                            "Não foi possível salvar os dados!"
+                            );    
+            } 
+            else
             if (acao == "put") {
                         this.adicionarAlert(
                             "success",
