@@ -222,7 +222,7 @@
                    <b-list-group-item block class="btn-light btn-outline-dark m-0 p-1"
                     v-if="data.item.status.id_status!='14'"  
                      @listarProcesso="listarProcesso(currentPage)"
-                     @click="abrirModal('modal-andamento-processo', data.item.id_processo)">
+                     @click="abrirModal('modal-andamento-processo', data.item.id_processo, data.item.num_procedimento)">
                      Alterar Situação
                    </b-list-group-item>
  
@@ -301,7 +301,7 @@
          <!-- ANDAMENTO PROCESSO - ALTERAR STATUS -->
          <b-modal id="modal-andamento-processo" centered title="Alterar Situação do Processo" hide-footer>         
              <ModalAndamentoProcesso  @listarProcesso="listarProcesso(currentPage)"
-               :idProcesso="idProcessoModal">
+               :idProcesso="idProcessoModal" :numProcedimento="numProcedimentoModal">
              <template v-slot:buttons>
                  <b-button class="bordered" @click="$bvModal.hide('modal-andamento-processo')">Fechar</b-button>
              </template>
