@@ -20,7 +20,7 @@
          </div>   
  
       <!-- FORMULÁRIO DE CONSULTA DO PROCESSO -->
-      <b-form  @submit.prevent="search">
+      <b-form @submit.prevent="search">
            <!-- 1ª LINHA (3 CAIXAS + ÍCONE) -->
            <div class="row">
              <!-- 1ª LINHA (3 CAIXAS) -->
@@ -487,7 +487,8 @@
          return diferencaDias 
      },
      calcularDiasAExpirarDesc(dataAExpirar: any): any{
-         let diferencaDias = dataMixin.methods.diferencaEntreDataAtual(dataAExpirar) 
+         //let diferencaDias = dataMixin.methods.diferencaEntreDataAtual(dataAExpirar) 
+         let diferencaDias = this.calcularDiasAExpirar(dataAExpirar)
        
          if(!diferencaDias){
            return ""
@@ -522,7 +523,9 @@
            this.items = response.data.data
            this.perPage = response.data.perPage
            this.totalRows = response.data.total   
-           this.totalPageSearch = response.data.data.length           
+           this.totalPageSearch = response.data.data.length  
+           
+           console.log(response.data)
          })
          .catch((e) => {
            this.Notificacao.push({
@@ -861,9 +864,11 @@
              
              return "light"            
      },
-     //dias corridos
-     colorDiasRestantes(DataLimitePrazo: any) : any {
- 
+    
+     //dias corridos    
+     colorDiasRestantes(DataLimitePrazo: any) : any { 
+
+            /* Calcula data atual menos a data limite prazo e informa quandos dias tem a expirar */
              const prazo = this.calcularDiasAExpirar(DataLimitePrazo)
  
              if(prazo == -1) {
@@ -888,7 +893,7 @@
    
              return ""            
      },
-     statusDiasRestantes(prazo: any) : any {
+     /*statusDiasRestantes(prazo: any) : any {
  
              if(prazo < 0) {
                return "Expirado" 
@@ -908,7 +913,7 @@
  
              return ""
              
-     },
+     },*/
      colorStatusProcesso(status: number) : any {
  
            switch(status){
