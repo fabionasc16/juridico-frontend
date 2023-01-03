@@ -34,7 +34,8 @@ A partir da data de recebimento do processo, é calculada a data final limite,
 que leva em consideração os feriados cadastrados no sistema, o prazo total informado,
 e se esse prazo total é em dias úteis ou corridos.
 <p>
-Existem 2 status no processo: <b>status do prazo</b> e <b>status do processo</b>. <br>
+Existem 2 status no processo: <b>status do prazo</b> e <b>status do processo</b>. 
+<br><br>
 O <b>status do processo</b> pode ser: <br>
 
    - RECEBIDO: Chegou na mesa da Recepção, foi cadastrado.
@@ -45,17 +46,39 @@ O <b>status do processo</b> pode ser: <br>
    - ARQUIVADO: Quando foi arquivado no SIGED. Quando responde para o órgão demandante com ofício.
    
    É possível desarquivar o processo, após ser arquivado.
+   <br>
+   Se orgão demandante não aceitar a resposta, abre outro processo.
+   <p>O processo tem 2 números: número do SIGED ou número externo.</p>
 
 <BR> O <b>status do prazo</b> pode ser: <br>
 
-   - NORMAL
-   - ATENÇÃO
-   - CRÍTICO
-   - EXPIRADO
+   - NORMAL: PRAZO>=6 DIAS (verde)
+   - ATENÇÃO: PRAZO>=4 E < 6 DIAS (amarelo)
+   - CRÍTICO: PRAZO >=0 E <4 DIAS, E HOJE(== -1) (vermelho)
+   - EXPIRADO: PRAZO <-1 (preto)
 
 </p>
 
-## 2. Feriados
+### 1.1. Tramitações
+    As tramitações são buscadas no elastic, e exibidas no sistema.
+<br>
+    Elas só serão exibidas quando for informado o número do SIGED.
+
+### 1.2. Reiteração no processo
+    Pode haver reiterações no processo, com novo número no SIGED.
+
+### 1.3. Duplicar processo
+    Serve para facilitar o cadastro do processo, para que não precise digitar tudo de novo.
+<br>
+    Se existir algum processo muito parecido com o que será cadastrado,
+    basta clicar em editar esse processo, e clicar em duplicar.
+    Alguns dados serão 'reaproveitados'.<br>
+    A duplicação só será efetiva ao salvar.<br>
+
+## 2. Responsáveis
+    Cadastro de responsáveis, que são advogados que serão responsáveis pelo processo.
+
+## 3. Feriados
 
 Uma vez por ano deve-se registrar os feriados para o ano corrente. O feriado pode ser móvel ou fixo.
 O Ponto Facultativo também precisa ser registrado na tabela de feriado para que seja levado em consideração no cálculo do prazo final.
