@@ -48,7 +48,13 @@ O <b>status do processo</b> pode ser: <br>
    É possível desarquivar o processo, após ser arquivado.
    <br>
    Se orgão demandante não aceitar a resposta, abre outro processo.
-   <p>O processo tem 2 números: número do SIGED ou número externo.</p>
+   <p>O processo tem 2 números: número do SIGED ou número externo(número do procedimento).
+   - Número externo: número processo gerado pelo órgão externo, exemplo Ministério Público, para permitir que seja realizada busca.
+   - Número SIGED: número processo SIGED, para conduzir o externo.
+   </p>
+   Caixa do SIGED: posteriormente deverá ser feito update para saber em que caixa está, pois hoje só
+   salva a caixa atual, no momento do cadastro do processo.
+   <br> Ou ver a tela de tramitações, que mostra por todos as caixas que o processo passou, de acordo com o SIGED.
 
 <BR> O <b>status do prazo</b> pode ser: <br>
 
