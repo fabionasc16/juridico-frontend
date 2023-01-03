@@ -60,23 +60,27 @@ O <b>status do processo</b> pode ser: <br>
 </p>
 
 ### 1.1. Tramitações
-    As tramitações são buscadas no elastic, e exibidas no sistema.
+
+As tramitações são buscadas no elastic, e exibidas no sistema.
 <br>
-    Elas só serão exibidas quando for informado o número do SIGED.
+Elas só serão exibidas quando for informado o número do SIGED.
 
 ### 1.2. Reiteração no processo
-    Pode haver reiterações no processo, com novo número no SIGED.
+    
+Pode haver reiterações no processo, com novo número no SIGED.
 
 ### 1.3. Duplicar processo
-    Serve para facilitar o cadastro do processo, para que não precise digitar tudo de novo.
+
+Serve para facilitar o cadastro do processo, para que não precise digitar tudo de novo.
 <br>
-    Se existir algum processo muito parecido com o que será cadastrado,
-    basta clicar em editar esse processo, e clicar em duplicar.
-    Alguns dados serão 'reaproveitados'.<br>
-    A duplicação só será efetiva ao salvar.<br>
+Se existir algum processo muito parecido com o que será cadastrado,
+basta clicar em editar esse processo, e clicar em duplicar.
+Alguns dados serão 'reaproveitados'.<br>
+A duplicação só será efetiva ao salvar.<br>
 
 ## 2. Responsáveis
-    Cadastro de responsáveis, que são advogados que serão responsáveis pelo processo.
+
+Cadastro de advogados que serão responsáveis pelo processo.
 
 ## 3. Feriados
 
