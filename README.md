@@ -27,7 +27,7 @@ Esses processos cadastrados, podem ser vinculados a um número do Siged, então,
 - `Funcionalidade 7`: Cadastro de Assuntos
 - `Funcionalidade 8`: Cadastro de Classificação
 
-### Processos
+## 3. Processos
 
 O Prazo Total do Processo vem escrito no documento do orgão demandante.<br>
 A partir da data de recebimento do processo, é calculado a data final limite,
@@ -36,29 +36,30 @@ e se esse prazo total é de dias úteis ou corridos.
 <p>
 Existem 2 status no processo: status do prazo e status do processo. <br>
 O status do processo pode ser: <br>
-   * RECEBIDO: Chegou na mesa da Recepção, foi cadastrado.
-   * DISTRIBUÍDO: Entre as pessoas do setor que vão dar a solução, no caso os 
+
+   - RECEBIDO: Chegou na mesa da Recepção, foi cadastrado.
+   - DISTRIBUÍDO: Entre as pessoas do setor que vão dar a solução, no caso os 
    responsáveis (advogados) cadastrados.
-   * TRAMITANDO: Quando enviam para outro setor.
-   * RESPONDENDO: Tramitou e já estão respondendo.
-   * ARQUIVADO: Quando foi arquivado no SIGED. Quando responde para o órgão demandante com ofício.
+   - TRAMITANDO: Quando enviam para outro setor.
+   - RESPONDENDO: Tramitou e já estão respondendo.
+   - ARQUIVADO: Quando foi arquivado no SIGED. Quando responde para o órgão demandante com ofício.
 
    <br>
    É possível desarquivar o processo, após ser arquivado.
 
 <BR> O status do prazo pode ser: <br>
-    * NORMAL
-    * ATENÇÃO
-    * CRÍTICO
-    * EXPIRADO
+
+   - NORMAL
+   - ATENÇÃO
+   - CRÍTICO
+   - EXPIRADO
 
 </p>
 
-### Feriados
+## 2. Feriados
 
 Uma vez por ano deve-se registrar os feriados para o ano corrente. O feriado pode ser móvel ou fixo.
 Ponto Facultativo também é preciso registrar na tabela de feriado para que seja levado em consideração no cálculo do prazo.
-
 
 
 ### Papéis no sistema
