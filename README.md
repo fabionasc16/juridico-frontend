@@ -9,11 +9,11 @@ O Projeto SAPEJ auxiliará o setor Jurídico no controle de processos provenient
 <br>
 
 O cadastro do processo é realizado pela recepção do jurídico.<br>
-A recepção pode visualizar os processos até que sejam dstribuídos.<br>
+A recepção pode visualizar os processos até que sejam distribuídos.<br>
 Para distribuir processo, a recepção informará um responsável, o qual é um advogado cadastrado,
 e após isso muda o status para 'Distribuído'. <br>
 O processo fica agora em responsabilidade do Advogado, o qual pode ser tramitado, respondido ou arquivado.<br>
-Esses processos cadastrados, podem ser vinculados a um número do Siged, então, é possível visualizar o andamento do mesmo no Siged através da tela de Tramitação.
+Esses processos cadastrados, podem ser vinculados a um número do Siged, então, é possível visualizar o andamento do mesmo no Siged através da tela de Tramitação.<br>
 
 
 # :hammer: Funcionalidades do projeto
@@ -26,6 +26,40 @@ Esses processos cadastrados, podem ser vinculados a um número do Siged, então,
 - `Funcionalidade 6`: Cadastro de Usuários
 - `Funcionalidade 7`: Cadastro de Assuntos
 - `Funcionalidade 8`: Cadastro de Classificação
+
+### Processos
+
+O Prazo Total do Processo vem escrito no documento do orgão demandante.<br>
+A partir da data de recebimento do processo, é calculado a data final limite,
+que leva em consideração os feriados cadastrados no sistema, o prazo total informado,
+e se esse prazo total é de dias úteis ou corridos.
+<p>
+Existem 2 status no processo: status do prazo e status do processo. <br>
+O status do processo pode ser: <br>
+   * RECEBIDO: Chegou na mesa da Recepção, foi cadastrado.
+   * DISTRIBUÍDO: Entre as pessoas do setor que vão dar a solução, no caso os 
+   responsáveis (advogados) cadastrados.
+   * TRAMITANDO: Quando enviam para outro setor.
+   * RESPONDENDO: Tramitou e já estão respondendo.
+   * ARQUIVADO: Quando foi arquivado no SIGED. Quando responde para o órgão demandante com ofício.
+
+   <br>
+   É possível desarquivar o processo, após ser arquivado.
+
+<BR> O status do prazo pode ser: <br>
+    * NORMAL
+    * ATENÇÃO
+    * CRÍTICO
+    * EXPIRADO
+
+</p>
+
+### Feriados
+
+Uma vez por ano deve-se registrar os feriados para o ano corrente. O feriado pode ser móvel ou fixo.
+Ponto Facultativo também é preciso registrar na tabela de feriado para que seja levado em consideração no cálculo do prazo.
+
+
 
 ### Papéis no sistema
 - `Administrador`:
