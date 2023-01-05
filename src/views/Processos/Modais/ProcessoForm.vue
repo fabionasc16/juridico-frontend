@@ -295,6 +295,8 @@ export default Vue.extend({
             this.loading = true;            
             RestApiService.get("processos/id", this.idProcesso)
                 .then((res: any) => { 
+
+                   
                 this.form.idProcesso =   res.data.id_processo                
                 this.form.numProcedimento = res.data.num_procedimento              
                 this.form.prazoTotal = res.data.prazo_total                
@@ -469,24 +471,24 @@ export default Vue.extend({
                 "Data do Recebimento informada é inválida!"
                 );
             }  
-            if(!this.validarDataFinalLimite()){
+            /*if(!this.validarDataFinalLimite()){
                 this.adicionarNotificacao(
                 "danger",
                 "Data Final Limite informada é inválida!"
                 );
-            } 
+            }*/
             if(this.form.dataRecebimento < this.form.dataProcesso){
                 this.adicionarNotificacao(
                 "danger",
                 "Data de Recebimento não pode ser menor que a data do processo!"
                 );
             }       
-            if(this.form.dataLimitePrazo && (this.form.dataLimitePrazo < this.form.dataProcesso)){
+            /*if(this.form.dataLimitePrazo && (this.form.dataLimitePrazo < this.form.dataProcesso)){
                 this.adicionarNotificacao(
                 "danger",
                 "Data Final Limite não pode ser menor que a data do processo!"
                 );
-            } 
+            } */
             if (this.Notificacao.length > 0) {
                 //ir para o início da página onde aparecem as mensagens
                 window.scrollTo(0, 0);               
