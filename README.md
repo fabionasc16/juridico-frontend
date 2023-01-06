@@ -161,12 +161,11 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 ### Imagens
 
 ## MER
-Esse modelo foi adicionado para ter ideia de como está a estrutura no banco, mas os dados
-podem não estar atualizados
+Esse modelo pode não estar com os dados atualizados, porém, essa foi a estrutura utilizada. 
 
 ![name](/readme/mer.jpg)
 
 ## Código dos status
 
-![name](/readme/status.jpg)]
+![name](/readme/status.jpg)
 
