@@ -167,5 +167,5 @@ podem não estar atualizados
 ![name](/readme/mer.jpg)
 
 ## Código dos status
+[![name](/readme/status.jpg =400x250)]
 
-[![name](/readme/status.jpg = 400x250)]
