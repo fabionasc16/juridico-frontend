@@ -168,5 +168,5 @@ podem não estar atualizados
 
 ## Código dos status
 
-[![name](/readme/status.jpg)]
+![name](/readme/status.jpg)]
 

@@ -56,6 +56,8 @@
             </div>
         </b-form>
 
+        <!--  <upload-feriado/> -->
+
         <!-- CARD DA TABELA -->
         <div class="card-table p-0 m-0">    
           <!-- TOPO TABELA-->
@@ -187,6 +189,7 @@ import ReturnMessage from "@/components/ReturnMessage.vue";
 import LoadingSpinner from "@/components/LoadingSpinner.vue";
 import ModalCadastroFeriado from "./Modais/ModalCadastroFeriado.vue";
 import ModalExcluir from "@/components/ModalExcluir.vue"
+import UploadFeriado from "./Upload.vue"
 
 export default Vue.extend({
   directives: { mask },
@@ -196,7 +199,8 @@ export default Vue.extend({
     ReturnMessage,
     LoadingSpinner,  
     ModalCadastroFeriado,
-    ModalExcluir
+    ModalExcluir,
+    UploadFeriado
   },
   mixins: [        
         dataMixin,
