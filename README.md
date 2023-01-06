@@ -157,3 +157,8 @@ npm run build
 
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
+
+### Imagens
+[![name](juridico-frontend/readme/mer.jpg = 400x250)]
+
+[![name](/https://gitlab.com/sec-saude-am/juridico-frontend/-/tree/develop/readme/status.jpg = 400x250)]
