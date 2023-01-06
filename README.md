@@ -159,6 +159,13 @@ npm run build
 See [Configuration Reference](https://cli.vuejs.org/config/).
 
 ### Imagens
+
+## MER
+Esse modelo foi adicionado para ter ideia de como está a estrutura no banco, mas os dados
+podem não estar atualizados
+
 ![name](/readme/mer.jpg)
 
-[![name](/https://gitlab.com/sec-saude-am/juridico-frontend/-/tree/develop/readme/status.jpg = 400x250)]
+## Código dos status
+
+[![name](/readme/status.jpg = 400x250)]
