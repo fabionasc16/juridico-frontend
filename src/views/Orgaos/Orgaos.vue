@@ -1,5 +1,4 @@
 <template>
-
 <div class="container fluid">
     <div class="row">
         <div class="col-12" style="margin-top: 20px">
@@ -21,53 +20,53 @@
    
 
      <!-- FORMULÁRIO DE CONSULTA -->       
-     <b-form @submit.prevent="submit" class="mb-5">
+     <b-form @submit.prevent="search" class="mb-5">
           <div class="row">               
               <!-- (NOME) -->
-              <div class="col-4"> 
+              <div class="col-md-6 col-lg-4"> 
                 <b-form-group label="Nome:" class="font">
-                  <b-form-input :placeholder="'Digite Nome do Órgão Demandante'" type="text" v-model="form.orgaoDemandante">
+                  <b-form-input :placeholder="'Digite Nome do Órgão Demandante'" type="text" v-model="nomepesquisa">
                   </b-form-input>
                 </b-form-group>
               </div>
+              <b-form-group class="font col-md-6 col-lg-3">
+                            <label>Sigla<span class="text-danger">*</span>:</label>
+                            <b-form-input type="text"
+                                v-model="siglapesquisa"></b-form-input>
+              </b-form-group>
+
+              <b-form-group class="font col-md-6 col-lg-3">
+                  <label>Esfera<span class="text-danger">*</span>:</label>
+                  <b-form-input type="text"
+                      v-model="esferapesquisa"></b-form-input>
+              </b-form-group>
               <!-- ÍCONE DA LUPA -->
-              <div class="col-2 justify-content-center">
-                <b-form-group label="Consultar" class="font text-white">                    
-                    <b-button class="h2" type="submit">
+             
+                <b-form-group class="font text-white col-lg-1 button-search">                    
+                    <b-button type="submit">
                       <b-icon-search v-b-tooltip.hover.topleft="'Consultar'"></b-icon-search>
                     </b-button>               
                 </b-form-group>               
-             </div>
+           
+              
           </div>
      </b-form>
 
-
      <!-- CARD DA TABELA -->
-     <div class="card p-0 m-0">
-          <!-- CABEÇALHO DA TABELA (Espaço reservado para incluir ícones) -->
-          <div class="card-header" align="right">
-            <div class="row">
-                <!-- ÍCONE Journal-text -->
-                <div class="col-1 text-blue h2 p0m0" align="center" label="Responsáveis Cadastrados">
-                  <b-icon-journal-text>
-                  </b-icon-journal-text>
-                </div>                
-              <!-- TÍTULO -->
-              <div class="col-10 mt-1" align="start">
-                <div class="row position-relative">
-                  <h5>Órgãos Cadastrados</h5>
-                </div>
-              </div>
-              <!-- ÍCONE Plus-Circle -->
-              <div class="col-1 position-relative" align="center"> 
-                <b-form-group label="" class="btn text-primary position-absolute top-50 start-50 translate-middle">
-                  <div class="h3">
-                    <b-icon-plus-circle v-b-modal.modal-cadastro-orgao v-b-tooltip.hover.topleft="'Adicionar Órgão'"></b-icon-plus-circle>
-                  </div>
-                </b-form-group>
-              </div>
+      <div class="card-table p-0 m-0">    
+          <!-- TOPO TABELA-->
+          <div class="topo-table">
+       
+            <div class="desc-topo-table">
+              <b-icon-journal-text class="icon-topo-table"></b-icon-journal-text> 
+              <span class="title-topo-table">Órgãos Cadastrados</span>
+            </div>                      
+
+            <div class="button-topo-table">
+              <b-icon-plus-circle v-b-modal.modal-cadastro-orgao v-b-tooltip.hover.topleft="'Adicionar Órgão'"></b-icon-plus-circle>
             </div>
-          </div>
+
+          </div> 
           <!-- TABELA -->
           <div>
             <b-table-lite small striped hover class="m-0" head-variant="dark" :current-page="currentPage"
@@ -94,13 +93,24 @@
                      class="btn-light btn-outline-dark m-0 p-1">
                     Visualizar
                   </b-list-group-item>                 
-                  <b-list-group-item block class="btn-light text-dark btn-outline-danger m-0 p-1" @click="excluir(data.item.id_orgao, data.item.orgao_demandante)">
+                  <!--<b-list-group-item block class="btn-light text-dark btn-outline-danger m-0 p-1" @click="excluir(data.item.id_orgao, data.item.orgao_demandante)">
                     Excluir
-                  </b-list-group-item>
+                  </b-list-group-item>-->
+                  <b-list-group-item block                     
+                       @click="abrirModal('modal-excluir', data.item.id_orgao, data.item.orgao_demandante)"
+                       class="btn-light text-dark btn-outline-danger m-0 p-1"                 
+                       @listarOrgaos="listarOrgaos(currentPage)">                      
+                     Excluir
+                   </b-list-group-item>
                 </b-dropdown>
               </template>                                 
             </b-table-lite>
           </div>
+
+          <div class="m-3 text-center" v-if="totalRows==0">
+               <label>Nenhum registro encontrado.</label>
+          </div>       
+
           <!-- RODAPÉ DA TABELA (Espaço reservado para incluir ícones) -->
           <div class="card-footer m-0 px-1 pt-1">
             <!-- PAGINAÇÃO -->
@@ -138,6 +148,14 @@
             </template>           
           </ModalCadastroOrgao>
         </b-modal>
+
+        <ModalExcluir :pergunta="`o òrgão ${nomeOrgaoModal}`">
+            <template v-slot:buttons>
+                 <b-button variant="danger" class="bordered" 
+                 @click="excluir(idOrgao)"
+                 >Excluir</b-button>
+             </template>   
+         </ModalExcluir>
       <!-- //MODAL -->
 
 </div> <!--container fluid-->
@@ -146,39 +164,36 @@
 
 <script lang="ts">
 import Vue from "vue";
-//import axios from "axios";
 import HeaderPage from '@/components/HeaderPage.vue';
 import ModalCadastroOrgao from './Modais/ModalCadastroOrgao.vue';
 import { mask } from "vue-the-mask";
 import { Orgaos } from '@/type/orgaos';
 import { FieldsTableOrgao } from "@/type/tableOrgaos";
-import { BIconSearch, BIconPlusCircle, BIconInfoCircle, BIconJournalText } from 'bootstrap-vue'
-
 import Notifications from "@/components/Notifications.vue";
 import { Notificacao } from "@/type/notificacao";
 import ReturnMessage from "@/components/ReturnMessage.vue";
 import LoadingSpinner from "@/components/LoadingSpinner.vue";
-
 import RestApiService from "@/services/rest/service";
+import ModalExcluir from "@/components/ModalExcluir.vue"
 
 export default Vue.extend({
   directives: { mask },
   components: {
-    HeaderPage,   
-    BIconSearch,
-    BIconJournalText,
-    BIconPlusCircle,
-    BIconInfoCircle,
+    HeaderPage, 
     Notifications,
     ModalCadastroOrgao,
     ReturnMessage,
     LoadingSpinner,
+    ModalExcluir,
   },
   data() {
     return {
       idOrgao: null as any, //para modal
       rows: 100,
       currentPage: 1,
+      nomepesquisa: "" as string,
+      siglapesquisa: "" as string,
+      esferapesquisa: "" as string,
       totalRows: null as any,
       perPage: 10,
       items: [] as Array<String>,  
@@ -191,19 +206,51 @@ export default Vue.extend({
       Notificacao: [] as Array<Notificacao>,
       Message: [] as Array<Notificacao>,
       loading: false as boolean,
-      alert: false as boolean,   
+      alert: false as boolean,  
+      
+      nomeOrgaoModal: "" as string,
+      titleModal: "" as string,
+      totalPageSearch: 0, //total de registros na paginacao corrente    
     };
   },
   mounted() {
     this.listarOrgaos(this.currentPage)
   },
   methods: {
-    submit() {
-      alert("pesquisar");
-      
-      console.log(JSON.stringify(this.form))
-    },  
+    search() {       
+        this.loading = true             
 
+        let busca = { 
+          orgaoDemandante: this.nomepesquisa? this.nomepesquisa : "",
+          siglaOrgao: this.siglapesquisa? this.siglapesquisa : "",
+          esferaOrgao: this.esferapesquisa? this.esferapesquisa : "",        
+        }  
+
+        if(!this.nomepesquisa && !this.siglapesquisa && !this.esferapesquisa){       
+          this.currentPage = 1
+        }  
+
+        RestApiService.post(
+          "orgaos-demandantes/list",
+           busca
+        )
+          .then((response: any) => {
+            this.perPage = response.data.perPage;
+            this.items = response.data.data;
+            this.totalRows = response.data.total;
+            this.totalPageSearch = response.data.length           
+          })
+          .catch((e) => {
+            this.adicionarAlert(
+                            "alert",
+                            "Ocorreu um erro ao realizar a pesquisa!"
+                            );         
+          })
+          .finally(() => {
+            this.loading = false          
+          });
+      
+    },
     editarOrgao(id: number): void {
         this.idOrgao = id
         this.$bvModal.show('modal-editar-orgao')       
@@ -216,11 +263,13 @@ export default Vue.extend({
 
     listarOrgaos(currentpage: number) : void {
       this.loading = true
-      RestApiService.get("orgaos-demandantes", `?currentPage=${currentpage}`)
-        .then((response: any) => {
+      let busca={}
+      RestApiService.post3("orgaos-demandantes/list", `?currentPage=${currentpage}`, busca)
+        .then((response: any) => {         
           this.items = response.data.data
           this.perPage = response.data.perPage
-          this.totalRows = response.data.total          
+          this.totalRows = response.data.total  
+          this.totalPageSearch = response.data.data.length               
         })
         .catch((e: Error) => {
           console.log(e)
@@ -232,16 +281,18 @@ export default Vue.extend({
         });
 
     },
-   
-    voltar(): void {
-      this.$router.push("/");
+    
+    abrirModal(modalname: string, idOrgao: number, nomeOrgao?: any){      
+        this.titleModal = ''
+        this.idOrgao = idOrgao            
+        this.nomeOrgaoModal = nomeOrgao
+        this.$bvModal.show(modalname)            
     },
 
-    excluir(id: any, nome: string): void {
-    
-      let message = 'Deseja realmente excluir órgão demandante ' + nome + '?'
+    excluir(id: any): void {
 
-      if(confirm(message)) {
+        this.$bvModal.hide('modal-excluir') 
+     
         RestApiService.delete("orgaos-demandantes", id)
           .then((response: any) =>{
               this.loading = true
@@ -250,7 +301,12 @@ export default Vue.extend({
                   "Exclusão realizada com sucesso!"
               );
 
-             this.listarOrgaos(this.currentPage)
+            //se excluir último registro de uma página, retornar para a primeira
+            if(this.totalPageSearch == 1) {
+              this.currentPage = 1
+            }  
+
+            this.listarOrgaos(this.currentPage)
           })
           .catch((e: Error) => {
              this.adicionarAlert(
@@ -260,8 +316,7 @@ export default Vue.extend({
           })
           .finally(() => {
             this.loading = false
-          });
-      }
+          });      
     },
 
     adicionarAlert(tipo: string, mensagem: string): void {
@@ -315,4 +370,50 @@ export default Vue.extend({
 .custom-select-sm {
   height: calc(2em + 0.5rem + 2px);
 }
+
+/* Cabeçalho da tabela */
+.topo-table {
+  display: flex;
+  justify-content: space-between;  
+  align-items: center;
+  padding: 1px 10px; /* top bottom / right left */
+  background-color: rgba(0, 0, 0, .03);
+  border: 1px solid rgba(0,0,0, .125); 
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+}
+
+.icon-topo-table { 
+  font-size: 2rem;  
+}
+
+.title-topo-table {
+  font-size: 1.2rem;
+  padding-left: 10px;
+  font-weight: 100;
+  flex-grow: 1;  
+  font-family: "Mulish", sans-serif;
+  align-self: center;
+}
+
+.button-topo-table {
+  font-size: 2.2rem;
+  color: #007bff;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.button-topo-table:hover {
+  color: #5cabff;
+}
+
+
+@media(min-width: 992px)
+  {
+    .button-search {
+      margin-top: 32px
+    }
+  }
+
+
 </style>

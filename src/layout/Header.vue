@@ -1,21 +1,20 @@
 <template>
   <div class="sticky-top">
-    <div class="header px-4">
-      <span class="text-center col-12">Sistema de Acompanhamento de Processos Extra Judicais</span>
-      <slot></slot>      
-      <b-dropdown class="dropdown" size="sm" variant="outline-light">
-        <template #button-content>
-          <span>
-              Nome do usuario
-          </span>
-        </template>
-        <b-dropdown-divider />
-        <b-dropdown-item to="/alterarSenha"> Alterar Senha </b-dropdown-item>
-        <b-dropdown-item @click="logOut"> Logout </b-dropdown-item>
-      </b-dropdown>
+    <div class="header px-4">  
+          <slot></slot>      
+          <b-dropdown class="dropdown" size="sm" variant="outline-light">
+            <template #button-content>        
+              <span v-if="getUsuarioNome != ''">
+                {{ getUsuarioNome }}
+              </span>        
+            </template>
+            <b-dropdown-divider />
+            <b-dropdown-item to="/alterarSenha"> Alterar Senha </b-dropdown-item>
+            <b-dropdown-item @click="logOut"> Logout </b-dropdown-item>
+          </b-dropdown>  
     </div>
     <div class="breadcumb">
-      {{ this.$route.name }}
+      {{ $route.name }}
     </div>
   </div>
 </template>
@@ -30,7 +29,7 @@ export default Vue.extend({
     };
   },
    computed: {
-    ...mapGetters("usuario", ["getUsuarioNome"]),
+    ...mapGetters("usuario", ["getUsuarioNome", "getUsuarioUnidade"]),
   },
   methods: {
     ...mapActions("usuario", ["deslogarUsuario"]),
@@ -43,25 +42,20 @@ export default Vue.extend({
 </script>
 <style scoped>
 .header {
-  background-color: #081550;
-  /* background-color: #1b2038; */
-  color: white;
-  min-height: 50px;
   display: flex;
+  justify-content: center;
   align-items: center;
-}
-
-.dropdown {
-  float: right;
-  right: 15px;
-  position: absolute;
+  background-color: #081550;
+  color: white;
+  padding-top: 1%;
 }
 
 .breadcumb {
   background-color: #081550;
   /* background-color: #1b2038; */
-  color: white;
-  padding: 1px 2%;
+  color: white;  
   font-style: italic;
+  /*padding: 1px 2%;*/
+  padding: 15px 2% 4px 2%; /* top right bottom left */
 }
 </style>

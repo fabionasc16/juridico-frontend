@@ -25,7 +25,7 @@
       <b-form @submit.prevent="search" class="mb-5">
           <div class="row">               
               <div class="col-3">
-                <b-form-group label="Tipo Processo:" class="font">
+                <b-form-group label="Classificação:" class="font">
                     
                       <b-input-group>  
                         <b-form-input class="bordered margin-field" type="text"
@@ -55,31 +55,21 @@
     
     
          <!-- CARD DA TABELA -->
-         <div class="card p-0 m-0">
-              <!-- CABEÇALHO DA TABELA (Espaço reservado para incluir ícones) -->
-              <div class="card-header" align="right">
-                <div class="row">
-                    <!-- ÍCONE Journal-text -->
-                    <div class="col-1 text-blue h2 p0m0" align="center" label="Classificações Cadastrados">
-                      <b-icon-journal-text>
-                      </b-icon-journal-text>
-                    </div>                
-                  <!-- TÍTULO -->
-                  <div class="col-10 mt-1" align="start">
-                    <div class="row position-relative">
-                      <h5>Classificações Cadastrados</h5>
-                    </div>
-                  </div>
-                  <!-- ÍCONE Plus-Circle -->
-                  <div class="col-1 position-relative" align="center"> 
-                    <b-form-group label="" class="btn text-primary position-absolute top-50 start-50 translate-middle">
-                      <div class="h3">
-                        <b-icon-plus-circle v-b-modal.modal-cadastro-classificacao v-b-tooltip.hover.topleft="'Adicionar Classificação'"></b-icon-plus-circle>
-                      </div>
-                    </b-form-group>
-                  </div>
-                </div>
-              </div>
+         <div class="card-table p-0 m-0">    
+          <!-- TOPO TABELA-->
+          <div class="topo-table">
+       
+            <div class="desc-topo-table">
+              <b-icon-journal-text class="icon-topo-table"></b-icon-journal-text> 
+              <span class="title-topo-table">Classificações Cadastradas</span>
+            </div>                      
+
+            <div class="button-topo-table">
+              <b-icon-plus-circle v-b-modal.modal-cadastro-classificacao v-b-tooltip.hover.topleft="'Adicionar Classificação'"></b-icon-plus-circle>
+            </div>
+
+          </div> 
+
               <!-- TABELA -->
               <div>
                 <b-table-lite small striped hover class="m-0" head-variant="dark" :current-page="currentPage"
@@ -101,13 +91,25 @@
                          class="btn-light btn-outline-dark m-0 p-1" @click="editarClassificacao(data.item.id_classificacao)">
                         Editar
                       </b-list-group-item>                   
-                      <b-list-group-item block class="btn-light text-dark btn-outline-danger m-0 p-1" @click="excluir(data.item.id_classificacao, data.item.descClassificacao)">
+                      <!--<b-list-group-item block class="btn-light text-dark btn-outline-danger m-0 p-1" @click="excluir(data.item.id_classificacao, data.item.descClassificacao)">
                         Excluir
-                      </b-list-group-item>
+                      </b-list-group-item>-->
+
+                      <b-list-group-item block                     
+                       @click="abrirModal('modal-excluir', data.item.id_classificacao, data.item.desc_classificacao)"
+                       class="btn-light text-dark btn-outline-danger m-0 p-1"                 
+                       @listarClassificacao="listarClassificacao(currentPage)">                      
+                     Excluir
+                  </b-list-group-item>
+
                     </b-dropdown>
                   </template>                                 
                 </b-table-lite>
               </div>
+              <div class="m-3 text-center" v-if="totalRows==0">
+               <label>Nenhum registro encontrado.</label>
+             </div>
+
               <!-- RODAPÉ DA TABELA (Espaço reservado para incluir ícones) -->
               <div class="card-footer m-0 px-1 pt-1">
                 <!-- PAGINAÇÃO -->
@@ -137,6 +139,14 @@
                 </template>           
               </ModalCadastroClassificacao>
             </b-modal>
+
+            <ModalExcluir :pergunta="`a classificação ${nomeClassificacaoModal}`">
+            <template v-slot:buttons>
+                 <b-button variant="danger" class="bordered" 
+                 @click="excluir(id_classificacao)"
+                 >Excluir</b-button>
+             </template>   
+         </ModalExcluir>  
           <!-- //MODAL -->
     
     </div> <!--container fluid-->
@@ -150,28 +160,23 @@
     import ModalCadastroClassificacao from './modais/ModalCadastroClassificacao.vue';
     import { mask } from "vue-the-mask";
     import { Classificacao } from '@/type/classificacao';
-    import { FieldsTableClassificacao} from "@/type/tableClassificacao";
-    import { BIconSearch, BIconPlusCircle, BIconInfoCircle, BIconJournalText } from 'bootstrap-vue'
-    
+    import { FieldsTableClassificacao} from "@/type/tableClassificacao";  
     import Notifications from "@/components/Notifications.vue";
     import { Notificacao } from "@/type/notificacao";
     import ReturnMessage from "@/components/ReturnMessage.vue";
     import LoadingSpinner from "@/components/LoadingSpinner.vue";
-    
     import RestApiService from "@/services/rest/service";
-    
+    import ModalExcluir from "@/components/ModalExcluir.vue"
+
     export default Vue.extend({
       directives: { mask },
       components: {
-        HeaderPage,   
-        BIconSearch,
-        BIconJournalText,
-        BIconPlusCircle,
-        BIconInfoCircle,
+        HeaderPage,  
         Notifications,
         ModalCadastroClassificacao,
         ReturnMessage,
         LoadingSpinner,
+        ModalExcluir
       },
       data() {
         return {
@@ -188,24 +193,25 @@
           fields: FieldsTableClassificacao, //nome das colunas da tabela     
           stickyHeader: true,
           noCollapse: true,
-    
           Notificacao: [] as Array<Notificacao>,
           Message: [] as Array<Notificacao>,
           loading: false as boolean,
           alert: false as boolean,   
+          nomeClassificacaoModal: "" as string,
+          titleModal: "" as string,
+          totalPageSearch: 0, //total de registros na paginacao corrente 
         };
       },
-      mounted() {   
-    this.listarClassificacao(this.currentPage);
-     
+  mounted() {   
+    this.listarClassificacao(this.currentPage);     
   },
   methods: {
-    abrirModal(modalname: string, id_classificacao: number, dado?: any){
+    /*abrirModal(modalname: string, id_classificacao: number, dado?: any){
        
        this.id_classificacao = id_classificacao            
        this.classificacaoModal = dado
        this.$bvModal.show(modalname)            
-    },
+    },*/
     editarClassificacao(id: number): void {
         this.id_classificacao = id
         this.$bvModal.show('modal-editar-classificacao')       
@@ -213,27 +219,32 @@
    
     search():void {
 
-      console.log(JSON.stringify(this.busca))
+      this.loading = true
 
-      if (!this.busca) {
-        this.listarClassificacao(this.currentPage);
-      } else {
+        if(!this.busca){       
+          this.currentPage = 1
+        }  
+    
         RestApiService.get(
-          "classificacaoes",
-          `?currentPage=${this.currentPage}&search=${this.busca}`
+          "classificacoes",
+          `?search=${this.busca}`
         )
           .then((response: any) => {
             this.perPage = response.data.perPage;
             this.items = response.data.data;
             this.totalRows = response.data.total;
+            this.totalPageSearch = response.data.data.length 
           })
           .catch((e) => {
             this.adicionarAlert(
                             "alert",
                             "Ocorreu um erro ao realizar a pesquisa!"
                             );         
+          })
+          .finally(() => {
+            this.loading = false          
           });
-      }
+      
     },
 
 
@@ -247,7 +258,7 @@
             this.items = response.data.data;
             this.perPage = response.data.perPage;
             this.totalRows = response.data.total;
-
+            this.totalPageSearch = response.data.data.length  
           })
           .catch((e) => {
             if (e.message === "Network Error") {
@@ -278,7 +289,14 @@
       
     },   
 
-    excluir(id: any, data: any): void {    
+    abrirModal(modalname: string, idClassificacao: number, nomeClassificacao?: any){      
+        this.titleModal = ''
+        this.id_classificacao = idClassificacao            
+        this.nomeClassificacaoModal = nomeClassificacao
+        this.$bvModal.show(modalname)            
+    },
+
+    excluir(id: any): void {    
         this.$bvModal.hide('modal-excluir')  
       
         RestApiService.delete("classificacoes", id)
@@ -289,6 +307,11 @@
                     "success",
                     "Exclusão realizada com sucesso!"
             );  
+
+            //se excluir último registro de uma página, retornar para a primeira
+            if(this.totalPageSearch == 1) {
+              this.currentPage = 1
+            }   
 
             this.listarClassificacao(this.currentPage)
           })
@@ -328,7 +351,7 @@
     });
     </script>
     
-    <style scope>
+<style scope>
     .p0m0 {
       margin: 0;
       padding: 0;
@@ -355,5 +378,43 @@
     .custom-select-sm {
       height: calc(2em + 0.5rem + 2px);
     }
-    </style>
+
+
+/* Cabeçalho da tabela */
+.topo-table {
+  display: flex;
+  justify-content: space-between;  
+  align-items: center;
+  padding: 1px 10px; /* top bottom / right left */
+  background-color: rgba(0, 0, 0, .03);
+  border: 1px solid rgba(0,0,0, .125); 
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+}
+
+.icon-topo-table { 
+  font-size: 2rem;  
+}
+
+.title-topo-table {
+  font-size: 1.2rem;
+  padding-left: 10px;
+  font-weight: 100;
+  flex-grow: 1;  
+  font-family: "Mulish", sans-serif;
+  align-self: center;
+}
+
+.button-topo-table {
+  font-size: 2.2rem;
+  color: #007bff;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.button-topo-table:hover {
+  color: #5cabff;
+}
+
+</style>
     

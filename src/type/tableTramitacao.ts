@@ -9,29 +9,29 @@ export type TableTramitacao = {
 export const FieldsTableTramitacao = 
     [   //NOMES DAS COLUNAS
         {
-            key: 'caixaSIGED',
-            label: 'Caixa SIGED',
-            sortable: true,
+            key: 'entrada_no_setor',
+            label: 'Data Entrada',
+            sortable: true,       
         },
         {
-            key: 'eventoTramitacao',
-            label: 'Evento Tramitação',
+            key: 'setor_tramitacao',
+            label: 'Setor Tramitação',
             sortable: true
         },
         {
-            key: 'entradaSetor',
-            label: 'Entrada no Setor',
+            key: 'dias_no_setor',
+            label: 'Dias no Setor',
             sortable: true,
         },
         {
-            key: 'permanencia',
-            label: 'Permanência',
+            key: 'evento_tramitado',
+            label: 'Evento',
             sortable: true,
         },
       ];
 
-export const TableTramitacaoSeeder: Array<TableTramitacao> = [
- 
+/*
+export const TableTramitacaoSeeder: Array<TableTramitacao> = [ 
   { isActive: true, caixaSIGED: 'JURÍDICO', eventoTramitacao: 'Para Assinatura', entradaSetor: '03/06/2022', permanencia: '0' },
   { isActive: true, caixaSIGED: 'CONTRATOS', eventoTramitacao: 'Aguardar Pagamento', entradaSetor: '01/06/2022', permanencia: '2' },
   { isActive: true, caixaSIGED: 'COMPRAS', eventoTramitacao: 'Tramitando', entradaSetor: '28/05/2022', permanencia: '4' },
@@ -40,6 +40,5 @@ export const TableTramitacaoSeeder: Array<TableTramitacao> = [
   { isActive: true, caixaSIGED: 'DIREÇÃO', eventoTramitacao: 'Conhecimento e Providências', entradaSetor: '16/05/2022', permanencia: '4' },
   { isActive: true, caixaSIGED: 'JURÍDICO', eventoTramitacao: 'Para Assinatura Digital', entradaSetor: '16/05/2022', permanencia: '0' },
   { isActive: true, caixaSIGED: 'PROTOCOLO', eventoTramitacao: 'Tramitando', entradaSetor: '15/05/2022', permanencia: '1' },
- 
-            
 ];
+*/

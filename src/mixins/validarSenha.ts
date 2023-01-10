@@ -52,4 +52,3 @@ const validarSenhaMixin = {
   };
   
   export default validarSenhaMixin;
-  

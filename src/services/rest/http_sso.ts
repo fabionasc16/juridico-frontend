@@ -9,7 +9,7 @@ const http = axios.create({
   headers: { "Content-Type": "application/json" },
 });
 
-/*
+
 http.interceptors.request.use(
   (config: any) => {
     const token = store.getters["usuario/getUsuarioToken"];
@@ -33,7 +33,7 @@ http.interceptors.response.use(
       return Promise.reject(err) // Returns the error information returned by the interface     
    }
   )
-*/
+
 
 export default http
 

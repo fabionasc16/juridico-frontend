@@ -54,31 +54,20 @@
        
 
         <!-- CARD DA TABELA -->
-        <div class="card p-0 m-0">
-          <!-- CABEÇALHO DA TABELA (Espaço reservado para incluir ícones) -->
-          <div class="card-header" align="right">
-            <div class="row">
-                <!-- ÍCONE Journal-text -->
-                <div class="col-1 text-blue h2 p0m0" align="center" label="Tipos de Processo Cadastrados">
-                  <b-icon-journal-text>
-                  </b-icon-journal-text>
-                </div>
-              <!-- TÍTULO -->
-              <div class="col-10 mt-1" align="start">
-                <div class="row position-relative">
-                  <h5>Tipos de Processo Cadastrados</h5>
-                </div>
-              </div>
-              <!-- ÍCONE Plus-Circle -->
-              <div class="col-1 position-relative" align="center"> 
-                <b-form-group label="" class="btn text-primary position-absolute top-50 start-50 translate-middle">
-                  <div class="h3">
-                    <b-icon-plus-circle v-b-modal.modal-cadastro-tipoprocesso v-b-tooltip.hover.topleft="'Adicionar Tipo de Processo'"></b-icon-plus-circle>
-                  </div>
-                </b-form-group>
-              </div>
+        <div class="card p-0 m-0">           
+          <!-- TOPO TABELA-->
+          <div class="topo-table">
+       
+            <div class="desc-topo-table">
+              <b-icon-journal-text class="icon-topo-table"></b-icon-journal-text> 
+              <span class="title-topo-table">Tipos de Processo Cadastrados</span>
+            </div>                      
+
+            <div class="button-topo-table">
+              <b-icon-plus-circle v-b-modal.modal-cadastro-tipoprocesso v-b-tooltip.hover.topleft="'Adicionar Tipo de Processo'"></b-icon-plus-circle>
             </div>
-          </div>
+
+          </div>   
           <!-- TABELA -->
           <div>
             <b-table-lite small striped hover class="m-0" head-variant="dark" :current-page="currentPage"
@@ -120,6 +109,11 @@
               </template>
             </b-table-lite>
           </div>
+
+          <div class="m-3 text-center" v-if="totalRows==0">
+               <label>Nenhum registro encontrado.</label>
+          </div>       
+
           <!-- RODAPÉ DA TABELA (Espaço reservado para incluir ícones) -->
           <div class="card-footer m-0 px-1 pt-1">
             <!-- PAGINAÇÃO -->
@@ -224,7 +218,8 @@ export default Vue.extend({
       Notificacao: [] as Array<Notificacao>,
       Message: [] as Array<Notificacao>,
       loading: false as boolean,
-      alert: false as boolean,      
+      alert: false as boolean,    
+      totalPageSearch: 0, //total de registros na paginacao corrente   
       
     };
   },
@@ -250,28 +245,32 @@ export default Vue.extend({
     },
    
     search():void {
+      this.loading = true
 
-      console.log(JSON.stringify(this.busca))
-
-      if (!this.busca) {
-        this.listarTiposProcesso(this.currentPage);
-      } else {
+      if(!this.busca){       
+        this.currentPage = 1
+      }  
+     
         RestApiService.get(
           "tipos-processo",
-          `?currentPage=${this.currentPage}&search=${this.busca}`
+          `?search=${this.busca}`
         )
           .then((response: any) => {
             this.perPage = response.data.perPage;
             this.items = response.data.data;
             this.totalRows = response.data.total;
+            this.totalPageSearch = response.data.data.length  
           })
           .catch((e) => {
             this.adicionarAlert(
                             "alert",
                             "Ocorreu um erro ao realizar a pesquisa!"
                             );         
+          })
+          .finally(() => {
+            this.loading = false          
           });
-      }
+    
     },
 
 
@@ -285,7 +284,7 @@ export default Vue.extend({
             this.items = response.data.data;
             this.perPage = response.data.perPage;
             this.totalRows = response.data.total;
-
+            this.totalPageSearch = response.data.data.length  
           })
           .catch((e) => {
             if (e.message === "Network Error") {
@@ -327,6 +326,11 @@ export default Vue.extend({
                     "success",
                     "Exclusão realizada com sucesso!"
             );  
+
+            //se excluir último registro de uma página, retornar para a primeira
+            if(this.totalPageSearch == 1) {
+              this.currentPage = 1
+            }  
             
             this.listarTiposProcesso(this.currentPage)
           })
@@ -392,5 +396,42 @@ export default Vue.extend({
 
 .custom-select-sm {
   height: calc(2em + 0.5rem + 2px);
+}
+
+
+/* Cabeçalho da tabela */
+.topo-table {
+  display: flex;
+  justify-content: space-between;  
+  align-items: center;
+  padding: 1px 10px; /* top bottom / right left */
+  background-color: rgba(0, 0, 0, .03);
+  border: 1px solid rgba(0,0,0, .125); 
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+}
+
+.icon-topo-table { 
+  font-size: 2rem;  
+}
+
+.title-topo-table {
+  font-size: 1.2rem;
+  padding-left: 10px;
+  font-weight: 100;
+  flex-grow: 1;  
+  font-family: "Mulish", sans-serif;
+  align-self: center;
+}
+
+.button-topo-table {
+  font-size: 2.2rem;
+  color: #007bff;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.button-topo-table:hover {
+  color: #5cabff;
 }
 </style>

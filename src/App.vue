@@ -1,5 +1,5 @@
 <template>
-  <component :is="this.$route.meta.layout">
+ <component :is="this.$route.meta.layout">
     <transition appear enter-active-class="animate__animated animate__fadeIn">
       <router-view />
     </transition>
@@ -8,10 +8,36 @@
 <script lang="ts">
 import Vue from 'vue'
 import Layout from './layout/Root.vue'
+import { mapGetters, mapActions } from "vuex";
+
 export default Vue.extend({
   components:{
     Layout
+  },
+  //para manter o estado no store ao dar refresh na pagina
+  created() {
+    if (window.localStorage.token && window.localStorage.cpf) {
+      this.atribuirToken(window.localStorage.token);
+      this.atribuirId(window.localStorage._id);
+      this.atribuirCpf(window.localStorage.cpf);
+      this.atribuirNome(window.localStorage.nome);
+      this.atribuirUnidade(window.localStorage.unidade);
+      this.atribuirIdUnidade(window.localStorage.idUnidade);
+      this.atribuirRoles(JSON.parse(window.localStorage.roles));
+    }
+  },
+  methods: {
+    ...mapActions("usuario", [
+      "atribuirToken",
+      "atribuirId",
+      "atribuirNome",
+      "atribuirCpf",
+      "atribuirUnidade",
+      "atribuirRoles",
+      "atribuirIdUnidade",
+    ]),
   }
+
 })
 </script>
 

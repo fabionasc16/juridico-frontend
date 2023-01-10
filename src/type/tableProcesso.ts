@@ -35,7 +35,7 @@ export const FieldsTableProcesso =
     sortable: true,
   },
   {
-    key: 'classificacao.descClassificacao',
+    key: 'classificacao.desc_classificacao',
     label: 'Classificação',
     sortable: true,
   },
@@ -51,7 +51,7 @@ export const FieldsTableProcesso =
   },  
   {
     key: 'prazo_total',
-    label: 'Prazo (Dias Úteis)',
+    label: 'Prazo',
     sortable: true,
   },  
   {
@@ -64,6 +64,11 @@ export const FieldsTableProcesso =
     label: 'Reiteração',
     sortable: true,
   }, 
+  /*{
+    key: 'status_prazo',
+    label: 'Status Prazo',
+    sortable: true,
+  },*/ 
 
 ];
 

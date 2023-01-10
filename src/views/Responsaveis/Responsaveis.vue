@@ -18,8 +18,6 @@
             <LoadingSpinner></LoadingSpinner>
         </div>  
     
-
-
         <!-- FORMULÁRIO DE CONSULTA -->       
         <b-form @submit.prevent="search" class="mb-5">
             <div class="row">
@@ -50,37 +48,31 @@
 
 
         <!-- CARD DA TABELA -->
-        <div class="card p-0 m-0">
-          <!-- CABEÇALHO DA TABELA (Espaço reservado para incluir ícones) -->
-          <div class="card-header" align="right">
-            <div class="row">
-                <!-- ÍCONE Journal-text -->
-                <div class="col-1 text-blue h2 p0m0" align="center" label="Responsáveis Cadastrados">
-                  <b-icon-journal-text>
-                  </b-icon-journal-text>
-                </div>                
-              <!-- TÍTULO -->
-              <div class="col-10 mt-1" align="start">
-                <div class="row position-relative">
-                  <h5>Responsáveis Cadastrados</h5>
-                </div>
-              </div>
-              <!-- ÍCONE Plus-Circle -->
-              <div class="col-1 position-relative" align="center"> 
-                <b-form-group label="" class="btn text-primary position-absolute top-50 start-50 translate-middle">
-                  <div class="h3">
-                    <b-icon-plus-circle class="mr-3" v-b-modal.modal-cadastro-responsavel v-b-tooltip.hover.topleft="'Adicionar Responsável'"></b-icon-plus-circle>
-                  </div>
-                </b-form-group>
-              </div>
+        <div class="card-table p-0 m-0">    
+          <!-- TOPO TABELA-->
+          <div class="topo-table">
+       
+            <div class="desc-topo-table">
+              <b-icon-journal-text class="icon-topo-table"></b-icon-journal-text> 
+              <span class="title-topo-table">Responsáveis Cadastrados</span>
+            </div>                      
+
+            <div class="button-topo-table">
+              <b-icon-plus-circle v-b-modal.modal-cadastro-responsavel v-b-tooltip.hover.topleft="'Adicionar Responsável'"></b-icon-plus-circle>
             </div>
-          </div>
+
+          </div>      
           <!-- TABELA -->
           <div>
             <b-table-lite small striped hover class="m-0" head-variant="dark" :current-page="currentPage"
               :per-page="perPage" :no-border-collapse="noCollapse" :items="items"
               :fields="fields">            
             
+              <template v-slot:cell(cpf_responsavel)="data">               
+                      {{formatCnpjCpf(data.item.cpf_responsavel)}}      
+              </template>
+ 
+
               <!-- BOTÕES DE AÇÕES -->
               <template v-slot:cell(botaoAction)="data">
 
@@ -118,6 +110,11 @@
               </template>                                 
             </b-table-lite>
           </div>
+
+          <div class="m-3 text-center" v-if="totalRows==0">
+               <label>Nenhum registro encontrado.</label>
+          </div>
+                 
           <!-- RODAPÉ DA TABELA (Espaço reservado para incluir ícones) -->
           <div class="card-footer m-0 px-1 pt-1">
             <!-- PAGINAÇÃO -->
@@ -191,6 +188,7 @@ import LoadingSpinner from "@/components/LoadingSpinner.vue";
 import RestApiService from "@/services/rest/service";
 
 import ModalExcluir from "@/components/ModalExcluir.vue"
+import formataCpfMixin from "@/mixins/formataCpfMixin";
 
 export default Vue.extend({
   directives: { mask },
@@ -206,6 +204,9 @@ export default Vue.extend({
     LoadingSpinner,
     ModalExcluir
   },
+  mixins: [        
+    formataCpfMixin,
+  ], 
   data() {
     return {
       idResponsavel: null as any, //para modal
@@ -225,6 +226,8 @@ export default Vue.extend({
       Message: [] as Array<Notificacao>,
       loading: false as boolean,
       alert: false as boolean,   
+
+      totalPageSearch: 0, //total de registros na paginacao corrente   
     };
   },
   mounted() {
@@ -257,7 +260,8 @@ export default Vue.extend({
         .then((response: any) => {
           this.items = response.data.data
           this.perPage = response.data.perPage
-          this.totalRows = response.data.total          
+          this.totalRows = response.data.total    
+          this.totalPageSearch = response.data.data.length          
         })
         .catch((e: Error) => {
           console.log(e)
@@ -281,15 +285,18 @@ export default Vue.extend({
       let busca = {
         cpfResponsavel : cpf,
         nomeResponsavel : this.form.nome_responsavel ? this.form.nome_responsavel : "",      
-      }      
- 
-      console.log("busca ", JSON.stringify(busca))
+      }   
+      
+      if(!this.form.cpf_responsavel   && !this.form.nome_responsavel ){       
+          this.currentPage = 1        
+        }    
      
         RestApiService.post("responsaveis/list", busca)
           .then((response: any) => {            
             this.items = response.data.data;
             this.perPage = response.data.perPage;
             this.totalRows = response.data.total;
+            this.totalPageSearch = response.data.data.length      
           })
           .catch((e) => {
             if (e.message.length > 0) {
@@ -319,6 +326,11 @@ export default Vue.extend({
                   "success",
                   "Exclusão realizada com sucesso!"
           ); 
+
+          //se excluir último registro de uma página, retornar para a primeira
+          if(this.totalPageSearch == 1) {
+            this.currentPage = 1
+          }  
           
           this.listarResponsaveis(this.currentPage)
         })
@@ -411,4 +423,41 @@ export default Vue.extend({
 .custom-select-sm {
   height: calc(2em + 0.5rem + 2px);
 }
+
+/* Cabeçalho da tabela */
+.topo-table {
+  display: flex;
+  justify-content: space-between;  
+  align-items: center;
+  padding: 1px 10px; /* top bottom / right left */
+  background-color: rgba(0, 0, 0, .03);
+  border: 1px solid rgba(0,0,0, .125); 
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+}
+
+.icon-topo-table { 
+  font-size: 2rem;  
+}
+
+.title-topo-table {
+  font-size: 1.2rem;
+  padding-left: 10px;
+  font-weight: 100;
+  flex-grow: 1;  
+  font-family: "Mulish", sans-serif;
+  align-self: center;
+}
+
+.button-topo-table {
+  font-size: 2.2rem;
+  color: #007bff;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.button-topo-table:hover {
+  color: #5cabff;
+}
+
 </style>

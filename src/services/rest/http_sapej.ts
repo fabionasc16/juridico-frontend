@@ -2,14 +2,14 @@ import axios from "axios";
 import { environment } from "../../environments/environment";
 import store from "@/store";
 
-const apiUrl = environment.apiURL;
+const apiUrl = environment.apiURLSSO2;
 
 const http = axios.create({
   baseURL: `${apiUrl}`,
   headers: { "Content-Type": "application/json" },
 });
 
-/*
+
 http.interceptors.request.use(
   (config: any) => {
     const token = store.getters["usuario/getUsuarioToken"];
@@ -33,7 +33,7 @@ http.interceptors.response.use(
       return Promise.reject(err) // Returns the error information returned by the interface     
    }
 )
-*/
+
 
 export default http
 

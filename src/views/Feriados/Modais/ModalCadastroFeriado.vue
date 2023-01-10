@@ -24,8 +24,9 @@
                         </div>
 
                         <div class="col-6">   
-                            <b-form-group label="Tipo:" class="font">
-                                    <b-form-select v-model="form.tipoFeriado" :disabled="disabledAll">
+                            <b-form-group class="font">
+                                    <label>Tipo: <span class="text-danger">*</span></label>
+                                    <b-form-select v-model="form.tipoFeriado" :disabled="disabledAll" required>
                                         <b-form-select-option value="">-- Selecione --</b-form-select-option>
                                         <b-form-select-option v-for="option in optionsTipoFeriado" :value="option.value"
                                         :key="option.value"> {{ option.texto }}
@@ -38,8 +39,9 @@
                 <div class="row">
                         <div class="col-12">
                             <div class="row">
-                                <b-form-group label="Descrição:" class="font col-sm-12 col-md-12 col-lg-12">
-                                    <b-form-textarea rows="2" max-rows="2" v-model="form.descFeriado" :disabled="disabledAll"></b-form-textarea>
+                                <b-form-group class="font col-sm-12 col-md-12 col-lg-12">
+                                    <label>Descrição: <span class="text-danger">*</span></label>
+                                    <b-form-textarea rows="2" max-rows="2" v-model="form.descFeriado" :disabled="disabledAll" required></b-form-textarea>
                                 </b-form-group>
                             </div>
                         </div>
@@ -65,7 +67,6 @@ import ReturnMessage from "@/components/ReturnMessage.vue";
 import dataMixin from "@/mixins/dataMixin";
 import RestApiService from "@/services/rest/service";
 import LoadingSpinner from "@/components/LoadingSpinner.vue";
-import DetalhesProcesso from "../../../components/DetalhesProcesso.vue";
 import { Processo } from '@/type/processo';
 import { CadastroFeriado } from "@/type/feriado";
 import { TipoFeriadoSeeder } from "@/type/tipoFeriado";
@@ -81,7 +82,6 @@ export default Vue.extend({
         Notifications,
         ReturnMessage,
         LoadingSpinner,
-        DetalhesProcesso,
     },
     mixins: [        
         dataMixin,
@@ -125,10 +125,8 @@ export default Vue.extend({
 
             if (this.validarCampos()) { 
 
-                this.form.dataFeriado = this.dataFeriadoBR ? 
-                   dataMixin.methods.dataFormatEn(this.dataFeriadoBR) : "";
-
-                 console.log('JSON: ',JSON.stringify(this.form))
+            this.form.dataFeriado = this.dataFeriadoBR ? 
+                dataMixin.methods.dataFormatEn(this.dataFeriadoBR) : "";                
             
               RestApiService.salvar(url, this.form, acao, this.form.id_feriado)
                 .then((res) => {

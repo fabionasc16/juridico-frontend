@@ -17,7 +17,7 @@
                 <b-form @submit.prevent="submit">                   
 
                     <!-- 1ª LINHA (CPF + NOME) -->
-                    <div class="col-10">   
+                    <div class="col-10" style="margin-top:15px">   
                             <b-form-group class="font">                                
                                 <label>Classificação: <span class="text-danger">*</span></label>
                                 <b-form-input class="bordered margin-field" type="text" v-model="form.descClassificacao"
@@ -48,7 +48,7 @@ import { Notificacao } from "@/type/notificacao";1
 import ReturnMessage from "@/components/ReturnMessage.vue";1
 import RestApiService from "@/services/rest/service";1
 import LoadingSpinner from "@/components/LoadingSpinner.vue";1
-import DetalhesProcesso from "@/components/DetalhesProcesso.vue";
+
 
 export default Vue.extend({
     directives: { mask },
@@ -61,7 +61,6 @@ export default Vue.extend({
         Notifications,
         ReturnMessage,
         LoadingSpinner,
-        DetalhesProcesso
     },
     props: ['id', 'tipo'],
     data() {
@@ -97,9 +96,7 @@ export default Vue.extend({
             let acao = this.id ? "put" : "post"
             let url = "classificacoes";       
                                             
-            if (this.validarCampos()) { 
-
-              console.log('JSON: ',JSON.stringify(this.form))
+            if (this.validarCampos()) {            
               
               this.loading = true
             

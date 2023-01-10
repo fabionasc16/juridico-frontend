@@ -23,4 +23,3 @@
     background-color: rgb(23, 36, 94);
   }
   </style>
-  

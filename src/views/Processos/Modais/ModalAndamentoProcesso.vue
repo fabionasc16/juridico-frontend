@@ -17,21 +17,17 @@
                         <b-form-group append="m" class="font col-7 col-sm-7 col-md-7 col-lg-7"
                         >  
                             <label><b>Nº Procedimento:</b></label> 
-                            {{form.numProcedimento}}
+                            {{numProcedimento}}
                         </b-form-group>
                     </div>                        
-                    <div class="row">
-                        <b-form-group append="m" class="font col-7 col-sm-7 col-md-7 col-lg-7"
-                        >                       
-                        <label>Status Processo: <span class="text-danger">*</span></label> 
-                             <b-form-select v-model="form.idStatusProcesso" @change="alteraStatus($event)">
-                                <b-form-select-option value="">-- Selecione --</b-form-select-option>
-                                <b-form-select-option v-for="option in optionsStatusProcesso"                                
-                                   :value="option.id_status" 
-                                   :key="option.id_status"> {{ option.desc_status }}
-                                </b-form-select-option>                                
-                            </b-form-select>
-                        </b-form-group>
+                    <div class="row"> 
+                        <b-form-group class="font col-7 col-sm-7 col-md-7 col-lg-7">                            
+                            <label>Status Processo:<span class="text-danger">*</span></label>
+                            <v-select style="font-size: 0.85rem" 
+                                :options="optionsStatusProcesso" class="font" label="desc_status"
+                                        v-model="statusProcessoSelecionado" required 
+                                        @input="alteraStatus"/>
+                        </b-form-group>                           
                     </div>
                     <div class="row" v-if="exibirData">    
                         <div class="col-7" style="margin-bottom:-10px">    
@@ -69,7 +65,6 @@ import ReturnMessage from "@/components/ReturnMessage.vue";
 import dataMixin from "@/mixins/dataMixin";
 import RestApiService from "@/services/rest/service";
 import LoadingSpinner from "@/components/LoadingSpinner.vue";
-import DetalhesProcesso from "../../../components/DetalhesProcesso.vue";
 import { Processo } from '@/type/processo';
 import { StatusProcesso } from "@/type/statusProcesso";
 
@@ -84,12 +79,11 @@ export default Vue.extend({
         Notifications,
         ReturnMessage,
         LoadingSpinner,
-        DetalhesProcesso,
     },
     mixins: [        
         dataMixin,
     ],
-    props: ["idProcesso"],
+    props: ["idProcesso", "numProcedimento"],
     data() {
         return {
             show: false as boolean, 
@@ -102,50 +96,49 @@ export default Vue.extend({
            // carregarForm: {} as Processo,  
             dataArquivamentoBR: "" as string,
             optionsStatusProcesso: [] as Array<StatusProcesso>, 
+            statusProcessoSelecionado: {
+                    desc_status: "Selecione" as string,
+                    id_status: null as any,
+            }, 
             perPageListagens:1000,    
             exibirData: false as boolean, 
             statusAtual: null as any      
         }
     },    
 
-    mounted() {
+    beforeMount() {
         this.isLoading = false
-        this.carregarDados()    
-       
+        this.carregarDados() 
         this.carregarStatusPrazo()       
     }, 
             
-    methods: {    
-        alteraStatus() {        
+    methods: {         
+        alteraStatus(): void {
             this.dataArquivamentoBR = ""
             this.form.dataArquivamento = ""
-            this.form.idStatusProcesso == '14' ? this.exibirData = true : this.exibirData = false 
+            this.statusProcessoSelecionado.id_status == '14' ? this.exibirData = true : this.exibirData = false             
         },
         carregarDados(): void {       
             this.loading = true;          
             
             RestApiService.get("processos/id", this.idProcesso)
                 .then((res: any) => {
-
-                    console.log('res2 ', res.data.status.id_status)                    
-
                     this.form.numProcedimento = res.data.num_procedimento                   
                     this.form.idProcesso =   res.data.idProcesso               
                     this.form.dataArquivamento = res.data.dataArquivamento
                     this.form.idStatusProcesso = res.data.status.id_status
                     this.statusAtual = res.data.status.id_status
+                    this.form.statusProcesso = res.data.status.desc_status
 
                     //formatar datas para formato br
                     this.dataArquivamentoBR = res.data.dataArquivamento ? 
-                    dataMixin.methods.formatarDataBr(res.data.dataArquivamento) : "";                    
-                                 
+                    dataMixin.methods.formatarDataBr(res.data.dataArquivamento) : "";  
             })
             .catch((e) => {
                 this.adicionarAlert(
                     "alert",
                     "Houve um erro ao carregar os dados. Tente novamente!"
-                );
-          
+                );          
             })
             .finally(() => {
                 this.loading = false;
@@ -162,7 +155,7 @@ export default Vue.extend({
                 this.form.dataArquivamento = this.dataArquivamentoBR ? 
                    dataMixin.methods.dataFormatEn(this.dataArquivamentoBR) : "";
                 
-              console.log('JSON: ',JSON.stringify(this.form))
+                this.form.idStatusProcesso = this.statusProcessoSelecionado.id_status              
             
               RestApiService.patch(url, this.form )
                 .then((res) => {                   
@@ -203,40 +196,39 @@ export default Vue.extend({
         },
         carregarStatusPrazo(): void {
             this.loading = true   
-
                 RestApiService.get(
                 "status/aplicacaostatus",
                 `?aplicaA=PROCESSO&currentPage=1&perPage=${this.perPageListagens}`
                 )
                 .then((response: any) => {        
-                  this.optionsStatusProcesso = response.data 
+                    this.optionsStatusProcesso = response.data                   
                 })
                 .catch((e) => {          
-                console.log(e)
+                    console.log(e)
                 })
                 .finally(() => {
-                this.loading = false               
+                    this.loading = false               
                 })
         },        
 
         validarCampos(): boolean {    
             this.Notificacao = [];
 
-            if(!this.form.idStatusProcesso){
+            if(!this.statusProcessoSelecionado.id_status){
                 this.adicionarNotificacao(
                 "danger",
                 "Campo Status Processo é obrigatório!"
                 );
             }    
 
-            if(this.statusAtual != 10 && this.form.idStatusProcesso == 10) {
+            if(this.statusAtual != 10 && this.statusProcessoSelecionado.id_status == 10) {
                 this.adicionarNotificacao(
                 "danger",
                 "Não é possível retornar ao status Recebido!"
                 );
             }            
             
-            if(this.form.idStatusProcesso=='14' && !this.dataArquivamentoBR){
+            if( this.statusProcessoSelecionado.id_status=='14' && !this.dataArquivamentoBR){
                 this.adicionarNotificacao(
                 "danger",
                 "Campo Data é obrigatório!"

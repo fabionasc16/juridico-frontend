@@ -21,7 +21,7 @@ export const FieldsTableResponsavel =
           sortable: true
         },
       ];
-
+/*
 export const TableResponsaveisSeeder: Array<TableResponsavel> = [
  
   { nome: "Heleno",  cpf: "83318572080" },
@@ -40,4 +40,4 @@ export const TableResponsaveisSeeder: Array<TableResponsavel> = [
   { nome: "Louise",  cpf: "77583398088"},
   { nome: "Sabrina", cpf: "85441053003"},
          
-];
+];*/
