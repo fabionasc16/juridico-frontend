@@ -17,11 +17,6 @@
 
       <div style="padding: 5% 0% 2% 0%">
         <b-form @submit.prevent="submit">
-          <b-form-group label="CPF" class="font">
-            <b-form-input class="inputs" required type="tel" v-model="form.cpf" v-mask="'###.###.###-##'">
-            </b-form-input>
-          </b-form-group>
-
           <b-form-group label="Email" class="font">
             <b-form-input class="inputs" required type="email" v-model="form.email">
             </b-form-input>
@@ -46,6 +41,7 @@ import { mask } from "vue-the-mask";
 import SuccessAlert from "@/components/SuccessAlert.vue";
 import ReturnMessage from "@/components/ReturnMessage.vue";
 import LoadingSpinner from "@/components/LoadingSpinner.vue";
+import RestApiService from "@/services/rest/service";
 
 
 export default Vue.extend({
@@ -65,16 +61,18 @@ export default Vue.extend({
       success: false as boolean,
       message: "" as string,
       form: {
-        cpf: "" as string,
         email: "" as string,
       },
     };
   },
   methods: {
     submit() {
-      if (this.form.cpf && this.form.email) {
-        this.loading = true
-        this.$router.push("/");
+      if (this.form.email) {
+        RestApiService.postForgotPass('auth/forgotpassword', this.form)
+              .then((res: any) => {
+                alert("Senha enviada para o email informado!")
+                this.$router.push("/");
+              });
       } else {
         this.message = "Por favor, preencha todos os campos!";
         this.alert = true;
