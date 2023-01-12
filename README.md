@@ -142,17 +142,16 @@ O Ponto Facultativo também precisa ser registrado na tabela de feriado para que
     - Arquivo store/usuario:<br>
     
     Actions chama mutations. 
-    Só mutations altera o esstado da variável.
+    Só mutations altera o estado da variável.
     Dispatch chama método(boa prática).
     RemoveItem apaga do localStorage.
-<br>
     https://medium.com/@emerson_pereira/vuex-actions-e-mutations-6f3b107b313a
 
 <br>
     - localStorage é permanente, salvar nele os dados do login, para que ao dar F5 não apague tudo.
 <br>
     - store/index:<br> 
-    acrescenta o que está utlizando para que seja reconhecido como módulo
+    acrescenta o que está utlizando para que seja reconhecido como módulo.
 <br>
     - router/index:<br> 
     criou requires Auth para saber se a página precisa estar autenticda para acessar. 
