@@ -9,13 +9,14 @@
 import Vue from 'vue'
 import Layout from './layout/Root.vue'
 import { mapGetters, mapActions } from "vuex";
+import refreshToken from "@/services/rest/refresh_token";
 
 export default Vue.extend({
   components:{
     Layout
   },
   //para manter o estado no store ao dar refresh na pagina
-  created() {
+  created() {   
     if (window.localStorage.token && window.localStorage.cpf) {
       this.atribuirToken(window.localStorage.token);
       this.atribuirId(window.localStorage._id);
@@ -24,6 +25,15 @@ export default Vue.extend({
       this.atribuirUnidade(window.localStorage.unidade);
       this.atribuirIdUnidade(window.localStorage.idUnidade);
       this.atribuirRoles(JSON.parse(window.localStorage.roles));
+      
+      setInterval(() => {                      
+                    let token = localStorage.getItem("token");
+
+                    if(token) {    
+                      //console.log("refresh")               
+                      const response = refreshToken(); 
+                    }
+        }, 1000 * 60 * 20 )//20min
     }
   },
   methods: {

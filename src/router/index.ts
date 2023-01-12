@@ -23,7 +23,6 @@ const routes: Array<RouteConfig> = [
   { path: '/tiposprocesso', name: 'Tipos Processo', meta: { layout: "logged", requiresAuth: true}, component: () => import('../views/TiposProcesso/TiposProcesso.vue') },
   { path: '/assuntos', name: 'Assuntos', meta: { layout: "logged", requiresAuth: true}, component: () => import('../views/Assuntos/Assuntos.vue') },
   { path: '/classificacoes', name: 'Classificação', meta: { layout: "logged", requiresAuth: true}, component: () => import('../views/Classificacao/Classificacao.vue') },
-
 ]
 
 const router = new VueRouter({
@@ -35,7 +34,7 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
   //se a rota requer autenticação e usuário não está logado, direciona para o login
   const getToken = localStorage.getItem("token");
-
+  
   if (to.matched.some((record) => record.meta.requiresAuth)) {
     // se a rota requer autenticação
 
@@ -54,7 +53,8 @@ router.beforeEach((to, from, next) => {
         !AuthService.possuiPermissao(to.meta.routePermission)
       ) {
         alert("Você não possui autorização para acessar essa página.");
-        next({ path: "/home" }); 
+        next({ path: "/" }); 
+        //next({ path: "/home" }); 
       } else {
         next();
       }
@@ -65,7 +65,5 @@ router.beforeEach((to, from, next) => {
     next();
   }
 });
-
-
 
 export default router

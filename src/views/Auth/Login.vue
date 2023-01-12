@@ -1,5 +1,8 @@
 <template>
     <div>
+        <div v-if="loading">
+            <LoadingSpinner></LoadingSpinner>
+        </div>
       <div class="d-flex flex-column align-items-center">
         <div class="p-1">
           <img class="img-responsive" style="background-size: cover" src="@/assets/img/logo/thumbnail_logo_right.png"
@@ -103,13 +106,13 @@
       ...mapActions("usuario", ["efetuarLogin"]),
   
       submit() {
+        this.loading = true
         this.showError = false;
         let cpf = this.form.user_formatado.replace(/[^\d]+/g, '')
         this.form.user = cpf
         if (!this.form.user || !this.form.password) {
           this.message = 'Preencha todos os campos!';
-          this.showError = true;
-          //alert('Preencha todos os campos!')
+          this.showError = true;        
           return false
         } else {
           this.form.user = cpf
@@ -126,9 +129,11 @@
               }          
               
               this.message = error.response.data.message
-              this.showError = true;   
-              
+              this.showError = true;                 
             })
+            .finally(() => {
+              this.loading = false           
+            });      
         }
       },
     },
