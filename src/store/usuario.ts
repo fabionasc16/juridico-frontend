@@ -29,11 +29,11 @@ const usuario = {
     },
     ATRIBUIR_TOKEN(state: any, Payload: string) {
       state.token = Payload;
-    },
+    },   
     ATRIBUIR_ROLES(state: any, Payload: string) {
       state.roles = Payload;
     },
-    DESLOGAR_USUARIO(state: any) {
+    DESLOGAR_USUARIO(state: any) { 
       (state._id = ""),
         (state.cpf = ""),
         (state.nome = ""),
@@ -51,12 +51,12 @@ const usuario = {
     },
   },
   actions: {
-    deslogarUsuario({ commit }: any) {
+    deslogarUsuario({ commit }: any) {      
       commit("DESLOGAR_USUARIO");
     },
     efetuarLogin({ dispatch }: any, Payload: any) {
       return new Promise((resolve, reject) => {
-        RestApiService.postLogin("auth", Payload)
+        RestApiService.postLogin("auth/login", Payload)
           .then((response) => {
             dispatch("atribuirToken", response.data.user.access_token); //CHAMA OUTRA ACTION
             dispatch("atribuirId", response.data.user.user_id);
@@ -75,7 +75,7 @@ const usuario = {
     atribuirToken({ commit }: any, Payload: string) {
       window.localStorage.setItem("token", Payload);
       commit("ATRIBUIR_TOKEN", Payload);
-    },
+    },    
     atribuirId({ commit }: any, Payload: string) {
       window.localStorage.setItem("_id", Payload);
       commit("ATRIBUIR_ID", Payload);

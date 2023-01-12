@@ -11,17 +11,12 @@ class AuthService {
         return true;
       }
     }
-
     return false;
   }
 
   public userIsAdmin() {
     return this.possuiPermissao("SAPEJ_ADMINISTRADOR");
   }
-
-  /*public userIsServicoSocialTelaPaciente() {
-    return this.possuiPermissao("SIPAH_PACIENTE_SERVICO_SOCIAL");
-  }*/
 
   public unidadeUserLogado() {
     return localStorage.getItem("idUnidade") || "";

@@ -24,8 +24,9 @@
                         </div>
 
                         <div class="col-6">   
-                            <b-form-group label="Tipo:" class="font">
-                                    <b-form-select v-model="form.tipoFeriado" :disabled="disabledAll">
+                            <b-form-group class="font">
+                                    <label>Tipo: <span class="text-danger">*</span></label>
+                                    <b-form-select v-model="form.tipoFeriado" :disabled="disabledAll" required>
                                         <b-form-select-option value="">-- Selecione --</b-form-select-option>
                                         <b-form-select-option v-for="option in optionsTipoFeriado" :value="option.value"
                                         :key="option.value"> {{ option.texto }}
@@ -38,8 +39,9 @@
                 <div class="row">
                         <div class="col-12">
                             <div class="row">
-                                <b-form-group label="Descrição:" class="font col-sm-12 col-md-12 col-lg-12">
-                                    <b-form-textarea rows="2" max-rows="2" v-model="form.descFeriado" :disabled="disabledAll"></b-form-textarea>
+                                <b-form-group class="font col-sm-12 col-md-12 col-lg-12">
+                                    <label>Descrição: <span class="text-danger">*</span></label>
+                                    <b-form-textarea rows="2" max-rows="2" v-model="form.descFeriado" :disabled="disabledAll" required></b-form-textarea>
                                 </b-form-group>
                             </div>
                         </div>
