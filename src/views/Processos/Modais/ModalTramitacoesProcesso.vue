@@ -9,7 +9,7 @@
         </div> 
         <div v-if="loading">
              <LoadingSpinner></LoadingSpinner>
-        </div>   
+        </div>    
 
           <!-- TOPO TABELA-->
           <div class="topo-table p-2">       
