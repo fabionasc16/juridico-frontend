@@ -231,7 +231,14 @@
                       @listarProcesso="listarProcesso(currentPage)" class="btn-light btn-outline-dark m-0 p-1"
                       @click="abrirModal('modal-tramitacoes-processo',  data.item.id_processo, data.item.numero_siged)">
                      Tramitações
-                   </b-list-group-item>         
+                   </b-list-group-item>   
+                   
+                   <b-list-group-item block v-b-modal.modal-log-processo
+                    v-if="data.item.status.id_status!='14'" 
+                      @listarProcesso="listarProcesso(currentPage)" class="btn-light btn-outline-dark m-0 p-1"
+                      @click="abrirModal('modal-log-processo',  data.item.id_processo, data.item.num_procedimento)">
+                     Log do Processo
+                   </b-list-group-item> 
  
                    <b-list-group-item block class="btn-light text-dark btn-outline-danger m-0 p-1"
                          @click="abrirModal('modal-mensagem', data.item.id_processo, data.item.num_procedimento)"
@@ -313,7 +320,13 @@
            <ModalTramitacoesProcesso @listarProcesso="listarProcesso(currentPage)"
                :idProcesso="idProcessoModal" :numProcessoSIGED="numProcedimentoModal" >             
            </ModalTramitacoesProcesso>
-         </b-modal>         
+         </b-modal>        
+         
+         <b-modal id="modal-log-processo" size="xl" centered title="Log do Processo" hide-footer>
+           <ModalLogProcesso @listarProcesso="listarProcesso(currentPage)"
+               :idProcesso="idProcessoModal" :numProcedimento="numProcedimentoModal" >             
+           </ModalLogProcesso>
+         </b-modal>
          
          <ModalExcluir :pergunta="`o processo ${numProcedimentoModal}`">
             <template v-slot:buttons>
@@ -338,6 +351,7 @@
  <script lang="ts">
  import Vue from "vue";
  import HeaderPage from '@/components/HeaderPage.vue';
+ import ModalLogProcesso from './Modais/ModalLogProcesso.vue';
  import ModalTramitacoesProcesso from './Modais/ModalTramitacoesProcesso.vue';
  import ModalDetalhesProcesso from './Modais/ModalDetalhesProcesso.vue';
  import { mask } from "vue-the-mask";
@@ -361,6 +375,7 @@
    components: {
      HeaderPage,
      ModalTramitacoesProcesso,
+     ModalLogProcesso,
      ModalDetalhesProcesso,
      Notifications, 
      ModalAndamentoProcesso,

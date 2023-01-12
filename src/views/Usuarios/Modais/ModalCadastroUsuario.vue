@@ -182,7 +182,7 @@ export default Vue.extend({
     ReturnMessage,
   },
 
-  props: ["id", "acao"], 
+  props: ["id", "acao", 'tipo'], 
   data() {
     return {
       invalidCEP: "" as string,
@@ -212,9 +212,10 @@ export default Vue.extend({
       this.disabledAll = true;
     }
     this.carregarDados(this.id);
-    if (this.id) {
-      //editar e visualizar
-      this.carregarDados(this.id);
+    if (this.tipo == 'visualizar') {
+    this.carregarDados(this.id);
+    this.disabledAll = true;
+    
     }
   },
 
@@ -358,7 +359,7 @@ export default Vue.extend({
       },
 
     carregarDados(id: string) {
-      RestApiService.get("usuarios", id)
+      RestApiService.get("usuarios/detalhes", id)
         .then((response: any) => {
 
           //this.form.id = response.data.id; 
