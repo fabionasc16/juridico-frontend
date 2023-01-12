@@ -1,14 +1,14 @@
 import "axios";
 import { environment } from "../../environments/environment";
-import http3 from "./http_sapej";
-import http2 from "./http_img";
-import http from "./http_sso";
+import http from "./http_sapej";
+//import http_sso from './http_sso';
+//import http_img from "./http_img";
 
 class RestApiService {
   private apiUrl = environment.apiURL;
 
   public postLogin(uri: string, data: any): Promise<any> {
-    return http3.post(`/${uri}`, JSON.stringify(data));
+    return http.post(`/${uri}`, JSON.stringify(data));
   }
 
   public getUnidades(uri: string, params: any): Promise<any> {
@@ -39,9 +39,10 @@ class RestApiService {
     return http.get(`/processos/busca-processo?numero_processo=${params}`);
   }   
 
+  //separado porque a uri era diferente
   public getSSO(uri: string, params: any): Promise<any> {
-    return http3.get(`/${uri}/${params}`);
-  }  
+    return http.get(`/${uri}/${params}`);
+  }   
   
   public getCpf(uri: string, params: any): Promise<any> {
     return http.get(`/${uri}/cpf/query?cpf_usuario=${params}`);
@@ -84,13 +85,14 @@ class RestApiService {
     return http.put(`/${uri}/${id}`, JSON.stringify(data));
   }
 
+  /*
   public postUpload(uri: string, data: any): Promise<any> {
     return http2.post(`/${uri}`, data);
-  }
+  }*/
 
-  public getUrlFoto(id: any): string {
+  /* public getUrlFoto(id: any): string {
     return `${this.apiUrl}/paciente/openimage/${id}`;
-  }
+  }*/
 }
 
 export default new RestApiService();

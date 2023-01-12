@@ -137,6 +137,46 @@ O Ponto Facultativo também precisa ser registrado na tabela de feriado para que
 
     * SAPEJ_PROCESSO
 
+# Arquivos Login e Refresh Token
+<br>
+    - Arquivo store/usuario:<br>
+    
+    Actions chama mutations. 
+    Só mutations altera o estado da variável.
+    Dispatch chama método(boa prática).
+    RemoveItem apaga do localStorage.
+    https://medium.com/@emerson_pereira/vuex-actions-e-mutations-6f3b107b313a
+
+<br>
+    - localStorage é permanente, salvar nele os dados do login, para que ao dar F5 não apague tudo.
+<br>
+    - store/index:<br> 
+    acrescenta o que está utlizando para que seja reconhecido como módulo.
+<br>
+    - router/index:<br> 
+    criou requires Auth para saber se a página precisa estar autenticda para acessar. 
+    Nessa mesma tela usa em beforeEach.
+<br>
+    - App:<br> 
+    Onde faz com que o store não perca conteúdo após refresh.
+    Pode chamar a actions direto, não pode chamar a mutations direto
+<br>
+    - layout/Header
+<br>
+    - services/rest/http_sapej
+    enviar token no header
+<br>
+    - Para o refresh token:<br>
+    Foi utilizado o typescript em services/rest/refresh_token
+    que envia uma requisição para buscar um token novo no backend,
+    e substitui o token no store e localStorage.
+    A alteração no token do store está até o momento diretamente no state,
+    pois a realização da alteração através da action estava ocorrendo erro (pesquisar).
+<br>
+    Essa funcionalidade é chamada em App, configurada atualmente em 20 minutos, antes
+    que o token expire (30 min), para que o usuário do sistema não precise fazer login
+    a cada expiração do token.
+
 # 📁 Acesso ao projeto master
 https://sistemas.saude.am.gov.br/sapej/index.html#/
 
