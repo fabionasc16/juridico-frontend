@@ -76,15 +76,16 @@
     methods: {
       submit() {
         if (this.form.password && this.conf_password) {
-          const getToken = localStorage.getItem("token");
           if (this.form.password === this.conf_password) {
             this.loading = true;
             var senhaMsg = ValidarSenhaMixin.methods.validarSenha(this.form.password,this.conf_password)
             if (senhaMsg === 'OK'){
-              RestApiService.postResetPass('auth/reset-pass',this.form)
+                const token ="Bearer " + this.$route.params.token;
+                console.log(token);
+              RestApiService.postNewPass('auth/reset-pass',{"password":this.form.password, "token":token.trim()})
                   .then((res:any) => {
                      alert("Senha alterada com sucesso. Realize o login com a nova senha!")
-                     this.logOut()
+                     this.$router.push("/");
                   })   
                   .catch((e:any) => {                  
                     alert(e.response.data.message)
