@@ -23,7 +23,7 @@
                  <template>Perfil de usuário <span class="text-danger">*</span>
                     <b-form-select :disabled="disabledAll" style="margin-top: 1.8%" class="bordered" size="sm" v-model="form.perfilUsuario" required>
                       <b-form-select-option value="">Selecione...</b-form-select-option>
-                      <b-form-select-option v-for="perfil in optionsPerfis" :value="perfil._id" :key="perfil._id">
+                      <b-form-select-option v-for="perfil in optionsPerfis" :value="perfil.id" :key="perfil.id">
                         {{ perfil.profile_name }}
                       </b-form-select-option>
                     </b-form-select>
@@ -231,6 +231,7 @@ export default Vue.extend({
             }
     },
     validarCampos(): boolean { 
+  
       if (
         !this.form.perfilUsuario ||
         !this.form.nome ||
@@ -349,11 +350,15 @@ export default Vue.extend({
     },
   
     listarPerfis(): void {
-        RestApiService.getSSO(
+
+      /*RestApiService.getSSO(
         'profiles', 'system?nomeSistema=SAPEJ'
-          )
+          )*/       
+      RestApiService.get(
+          'auth/profiles', ""
+      )
       .then((response: any) => {
-        console.log(response.data)
+        console.log(response.data)      
         this.optionsPerfis = response.data;
       })
       .catch((e: Error) => {        
@@ -366,11 +371,7 @@ export default Vue.extend({
 
     carregarDados() {
       RestApiService.get("usuarios/detalhes", this.id)
-        .then((response: any) => {
-
-          console.log('carregar dados')
-          console.log(response.data)
-
+        .then((response: any) => {     
           //this.form.id = response.data.id; 
           //this.form.unidadeUsuario = response.data.unit_id; 
           this.form.nome = response.data.nome;
