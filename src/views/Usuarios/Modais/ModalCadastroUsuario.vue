@@ -4,18 +4,20 @@
     <b-container>
       <div class="row">
         <div class="col-12" style="margin-top: 2%">
-          <b-form @submit.prevent="submit">
-
-            <notifications :notifications="Notificacao"></notifications>      
-
+         
+          <notifications :notifications="Notificacao"></notifications>  
+        
             <div v-if="alert">
-                <ReturnMessage :message="Message" :fechaAlert="fechaAlert"></ReturnMessage>
-            </div>          
-
+                  <ReturnMessage :message="Message" :fechaAlert="fechaAlert"></ReturnMessage>
+            </div>                   
+      
             <div v-if="loading">
                 <LoadingSpinner></LoadingSpinner>
             </div>
 
+         
+          <b-form @submit.prevent="submit">
+           
             <div class="row">
                 <b-form-group class="font col-sm-5 col-md-5 col-lg-4">
                  <template>Perfil de usuário <span class="text-danger">*</span>
@@ -75,7 +77,7 @@
               <b-form-group class="font col-sm-6 col-md-6 col-lg-3">
                 <label>CPF <span class="text-danger">*</span></label>
                 <b-form-input :disabled="disabledAll" class="bordered" required :placeholder="'000.000.000-00'"
-                  type="tel" v-model="form.cpf" v-mask="'###.###.###-##'">
+                  type="text" v-model="form.cpf" v-mask="'###.###.###-##'">
                 </b-form-input>
               </b-form-group>
             </div>
@@ -93,7 +95,7 @@
               <b-form-group class="font col-sm-6 col-md-6 col-lg-4">
                 <label>Telefone/celular <span class="text-danger">*</span></label>
                 <b-form-input :disabled="disabledAll" class="bordered" required
-                  :placeholder="'Exemplo: (00) 00000-0000'" type="tel" v-model="form.telefone"
+                  :placeholder="'Exemplo: (00) 00000-0000'" type="text" v-model="form.telefone"
                   v-mask="'(##) #####-####'">
                 </b-form-input>
               </b-form-group>
@@ -105,7 +107,7 @@
             <div class="row">
               <b-form-group label="CEP" class="font col-sm-5 col-md-5 col-lg-3">
                 <b-form-input :disabled="disabledAll" class="bordered" id="cep" :placeholder="'Exemplo: 00000-000'"
-                  type="tel" @keyup="searchCep()" v-model="form.cep" v-mask="'#####-###'"></b-form-input>
+                  type="text" @keyup="searchCep()" v-model="form.cep" v-mask="'#####-###'"></b-form-input>
                 <span v-if="invalidCEP" style="color: red; font-size: 12px; padding-left: 1%">{{ invalidCEP }}</span>
               </b-form-group>
 
@@ -150,7 +152,6 @@
 <script lang="ts">
 import Vue from "vue";
 import axios from "axios";
-import { mask } from "vue-the-mask";
 import { Usuario } from "@/type/usuario";
 import { GeneroSeeder } from "@/type/genero";
 import ValidarCpfMixin from "@/mixins/validarCpfMixin";
@@ -165,7 +166,6 @@ import Notifications from "@/components/Notifications.vue";
 import { Notificacao } from "@/type/notificacao";
 import ReturnMessage from "@/components/ReturnMessage.vue";
 
-
 export default Vue.extend({
   name: "CadastroUsuario",
   mixins: [
@@ -174,22 +174,20 @@ export default Vue.extend({
     dataFormatEnMixin,
     ValidarDataMixin,
   ],
-  directives: { mask },
   components: {
     HeaderPage,
-    LoadingSpinner,
+    LoadingSpinner, 
     Notifications,
     ReturnMessage,
   },
-
-  props: ["id", "acao", 'tipo'], 
+  props: ["id", 'tipo'], 
   data() {
     return {
       invalidCEP: "" as string,
       loading: false as boolean,
       alert: false as boolean,
       success: false as boolean,
-      message: "" as string,
+      //message: "" as string,
       showBotaoSalvar: true as boolean,   
       optionsEstadoCivil: EstadoCivilSeeder,
       optionsGenero: GeneroSeeder,     
@@ -202,20 +200,18 @@ export default Vue.extend({
       unidadeUser: ["6399e95caa133b62db284f5d"] as Array<any>, //SES-AM
     };
   },
-  mounted() {
-    const path = this.$route.path;
-    const acao = "/visualizar";
+  mounted() { 
     this.listarPerfis();
 
-    if (path.includes(acao)) {
-      this.showBotaoSalvar = false;
-      this.disabledAll = true;
-    }
-    this.carregarDados(this.id);
-    if (this.tipo == 'visualizar') {
-    this.carregarDados(this.id);
-    this.disabledAll = true;
-    
+    if(this.tipo == 'editar') {
+        this.carregarDados();
+        this.showBotaoSalvar = false;     
+    }      
+
+    if(this.tipo == 'visualizar'){
+        this.carregarDados();
+        this.showBotaoSalvar = false;  
+        this.disabledAll = true; 
     }
   },
 
@@ -360,15 +356,20 @@ export default Vue.extend({
         console.log(response.data)
         this.optionsPerfis = response.data;
       })
-      .catch((e: Error) => {
-        this.message = "Não foi possível carregar a listagem de perfis.";
-        this.alert = true;
+      .catch((e: Error) => {        
+        this.adicionarAlert(
+                  "alert",
+                  "Não foi possível carregar a listagem de perfis."
+        );
         });
       },
 
-    carregarDados(id: string) {
-      RestApiService.get("usuarios/detalhes", id)
+    carregarDados() {
+      RestApiService.get("usuarios/detalhes", this.id)
         .then((response: any) => {
+
+          console.log('carregar dados')
+          console.log(response.data)
 
           //this.form.id = response.data.id; 
           //this.form.unidadeUsuario = response.data.unit_id; 
@@ -393,8 +394,10 @@ export default Vue.extend({
           this.form.complemento = response.data.complemento;         
         })
         .catch((e: Error) => {
-          this.message = "Houve um erro. Tente novamente!";
-          this.alert = true;
+            this.adicionarAlert(
+                            "alert",
+                            "Houve um erro. Tente novamente!"
+                            );
         });
     },
 

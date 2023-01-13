@@ -75,7 +75,6 @@ import Vue from "vue";
 import HeaderPage from '@/components/HeaderPage.vue';
 import { mask } from "vue-the-mask";
 import Notifications from "@/components/Notifications.vue";
-import { BIconSearch, BIconPlusCircle, BIconInfoCircle, BIconJournalPlus } from 'bootstrap-vue'
 import { OrgaoCadastro } from '@/type/orgaos';
 import { Notificacao } from "@/type/notificacao";
 import ReturnMessage from "@/components/ReturnMessage.vue";
@@ -88,10 +87,6 @@ export default Vue.extend({
     mixins: [ValidarCpfMixin],
     components: {
         HeaderPage,
-        BIconSearch,
-        BIconJournalPlus,
-        BIconPlusCircle,
-        BIconInfoCircle,
         Notifications,
         ReturnMessage,
         LoadingSpinner,
@@ -130,9 +125,7 @@ export default Vue.extend({
             let acao = this.id ? "put" : "post"
             let url = "orgaos-demandantes";       
                                             
-            if (this.validarCampos()) { 
-
-              console.log('JSON: ',JSON.stringify(this.form))
+            if (this.validarCampos()) {             
               
               this.loading = true  
 
