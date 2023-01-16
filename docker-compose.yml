@@ -3,13 +3,10 @@ version: '3.3'
 services:
   sapej_build:
     image: sapej_build
-    build: 
-      context: .
-      dockerfile: Dockerfile
     container_name: sapej_build
     network_mode: bridge
     working_dir: /app
-   # command: bash -c 'npm install && npm run build'   
+    command: bash -c 'npm install && npm run build'   
     volumes:
       - ./:/app
       - '/etc/timezone:/etc/timezone:ro'
