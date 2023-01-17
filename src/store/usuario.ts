@@ -48,10 +48,11 @@ const usuario = {
         window.localStorage.removeItem("idUnidade"),
         window.localStorage.removeItem("token"),
         window.localStorage.removeItem("roles");
+        window.localStorage.removeItem("refresh");
     },
   },
   actions: {
-    deslogarUsuario({ commit }: any) {      
+    deslogarUsuario({ commit }: any) {     
       commit("DESLOGAR_USUARIO");
     },
     efetuarLogin({ dispatch }: any, Payload: any) {
@@ -64,7 +65,8 @@ const usuario = {
             dispatch("atribuirCpf", response.data.user.user_cpf);
             dispatch("atribuirUnidade", response.data.user.user_unit);
             dispatch("atribuirIdUnidade", response.data.user.user_unit_id);
-            dispatch("atribuirRoles", response.data.user.roles);
+            dispatch("atribuirRoles", response.data.user.roles);  
+            window.localStorage.setItem("refresh", '1');;        
             resolve(response);
           })
           .catch((err) => {
@@ -125,5 +127,6 @@ const usuario = {
     },
   },
 };
+
 export default usuario;
 

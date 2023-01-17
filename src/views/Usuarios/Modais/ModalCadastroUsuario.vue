@@ -4,24 +4,33 @@
     <b-container>
       <div class="row">
         <div class="col-12" style="margin-top: 2%">
-          <b-form @submit.prevent="submit">
-
-            <notifications :notifications="Notificacao"></notifications>      
-
+         
+          <notifications :notifications="Notificacao"></notifications> 
             <div v-if="alert">
-                <ReturnMessage :message="Message" :fechaAlert="fechaAlert"></ReturnMessage>
-            </div>          
-
+                  <ReturnMessage :message="Message" :fechaAlert="fechaAlert"></ReturnMessage>
+            </div> 
             <div v-if="loading">
                 <LoadingSpinner></LoadingSpinner>
             </div>
-
+         
+          <b-form @submit.prevent="submit">           
+           
             <div class="row">
+              <b-form-group class="font col-sm-6 col-md-6 col-lg-6">
+                <label>CPF <span class="text-danger">*</span></label>
+                <b-form-input :disabled="disabledAll || tipo == 'editar'" class="bordered" required :placeholder="'000.000.000-00'"
+                  @keyup="verificaCpf"
+                  type="text" v-model="form.cpf" v-mask="'###.###.###-##'">
+                </b-form-input>
+                <small style="color: red;">Preencha primeiro o CPF</small>
+              </b-form-group>
+
                 <b-form-group class="font col-sm-5 col-md-5 col-lg-4">
-                 <template>Perfil de usuário <span class="text-danger">*</span>
-                    <b-form-select :disabled="disabledAll" style="margin-top: 1.8%" class="bordered" size="sm" v-model="form.perfilUsuario" required>
+                  <label>Perfil de usuário  <span class="text-danger">*</span></label>
+                 <template>
+                    <b-form-select :disabled="disabledAll" class="bordered" size="sm" v-model="form.perfilUsuario" required>
                       <b-form-select-option value="">Selecione...</b-form-select-option>
-                      <b-form-select-option v-for="perfil in optionsPerfis" :value="perfil._id" :key="perfil._id">
+                      <b-form-select-option v-for="perfil in optionsPerfis" :value="perfil.id" :key="perfil.id">
                         {{ perfil.profile_name }}
                       </b-form-select-option>
                     </b-form-select>
@@ -70,14 +79,7 @@
                 <label>Informe o gênero <span class="text-danger">*</span></label>
                 <b-form-input :disabled="disabledAll" class="bordered" :placeholder="'Exemplo: Não-binário'" type="text"
                   v-model="form.generoOutro" required></b-form-input>
-              </b-form-group>                   
-
-              <b-form-group class="font col-sm-6 col-md-6 col-lg-3">
-                <label>CPF <span class="text-danger">*</span></label>
-                <b-form-input :disabled="disabledAll" class="bordered" required :placeholder="'000.000.000-00'"
-                  type="tel" v-model="form.cpf" v-mask="'###.###.###-##'">
-                </b-form-input>
-              </b-form-group>
+              </b-form-group>               
             </div>
 
             <h5 class="titulo2">Informações de contato</h5>
@@ -93,7 +95,7 @@
               <b-form-group class="font col-sm-6 col-md-6 col-lg-4">
                 <label>Telefone/celular <span class="text-danger">*</span></label>
                 <b-form-input :disabled="disabledAll" class="bordered" required
-                  :placeholder="'Exemplo: (00) 00000-0000'" type="tel" v-model="form.telefone"
+                  :placeholder="'Exemplo: (00) 00000-0000'" type="text" v-model="form.telefone"
                   v-mask="'(##) #####-####'">
                 </b-form-input>
               </b-form-group>
@@ -105,7 +107,7 @@
             <div class="row">
               <b-form-group label="CEP" class="font col-sm-5 col-md-5 col-lg-3">
                 <b-form-input :disabled="disabledAll" class="bordered" id="cep" :placeholder="'Exemplo: 00000-000'"
-                  type="tel" @keyup="searchCep()" v-model="form.cep" v-mask="'#####-###'"></b-form-input>
+                  type="text" @keyup="searchCep()" v-model="form.cep" v-mask="'#####-###'"></b-form-input>
                 <span v-if="invalidCEP" style="color: red; font-size: 12px; padding-left: 1%">{{ invalidCEP }}</span>
               </b-form-group>
 
@@ -150,7 +152,6 @@
 <script lang="ts">
 import Vue from "vue";
 import axios from "axios";
-import { mask } from "vue-the-mask";
 import { Usuario } from "@/type/usuario";
 import { GeneroSeeder } from "@/type/genero";
 import ValidarCpfMixin from "@/mixins/validarCpfMixin";
@@ -165,7 +166,6 @@ import Notifications from "@/components/Notifications.vue";
 import { Notificacao } from "@/type/notificacao";
 import ReturnMessage from "@/components/ReturnMessage.vue";
 
-
 export default Vue.extend({
   name: "CadastroUsuario",
   mixins: [
@@ -174,22 +174,20 @@ export default Vue.extend({
     dataFormatEnMixin,
     ValidarDataMixin,
   ],
-  directives: { mask },
   components: {
     HeaderPage,
-    LoadingSpinner,
+    LoadingSpinner, 
     Notifications,
     ReturnMessage,
   },
-
-  props: ["id", "acao"], 
+  props: ["id", 'tipo'], 
   data() {
     return {
       invalidCEP: "" as string,
       loading: false as boolean,
       alert: false as boolean,
       success: false as boolean,
-      message: "" as string,
+      //message: "" as string,
       showBotaoSalvar: true as boolean,   
       optionsEstadoCivil: EstadoCivilSeeder,
       optionsGenero: GeneroSeeder,     
@@ -202,28 +200,26 @@ export default Vue.extend({
       unidadeUser: ["6399e95caa133b62db284f5d"] as Array<any>, //SES-AM
     };
   },
-  mounted() {
-    const path = this.$route.path;
-    const acao = "/visualizar";
+  mounted() { 
     this.listarPerfis();
 
-    if (path.includes(acao)) {
-      this.showBotaoSalvar = false;
-      this.disabledAll = true;
-    }
-    this.carregarDados(this.id);
-    if (this.id) {
-      //editar e visualizar
-      this.carregarDados(this.id);
+    if(this.tipo == 'editar') {
+        this.carregarDados();
+        this.showBotaoSalvar = false;     
+    }      
+
+    if(this.tipo == 'visualizar'){
+        this.carregarDados();
+        this.showBotaoSalvar = false;  
+        this.disabledAll = true; 
     }
   },
 
   methods: {
     submit() {
-            let acao = this.id ? "put" : "post" 
+            let acao = this.id || this.form.id ? "put" : "post"             
 
-            if (this.validarCampos()) {
-                this.form.id = this.id ? this.id : "";
+            if (this.validarCampos()) {            
 
                 this.form.dataNascimento = dataFormatEnMixin.methods.dataFormatEn(
                 this.dataNascimentoBR );
@@ -234,6 +230,7 @@ export default Vue.extend({
             }
     },
     validarCampos(): boolean { 
+  
       if (
         !this.form.perfilUsuario ||
         !this.form.nome ||
@@ -291,15 +288,15 @@ export default Vue.extend({
       RestApiService.salvar("usuarios", this.form, acao, this.form.id)
         .then((res) => {         
 
-            if(acao == "post" && res && res.status && res.status == 204) {
+            if(acao == "post" && res && res.status && res.status == 204) {            
               this.adicionarAlert(
                             "alert",
                             "Não foi possível salvar os dados!"
                             );    
             } 
             else
-            if (acao == "put") {
-                        this.adicionarAlert(
+             if (acao == "put") {
+                    this.adicionarAlert(
                             "success",
                             "Atualização realizada com sucesso!"
                         );
@@ -318,8 +315,7 @@ export default Vue.extend({
                             "Sem conexão de rede. Verifique sua conexão!"
                             );   
           }
-          if (e && e.response.data && e.response.data.message) {
-              console.log(e.response.data)
+          if (e && e.response.data && e.response.data.message) {           
               this.adicionarAlert(
                             "alert",
                             e.response.data.message
@@ -352,25 +348,32 @@ export default Vue.extend({
     },
   
     listarPerfis(): void {
-        RestApiService.getSSO(
+
+      /*RestApiService.getSSO(
         'profiles', 'system?nomeSistema=SAPEJ'
-          )
-      .then((response: any) => {
-        console.log(response.data)
+          )*/       
+      RestApiService.get(
+          'auth/profiles/sapej', ""
+      )
+      .then((response: any) => {         
         this.optionsPerfis = response.data;
       })
-      .catch((e: Error) => {
-        this.message = "Não foi possível carregar a listagem de perfis.";
-        this.alert = true;
+      .catch((e: Error) => {        
+        this.adicionarAlert(
+                  "alert",
+                  "Não foi possível carregar a listagem de perfis."
+        );
         });
       },
 
-    carregarDados(id: string) {
-      RestApiService.get("usuarios", id)
-        .then((response: any) => {
+    carregarDados(id?) {
 
-          //this.form.id = response.data.id; 
+      let idUser = id ? id : this.id 
+      RestApiService.get("usuarios/detalhes", idUser)
+        .then((response: any) => {     
+         
           //this.form.unidadeUsuario = response.data.unit_id; 
+          this.form.id = idUser || response.data.id;         
           this.form.nome = response.data.nome;
           this.form.perfilUsuario = response.data.perfilUsuario;         
           this.form.dataNascimento = response.data.dataNascimento;
@@ -392,10 +395,28 @@ export default Vue.extend({
           this.form.complemento = response.data.complemento;         
         })
         .catch((e: Error) => {
-          this.message = "Houve um erro. Tente novamente!";
-          this.alert = true;
+            this.adicionarAlert(
+                            "alert",
+                            "Houve um erro. Tente novamente!"
+                            );
         });
     },
+
+    verificaCpf():void {
+      if(this.form && this.form.cpf){       
+        if(this.form.cpf.length == 14){          
+          RestApiService.get('usuarios/cpf', `${this.form.cpf}` )          
+        .then((response: any) => {             
+          this.carregarDados(response.data._id);
+        })
+        .catch((e: Error) => {
+         // this.message = "Usuário não existe na base de dados.";
+         // this.alert = true;
+        });
+        }
+      }
+    },
+
 
     adicionarAlert(tipo: string, mensagem: string): void {
             this.Message = []        

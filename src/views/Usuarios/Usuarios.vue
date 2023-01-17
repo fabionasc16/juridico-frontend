@@ -130,8 +130,8 @@
          <!-- MODAL -->
 
          <b-modal id="modal-cadastro-usuario" size="lg" centered title="Cadastro de Usuário" hide-footer>
-          <ModalCadastroUsuario @listarUsuarios="listarUsuarios(currentPage)" > 
-            <template v-slot:buttons tipo="cadastrar"> 
+          <ModalCadastroUsuario @listarUsuarios="listarUsuarios(currentPage)" tipo="cadastrar"> 
+            <template v-slot:buttons> 
                 <b-button class="bordered" @click="$bvModal.hide('modal-cadastro-usuario')">Fechar</b-button>
             </template>           
           </ModalCadastroUsuario>
@@ -243,7 +243,7 @@ export default Vue.extend({
             this.items = response.data;           
             this.perPage = response.data.perPage;
             this.totalRows = response.data.total;     
-            this.totalPageSearch = response.data.length               
+            this.totalPageSearch = response.data.length  
           })
           .catch((e) => {
             if (e.message === "Network Error") {

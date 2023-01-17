@@ -9,13 +9,13 @@
         </div> 
         <div v-if="loading">
              <LoadingSpinner></LoadingSpinner>
-        </div>    
+        </div>   
 
           <!-- TOPO TABELA-->
           <div class="topo-table p-2">       
             <div class="desc-topo-table">
               <b-icon-journal-text class="icon-topo-table"></b-icon-journal-text> 
-              <span class="title-topo-table">{{numProcessoSIGED}}</span>
+              <span class="title-topo-table">{{numProcedimento}}</span>
             </div>  
           </div>  
     
@@ -44,7 +44,7 @@
             </div>
         </div> -->       
         <div class="py-2 mt-10 mr-3" align="right">                        
-            <b-button class="bordered" @click="$bvModal.hide('modal-tramitacoes-processo')">Fechar</b-button>
+            <b-button class="bordered" @click="$bvModal.hide('modal-log-processo')">Fechar</b-button>
         </div>
     </div>  
 </template>
@@ -54,9 +54,9 @@ import Vue from "vue";
 import HeaderPage from '@/components/HeaderPage.vue';
 import { mask } from "vue-the-mask";
 import Notifications from "@/components/Notifications.vue";
-import {FieldsTableTramitacao} from "@/type/tableTramitacao"
+import {FieldsTableLog} from "@/type/tableLogProcesso"
 import RestApiService from "@/services/rest/service";
-import { Tramitacao } from '@/type/tramitacao';
+import { Log } from '@/type/LogProcesso';
 import LoadingSpinner from "@/components/LoadingSpinner.vue";
 import { Notificacao } from "@/type/notificacao";
 import ReturnMessage from "@/components/ReturnMessage.vue";
@@ -73,7 +73,7 @@ export default Vue.extend({
     mixins: [        
         dataMixin,
     ], 
-    props: ['idProcesso', 'numProcessoSIGED'],
+    props: ['idProcesso', 'numProcedimento'],
     data() {
         return {           
             rows: 100,
@@ -82,10 +82,10 @@ export default Vue.extend({
             noCollapse: true,
             totalRows: 1,
             perPage: 5,           
-            fields: FieldsTableTramitacao,        
+            fields: FieldsTableLog,        
             loading: false as boolean,
-            form: {} as Tramitacao,
-            items: [] as Array<Tramitacao>,
+            form: {} as Log,
+            items: [] as Array<Log>,
             Message: [] as Array<Notificacao>, 
             Notificacao: [] as Array<Notificacao>,
             alert: false as boolean, 
@@ -98,7 +98,7 @@ export default Vue.extend({
         carregarDados(): void {
             this.loading = true;       
                         
-            RestApiService.get("processos/movimentacoes-processo", "?numero_processo="+this.numProcessoSIGED)            
+            RestApiService.get("processos/movimentacoes-processo", "?numero_processo="+this.numProcedimento)            
                 .then((response: any) => {                  
                 this.items = response.data; 
             })
