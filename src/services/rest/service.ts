@@ -26,9 +26,7 @@ class RestApiService {
   public postNewPass(uri: string, data: any): Promise<any> {
     const token:string = data.token;
     return http.post(`/${uri}`, JSON.stringify(data), {"headers": {"Authorization": token}});
-
   }
-
 
   public post(uri: string, data: any): Promise<any> {
     return http.post(`/${uri}`, JSON.stringify(data));
