@@ -5,23 +5,30 @@
       <div class="row">
         <div class="col-12" style="margin-top: 2%">
          
-          <notifications :notifications="Notificacao"></notifications>  
-        
+          <notifications :notifications="Notificacao"></notifications> 
             <div v-if="alert">
                   <ReturnMessage :message="Message" :fechaAlert="fechaAlert"></ReturnMessage>
-            </div>                   
-      
+            </div> 
             <div v-if="loading">
                 <LoadingSpinner></LoadingSpinner>
             </div>
-
          
-          <b-form @submit.prevent="submit">
+          <b-form @submit.prevent="submit">           
            
             <div class="row">
+              <b-form-group class="font col-sm-6 col-md-6 col-lg-6">
+                <label>CPF <span class="text-danger">*</span></label>
+                <b-form-input :disabled="disabledAll || tipo == 'editar'" class="bordered" required :placeholder="'000.000.000-00'"
+                  @keyup="verificaCpf"
+                  type="text" v-model="form.cpf" v-mask="'###.###.###-##'">
+                </b-form-input>
+                <small style="color: red;">Preencha primeiro o CPF</small>
+              </b-form-group>
+
                 <b-form-group class="font col-sm-5 col-md-5 col-lg-4">
-                 <template>Perfil de usuário <span class="text-danger">*</span>
-                    <b-form-select :disabled="disabledAll" style="margin-top: 1.8%" class="bordered" size="sm" v-model="form.perfilUsuario" required>
+                  <label>Perfil de usuário  <span class="text-danger">*</span></label>
+                 <template>
+                    <b-form-select :disabled="disabledAll" class="bordered" size="sm" v-model="form.perfilUsuario" required>
                       <b-form-select-option value="">Selecione...</b-form-select-option>
                       <b-form-select-option v-for="perfil in optionsPerfis" :value="perfil.id" :key="perfil.id">
                         {{ perfil.profile_name }}
@@ -72,14 +79,7 @@
                 <label>Informe o gênero <span class="text-danger">*</span></label>
                 <b-form-input :disabled="disabledAll" class="bordered" :placeholder="'Exemplo: Não-binário'" type="text"
                   v-model="form.generoOutro" required></b-form-input>
-              </b-form-group>                   
-
-              <b-form-group class="font col-sm-6 col-md-6 col-lg-3">
-                <label>CPF <span class="text-danger">*</span></label>
-                <b-form-input :disabled="disabledAll" class="bordered" required :placeholder="'000.000.000-00'"
-                  type="text" v-model="form.cpf" v-mask="'###.###.###-##'">
-                </b-form-input>
-              </b-form-group>
+              </b-form-group>               
             </div>
 
             <h5 class="titulo2">Informações de contato</h5>
@@ -217,10 +217,9 @@ export default Vue.extend({
 
   methods: {
     submit() {
-            let acao = this.id ? "put" : "post" 
+            let acao = this.id || this.form.id ? "put" : "post"             
 
-            if (this.validarCampos()) {
-                this.form.id = this.id ? this.id : "";
+            if (this.validarCampos()) {            
 
                 this.form.dataNascimento = dataFormatEnMixin.methods.dataFormatEn(
                 this.dataNascimentoBR );
@@ -289,15 +288,15 @@ export default Vue.extend({
       RestApiService.salvar("usuarios", this.form, acao, this.form.id)
         .then((res) => {         
 
-            if(acao == "post" && res && res.status && res.status == 204) {
+            if(acao == "post" && res && res.status && res.status == 204) {            
               this.adicionarAlert(
                             "alert",
                             "Não foi possível salvar os dados!"
                             );    
             } 
             else
-            if (acao == "put") {
-                        this.adicionarAlert(
+             if (acao == "put") {
+                    this.adicionarAlert(
                             "success",
                             "Atualização realizada com sucesso!"
                         );
@@ -316,8 +315,7 @@ export default Vue.extend({
                             "Sem conexão de rede. Verifique sua conexão!"
                             );   
           }
-          if (e && e.response.data && e.response.data.message) {
-              console.log(e.response.data)
+          if (e && e.response.data && e.response.data.message) {           
               this.adicionarAlert(
                             "alert",
                             e.response.data.message
@@ -355,10 +353,9 @@ export default Vue.extend({
         'profiles', 'system?nomeSistema=SAPEJ'
           )*/       
       RestApiService.get(
-          'auth/profiles', ""
+          'auth/profiles/sapej', ""
       )
-      .then((response: any) => {
-        console.log(response.data)      
+      .then((response: any) => {         
         this.optionsPerfis = response.data;
       })
       .catch((e: Error) => {        
@@ -369,11 +366,14 @@ export default Vue.extend({
         });
       },
 
-    carregarDados() {
-      RestApiService.get("usuarios/detalhes", this.id)
+    carregarDados(id?) {
+
+      let idUser = id ? id : this.id 
+      RestApiService.get("usuarios/detalhes", idUser)
         .then((response: any) => {     
-          //this.form.id = response.data.id; 
+         
           //this.form.unidadeUsuario = response.data.unit_id; 
+          this.form.id = idUser || response.data.id;         
           this.form.nome = response.data.nome;
           this.form.perfilUsuario = response.data.perfilUsuario;         
           this.form.dataNascimento = response.data.dataNascimento;
@@ -401,6 +401,22 @@ export default Vue.extend({
                             );
         });
     },
+
+    verificaCpf():void {
+      if(this.form && this.form.cpf){       
+        if(this.form.cpf.length == 14){          
+          RestApiService.get('usuarios/cpf', `${this.form.cpf}` )          
+        .then((response: any) => {             
+          this.carregarDados(response.data._id);
+        })
+        .catch((e: Error) => {
+         // this.message = "Usuário não existe na base de dados.";
+         // this.alert = true;
+        });
+        }
+      }
+    },
+
 
     adicionarAlert(tipo: string, mensagem: string): void {
             this.Message = []        

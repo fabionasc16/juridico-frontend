@@ -3,7 +3,7 @@ import usuario from "@/store/usuario";
 import axios from "axios";
 import { environment } from "../../environments/environment";
 
-async function refreshToken() {
+async function refreshToken(myInterval?) {
 
     //Para refresh_token
     const apiUrl = environment.apiURL; 
@@ -38,9 +38,15 @@ async function refreshToken() {
             // Fazer algo caso seja feito o refresh token
             return resolve(res);
           })
-          .catch((err) => {
-            // Fazer algo caso não seja feito o refresh token                 
-            return reject(err);
+          .catch((err) => {   
+             //para não continuar rodando o setinterval com refresh token            
+             window.localStorage.removeItem("refresh");    
+             if(myInterval) {
+              window.clearInterval(myInterval);   
+             }
+               
+             // Fazer algo caso não seja feito o refresh token                 
+             return reject(err);
           });
       } catch (err) {       
         return reject(err);
