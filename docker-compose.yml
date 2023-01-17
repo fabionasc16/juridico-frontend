@@ -2,13 +2,11 @@ version: '3.3'
 
 services:
   sapej_build:
-    image: node:16
+    image: sapej_build
     container_name: sapej_build
     network_mode: bridge
     working_dir: /app
-    command: bash -c 'npm install && npm run build'
-   # environment:
-   #   - "NODE_ENV=production"
+    command: bash -c 'npm install && npm run build'   
     volumes:
       - ./:/app
       - '/etc/timezone:/etc/timezone:ro'
@@ -17,8 +15,13 @@ services:
   sapej:
     image: nginx:latest
     container_name: sapej
+    restart: always
     ports:
       - '8282:80'
     volumes:
       - '/opt/sapej/dist/:/usr/share/nginx/html'
+      - '/etc/timezone:/etc/timezone:ro'
+      - '/etc/localtime:/etc/localtime:ro'
     network_mode: bridge
+    depends_on:
+      - sapej_build
