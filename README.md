@@ -176,9 +176,27 @@ O Ponto Facultativo também precisa ser registrado na tabela de feriado para que
     Essa funcionalidade é chamada em App, configurada atualmente em 20 minutos, antes
     que o token expire (30 min), para que o usuário do sistema não precise fazer login
     a cada expiração do token.
+<br>
+  o tempo para chamada do refresh-token no front, é configurado no environment, no campo timerUpdateRefreshToken.
+
+<br><br>
+Para as permissões na tela:
+<br>
+Service auth.ts: funções para permissões
+<br>
+layout/Sidebar.vue: permissão para exibir menu 
+<br>
+mixins/menu.ts: colocar as roles em meta permission
+<br>
+Em beforeEach, validar se tem permissão para acessar aquela página.
+Nas rotas, em meta permission colocar as roles.
 
 # 📁 Acesso ao projeto master
 https://sistemas.saude.am.gov.br/sapej/index.html#/
+<br>
+ local: apiURL: "http://192.168.107.150:3302/api/v1"
+ <br>
+ produção: apiURL: "https://sistemas.saude.am.gov.br/sapej-backend/api/v1" 
 
 ## Project setup
 ```
