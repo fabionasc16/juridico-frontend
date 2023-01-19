@@ -154,7 +154,7 @@ O Ponto Facultativo também precisa ser registrado na tabela de feriado para que
     acrescenta o que está utlizando para que seja reconhecido como módulo.
 <br>
     - router/index:<br> 
-    criou requires Auth para saber se a página precisa estar autenticda para acessar. 
+    criou requires Auth para saber se a página precisa estar autenticada para acessar. 
     Nessa mesma tela usa em beforeEach.
 <br>
     - App:<br> 
@@ -169,16 +169,35 @@ O Ponto Facultativo também precisa ser registrado na tabela de feriado para que
     - Para o refresh token:<br>
     Foi utilizado o typescript em services/rest/refresh_token
     que envia uma requisição para buscar um token novo no backend,
-    e substitui o token no store e localStorage.
+    e substitui o token no store(store/usuario) e localStorage.
     A alteração no token do store está até o momento diretamente no state,
     pois a realização da alteração através da action estava ocorrendo erro (pesquisar).
 <br>
     Essa funcionalidade é chamada em App, configurada atualmente em 20 minutos, antes
     que o token expire (30 min), para que o usuário do sistema não precise fazer login
     a cada expiração do token.
+    É chamada também após efetuar login (store/usuario/efetuarLogin)
+<br>
+  o tempo para chamada do refresh-token no front, é configurado no environment, no campo timerUpdateRefreshToken.
+
+<br><br>
+Para as permissões na tela:
+<br>
+Service auth.ts: funções para permissões
+<br>
+layout/Sidebar.vue: permissão para exibir menu 
+<br>
+mixins/menu.ts: colocar as roles em meta permission
+<br>
+Em beforeEach, validar se tem permissão para acessar aquela página.
+Nas rotas, em meta permission colocar as roles.
 
 # 📁 Acesso ao projeto master
 https://sistemas.saude.am.gov.br/sapej/index.html#/
+<br>
+ local: apiURL: "http://192.168.107.150:3302/api/v1"
+ <br>
+ produção: apiURL: "https://sistemas.saude.am.gov.br/sapej-backend/api/v1" 
 
 ## Project setup
 ```
