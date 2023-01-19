@@ -28,28 +28,29 @@
                <div class="row">            
  
                  <b-form-group append="m" class="font col-sm-6 col-md-5 col-lg-4">                    
-                   <b-form-checkbox switch class="font" v-model="checkedProcessoSiged" @change="alterarProced">                      
-                     <label v-if="checkedProcessoSiged">Nº Procedimento:</label> 
-                     <label v-else>Nº SIGED:</label>                       
-                   </b-form-checkbox>                            
+                  <b-form-radio-group v-model="selected" :options="options" class="mb-3" value-field="item" text-field="name" disabled-field="notEnabled" @change="alterarProced"></b-form-radio-group>                         
+                
+                  <b-form-input v-show="selected=='proced'" size="md" type="text" v-model="form.numProcedimento" autofocus placeholder="Nº Procedimento" id="numprod"></b-form-input>
+                   <b-form-input v-show="selected=='siged'" size="md" type="text" v-model="form.numProcessoSIGED" v-mask="'##.##.######.######/####-##'" autofocus placeholder="Nº SIGED" id="numsiged"></b-form-input>
  
-                   <b-form-input v-show="checkedProcessoSiged" size="md" type="text" v-model="form.numProcedimento" autofocus></b-form-input>
-                   <b-form-input v-show="!checkedProcessoSiged" size="md" type="text" v-model="form.numProcessoSIGED" v-mask="'##.##.######.######/####-##'" autofocus></b-form-input>
+                
                    <!-- v-mask="'######/####-##'" -->
                  </b-form-group>
- 
+
+              
                  <b-form-group label="Assunto:" append="m" class="font col-sm-6 col-md-5 col-lg-4">
                    <v-select style="font-size: 0.85rem" :options="optionsAssunto" 
-                                 class="font" 
+                                 class="font mt-2" 
                                  label="desc_assunto"
                                  value="id_assunto"    
                                  placeholder="--Selecione--"      
-                                 v-model="assuntoSelecionado"/>                                          
+                                 v-model="assuntoSelecionado"
+                                 />                                          
                  </b-form-group>
  
                  <b-form-group label="Status Processo:" append="m" class="font col-sm-6 col-md-5 col-lg-4"
                    >                 
-                   <v-select style="font-size: 0.85rem" :options="optionsStatusProcesso" class="font" label="desc_status"
+                   <v-select style="font-size: 0.85rem" :options="optionsStatusProcesso" class="font mt-2" label="desc_status"
                            value="id_status"
                            v-model="statusProcessoSelecionado"/>
                  </b-form-group>             
@@ -407,7 +408,11 @@
        pageOptions: [5, 10, 15, { value: 100, text: "Show a lot" }],
        form: {} as Processo,
        formDesarquivado: {} as Processo,
-       checkedProcessoSiged: false as boolean,
+       selected: 'siged',
+      options: [
+        { item: 'siged', name: 'N° Siged' },
+        { item: 'proced', name: 'Nº Procedimento' }
+        ],
        checkedExpiraHoje: false as boolean,
        maisDetalhes: false as boolean,
        fields: FieldsTableProcesso, //nome das colunas da tabela  
@@ -494,6 +499,7 @@
         this.$bvModal.show(modalname)            
      },
      alterarProced(){
+      console.log("alteraproc")
       this.form.numProcessoSIGED=""
       this.form.numProcedimento=""
      },
