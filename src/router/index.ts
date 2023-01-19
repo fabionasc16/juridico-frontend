@@ -11,19 +11,19 @@ const routes: Array<RouteConfig> = [
   { path: '/alterarsenha', name: 'Alterar a senha', meta: { layout: "logged", requiresAuth: true }, component: () => import('../views/Auth/ChangePassword.vue') },
   { path: '/novasenha/:token', name: 'Nova senha', meta: { layout: "Unlogged", requiresAuth: false }, component: () => import('../views/Auth/NewPassword.vue') },
   //{ path: '/home', name: 'Home', m  eta: { layout: "logged", requiresAuth: true}, component: () => import('../views/PaginaInicial.vue') },
-  { path: '/usuarios', name: 'Usuários', meta: { layout: "logged", requiresAuth: true}, component: () => import(/* webpackChunkName: "about" */ '../views/Usuarios/Usuarios.vue') },
-  { path: '/processos', name: 'Processos', meta: { layout: "logged", requiresAuth: true}, component: () => import('../views/Processos/Processos.vue') },
-  { path: '/dashboard', name: 'Dashboard', meta: { layout: "logged", requiresAuth: true}, component: () => import('../views/Dashboard/Dashboard.vue') },
-  { path: '/graficoColunas', name: 'Gráfico de Colunas', meta: { layout: "logged", requiresAuth: true}, component: () => import('../views/Dashboard/Graficos/GraficoColunas.vue') },
-  { path: '/graficoLinha', name: 'Gráfico de Linha', meta: { layout: "logged", requiresAuth: true}, component: () => import('../views/Dashboard/Graficos/GraficoLinha.vue') },
-  { path: '/graficoLinhas', name: 'Gráfico de Linhas', meta: { layout: "logged", requiresAuth: true}, component: () => import('../views/Dashboard/Graficos/GraficoLinhas.vue') },
-  { path: '/graficoPizza', name: 'Gráfico de Pizza', meta: { layout: "logged", requiresAuth: true}, component: () => import('../views/Dashboard/Graficos/GraficoPizza.vue') },
-  { path: '/responsaveis', name: 'Responsáveis', meta: { layout: "logged", requiresAuth: true}, component: () => import('../views/Responsaveis/Responsaveis.vue') },
-  { path: '/feriados', name: 'Feriados', meta: { layout: "logged", requiresAuth: true}, component: () => import('../views/Feriados/Feriados.vue') },
-  { path: '/orgaos', name: 'Órgãos Demandantes', meta: { layout: "logged", requiresAuth: true}, component: () => import('../views/Orgaos/Orgaos.vue') },
-  { path: '/tiposprocesso', name: 'Tipos Processo', meta: { layout: "logged", requiresAuth: true}, component: () => import('../views/TiposProcesso/TiposProcesso.vue') },
-  { path: '/assuntos', name: 'Assuntos', meta: { layout: "logged", requiresAuth: true}, component: () => import('../views/Assuntos/Assuntos.vue') },
-  { path: '/classificacoes', name: 'Classificação', meta: { layout: "logged", requiresAuth: true}, component: () => import('../views/Classificacao/Classificacao.vue') },
+  { path: '/usuarios', name: 'Usuários', meta: { layout: "logged", requiresAuth: true,  routePermission: "SAPEJ_USUARIO"}, component: () => import(/* webpackChunkName: "about" */ '../views/Usuarios/Usuarios.vue') },
+  { path: '/processos', name: 'Processos', meta: { layout: "logged", requiresAuth: true,  routePermission: "SAPEJ_PROCESSO"}, component: () => import('../views/Processos/Processos.vue') },
+  { path: '/dashboard', name: 'Dashboard', meta: { layout: "logged", requiresAuth: true,  routePermission: "SAPEJ_DASHBOARD"}, component: () => import('../views/Dashboard/Dashboard.vue') },
+  { path: '/graficoColunas', name: 'Gráfico de Colunas', meta: { layout: "logged", requiresAuth: true,  routePermission: "SAPEJ_DASHBOARD"}, component: () => import('../views/Dashboard/Graficos/GraficoColunas.vue') },
+  { path: '/graficoLinha', name: 'Gráfico de Linha', meta: { layout: "logged", requiresAuth: true, routePermission: "SAPEJ_DASHBOARD"}, component: () => import('../views/Dashboard/Graficos/GraficoLinha.vue') },
+  { path: '/graficoLinhas', name: 'Gráfico de Linhas', meta: { layout: "logged", requiresAuth: true, routePermission: "SAPEJ_DASHBOARD"}, component: () => import('../views/Dashboard/Graficos/GraficoLinhas.vue') },
+  { path: '/graficoPizza', name: 'Gráfico de Pizza', meta: { layout: "logged", requiresAuth: true, routePermission: "SAPEJ_DASHBOARD"}, component: () => import('../views/Dashboard/Graficos/GraficoPizza.vue') },
+  { path: '/responsaveis', name: 'Responsáveis', meta: { layout: "logged", requiresAuth: true, routePermission: "SAPEJ_RESPONSAVEL"}, component: () => import('../views/Responsaveis/Responsaveis.vue') },
+  { path: '/feriados', name: 'Feriados', meta: { layout: "logged", requiresAuth: true, routePermission: "SAPEJ_FERIADO"}, component: () => import('../views/Feriados/Feriados.vue') },
+  { path: '/orgaos', name: 'Órgãos Demandantes', meta: { layout: "logged", requiresAuth: true, routePermission: "SAPEJ_ORGAO"}, component: () => import('../views/Orgaos/Orgaos.vue') },
+  { path: '/tiposprocesso', name: 'Tipos Processo', meta: { layout: "logged", requiresAuth: true, routePermission: "SAPEJ_TIPO_PROCESSO"}, component: () => import('../views/TiposProcesso/TiposProcesso.vue') },
+  { path: '/assuntos', name: 'Assuntos', meta: { layout: "logged", requiresAuth: true, routePermission: "SAPEJ_ASSUNTO"}, component: () => import('../views/Assuntos/Assuntos.vue') },
+  { path: '/classificacoes', name: 'Classificação', meta: { layout: "logged", requiresAuth: true, routePermission: "SAPEJ_CLASSIFICACAO"}, component: () => import('../views/Classificacao/Classificacao.vue') },
 ]
 
 const router = new VueRouter({
@@ -45,24 +45,22 @@ router.beforeEach((to, from, next) => {
     } else if (
       getToken &&
       to.matched.some((record) => record.meta.routePermission)
-    ) {
-      //verificar se usuário tem permissão para acessar a rota
-
-      if (
-        to.meta &&
-        to.meta.routePermission &&
-        !AuthService.possuiPermissao(to.meta.routePermission)
-      ) {
-        alert("Você não possui autorização para acessar essa página.");
-        next({ path: "/" }); 
-        //next({ path: "/home" }); 
-      } else {
-        next();
-      }
-    } else {
-      next();
-    }
-  } else {
+    ) {          
+          //verificar se usuário tem permissão para acessar a rota
+          if (
+            to.meta &&
+            to.meta.routePermission &&
+            !AuthService.possuiPermissao(to.meta.routePermission)
+          ) {
+            alert("Você não possui autorização para acessar essa página.");
+            next({ path: "/" }); 
+            //next({ path: "/home" }); 
+          } else {                      
+            next();
+          }
+    } else     
+      next();    
+  } else {      
     next();
   }
 });

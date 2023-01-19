@@ -39,11 +39,12 @@ async function refreshToken(myInterval?) {
             return resolve(res);
           })
           .catch((err) => {   
-             //para não continuar rodando o setinterval com refresh token            
-             window.localStorage.removeItem("refresh");    
+            //para não continuar rodando o setinterval com refresh token            
+            //window.localStorage.removeItem("refresh");             
              if(myInterval) {
               window.clearInterval(myInterval);   
              }
+             window.localStorage.clear()
                
              // Fazer algo caso não seja feito o refresh token                 
              return reject(err);

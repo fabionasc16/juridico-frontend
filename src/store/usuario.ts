@@ -1,4 +1,6 @@
 import RestApiService from "@/services/rest/service";
+import refreshToken from "@/services/rest/refresh_token";
+import { environment } from "@/environments/environment";
 
 const usuario = {
   namespaced: true,
@@ -48,7 +50,9 @@ const usuario = {
         window.localStorage.removeItem("idUnidade"),
         window.localStorage.removeItem("token"),
         window.localStorage.removeItem("roles");
-        window.localStorage.removeItem("refresh");
+        window.localStorage.clear()
+
+      //  window.localStorage.removeItem("refresh");
     },
   },
   actions: {
@@ -66,7 +70,17 @@ const usuario = {
             dispatch("atribuirUnidade", response.data.user.user_unit);
             dispatch("atribuirIdUnidade", response.data.user.user_unit_id);
             dispatch("atribuirRoles", response.data.user.roles);  
-            window.localStorage.setItem("refresh", '1');;        
+           // window.localStorage.setItem("refresh", '1');;    
+           
+           //Ao efetuar login, rodar refresh token                             
+            let myInterval = setInterval(() => {                      
+            let token = localStorage.getItem("token"); 
+              if(token) {                                                         
+                const response = refreshToken(myInterval); 
+              }
+            }, environment.timerUpdateRefreshToken)
+
+
             resolve(response);
           })
           .catch((err) => {

@@ -685,12 +685,14 @@ export default Vue.extend({
             if(this.Message[0].type == 'success') {
                 this.$bvModal.hide('modal-cadastro-processo')
                 this.$bvModal.hide('modal-editar-processo')
+                this.$bvModal.hide('modal-visualizar-processo')
                 this.$emit("listarProcesso");
             }   
         },  
         cancelar(): void {            
             this.$bvModal.hide('modal-cadastro-processo')
             this.$bvModal.hide('modal-editar-processo')
+            this.$bvModal.hide('modal-visualizar-processo')
         },          
     }
 })

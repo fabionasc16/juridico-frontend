@@ -90,6 +90,8 @@
                 <label>E-mail <span class="text-danger">*</span></label>
                 <b-form-input :disabled="disabledAll" class="bordered" required :placeholder="'Exemplo: mail@email.com'"
                   type="email" v-model="form.email"></b-form-input>
+                <small style="color: red;">E-mail utilizado para envio de dados de acesso, alteração de senha
+                e informações.</small>
               </b-form-group>
 
               <b-form-group class="font col-sm-6 col-md-6 col-lg-4">
@@ -303,7 +305,7 @@ export default Vue.extend({
                     } else {
                         this.adicionarAlert(
                             "success",
-                            "Cadastro realizado com sucesso!"
+                            "Cadastro realizado com sucesso! Os dados de acesso foram enviados para o e-mail informado!"                                                   
                         );
             } 
            

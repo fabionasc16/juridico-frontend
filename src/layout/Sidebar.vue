@@ -6,20 +6,21 @@
       </div>
       <!-- Listagem das rotas -->
       <nav class="listagem pt-5">
-        <router-link class="d-block p-2" v-for="(r, index) in commonMenus" :key="index" :to="r.path"
-            v-if="r.meta.menu!='Cadastros'">
-          <p style="font-weight: 600">{{ r.name }}</p>
+        <router-link class="d-block p-2" v-for="(r, index) in commonMenus" :key="index" 
+            :to="r.path"
+            v-if="r.meta.menu!='Cadastros' && possuiPermissao(r.meta.permission)">
+          <p style="font-weight: 600">{{ r.name }} </p>
         </router-link>
       </nav>
 
-      <b-dropdown class="dropdown" size="sm" variant="outline-light">
+      <b-dropdown class="dropdown" size="sm" variant="outline-light" v-if="possuiPermissaoMenuCadastro()">
                 <template #button-content>
                    <span>
                     Cadastros
                    </span>
                </template>
 
-               <b-dropdown-item v-for="(r,index) in commonMenus" :key="index" v-if="r.meta.menu=='Cadastros'"> 
+               <b-dropdown-item v-for="(r,index) in commonMenus" :key="index" v-if="r.meta.menu=='Cadastros' && possuiPermissao(r.meta.permission)"> 
                    <router-link class="d-block p-2" :to="r.path" style="margin-bottom:-20px;" >
                         <label style="font-weight: 600;">{{r.name}}</label> 
                     </router-link>
@@ -38,7 +39,8 @@
   <script lang="ts">
   import Vue from "vue";
   import { menusMixin } from "../mixins/menu";
-  
+  import AuthService from "../services/auth";
+
   export default Vue.extend({
     mixins: [
       menusMixin as Object, // Mixin com menus utilizáveis
@@ -48,6 +50,16 @@
         return this.$route.name;
       },
     },
+    methods: {
+      possuiPermissao(permissao: string): boolean {
+        return AuthService.possuiPermissao(permissao);
+      },
+
+      possuiPermissaoMenuCadastro(): boolean {
+        return AuthService.possuiPermissaoMenuCadastro();
+      },
+    },
+
   });
   </script>
   
