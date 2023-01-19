@@ -96,9 +96,9 @@
                     </div>
                     <div class="row">
                         <b-form-group class="font col-sm-12 col-md-12 col-lg-12">  
-                            <label>Responsável: <span class="text-danger">*</span></label>                                 
+                            <label>Responsável: </label>                                 
                             <v-select style="font-size: 0.85rem" :options="optionsResponsavel" class="font" label="nome_responsavel"
-                                value="id_responsavel" v-model="responsavelSelecionado" :disabled="disabledAll" required/>
+                                value="id_responsavel" v-model="responsavelSelecionado" :disabled="disabledAll"/>
                         </b-form-group>
                     </div>
                     <div class="row">
