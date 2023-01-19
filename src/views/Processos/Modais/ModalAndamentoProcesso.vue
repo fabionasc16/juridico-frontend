@@ -42,7 +42,14 @@
                                 <small>Após <b>arquivamento</b> não será possível editar processo.</small>
                             </b-form-group>
                         </div>                                                  
-                    </div>               
+                    </div>       
+                    <div class="row" v-if="statusProcessoSelecionado.id_status==statusDistribuido">
+                        <b-form-group class="font col-sm-12 col-md-12 col-lg-12">  
+                            <label>Responsável: <span class="text-danger">*</span></label>                                 
+                            <v-select style="font-size: 0.85rem" :options="optionsResponsavel" class="font" label="nome_responsavel"
+                                value="id_responsavel" v-model="responsavelSelecionado" required/>
+                        </b-form-group>
+                    </div>        
                         
                     <div class="py-2 mt-10" align="right">                        
                        <slot name="buttons"></slot>
@@ -102,14 +109,22 @@ export default Vue.extend({
             }, 
             perPageListagens:1000,    
             exibirData: false as boolean, 
-            statusAtual: null as any      
+            statusAtual: null as any,
+            optionsResponsavel: [] as Array<string>,  
+            responsavelSelecionado: {
+                nome_responsavel: "Selecione" as string,
+                id_responsavel: "" as string,
+            }, 
+            statusDistribuido: '11' as string,
+            responsavelBD: null as any, //responsavel que vem diretamente no BD, antes do usuario alterar na tela
         }
     },    
 
     beforeMount() {
         this.isLoading = false
         this.carregarDados() 
-        this.carregarStatusPrazo()       
+        this.carregarStatusPrazo() 
+        this.listarResponsaveis()         
     }, 
             
     methods: {         
@@ -132,7 +147,14 @@ export default Vue.extend({
 
                     //formatar datas para formato br
                     this.dataArquivamentoBR = res.data.dataArquivamento ? 
-                    dataMixin.methods.formatarDataBr(res.data.dataArquivamento) : "";  
+                    dataMixin.methods.formatarDataBr(res.data.dataArquivamento) : "";
+                    
+                    this.responsavelSelecionado.id_responsavel = res.data.responsavel.id_responsavel
+                    this.responsavelSelecionado.nome_responsavel = res.data.responsavel.nome_responsavel
+                    this.responsavelBD = res.data.responsavel.id_responsavel
+
+                    this.statusProcessoSelecionado.id_status = res.data.status.id_status
+                    this.statusProcessoSelecionado.desc_status = res.data.status.desc_status
             })
             .catch((e) => {
                 this.adicionarAlert(
@@ -144,19 +166,34 @@ export default Vue.extend({
                 this.loading = false;
             });
         },
+        listarResponsaveis() { 
+            let busca = {}
+            RestApiService.post3("responsaveis/list", `?currentPage=1&perPage=300000`, busca)                        
+                .then((response) => {                    
+                    this.optionsResponsavel = response.data.data                    
+                })                         
+        },
         submit() {            
             let url = "processos/atualiza-status?idProcesso="+this.idProcesso;
             this.form.idProcesso = this.idProcesso
             
             this.loading = true  
            
-            if (this.validarCampos()) {                
-
+            if (this.validarCampos()) {      
+                                
                 this.form.dataArquivamento = this.dataArquivamentoBR ? 
                    dataMixin.methods.dataFormatEn(this.dataArquivamentoBR) : "";
                 
-                this.form.idStatusProcesso = this.statusProcessoSelecionado.id_status              
-            
+                this.form.idStatusProcesso = this.statusProcessoSelecionado.id_status  
+           
+                //Quando Distribuído
+                if(this.form.idStatusProcesso == this.statusDistribuido){
+                    this.form.idResponsavel = this.responsavelSelecionado.id_responsavel
+                }else{
+                    //enviar o responsável que já estava no BD
+                    this.form.idResponsavel = this.responsavelBD
+                }            
+              
               RestApiService.patch(url, this.form )
                 .then((res) => {                   
                         this.adicionarAlert(
@@ -212,7 +249,7 @@ export default Vue.extend({
         },        
 
         validarCampos(): boolean {    
-            this.Notificacao = [];
+            this.Notificacao = [];           
 
             if(!this.statusProcessoSelecionado.id_status){
                 this.adicionarNotificacao(
@@ -233,7 +270,14 @@ export default Vue.extend({
                 "danger",
                 "Campo Data é obrigatório!"
                 );
-            }            
+            }    
+            
+            if( this.statusProcessoSelecionado.id_status==this.statusDistribuido && !this.responsavelSelecionado){
+                this.adicionarNotificacao(
+                "danger",
+                "Campo Responsável é obrigatório!"
+                );
+            }    
 
             if(this.dataArquivamentoBR && !dataMixin.methods.validarData(this.dataArquivamentoBR) ) {
                     this.adicionarNotificacao(

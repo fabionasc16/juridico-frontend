@@ -11,48 +11,48 @@ const menusMixin = {
 			{
 				name: "Dashboard",
 				path: "/dashboard",
-				meta: { menu: "" }
+				meta: { menu: "" , permission: "SAPEJ_DASHBOARD" }
 			},*/
 			{
 				name: "Processos",
 				path: "/processos",
-				meta: { menu: "" }
+				meta: { menu: "", permission: "SAPEJ_PROCESSO"  }
 			},
 			{
 				name: "Responsáveis",
 				path: "/responsaveis",
-				meta: { menu: "Cadastros" }
+				meta: { menu: "Cadastros" , permission: "SAPEJ_RESPONSAVEL" }
 			},
 			{
 				name: "Feriados",
 				path: "/feriados",
-				meta: { menu: "Cadastros" }
+				meta: { menu: "Cadastros", permission: "SAPEJ_FERIADO"  }
 			},
 			{
 				name: "Orgãos",
 				path: "/orgaos",
-				meta: { menu: "Cadastros" }
+				meta: { menu: "Cadastros" , permission: "SAPEJ_ORGAO" }
 			},
 			{
 				name: "Tipos Processo",
 				path: "/tiposprocesso",
-				meta: { menu: "Cadastros" }
+				meta: { menu: "Cadastros" , permission: "SAPEJ_TIPO_PROCESSO" }
 			},
 			{
 				name: "Usuários",
 				path: "/usuarios",
-				meta: { menu: "Cadastros" }
+				meta: { menu: "Cadastros" , permission: "SAPEJ_USUARIO" }
 			},
 			{
 			
 				name: "Assuntos",
 				path: "/assuntos",
-				meta: { menu: "Cadastros"}
+				meta: { menu: "Cadastros", permission: "SAPEJ_ASSUNTO" }
 			},
 			{
 				name: "Classificação",
 				path: "/classificacoes",
-				meta: { menu: "Cadastros" }
+				meta: { menu: "Cadastros" , permission: "SAPEJ_CLASSIFICACAO" }
 				
 			}
 			] as Array<RouteConfig>

@@ -17,8 +17,7 @@ export default Vue.extend({
     Layout
   },
   //para manter o estado no store ao dar refresh na pagina
-  created() {  
-
+  created() {                 
     if (window.localStorage.token && window.localStorage.cpf) {
       this.atribuirToken(window.localStorage.token);
       this.atribuirId(window.localStorage._id);
@@ -28,19 +27,20 @@ export default Vue.extend({
       this.atribuirIdUnidade(window.localStorage.idUnidade);
       this.atribuirRoles(JSON.parse(window.localStorage.roles));
       
-      let refresh = window.localStorage.getItem("refresh");       
+      //let refresh = window.localStorage.getItem("refresh");       
       let myInterval;
 
-      if(refresh && refresh == '1') {
+     // if(refresh && refresh == '1') {
         myInterval = setInterval(() => {                      
-                        let token = localStorage.getItem("token");
-                        if(token) {                                      
+                        let token = localStorage.getItem("token");                       
+                        if(token) {                                                       
                           const response = refreshToken(myInterval); 
+                        }else{
+                          window.clearInterval(myInterval);   
                         }
                       }, environment.timerUpdateRefreshToken)
-      }
-       
-    }
+        }
+   // }
   },
 
   methods: {

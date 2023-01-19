@@ -14,6 +14,24 @@ class AuthService {
     return false;
   }
 
+  public possuiPermissaoMenuCadastro(): boolean {
+    const user_roles = JSON.parse(localStorage.getItem("roles") || "{}");
+
+ 
+    let menuCadastro = ['SAPEJ_RESPONSAVEL', 'SAPEJ_FERIADO', 'SAPEJ_ORGAO', 'SAPEJ_TIPO_PROCESSO',
+    'SAPEJ_USUARIO', 'SAPEJ_ASSUNTO', 'SAPEJ_CLASSIFICACAO', 'SAPEJ_DASHBOARD', 'SAPEJ_ADMINISTRADOR'];
+
+    for (let i = 0; i < user_roles.length; i++) {
+
+      // menuCadastro.includes(user_roles[i])); nao funciona no IE
+       if(menuCadastro.indexOf(user_roles[i]) >= 0) {
+        return true;
+       }
+   
+    }
+    return false;
+  }
+
   public userIsAdmin() {
     return this.possuiPermissao("SAPEJ_ADMINISTRADOR");
   }
