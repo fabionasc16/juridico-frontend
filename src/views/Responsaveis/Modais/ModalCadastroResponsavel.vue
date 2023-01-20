@@ -20,18 +20,21 @@
                         <hr />
                     </b-form-group> -->
 
+                   
                     <!-- 1ª LINHA (CPF + NOME) -->
                     <div class="row mt-3" >
                         <b-form-group class="font col-sm-5 col-md-5 col-lg-5">
                            <label>CPF<span class="text-danger">*</span>:</label>
-                            <b-form-input :placeholder="'Digite seu CPF '" type="text" v-model="form.cpfResponsavel"
-                                v-mask="'###.###.###-##'" required :disabled="disabledAll"></b-form-input>
+                            <b-form-input :placeholder="'Digite seu CPF '" type="text" 
+                                v-model="form.cpfResponsavel"
+                                @focusout="verificaCpf"
+                                v-mask="'###.###.###-##'" required :disabled="disabledAll||tipo=='editar'"></b-form-input>
                         </b-form-group>
 
                         <b-form-group class="font col-sm-7 col-md-7 col-lg-7">
                             <label>Nome completo<span class="text-danger">*</span>:</label>
                             <b-form-input :placeholder="'Digite seu Nome Completo'" type="text"
-                                v-model="form.nomeResponsavel" required :disabled="disabledAll">
+                                v-model="form.nomeResponsavel" required :disabled="disabledAll || disableMenosCPF">
                             </b-form-input>
                         </b-form-group>
                     </div>
@@ -40,13 +43,13 @@
                         <b-form-group class="font col-sm-5 col-md-5 col-lg-5">
                             <label>Telefone<span class="text-danger">*</span>:</label>
                             <b-form-input :placeholder="'(00) 00000-0000'" type="text"
-                                v-model="form.telefone" v-mask="'(##) #####-####'" required :disabled="disabledAll"></b-form-input>
+                                v-model="form.telefone" v-mask="'(##) #####-####'" required :disabled="disabledAll || disableMenosCPF"></b-form-input>
                         </b-form-group>
 
                         <b-form-group class="font col-sm-7 col-md-7 col-lg-7">
                             <label>Email<span class="text-danger">*</span>:</label>
                             <b-form-input :placeholder="'Digite seu Email'" type="email" v-model="form.email" required
-                              :disabled="disabledAll">
+                              :disabled="disabledAll || disableMenosCPF">
                             </b-form-input>
                         </b-form-group>
                     </div>
@@ -55,14 +58,19 @@
                         <b-form-group class="font col-sm-5 col-md-5 col-lg-5">
                              <label>Registro OAB:<span class="text-danger">*</span>:</label>
                             <b-form-input :placeholder="'Digite seu Registro OAB'" type="text" v-model="form.registroOAB"
-                             required :disabled="disabledAll">
+                             required :disabled="disabledAll || disableMenosCPF">
                             </b-form-input>
                         </b-form-group>
                     </div>
 
-                    <div class="py-2 mt-10" align="right">                        
+                    <div class="py-2 mt-10" align="right">                         
                        <slot name="buttons"></slot>
-                       <b-button v-if="!disabledAll" class="bordered ml-2" type="submit" variant="success">Salvar</b-button>
+                       <b-button v-if="!disabledAll" 
+                       class="bordered ml-2" type="submit" variant="success"
+                       :disabled="disableMenosCPF">Salvar</b-button>
+                    </div>
+                    <div class="row p-3"> 
+                        <small>* O responsável deve estar cadastrado como usuário do sistema.</small>              
                     </div>
 
                 </b-form>
@@ -102,6 +110,7 @@ export default Vue.extend({
     data() {
         return {
             disabledAll: false as boolean,
+            disableMenosCPF: false as boolean,
             rows: 100,
             currentPage: 1,
             stickyHeader: true as boolean,
@@ -118,13 +127,17 @@ export default Vue.extend({
     mounted() {
         this.isLoading = false
 
+        if(this.tipo == 'cadastrar') {
+            this.disableMenosCPF = true;   
+        } 
+
         if(this.tipo == 'editar') {
             this.carregarDados();   
         }      
 
         if(this.tipo == 'visualizar'){
             this.carregarDados();  
-            this.disabledAll = true; 
+            this.disabledAll = true;             
         }
     }, 
     methods: {
@@ -132,10 +145,7 @@ export default Vue.extend({
             let acao = this.id ? "put" : "post"
             let url = "responsaveis";           
                     
-            if (this.validarCampos()) { 
-
-              console.log('JSON: ',JSON.stringify(this.form))
-              
+            if (this.validarCampos()) {   
               this.loading = true  
             
               RestApiService.salvar(url, this.form, acao, this.form.idResponsavel)
@@ -187,6 +197,55 @@ export default Vue.extend({
             }                  
         },
 
+        //limpar campos que são preenchidos após CPF
+        limparCampos(){
+            this.form.nomeResponsavel = ""
+            this.form.telefone = ""
+            this.form.email = ""
+            this.form.registroOAB = ""
+        },
+
+        verificaCpf():void {  
+            this.Notificacao = []; 
+
+            if(this.form && this.form.cpfResponsavel && this.form.cpfResponsavel.length == 14){                 
+                    if(this.form.cpfResponsavel && !ValidarCpfMixin.methods.validarCpf(this.form.cpfResponsavel)){
+                        this.limparCampos()
+                        this.disableMenosCPF = true
+                        this.adicionarNotificacao(
+                        "danger",
+                        "CPF inválido!"
+                        );
+                        return;
+                    }    
+
+                    RestApiService.get('usuarios/cpf', `${this.form.cpfResponsavel}` )          
+                    .then((response: any) => { 
+                       // this.carregarDadosUser(response.data._id)        
+                        this.form.nomeResponsavel = response.data.nome   
+                        this.form.telefone = response.data.telefone
+                        this.form.email = response.data.email      
+                        //console.log(response.data)  
+                        this.disableMenosCPF=false    
+                                  
+                    })
+                    .catch((e) => {        
+                        this.limparCampos()         
+                        this.disableMenosCPF = true  
+                        if (e && e.response.status &&  e.response.status == 404) {                                                   
+                           this.adicionarAlert(
+                                "alert",
+                                "Erro! O responsável deve estar cadastrado como usuário do sistema!"
+                            );
+                        }                    
+                    });
+                }else{
+                    this.limparCampos()
+                    this.disableMenosCPF = true
+                }
+            
+        },
+
          carregarDados(): void {
             this.loading = true;       
                         
@@ -212,6 +271,23 @@ export default Vue.extend({
                 this.loading = false;
             });
         },
+
+       /* carregarDadosUser(idUser) {        
+        RestApiService.get("usuarios/detalhes", idUser)
+        .then((response: any) => { 
+            this.form.nomeResponsavel = response.data.nome;
+            this.form.telefone = response.data.telefone;    
+            this.form.email = response.data.email;
+                   
+        })
+        .catch((e: Error) => {
+            this.adicionarAlert(
+                            "alert",
+                            "Houve um erro ao carregar dados. Tente novamente!"
+                            );
+        });
+        },*/
+
              
         validarCampos(): boolean {
             this.Notificacao = [];
