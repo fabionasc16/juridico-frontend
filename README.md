@@ -92,7 +92,11 @@ Cadastro de advogados que serão responsáveis pelo processo.
 
 Uma vez por ano deve-se registrar os feriados para o ano corrente. O feriado pode ser móvel ou fixo.
 O Ponto Facultativo também precisa ser registrado na tabela de feriado para que seja levado em consideração no cálculo do prazo final.
-
+<br>
+Nova reunião foi informado que seria conversado com o jurídico a respeito dos feriados.
+Mas a ideia seria o sistema cadastrar os feriados fixos e calcular os móveis, uma vez por ano.
+E o jurídico ficaria responsável pelo cadastro dos pontos facultativos.
+Em relação a feriados criados, o sistema enviaria para o usuário confirmar, por exemplo: 'Deseja atualizar o prazo dos processos que estão em aberto?'. Caso usuário confirme, o sistema atualiza o prazo de todos os processos que não estão arquivados, em que o feriado interfira o prazo do processo.
 
 ### Papéis no sistema
 - `Administrador`:
@@ -116,7 +120,8 @@ O Ponto Facultativo também precisa ser registrado na tabela de feriado para que
     Ver todos os processos (mesmo os cadastrados pela recepção ou distribuídos para outros advogados),
     porém os que estão distribuídos para ele são ordenados no início.
     <br>
-    Não pode atualizar os processos não distribuídos para ele, mas ele pode alterar responsável.
+    Ficará aberto para atualizar processo, pois será armazenado em log. 
+    Ele pode alterar responsável do processo.
     <br>
 
     * SAPEJ_PROCESSO
@@ -151,7 +156,7 @@ O Ponto Facultativo também precisa ser registrado na tabela de feriado para que
     - localStorage é permanente, salvar nele os dados do login, para que ao dar F5 não apague tudo.
 <br>
     - store/index:<br> 
-    acrescenta o que está utlizando para que seja reconhecido como módulo.
+    acrescenta o que está utilizando para que seja reconhecido como módulo.
 <br>
     - router/index:<br> 
     criou requires Auth para saber se a página precisa estar autenticada para acessar. 
@@ -189,7 +194,7 @@ layout/Sidebar.vue: permissão para exibir menu
 <br>
 mixins/menu.ts: colocar as roles em meta permission
 <br>
-Em beforeEach, validar se tem permissão para acessar aquela página.
+router/index: Em beforeEach, validar se tem permissão para acessar aquela página.
 Nas rotas, em meta permission colocar as roles.
 
 # 📁 Acesso ao projeto master
