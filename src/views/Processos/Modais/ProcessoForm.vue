@@ -331,8 +331,8 @@ export default Vue.extend({
                 this.assuntoSelecionado.id_assunto = res.data.assunto.id_assunto
                 this.assuntoSelecionado.desc_assunto = res.data.assunto.desc_assunto
             
-                this.responsavelSelecionado.id_responsavel = res.data.responsavel.id_responsavel
-                this.responsavelSelecionado.nome_responsavel = res.data.responsavel.nome_responsavel
+                this.responsavelSelecionado.id_responsavel = res.data.responsavel? res.data.responsavel.id_responsavel : ""
+                this.responsavelSelecionado.nome_responsavel = res.data.responsavel? res.data.responsavel.nome_responsavel : ""
 
                 this.tipoProcessoSelecionado.id_tipoprocesso = res.data.tipoProcesso.id_tipoprocesso
                 this.tipoProcessoSelecionado.desc_tipoprocesso = res.data.tipoProcesso.desc_tipoprocesso
