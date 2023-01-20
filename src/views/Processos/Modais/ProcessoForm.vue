@@ -96,9 +96,9 @@
                     </div>
                     <div class="row">
                         <b-form-group class="font col-sm-12 col-md-12 col-lg-12">  
-                            <label>Responsável: <span class="text-danger">*</span></label>                                 
+                            <label>Responsável: </label>                                 
                             <v-select style="font-size: 0.85rem" :options="optionsResponsavel" class="font" label="nome_responsavel"
-                                value="id_responsavel" v-model="responsavelSelecionado" :disabled="disabledAll" required/>
+                                value="id_responsavel" v-model="responsavelSelecionado" :disabled="disabledAll"/>
                         </b-form-group>
                     </div>
                     <div class="row">
@@ -329,8 +329,8 @@ export default Vue.extend({
                 this.assuntoSelecionado.id_assunto = res.data.assunto.id_assunto
                 this.assuntoSelecionado.desc_assunto = res.data.assunto.desc_assunto
             
-                this.responsavelSelecionado.id_responsavel = res.data.responsavel.id_responsavel
-                this.responsavelSelecionado.nome_responsavel = res.data.responsavel.nome_responsavel
+                this.responsavelSelecionado.id_responsavel = res.data.responsavel? res.data.responsavel.id_responsavel : ""
+                this.responsavelSelecionado.nome_responsavel = res.data.responsavel? res.data.responsavel.nome_responsavel : ""
 
                 this.tipoProcessoSelecionado.id_tipoprocesso = res.data.tipoProcesso.id_tipoprocesso
                 this.tipoProcessoSelecionado.desc_tipoprocesso = res.data.tipoProcesso.desc_tipoprocesso
