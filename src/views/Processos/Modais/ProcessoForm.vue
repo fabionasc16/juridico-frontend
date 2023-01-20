@@ -177,10 +177,8 @@
                 <b-button class="bordered ml-2" type="button" variant="secondary" 
                 @click="cancelar" >Cancelar</b-button> 
                 <b-button class="bordered ml-2" type="submit" variant="success" 
-                v-if="!disabledAll" >Salvar</b-button>   
-                                                             
+                v-if="!disabledAll">Salvar</b-button>                                                                
             </div>  
-
         </b-form>
 
     </div>
@@ -379,6 +377,14 @@ export default Vue.extend({
             this.form.idClassificacao = this.classificacaoSelecionada && this.classificacaoSelecionada.id_classificacao ? this.classificacaoSelecionada.id_classificacao : null
             this.form.idAssunto =  this.assuntoSelecionado && this.assuntoSelecionado.id_assunto ? this.assuntoSelecionado.id_assunto : ""    
             
+            //enviar dados do siged vazio, pois null ocorre erro no back
+            this.form.caixaAtualSIGED = this.form.caixaAtualSIGED ? this.form.caixaAtualSIGED : ""
+            this.form.dataProcessoSIGED = this.form.dataProcessoSIGED ? this.form.dataProcessoSIGED  : "" 
+            this.form.numProcessoSIGED = this.form.numProcessoSIGED ? this.form.numProcessoSIGED : ""
+            this.form.permanenciaSIGED = this.form.permanenciaSIGED ? this.form.permanenciaSIGED.toString() : ""
+            this.form.tramitacaoSIGED =  this.form.tramitacaoSIGED ?  this.form.tramitacaoSIGED : ""
+
+
             let acao = (!this.idProcesso || this.opcaoDuplicar) ? "post" : "put"
             let url ="processos"
 
@@ -457,6 +463,15 @@ export default Vue.extend({
                 this.adicionarNotificacao(
                 "danger",
                 "Nº SIGED é obrigatório quando o campo 'Requer SIGED' for selecionado!"
+                );
+            }
+            if(this.form.requerSIGED === true && this.form.numProcessoSIGED
+               && (!this.form.dataProcessoSIGED || !this.form.permanenciaSIGED || 
+                !this.form.caixaAtualSIGED || !this.form.tramitacaoSIGED)){
+                this.adicionarNotificacao(
+                "danger",
+                "Não é possível salvar registro sem dados do SIGED, "+
+                "quando o campo 'Requer SIGED' for selecionado!"
                 );
             }
             if(!this.validarDataProcesso()){

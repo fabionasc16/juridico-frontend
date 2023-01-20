@@ -22,7 +22,7 @@
                   @keyup="verificaCpf"
                   type="text" v-model="form.cpf" v-mask="'###.###.###-##'">
                 </b-form-input>
-                <small style="color: red;">Preencha primeiro o CPF</small>
+                <small style="color: blue;">Preencha primeiro o CPF</small>
               </b-form-group>
 
                 <b-form-group class="font col-sm-5 col-md-5 col-lg-4">
@@ -90,7 +90,7 @@
                 <label>E-mail <span class="text-danger">*</span></label>
                 <b-form-input :disabled="disabledAll" class="bordered" required :placeholder="'Exemplo: mail@email.com'"
                   type="email" v-model="form.email"></b-form-input>
-                <small style="color: red;">E-mail utilizado para envio de dados de acesso, alteração de senha
+                <small style="color: blue;">E-mail utilizado para envio de dados de acesso, alteração de senha
                 e informações.</small>
               </b-form-group>
 

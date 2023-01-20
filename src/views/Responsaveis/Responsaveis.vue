@@ -337,7 +337,7 @@ export default Vue.extend({
         .catch((e: Error) => {    
            this.adicionarAlert(
                   "alert",
-                  "Ocorreu um erro ao excluir registro!"
+                  "Ocorreu um erro ao excluir registro! O registro pode estar sendo utilizado em outro cadastro."
           );
         })
         .finally(() => {
