@@ -220,14 +220,11 @@ export default Vue.extend({
                     }    
 
                     RestApiService.get('usuarios/cpf', `${this.form.cpfResponsavel}` )          
-                    .then((response: any) => { 
-                       // this.carregarDadosUser(response.data._id)        
+                    .then((response: any) => {                       
                         this.form.nomeResponsavel = response.data.nome   
                         this.form.telefone = response.data.telefone
-                        this.form.email = response.data.email      
-                        //console.log(response.data)  
-                        this.disableMenosCPF=false    
-                                  
+                        this.form.email = response.data.email 
+                        this.disableMenosCPF=false                                      
                     })
                     .catch((e) => {        
                         this.limparCampos()         
@@ -242,8 +239,7 @@ export default Vue.extend({
                 }else{
                     this.limparCampos()
                     this.disableMenosCPF = true
-                }
-            
+                }            
         },
 
          carregarDados(): void {
@@ -270,25 +266,8 @@ export default Vue.extend({
             .finally(() => {
                 this.loading = false;
             });
-        },
+        },   
 
-       /* carregarDadosUser(idUser) {        
-        RestApiService.get("usuarios/detalhes", idUser)
-        .then((response: any) => { 
-            this.form.nomeResponsavel = response.data.nome;
-            this.form.telefone = response.data.telefone;    
-            this.form.email = response.data.email;
-                   
-        })
-        .catch((e: Error) => {
-            this.adicionarAlert(
-                            "alert",
-                            "Houve um erro ao carregar dados. Tente novamente!"
-                            );
-        });
-        },*/
-
-             
         validarCampos(): boolean {
             this.Notificacao = [];
 
