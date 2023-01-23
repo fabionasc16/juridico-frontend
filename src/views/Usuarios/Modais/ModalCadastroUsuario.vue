@@ -19,7 +19,7 @@
               <b-form-group class="font col-sm-6 col-md-6 col-lg-6">
                 <label>CPF <span class="text-danger">*</span></label>
                 <b-form-input :disabled="disabledAll || tipo == 'editar'" class="bordered" required :placeholder="'000.000.000-00'"
-                  @keyup="verificaCpf"
+                  @focusout="verificaCpf"
                   type="text" v-model="form.cpf" v-mask="'###.###.###-##'">
                 </b-form-input>
                 <small style="color: blue;">Preencha primeiro o CPF</small>
@@ -31,7 +31,7 @@
                     <b-form-select :disabled="disabledAll" class="bordered" size="sm" v-model="form.perfilUsuario" required>
                       <b-form-select-option value="">Selecione...</b-form-select-option>
                       <b-form-select-option v-for="perfil in optionsPerfis" :value="perfil.id" :key="perfil.id">
-                        {{ perfil.profile_name }}
+                        {{ perfil.profile_name == 'RECEPCAO'? 'RECEPÇÃO' :  perfil.profile_name}}
                       </b-form-select-option>
                     </b-form-select>
                   </template>
@@ -358,7 +358,7 @@ export default Vue.extend({
           'auth/profiles/sapej', ""
       )
       .then((response: any) => {         
-        this.optionsPerfis = response.data;
+        this.optionsPerfis = response.data;       
       })
       .catch((e: Error) => {        
         this.adicionarAlert(
@@ -368,12 +368,12 @@ export default Vue.extend({
         });
       },
 
-    carregarDados(id?) {
+    carregarDados() {
 
-      let idUser = id ? id : this.id 
+      let idUser = this.id 
       RestApiService.get("usuarios/detalhes", idUser)
-        .then((response: any) => {     
-         
+        .then((response: any) => {            
+          
           //this.form.unidadeUsuario = response.data.unit_id; 
           this.form.id = idUser || response.data.id;         
           this.form.nome = response.data.nome;
@@ -405,18 +405,64 @@ export default Vue.extend({
     },
 
     verificaCpf():void {
-      if(this.form && this.form.cpf){       
-        if(this.form.cpf.length == 14){          
-          RestApiService.get('usuarios/cpf', `${this.form.cpf}` )          
-        .then((response: any) => {             
-          this.carregarDados(response.data._id);
+
+      this.loading = true
+
+      if(this.form && this.form.cpf && this.form.cpf.length == 14){  
+         
+         RestApiService.get('usuarios/cpf', `${this.form.cpf}` )          
+        .then((response: any) => {         
+          
+          this.form.id = response.data._id;         
+          this.form.nome = response.data.nome;
+          this.form.perfilUsuario = response.data.perfilUsuario;    //     
+          this.form.dataNascimento = response.data.dataNascimento;
+          this.dataNascimentoBR = response.data.dataNascimento
+            ? formatarDataBrMixin.methods.formatarDataBr(
+              response.data.dataNascimento
+            )
+            : "";
+          this.form.estadoCivil = response.data.estadoCivil;
+          this.form.genero = response.data.genero;
+          this.form.generoOutro = response.data.generoOutro;        
+          this.form.cpf = response.data.cpf;
+          this.form.email = response.data.email;
+          this.form.telefone = response.data.telefone;
+
+          this.form.cep = response.data.cep;
+          this.form.logradouro = response.data.logradouro;
+          this.form.numero = response.data.numero;
+          this.form.bairro = response.data.bairro;
+          this.form.complemento = response.data.complemento;   
         })
         .catch((e: Error) => {
-         // this.message = "Usuário não existe na base de dados.";
-         // this.alert = true;
-        });
-        }
+          this.limparCampos()
+        })
+        .finally(() => {
+            this.loading = false;
+        });       
+      }else{
+        this.limparCampos()
+        this.loading = false;        
       }
+    },
+
+    limparCampos(){
+          this.form.id = ""       
+          this.form.nome = ""
+          this.form.perfilUsuario = ""
+          this.form.dataNascimento = ""
+          this.dataNascimentoBR = ""            
+          this.form.estadoCivil = ""
+          this.form.genero = ""
+          this.form.generoOutro = ""                
+          this.form.email = ""
+          this.form.telefone = ""
+          this.form.cep = ""
+          this.form.logradouro = ""
+          this.form.numero = ""
+          this.form.bairro = ""
+          this.form.complemento = ""
     },
 
 
