@@ -24,7 +24,7 @@
                     <!-- 1ª LINHA (CPF + NOME) -->
                     <div class="row mt-3" >
                         <b-form-group class="font col-sm-5 col-md-5 col-lg-5">
-                           <label>CPF<span class="text-danger">*</span>:</label>
+                           <label>CPF {{ form.idUsuario }}<span class="text-danger">*</span>:</label>
                             <b-form-input :placeholder="'Digite seu CPF '" type="text" 
                                 v-model="form.cpfResponsavel"
                                 @focusout="verificaCpf"
@@ -203,10 +203,13 @@ export default Vue.extend({
             this.form.telefone = ""
             this.form.email = ""
             this.form.registroOAB = ""
+            this.form.idUsuario = ""
         },
 
         verificaCpf():void {  
             this.Notificacao = []; 
+
+            this.form.idUsuario = ""
 
             if(this.form && this.form.cpfResponsavel && this.form.cpfResponsavel.length == 14){                 
                     if(this.form.cpfResponsavel && !ValidarCpfMixin.methods.validarCpf(this.form.cpfResponsavel)){
@@ -220,11 +223,12 @@ export default Vue.extend({
                     }    
 
                     RestApiService.get('usuarios/cpf', `${this.form.cpfResponsavel}` )          
-                    .then((response: any) => {                       
+                    .then((response: any) => {    
+                        this.form.idUsuario = response.data._id                          
                         this.form.nomeResponsavel = response.data.nome   
                         this.form.telefone = response.data.telefone
                         this.form.email = response.data.email 
-                        this.disableMenosCPF=false                                      
+                        this.disableMenosCPF=false                                                    
                     })
                     .catch((e) => {        
                         this.limparCampos()         
@@ -247,6 +251,8 @@ export default Vue.extend({
                         
             RestApiService.get("responsaveis/id", this.id)
                 .then((res: any) => {          
+
+                console.log(res.data)
 
                 this.form.idResponsavel =  res.data.id_responsavel 
                 this.form.nomeResponsavel = res.data.nome_responsavel

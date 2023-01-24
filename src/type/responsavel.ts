@@ -14,6 +14,7 @@ export type ResponsavelCadastro = {
     telefone?: string;
     email?: string;
     registroOAB?: string;
+    idUsuario: string;
 };
 
 /*export const ResponsavelSeeder: Array<Responsavel> = [
