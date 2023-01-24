@@ -1,30 +1,30 @@
 export type TableLogProcesso = { 
     isActive: boolean,
-    caixaSIGED: string,
-    eventoTramitacao: string,
-    entradaSetor: string,  
-    permanencia: string,  
+    date: string,
+    module: string,
+    transaction: string,  
+    user: string,  
 };
 
 export const FieldsTableLog = 
     [   //NOMES DAS COLUNAS
         {
-            key: 'entrada_no_setor',
+            key: 'date',
             label: 'Data',
             sortable: true,
         },
         {
-            key: 'evento_tramitado',
-            label: 'Hora',
+            key: 'module',
+            label: 'Módulo',
             sortable: true
         },
         {
-            key: 'dias_no_setor',
+            key: 'transaction',
             label: 'Ação',
             sortable: true,
         },
         {
-            key: 'setor_tramitacao',
+            key: 'user',
             label: 'Usuário',
             sortable: true,
         },
