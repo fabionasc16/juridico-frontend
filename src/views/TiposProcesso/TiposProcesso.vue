@@ -23,7 +23,7 @@
       <!-- FORMULÁRIO DE CONSULTA -->       
       <b-form @submit.prevent="search" class="mb-5">
           <div class="row">               
-              <div class="col-3">
+            <div class="col-xs-6 col-sm-8 col-md-6">
                 <b-form-group label="Tipo Processo:" class="font">
                     
                       <b-input-group>  

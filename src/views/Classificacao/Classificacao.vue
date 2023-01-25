@@ -1,5 +1,4 @@
 <template>
-
     <div class="container fluid">
         <div class="row">
             <div class="col-12" style="margin-top: 20px">
@@ -24,7 +23,7 @@
          <!-- FORMULÁRIO DE CONSULTA -->       
       <b-form @submit.prevent="search" class="mb-5">
           <div class="row">               
-              <div class="col-3">
+              <div class="col-xs-6 col-sm-7 col-md-6">
                 <b-form-group label="Classificação:" class="font">
                     
                       <b-input-group>  
@@ -49,7 +48,7 @@
                       <b-icon-search v-b-tooltip.hover.topleft="'Consultar'"></b-icon-search>
                     </b-button>               
                 </b-form-group>               
-          </div>
+              </div>
           </div>
     </b-form>
     

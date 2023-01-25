@@ -238,7 +238,7 @@
                     v-if="data.item.status.id_status!='14'" 
                       @listarProcesso="listarProcesso(currentPage)" class="btn-light btn-outline-dark m-0 p-1"
                       @click="abrirModal('modal-log-processo',  data.item.id_processo, data.item.num_procedimento)">
-                     Log do Processo
+                     Log do Sistema
                    </b-list-group-item> 
  
                    <b-list-group-item block class="btn-light text-dark btn-outline-danger m-0 p-1"
@@ -323,7 +323,7 @@
            </ModalTramitacoesProcesso>
          </b-modal>        
          
-         <b-modal id="modal-log-processo" size="xl" centered title="Log do Processo" hide-footer>
+         <b-modal id="modal-log-processo" size="xl" centered title="Log do Sistema" hide-footer>
            <ModalLogProcesso @listarProcesso="listarProcesso(currentPage)"
                :idProcesso="idProcessoModal" :numProcedimento="numProcedimentoModal" >             
            </ModalLogProcesso>

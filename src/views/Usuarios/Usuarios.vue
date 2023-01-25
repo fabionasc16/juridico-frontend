@@ -30,7 +30,7 @@
                       v-mask="'###.###.###-##'"></b-form-input>
                   </b-form-group>
                 </div>    
-                <div class="col-xs-3 col-md-3">             
+                <div class="col-xs-3 col-md-4">             
                     <b-form-group label="Nome completo:" class="font">
                     <b-form-input :placeholder="'Digite seu Nome Completo'" type="text" v-model="form.nome">
                     </b-form-input>

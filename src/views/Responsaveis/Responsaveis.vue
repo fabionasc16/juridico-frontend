@@ -22,14 +22,14 @@
         <b-form @submit.prevent="search" class="mb-5">
             <div class="row">
                 <!-- (CPF) -->
-                <div class="col-3">
+                <div class="col-xs-6 col-sm-4 col-md-4">
                   <b-form-group label="CPF:" class="font">
                     <b-form-input :placeholder="'Digite seu CPF '" type="text" v-model="form.cpf_responsavel"
                       v-mask="'###.###.###-##'"></b-form-input>
                   </b-form-group>
                 </div>
                 <!-- (NOME) -->
-                <div class="col-4"> 
+                <div class="col-xs-6 col-sm-6 col-md-6">
                   <b-form-group label="Nome:" class="font">
                     <b-form-input :placeholder="'Digite seu Nome'" type="text" v-model="form.nome_responsavel">
                     </b-form-input>
