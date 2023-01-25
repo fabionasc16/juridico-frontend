@@ -233,7 +233,7 @@ export default Vue.extend({
         this.id_usuario = id
         this.$bvModal.show('modal-visualizar-usuario')
     },
-
+ 
     listarUsuarios(currentpage: number) : void { 
      
       this.loading = true; 
