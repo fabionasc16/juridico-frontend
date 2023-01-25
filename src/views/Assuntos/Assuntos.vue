@@ -267,7 +267,8 @@ export default Vue.extend({
      
       this.loading = true;         
         
-      let busca = {             
+      let busca = {    
+        descricaoAssunto : this.assuntoPesquisa ? this.assuntoPesquisa : "",         
       }            
       
         RestApiService.post3("assuntos/list", `?currentPage=${currentpage}`, busca)

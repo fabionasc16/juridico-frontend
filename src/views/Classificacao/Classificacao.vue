@@ -221,7 +221,7 @@
 
       this.loading = true
 
-        if(!this.busca){       
+        if(!this.busca || !this.currentPage){       
           this.currentPage = 1
         }  
     
@@ -250,43 +250,27 @@
 
     listarClassificacao(currentpage: number) : void {
      
-      this.loading = true;  
-       
+      this.loading = true
+
         RestApiService.get(
-          "classificacoes", `?currentPage=${currentpage}`)
+          "classificacoes",
+          `?search=${this.busca}&currentPage=${currentpage}`
+        )
           .then((response: any) => {
-            this.items = response.data.data;
             this.perPage = response.data.perPage;
+            this.items = response.data.data;
             this.totalRows = response.data.total;
-            this.totalPageSearch = response.data.data.length  
+            this.totalPageSearch = response.data.data.length 
           })
           .catch((e) => {
-            if (e.message === "Network Error") {
-                            this.adicionarAlert(
+            this.adicionarAlert(
                             "alert",
-                            "Sem conexão de rede. Verifique sua conexão!"
-                            );
-                        } else if (
-                            e &&
-                            e.response &&
-                            e.response.data &&
-                            e.response.data.message
-                        ) {
-                            this.adicionarAlert(
-                            "alert",
-                            e.response.data.message
-                            );                       
-                        } else {
-                            this.adicionarAlert(
-                            "alert",
-                            "Houve um erro. Não foi possível carregar a listagem!"
-                            );                      
-                        }      
+                            "Ocorreu um erro ao realizar a pesquisa!"
+                            );         
           })
           .finally(() => {
-            this.loading = false;          
+            this.loading = false          
           });
-      
     },   
 
     abrirModal(modalname: string, idClassificacao: number, nomeClassificacao?: any){      
