@@ -317,7 +317,9 @@ export default Vue.extend({
         return;
       }
       
-        let busca = {}
+        let busca = {dataFeriado : this.dataFeriadoBR ? dataMixin.methods.dataFormatEn(this.dataFeriadoBR) : "",
+          tipoFeriado: this.tipoFeridoSearch ? this.tipoFeridoSearch: "",
+          anoFeriado: this.anoFeriadoSearch ? Number(this.anoFeriadoSearch) : ""}
        
         let url = "feriados/list?currentPage="+currentpage+"&perPage="+`${this.perPage}`
        

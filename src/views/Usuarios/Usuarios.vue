@@ -233,12 +233,12 @@ export default Vue.extend({
         this.id_usuario = id
         this.$bvModal.show('modal-visualizar-usuario')
     },
-
+ 
     listarUsuarios(currentpage: number) : void { 
      
       this.loading = true; 
      
-      RestApiService.get("usuarios/all/?nomeSistema=SAPEJ",  `?currentPage=${currentpage}`)     
+      RestApiService.get("usuarios/all/?nomeSistema=SAPEJ",  `?search=${this.busca}&currentPage=${currentpage}`)     
           .then((response: any) => {            
             this.items = response.data;           
             this.perPage = response.data.perPage;
