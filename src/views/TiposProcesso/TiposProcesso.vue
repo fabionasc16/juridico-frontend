@@ -247,13 +247,14 @@ export default Vue.extend({
     search():void {
       this.loading = true
 
-      if(!this.busca){       
+      if(!this.busca || !this.currentPage){       
         this.currentPage = 1
       }  
-     
+      console.log(this.currentPage)
         RestApiService.get(
-          "tipos-processo",
-          `?search=${this.busca}`
+          "tipos-processo" ,
+         `?search=${this.busca}&currentPage=${this.currentPage}`
+          
         )
           .then((response: any) => {
             this.perPage = response.data.perPage;
@@ -277,9 +278,9 @@ export default Vue.extend({
     listarTiposProcesso(currentpage: number) : void {
      
       this.loading = true;  
-       
+       console.log(this.currentPage);
         RestApiService.get(
-          "tipos-processo", `?currentPage=${currentpage}`)
+          "tipos-processo", `?search=${this.busca}&currentPage=${currentpage}`)
           .then((response: any) => {
             this.items = response.data.data;
             this.perPage = response.data.perPage;

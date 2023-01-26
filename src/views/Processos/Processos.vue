@@ -238,7 +238,7 @@
                     v-if="data.item.status.id_status!='14'" 
                       @listarProcesso="listarProcesso(currentPage)" class="btn-light btn-outline-dark m-0 p-1"
                       @click="abrirModal('modal-log-processo',  data.item.id_processo, data.item.num_procedimento)">
-                     Log do Processo
+                     Log do Sistema
                    </b-list-group-item> 
  
                    <b-list-group-item block class="btn-light text-dark btn-outline-danger m-0 p-1"
@@ -323,7 +323,7 @@
            </ModalTramitacoesProcesso>
          </b-modal>        
          
-         <b-modal id="modal-log-processo" size="xl" centered title="Log do Processo" hide-footer>
+         <b-modal id="modal-log-processo" size="xl" centered title="Log do Sistema" hide-footer>
            <ModalLogProcesso @listarProcesso="listarProcesso(currentPage)"
                :idProcesso="idProcessoModal" :numProcedimento="numProcedimentoModal" >             
            </ModalLogProcesso>
@@ -537,7 +537,18 @@
      },   
      listarProcesso(currentpage: number): void {
        this.loading = true 
-       let busca = {}
+       let busca = {numProcedimento : this.form.numProcedimento ? this.form.numProcedimento : "",
+         numProcessoSIGED : this.form.numProcessoSIGED ? this.form.numProcessoSIGED : "",
+         idAssunto : this.assuntoSelecionado ? this.assuntoSelecionado.id_assunto : "",
+         caixaAtualSIGED : this.caixaSigedSelecionada ? this.caixaSigedSelecionada.caixa_atual_siged : "",
+         idOrgaoDemandante : this.orgaoDemandanteSelecionado ? this.orgaoDemandanteSelecionado.id_orgao : "",
+         idTipoProcesso  :  this.tipoProcessoSelecionado ? this.tipoProcessoSelecionado.id_tipoprocesso : "",
+         statusProcesso : this.statusProcessoSelecionado ? this.statusProcessoSelecionado.id_status : "",
+         statusPrazo : (this.statusPrazoSelecionado && this.statusPrazoSelecionado.id_status) ? (this.statusPrazoSelecionado.id_status) : "",
+         idClassificacao:  this.classificacaoSelecionada ? this.classificacaoSelecionada.id_classificacao : "",
+         idResponsavel: this.responsavelSelecionado ? this.responsavelSelecionado.id_responsavel : "",
+         descricaoProcesso: this.form.descricao ? this.form.descricao : "",
+         objetoProcesso: this.form.objeto ? this.form.objeto : "",}
  
        RestApiService.post3("processos/list", `?currentPage=${currentpage}`, busca)
          .then((response: any) => {           

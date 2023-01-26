@@ -263,7 +263,10 @@ export default Vue.extend({
 
     listarOrgaos(currentpage: number) : void {
       this.loading = true
-      let busca={}
+      let busca={
+          orgaoDemandante: this.nomepesquisa? this.nomepesquisa : "",
+          siglaOrgao: this.siglapesquisa? this.siglapesquisa : "",
+          esferaOrgao: this.esferapesquisa? this.esferapesquisa : "",}
       RestApiService.post3("orgaos-demandantes/list", `?currentPage=${currentpage}`, busca)
         .then((response: any) => {         
           this.items = response.data.data

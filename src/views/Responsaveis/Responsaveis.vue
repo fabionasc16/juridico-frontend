@@ -254,7 +254,13 @@ export default Vue.extend({
     listarResponsaveis(currentpage: number) : void {
       this.loading = true
       //RestApiService.get("responsaveis", `?currentPage=${currentpage}`)
-      let busca = {}
+      const cpf =  this.form.cpf_responsavel ? 
+           this.form.cpf_responsavel.replace(/[^\d]+/g, "") : ""
+
+      let busca = {
+        cpfResponsavel : cpf,
+        nomeResponsavel : this.form.nome_responsavel ? this.form.nome_responsavel : "",
+      }
 
       RestApiService.post3("responsaveis/list", `?currentPage=${currentpage}`, busca) 
         .then((response: any) => {
