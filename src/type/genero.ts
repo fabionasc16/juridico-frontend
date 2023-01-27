@@ -4,6 +4,7 @@ export type Genero = {
 };
 
 export const GeneroSeeder: Array<Genero> = [
+  { value: "", texto: "Selecione" },
   { value: "masculino", texto: "Masculino" },
   { value: "feminino", texto: "Feminino" },
   { value: "autointitulado", texto: "Autointitulado" },
