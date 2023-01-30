@@ -65,20 +65,19 @@
               </b-form-group>
 
               <b-form-group class="font col-sm-6 col-md-6 col-lg-3">
-                <label>Gênero <span class="text-danger">*</span></label>
-                <b-form-select :disabled="disabledAll" class="bordered" size="sm" v-model="form.genero" required>
-                  <b-form-select-option value="">Selecione...</b-form-select-option>
-                  <b-form-select-option v-for="option in optionsGenero" :value="option.value" :key="option.value">
-                    {{ option.texto }}
-                  </b-form-select-option>
-                </b-form-select>
-              </b-form-group>
-
-              <b-form-group v-if="form.genero === 'autointitulado'"
+                <label>Gênero <span class="text-danger">*</span></label>                
+                <b-form-select @change="alterarGenero()" v-model="generoSelecionado" :options="optionsGenero"  
+                :disabled="disabledAll" class="bordered" size="sm"  
+                value-field="value"            
+                text-field="texto"
+                > </b-form-select>    
+              </b-form-group>              
+           
+              <b-form-group v-show="generoSelecionado == 'autointitulado'" 
                 class="font col-sm-6 col-md-6 col-lg-4 animate__animated animate__backInRight">
                 <label>Informe o gênero <span class="text-danger">*</span></label>
                 <b-form-input :disabled="disabledAll" class="bordered" :placeholder="'Exemplo: Não-binário'" type="text"
-                  v-model="form.generoOutro" required></b-form-input>
+                  v-model="form.generoOutro"></b-form-input>
               </b-form-group>               
             </div>
 
@@ -193,8 +192,9 @@ export default Vue.extend({
       showBotaoSalvar: true as boolean,   
       optionsEstadoCivil: EstadoCivilSeeder,
       optionsGenero: GeneroSeeder,     
+      generoSelecionado: "" as string,
       dataNascimentoBR: "" as string,
-      form: {} as Usuario,
+      form: {} as Usuario,      
       disabledAll: false as boolean,
       optionsPerfis: [],         
       Notificacao: [] as Array<Notificacao>,
@@ -218,6 +218,9 @@ export default Vue.extend({
   },
 
   methods: {
+    alterarGenero() {
+      this.form.generoOutro = ""
+    },
     submit() {
             let acao = this.id || this.form.id ? "put" : "post"             
 
@@ -235,13 +238,13 @@ export default Vue.extend({
   
       if (
         !this.form.perfilUsuario ||
-        !this.form.nome ||
-        !this.form.genero ||
+        !this.form.nome ||       
+        !this.generoSelecionado ||
         !this.dataNascimentoBR ||
         !this.form.cpf ||
         !this.form.email ||
         !this.form.telefone ||   
-        (this.form.genero === "autointitulado" && !this.form.generoOutro)
+        (this.generoSelecionado === "autointitulado" && !this.form.generoOutro)
       ){
         this.adicionarNotificacao(
                 "danger",
@@ -285,7 +288,9 @@ export default Vue.extend({
     
 
     salvar(acao: string): void {
-      this.loading = true       
+      this.loading = true      
+      
+      this.form.genero = this.generoSelecionado ? this.generoSelecionado : ""
 
       RestApiService.salvar("usuarios", this.form, acao, this.form.id)
         .then((res) => {         
@@ -385,7 +390,8 @@ export default Vue.extend({
             )
             : "";
           this.form.estadoCivil = response.data.estadoCivil;
-          this.form.genero = response.data.genero;
+          this.form.genero = response.data.genero;          
+          this.generoSelecionado = response.data.genero;
           this.form.generoOutro = response.data.generoOutro;        
           this.form.cpf = response.data.cpf;
           this.form.email = response.data.email;
@@ -455,6 +461,7 @@ export default Vue.extend({
           this.dataNascimentoBR = ""            
           this.form.estadoCivil = ""
           this.form.genero = ""
+          this.generoSelecionado = ""
           this.form.generoOutro = ""                
           this.form.email = ""
           this.form.telefone = ""
@@ -501,6 +508,7 @@ export default Vue.extend({
       this.form.dataNascimento = "";
       this.form.estadoCivil = "";      
       this.form.genero = "";
+      this.generoSelecionado = "";
       this.form.generoOutro = "";
       this.form.cpf = "";
       this.form.email = "";
