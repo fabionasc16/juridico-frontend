@@ -13,6 +13,12 @@ const dataMixin = {
       return data.toLocaleDateString("pt-BR", { timeZone: "UTC" });
     },
 
+    formatarDateTimeBr(databr: string): string {       
+      let data = new Date(databr);
+      let dataFormat = data.toLocaleDateString("pt-BR") + " " + data.toLocaleTimeString("pt-BR");
+      return dataFormat
+    },
+
     dataAtual(): string {
       let hoje = new Date();
       let month = ("0" + (hoje.getMonth() + 1)).slice(-2);

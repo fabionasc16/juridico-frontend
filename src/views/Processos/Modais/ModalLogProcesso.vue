@@ -57,6 +57,11 @@
                 :current-page="currentPage" :per-page="perPage" :sticky-header="stickyHeader"
                 :no-border-collapse="noCollapse" :items="items" :fields="fields">
 
+
+              <!-- DATA FERIADO -->
+              <template v-slot:cell(date)="data">
+                 {{formatarDateTimeBr(data.item.date)}}
+              </template> 
              
             </b-table-lite>
         </div>
@@ -136,7 +141,7 @@ export default Vue.extend({
 
             RestApiService.get(
                 "logs",
-                `?search=${this.busca}`
+                `?idProcesso=${this.idProcesso}&search=${this.busca}`
             )
                 .then((response: any) => {
                 this.perPage = response.data.perPage;
@@ -157,11 +162,11 @@ export default Vue.extend({
 
         carregarDados(currentpage: number): void {
             this.loading = true;       
-                        
-            RestApiService.get("logs", `?currentPage=${currentpage}`)            
+           
+            RestApiService.get("logs", `?idProcesso=${this.idProcesso}&currentPage=${currentpage}`)            
                 .then((response: any) => {                  
                 this.items = response.data; 
-                this.perPage = response.data.perPage;
+                this.perPage = response.data.perPage;              
             })
             .catch((e) => {                
                 if (e.message === "Network Error") {
