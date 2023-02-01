@@ -6,7 +6,7 @@
            <hr />
            </b-form-group>
          </div>
-     </div>
+     </div> 
  
           <!-- NOTIFICAÇÕES -->       
          <notifications :notifications="Notificacao"></notifications>     
@@ -555,9 +555,7 @@
            this.items = response.data.data
            this.perPage = response.data.perPage
            this.totalRows = response.data.total   
-           this.totalPageSearch = response.data.data.length  
-           
-           console.log(response.data)
+           this.totalPageSearch = response.data.data.length
          })
          .catch((e) => {
            this.Notificacao.push({
@@ -620,9 +618,9 @@
          )*/
          let busca = {}
  
-         RestApiService.post("responsaveis/list?currentPage=1&perPage=30000", busca)
+         RestApiService.get1("responsaveis/list")
          .then((response: any) => {        
-           this.optionsResponsavel = response.data.data     
+           this.optionsResponsavel = response.data     
          })
          .catch((e) => {          
            console.log(e)
@@ -725,15 +723,13 @@
      carregarClassificacao(): void {
        this.loading = true
      
-       RestApiService.get(
-           "classificacoes",
-           `?currentPage=1&perPage=${this.perPageListagens}`
-         )
-         .then((response: any) => {         
-           this.optionsClassificacao = response.data.data
-         
+       let busca = {}
+ 
+         RestApiService.get1("classificacoes/list")
+         .then((response: any) => {        
+           this.optionsClassificacao = response.data     
          })
-         .catch((e) => {         
+         .catch((e) => {          
            console.log(e)
          })
          .finally(() => {
@@ -743,63 +739,57 @@
      },
  
      carregarAssunto(): void {
-       this.loading = true
-       
-       let busca ={}   
-       RestApiService.post3("assuntos/list", `?currentPage=1&perPage=${this.perPageListagens}`, busca)
-         .then((response: any) => {         
-           this.optionsAssunto = response.data.data
-         
-         })
-         .catch((e) => {
-           console.log(e)
-         })
-         .finally(() => {
-           this.loading = false
-           this.limparNotificacao();
-         })
+      this.loading = true
+     
+     let busca = {}
+
+       RestApiService.get1("assuntos/list")
+       .then((response: any) => {        
+         this.optionsAssunto = response.data     
+       })
+       .catch((e) => {          
+         console.log(e)
+       })
+       .finally(() => {
+         this.loading = false
+         this.limparNotificacao();
+       })
      },
  
       carregarOrgaosDemandantes(): void {
-       this.loading = true
- 
+        this.loading = true
+     
         let busca = {}
 
-         RestApiService.post3(
-           "orgaos-demandantes/list",
-           `?currentPage=1&perPage=${this.perPageListagens}`, busca
-         )      
-         .then((response: any) => {         
-           this.optionsOrgaoDemandante = response.data.data
-         
-         })
-         .catch((e) => {          
-           console.log(e)
-         })
-         .finally(() => {
-           this.loading = false
-           this.limparNotificacao();
-         })
+       RestApiService.get1("orgaos-demandantes/list")
+       .then((response: any) => {        
+         this.optionsOrgaoDemandante = response.data     
+       })       
+       .catch((e) => {          
+         console.log(e)
+       })
+       .finally(() => {
+         this.loading = false
+         this.limparNotificacao();
+       })
      },
  
       carregarTipoProcesso(): void {
-       this.loading = true
- 
-         RestApiService.get(
-           "tipos-processo",
-           `?currentPage=1&perPage=${this.perPageListagens}`
-         )      
-         .then((response: any) => {         
-           this.optionsTipoProcesso = response.data.data       
-         
-         })
-         .catch((e) => {          
-           console.log(e)
-         })
-         .finally(() => {
-           this.loading = false
-           this.limparNotificacao();
-         })
+        this.loading = true
+     
+        let busca = {} 
+
+        RestApiService.get1("tipos-processo/list")
+        .then((response: any) => {        
+          this.optionsTipoProcesso            = response.data     
+        })
+        .catch((e) => {          
+          console.log(e)
+        })
+        .finally(() => {
+          this.loading = false
+          this.limparNotificacao();
+        })
      },
  
      limparNotificacao(): void {
