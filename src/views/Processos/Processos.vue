@@ -777,7 +777,7 @@
       carregarTipoProcesso(): void {
         this.loading = true
      
-        let busca = {}
+        let busca = {} 
 
         RestApiService.get1("tipos-processo/list")
         .then((response: any) => {        
