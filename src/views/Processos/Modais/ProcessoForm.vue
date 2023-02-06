@@ -565,27 +565,21 @@ export default Vue.extend({
              return true
         },     
         listarTipoProcesso(){            
-            RestApiService.get(
-              "tipos-processo",
-              `?currentPage=1&perPage=${this.perPageListagens}`
-              )
+            RestApiService.get1("tipos-processo/list")
               .then((response) => {
                   this.optionsTipoProcesso = response.data.data                   
               }) 
         },
         listarOrgaos(){
             let busca = {}            
-            RestApiService.post3(
-                "orgaos-demandantes/list",
-                `?currentPage=1&perPage=${this.perPageListagens}`, busca
-            )
+            RestApiService.get1("orgaos-demandantes/list")
             .then((response) => {
                 this.optionsOrgaos = response.data.data                  
             })                     
         },
         listarAssuntos(){  
             let busca ={}   
-            RestApiService.post3("assuntos/list", `?currentPage=1&perPage=${this.perPageListagens}`, busca)
+            RestApiService.get1("assuntos/list")
                 .then((response: any) => {         
                 this.optionsAssunto = response.data.data
                 
@@ -595,17 +589,14 @@ export default Vue.extend({
             })  
         },       
         listarClassificacoes() {
-             RestApiService.get(
-                "classificacoes",
-                `?currentPage=1&perPage=${this.perPageListagens}`
-                )            
+            RestApiService.get1("classificacoes/list")            
                 .then((response) => {
                     this.optionsClassificacao = response.data.data                    
                 })                    
         },
         listarResponsaveis() { 
             let busca = {}
-            RestApiService.post3("responsaveis/list", `?currentPage=1&perPage=${this.perPageListagens}`, busca)                        
+            RestApiService.get1("responsaveis/list")                        
                 .then((response) => {                    
                     this.optionsResponsavel = response.data.data                    
                 })                         
