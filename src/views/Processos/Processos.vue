@@ -139,15 +139,15 @@
                    v-model="caixaSigedSelecionada"/>                 
                 </b-form-group>
  
-                <!--
-                  <b-form-group label="Descrição:" append="m" class="font col-sm-6 col-md-5 col-lg-4" v-show="exibirMaisDetalhes">                            
-                  <b-form-input size="md" type="text" v-model="form.descricao" autofocus></b-form-input  >
+                
+                <b-form-group label="Descrição:" append="m" class="font col-sm-6 col-md-5 col-lg-4" v-show="exibirMaisDetalhes">                            
+                  <b-form-input size="md" type="text" v-model="form.descricaoProcesso" minlength="3" autofocus></b-form-input  >
                 </b-form-group>
 
                 <b-form-group label="Objeto:" append="m" class="font col-sm-6 col-md-5 col-lg-4" v-show="exibirMaisDetalhes">                            
-                  <b-form-input size="md" type="text" v-model="form.objeto" autofocus></b-form-input  >
+                  <b-form-input size="md" type="text" v-model="form.objetoProcesso" minlength="3" autofocus></b-form-input  >
                 </b-form-group>
-              -->
+              
                    
                </div>
              </div>
@@ -471,8 +471,8 @@
          descricao: "" as string,
        },
        objetoProcesso: {               
-         objeto: "" as string,
-       },   
+         objetoProcesso: "" as string,
+       },
          
      };
    },
@@ -487,6 +487,7 @@
      this.carregarStatusProcesso()
      this.carregarStatusPrazo()
      this.carregarCaixaSiged()
+     
    },
    methods: {
      userIsRecepcao(): boolean {
@@ -551,8 +552,8 @@
          statusPrazo : (this.statusPrazoSelecionado && this.statusPrazoSelecionado.id_status) ? (this.statusPrazoSelecionado.id_status) : "",
          idClassificacao:  this.classificacaoSelecionada ? this.classificacaoSelecionada.id_classificacao : "",
          idResponsavel: this.responsavelSelecionado ? this.responsavelSelecionado.id_responsavel : "",
-         descricaoProcesso: this.form.descricao ? this.form.descricao : "",
-         objetoProcesso: this.form.objeto ? this.form.objeto : "",}
+         descricaoProcesso: this.form.descricaoProcesso ? this.form.descricaoProcesso : "",
+         objetoProcesso: this.form.objetoProcesso ? this.form.objetoProcesso : "",}
  
        RestApiService.post3("processos/list", `?currentPage=${currentpage}`, busca)
          .then((response: any) => {           
@@ -585,20 +586,24 @@
          statusPrazo : (this.statusPrazoSelecionado && this.statusPrazoSelecionado.id_status) ? (this.statusPrazoSelecionado.id_status) : "",
          idClassificacao:  this.classificacaoSelecionada ? this.classificacaoSelecionada.id_classificacao : "",
          idResponsavel: this.responsavelSelecionado ? this.responsavelSelecionado.id_responsavel : "",
-         descricaoProcesso: this.form.descricao ? this.form.descricao : "",
-         objetoProcesso: this.form.objeto ? this.form.objeto : "",
+         descricaoProcesso: this.form.descricaoProcesso ? this.form.descricaoProcesso : "",
+         objetoProcesso: this.form.objetoProcesso ? this.form.objetoProcesso : "",
        }     
 
          this.currentPage = 1               
       
          RestApiService.post("processos/list", busca)
-           .then((response: any) => {            
+           .then((response: any) => {  
+            
+            console.log(response.data)
              this.items = response.data.data;
              this.perPage = response.data.perPage;
              this.totalRows = response.data.total;
              this.totalPageSearch = response.data.data.length    
            })
            .catch((e) => {
+
+            //console.log("erro ",e)
              if (e.message.length > 0) {
                this.Notificacao.push({
                  type: "danger",
