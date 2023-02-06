@@ -91,7 +91,7 @@
                     <div class="row">
                         <b-form-group class="font col-sm-12 col-md-12 col-lg-12">
                             <label>Objeto: <span class="text-danger">*</span></label>
-                            <b-form-textarea rows="2" max-rows="2" v-model="form.objeto" :disabled="disabledAll" required></b-form-textarea>
+                            <b-form-textarea rows="2" max-rows="2" v-model="form.objetoProcesso" :disabled="disabledAll" required></b-form-textarea>
                         </b-form-group>
                     </div>
                     <div class="row">
@@ -104,7 +104,7 @@
                     <div class="row">
                         <b-form-group class="font col-sm-12 col-md-12 col-lg-12">
                             <label>Descrição: <span class="text-danger">*</span></label>        
-                            <b-form-textarea rows="4" max-rows="4" v-model="form.descricao" 
+                            <b-form-textarea rows="4" max-rows="4" v-model="form.descricaoProcesso" 
                                 :disabled="disabledAll" required></b-form-textarea>
                         </b-form-group>
                     </div> 
@@ -306,14 +306,14 @@ export default Vue.extend({
                 this.form.dataProcesso = res.data.data_processo
                 this.form.dataRecebimento = res.data.data_recebimento
                 this.form.horaRecebimento =  res.data.hora_recebimento                              
-                this.form.objeto =  res.data.objeto
+                this.form.objetoProcesso =  res.data.objeto
                 this.form.requerSIGED = res.data.requer_siged
                 this.form.numProcessoSIGED = res.data.numero_siged
                 this.form.dataProcessoSIGED = res.data.data_processo_siged
                 this.form.permanenciaSIGED = res.data.permanencia_siged
                 this.form.caixaAtualSIGED =  res.data.caixa_atual_siged
                 this.form.tramitacaoSIGED =  res.data.tramitacao_siged              
-                this.form.descricao = res.data.descricao
+                this.form.descricaoProcesso = res.data.descricao
                 this.form.dataLimitePrazo =  res.data.dia_limite_prazo
                 this.form.diasPercorridos =  res.data.dias_percorridos
                 this.form.diasExpirados = res.data.dias_expirados 
