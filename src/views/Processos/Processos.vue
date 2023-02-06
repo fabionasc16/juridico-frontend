@@ -235,7 +235,7 @@
                    </b-list-group-item>   
                    
                    <b-list-group-item block v-b-modal.modal-log-processo
-                    v-if="data.item.status.id_status!='14'" 
+                    v-if="data.item.status.id_status!='14' && !userIsRecepcao()" 
                       @listarProcesso="listarProcesso(currentPage)" class="btn-light btn-outline-dark m-0 p-1"
                       @click="abrirModal('modal-log-processo',  data.item.id_processo, data.item.num_procedimento)">
                      Log do Sistema
@@ -370,6 +370,7 @@
  import ModalExcluir from "@/components/ModalExcluir.vue"
  import ModalMensagem from "@/components/ModalMensagem.vue"
  import dataMixin from "@/mixins/dataMixin";
+ import AuthService from "@/services/auth";
  
  export default Vue.extend({
    directives: { mask },
@@ -488,6 +489,9 @@
      this.carregarCaixaSiged()
    },
    methods: {
+     userIsRecepcao(): boolean {
+      return AuthService.userIsRecepcao()
+     },
      alterarTitulo(nome:string):void {
        this.titleModal = nome
      },

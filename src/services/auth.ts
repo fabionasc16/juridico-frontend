@@ -36,6 +36,10 @@ class AuthService {
     return this.possuiPermissao("SAPEJ_ADMINISTRADOR");
   }
 
+  public userIsRecepcao() {
+    return this.possuiPermissao("SAPEJ_RECEPCAO");
+  }
+
   public unidadeUserLogado() {
     return localStorage.getItem("idUnidade") || "";
   }
