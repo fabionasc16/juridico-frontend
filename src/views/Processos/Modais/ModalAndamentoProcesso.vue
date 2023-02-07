@@ -102,7 +102,7 @@ export default Vue.extend({
             form: {} as Processo,  
            // carregarForm: {} as Processo,  
             dataArquivamentoBR: "" as string,
-            optionsStatusProcesso: [] as Array<StatusProcesso>, 
+            optionsStatusProcesso: [] as Array<String>, 
             statusProcessoSelecionado: {
                     desc_status: "Selecione" as string,
                     id_status: null as any,
@@ -116,6 +116,8 @@ export default Vue.extend({
                 id_responsavel: "" as string,
             }, 
             statusDistribuido: '11' as string,
+            statusRecebido: '10' as string,
+            statusArquivado: '14' as string,
             responsavelBD: null as any, //responsavel que vem diretamente no BD, antes do usuario alterar na tela
         }
     },    
@@ -131,7 +133,7 @@ export default Vue.extend({
         alteraStatus(): void {
             this.dataArquivamentoBR = ""
             this.form.dataArquivamento = ""
-            this.statusProcessoSelecionado.id_status == '14' ? this.exibirData = true : this.exibirData = false             
+            this.statusProcessoSelecionado.id_status == this.statusArquivado ? this.exibirData = true : this.exibirData = false             
         },
         carregarDados(): void {       
             this.loading = true;          
@@ -166,6 +168,23 @@ export default Vue.extend({
                 this.loading = false;
             });
         },
+        carregarStatusProcesso(): void {
+            this.loading = true   
+        
+                RestApiService.get(
+                "status/aplicacaostatUs",
+                `?aplicaA=PROCESSO`
+                )
+                .then((response: any) => {                
+                this.optionsStatusProcesso = response.data                
+                })
+                .catch((e) => {          
+                console.log(e)
+                })
+                .finally(() => {
+                this.loading = false               
+            })
+        },   
         listarResponsaveis() { 
             let busca = {}
             RestApiService.post3("responsaveis/list", `?currentPage=1&perPage=300000`, busca)                        
@@ -258,14 +277,14 @@ export default Vue.extend({
                 );
             }    
 
-            if(this.statusAtual != 10 && this.statusProcessoSelecionado.id_status == 10) {
+            if(this.statusAtual != this.statusRecebido && this.statusProcessoSelecionado.id_status == this.statusRecebido) {
                 this.adicionarNotificacao(
                 "danger",
                 "Não é possível retornar ao status Recebido!"
                 );
             }            
             
-            if( this.statusProcessoSelecionado.id_status=='14' && !this.dataArquivamentoBR){
+            if( this.statusProcessoSelecionado.id_status==this.statusArquivado && !this.dataArquivamentoBR){
                 this.adicionarNotificacao(
                 "danger",
                 "Campo Data é obrigatório!"

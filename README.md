@@ -135,8 +135,11 @@ Em relação a feriados criados, o sistema enviaria para o usuário confirmar, p
     * SAPEJ_DASHBOARD
 
 - `Recepção`:
-    <br>
-    Pode ver os processos que ainda não foram distribuídos, ou seja, os processos com status Recebido, independente de quem cadastrou.
+    <br>  
+    Pode ver todos os processos, mas só pode alterar com status do recebido. 
+    A regra de visualizar processos foi alterada para que
+    a Recepção possa ver se o processo já está cadastrado e se o que ele vai cadastrar é apenas uma reiteração ou um processo novo.
+
     Apenas quando estiver com status de Recebido, pode excluir processo.
     <br>
 

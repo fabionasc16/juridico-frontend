@@ -237,13 +237,18 @@ export default Vue.extend({
     listarUsuarios(currentpage: number) : void { 
      
       this.loading = true; 
-     
-      RestApiService.get("usuarios/all/?nomeSistema=SAPEJ",  `?currentPage=${currentpage}`)     
+      let busca = {
+          nomeSistema : "SAPEJ",       
+        }   
+      //RestApiService.get("usuarios/all/?nomeSistema=SAPEJ",  `?currentPage=${currentpage}`) 
+      let url =  "usuarios/all"+ `?currentPage=${currentpage}&perPage=10`
+      RestApiService.post(url, busca)     
           .then((response: any) => {            
-            this.items = response.data;           
+            this.items = response.data.data;           
             this.perPage = response.data.perPage;
             this.totalRows = response.data.total;     
-            this.totalPageSearch = response.data.length  
+            this.totalPageSearch = response.data.data.length  
+          
           })
           .catch((e) => {
             if (e.message === "Network Error") {
@@ -278,17 +283,19 @@ export default Vue.extend({
             this.form.cpf.replace(/[^\d]+/g, "") : ""
 
         let busca = {
-          user_cpf : cpf,
-          user_name : this.form.nome ? this.form.nome : "",      
+          nomeSistema : "SAPEJ", 
+          cpfUsuario : cpf,
+          nomeUsuario : this.form.nome ? this.form.nome : "",      
         }    
 
-        RestApiService.post("usuarios", busca)
+        let url =  "usuarios/all?currentPage=1&perPage=10"
+        RestApiService.post(url, busca)
       //  RestApiService.post("usuarios/?nomeSistema=SAPEJ", busca)
             .then((response: any) => {            
-              this.items = response.data;
+              this.items = response.data.data;
               this.perPage = response.data.perPage;
               this.totalRows = response.data.total;
-              this.totalPageSearch = response.data.length              
+              this.totalPageSearch = response.data.data.length              
             })
             .catch((e) => {             
               if (e.message.length > 0) {
