@@ -4,9 +4,9 @@ export type StatusProcesso = {
 };
 
 export const StatusProcessoSeeder: Array<StatusProcesso> = [
-  { texto: "Recebido", value: "1" },
-  { texto: "Distribuído", value: "2" },
-  { texto: "Tramitando", value: "3" },
-  { texto: "Respondendo", value: "4" },
-  { texto: "Arquivado", value: "5" },
+  { texto: "Recebido", value: "10" },
+  { texto: "Distribuído", value: "11" },
+  { texto: "Tramitando", value: "12" },
+  { texto: "Respondendo", value: "13" },
+  { texto: "Arquivado", value: "14" },
 ];

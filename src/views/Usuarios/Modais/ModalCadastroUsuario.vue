@@ -55,7 +55,8 @@
                   v-mask="'##/##/####'" :disabled="disabledAll" required></b-form-input>
               </b-form-group>
 
-              <b-form-group label="Estado civil" class="font col-sm-6 col-md-6 col-lg-3">
+              <b-form-group class="font col-sm-6 col-md-6 col-lg-3">
+                <label>Estado civil <span class="text-danger">*</span></label>
                 <b-form-select :disabled="disabledAll" class="bordered" size="sm" v-model="form.estadoCivil">
                   <b-form-select-option value="">Selecione...</b-form-select-option>
                   <b-form-select-option v-for="option in optionsEstadoCivil" :value="option.value" :key="option.value">
@@ -108,10 +109,10 @@
             <div class="row">
               <b-form-group label="CEP" class="font col-sm-5 col-md-5 col-lg-3">
                 <b-form-input :disabled="disabledAll" class="bordered" id="cep" :placeholder="'Exemplo: 00000-000'"
-                  type="text" @keyup="searchCep()" v-model="form.cep" v-mask="'#####-###'"></b-form-input>
+                  type="text" @focusout="searchCep()" v-model="form.cep" v-mask="'#####-###'"></b-form-input>
                 <span v-if="invalidCEP" style="color: red; font-size: 12px; padding-left: 1%">{{ invalidCEP }}</span>
               </b-form-group>
-
+             
               <b-form-group label="Logradouro" class="font col-sm-7 col-md-7 col-lg-9">
                 <b-form-input :disabled="disabledAll" class="bordered" id="logradouro"
                   :placeholder="'Exemplo: Avenida Boulevard'" type="text" v-model="form.logradouro"></b-form-input>
@@ -337,22 +338,7 @@ export default Vue.extend({
         .finally(() => {
           this.loading = false;
         });
-    },
-    searchCep() {
-      var cep = this.form.cep.replace(/[^0-9]/g, "");
-
-      if (cep.length == 8) {
-        axios.get(`https://viacep.com.br/ws/${cep}/json/`).then((res) => {
-          if (!res.data.erro) {
-            this.invalidCEP = "";
-            this.form.logradouro = res.data.logradouro;
-            this.form.bairro = res.data.bairro;          
-          } else {
-            this.invalidCEP = "Este CEP parece inválido!";
-          }
-        });
-      }
-    },
+    },  
   
     listarPerfis(): void {
 
@@ -408,6 +394,30 @@ export default Vue.extend({
                             "Houve um erro. Tente novamente!"
                             );
         });
+    },
+
+    searchCep() {
+
+        this.loading = true
+        var cep = this.form.cep.replace(/[^0-9]/g, "");
+
+        if (cep.length == 8) {
+          axios.get(`https://viacep.com.br/ws/${cep}/json/`).then((res) => {
+            if (!res.data.erro) {
+              this.invalidCEP = "";
+              this.form.logradouro = res.data.logradouro;
+              this.form.bairro = res.data.bairro;  
+                   
+            } else {
+              this.loading = false;
+              this.invalidCEP = "Este CEP parece inválido!";
+            }
+          }).finally(() => {
+            this.loading = false;
+          }); 
+        }else{
+          this.loading = false;
+        }
     },
 
     verificaCpf():void {

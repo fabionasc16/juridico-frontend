@@ -206,7 +206,7 @@
  
                    <!--status diferente de arquivado(14) -->                  
                    <b-list-group-item block class="btn-light btn-outline-dark m-0 p-1"
-                   v-if="data.item.status.id_status!='14'" 
+                   v-if="data.item.status.id_status!=statusArquivado && permissaoRecepcaoMenu(data.item.fk_status )" 
                      @click="abrirModal('modal-editar-processo', data.item.id_processo)"
                      @listarProcesso="listarProcesso(currentPage)"
                      >
@@ -221,7 +221,7 @@
  
                    <!--status diferente de arquivado(14) --> 
                    <b-list-group-item block class="btn-light btn-outline-dark m-0 p-1"
-                    v-if="data.item.status.id_status!='14'"  
+                    v-if="data.item.status.id_status!=statusArquivado && permissaoRecepcaoMenu(data.item.fk_status )"  
                      @listarProcesso="listarProcesso(currentPage)"
                      @click="abrirModal('modal-andamento-processo', data.item.id_processo, data.item.num_procedimento)">
                      Alterar Situação
@@ -235,7 +235,7 @@
                    </b-list-group-item>   
                    
                    <b-list-group-item block v-b-modal.modal-log-processo
-                    v-if="data.item.status.id_status!='14' && !userIsRecepcao()" 
+                    v-if="data.item.status.id_status!=statusArquivado && !userIsRecepcao()" 
                       @listarProcesso="listarProcesso(currentPage)" class="btn-light btn-outline-dark m-0 p-1"
                       @click="abrirModal('modal-log-processo',  data.item.id_processo, data.item.num_procedimento)">
                      Log do Sistema
@@ -243,7 +243,7 @@
  
                    <b-list-group-item block class="btn-light text-dark btn-outline-danger m-0 p-1"
                          @click="abrirModal('modal-mensagem', data.item.id_processo, data.item.num_procedimento)"
-                         v-if="data.item.status.id_status=='14'" 
+                         v-if="data.item.status.id_status==statusArquivado && !userIsRecepcao()" 
                          @listarProcesso="listarProcesso(currentPage)">
                      Desarquivar
                    </b-list-group-item>
@@ -253,7 +253,7 @@
                        @click="abrirModal('modal-excluir', data.item.id_processo, data.item.num_procedimento)"
                        class="btn-light text-dark btn-outline-danger m-0 p-1"                 
                        @listarProcesso="listarProcesso(currentPage)"
-                       v-if="data.item.status.id_status=='10'">                      
+                       v-if="data.item.status.id_status== statusRecebido">                      
                      Excluir
                    </b-list-group-item>
                      <!--@click="excluir(data.item.id_processo, data.item.num_procedimento, data.item.status.id_status)">-->
@@ -433,6 +433,10 @@
        Message: [] as Array<Notificacao>,
        loading: false as boolean,
        alert: false as boolean,   
+
+       statusRecebido: '10' as String,
+       statusArquivado: '14' as String,
+       statusTramitando: '12' as String,
  
        perPageListagens:30000,
  
@@ -473,11 +477,11 @@
        objetoProcesso: {               
          objetoProcesso: "" as string,
        },
-         
+               
      };
    },
      
-   mounted() {
+   mounted() {          
      this.listarProcesso(this.currentPage)    
      this.carregarResponsavel()
      this.carregarClassificacao()
@@ -490,6 +494,10 @@
      
    },
    methods: {
+     //recepção só tem permissão de alterar processos com status recebido
+     permissaoRecepcaoMenu(statusProcesso:string): any {    
+        return !this.userIsRecepcao() || (this.userIsRecepcao() && statusProcesso == this.statusRecebido)
+     }, 
      userIsRecepcao(): boolean {
       return AuthService.userIsRecepcao()
      },
@@ -503,8 +511,7 @@
         this.numProcedimentoModal = numProcedimento
         this.$bvModal.show(modalname)            
      },
-     alterarProced(){
-      console.log("alteraproc")
+     alterarProced(){     
       this.form.numProcessoSIGED=""
       this.form.numProcedimento=""
      },
@@ -561,6 +568,8 @@
            this.perPage = response.data.perPage
            this.totalRows = response.data.total   
            this.totalPageSearch = response.data.data.length
+
+           console.log(this.items)
          })
          .catch((e) => {
            this.Notificacao.push({
@@ -814,7 +823,7 @@
        
        this.formDesarquivado.idProcesso = id_processo
        this.formDesarquivado.dataArquivamento = ""
-       this.formDesarquivado.idStatusProcesso = 12 //Tramitando
+       this.formDesarquivado.idStatusProcesso = this.statusTramitando //Tramitando
  
        let url = "processos/atualiza-status?idProcesso="+id_processo;                 
  

@@ -16,7 +16,7 @@ export const FieldsTableUsuario =
           sortable: true
         },  
         {
-          key: 'profiles[0].profile_name',
+          key: 'profiles.profile_name',
           label: 'Perfil',
           sortable: true
         },        
