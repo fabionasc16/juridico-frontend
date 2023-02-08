@@ -23,10 +23,11 @@
                     <div class="row"> 
                         <b-form-group class="font col-7 col-sm-7 col-md-7 col-lg-7">                            
                             <label>Status Processo:<span class="text-danger">*</span></label>
-                            <v-select style="font-size: 0.85rem" 
+                            <v-select style="font-size: 0.85rem"
                                 :options="optionsStatusProcesso" class="font" label="desc_status"
                                         v-model="statusProcessoSelecionado" required 
-                                        @input="alteraStatus"/>
+                                        @input="alteraStatus"
+                                        :clearable="false" /> 
                         </b-form-group>                           
                     </div>
                     <div class="row" v-if="exibirData">    
@@ -74,6 +75,7 @@ import RestApiService from "@/services/rest/service";
 import LoadingSpinner from "@/components/LoadingSpinner.vue";
 import { Processo } from '@/type/processo';
 import { StatusProcesso } from "@/type/statusProcesso";
+import AuthService from "@/services/auth";
 
 export default Vue.extend({
     directives: { mask },
@@ -125,11 +127,14 @@ export default Vue.extend({
     beforeMount() {
         this.isLoading = false
         this.carregarDados() 
-        this.carregarStatusPrazo() 
+        this.carregarStatusProcesso() 
         this.listarResponsaveis()         
     }, 
             
-    methods: {         
+    methods: {  
+        userIsRecepcao(): boolean {
+            return AuthService.userIsRecepcao()
+        },       
         alteraStatus(): void {
             this.dataArquivamentoBR = ""
             this.form.dataArquivamento = ""
@@ -167,24 +172,7 @@ export default Vue.extend({
             .finally(() => {
                 this.loading = false;
             });
-        },
-        carregarStatusProcesso(): void {
-            this.loading = true   
-        
-                RestApiService.get(
-                "status/aplicacaostatUs",
-                `?aplicaA=PROCESSO`
-                )
-                .then((response: any) => {                
-                this.optionsStatusProcesso = response.data                
-                })
-                .catch((e) => {          
-                console.log(e)
-                })
-                .finally(() => {
-                this.loading = false               
-            })
-        },   
+        },      
         listarResponsaveis() { 
             let busca = {}
             RestApiService.post3("responsaveis/list", `?currentPage=1&perPage=300000`, busca)                        
@@ -249,15 +237,29 @@ export default Vue.extend({
                     this.loading = false;
                 });
             }                 
-        },
-        carregarStatusPrazo(): void {
-            this.loading = true   
+        },        
+        carregarStatusProcesso(): void {
+
+            if(this.userIsRecepcao()){
+                const statusRecepcao :  Array<any> = [
+                    { aplica_a: "PROCESSO", desc_status: "Recebido",  id_status: 10 },
+                    { aplica_a: "PROCESSO", desc_status: "Distribuido",  id_status: 11 },
+                ]
+                    
+                this.optionsStatusProcesso = statusRecepcao
+            }
+            else {
+                this.loading = true   
+               /*  RestApiService.get(
+                "status/aplicacaostatUs",
+                `?aplicaA=PROCESSO`
+                )*/
                 RestApiService.get(
                 "status/aplicacaostatus",
                 `?aplicaA=PROCESSO&currentPage=1&perPage=${this.perPageListagens}`
                 )
-                .then((response: any) => {        
-                    this.optionsStatusProcesso = response.data                   
+                .then((response: any) => {                   
+                    this.optionsStatusProcesso = response.data    
                 })
                 .catch((e) => {          
                     console.log(e)
@@ -265,6 +267,7 @@ export default Vue.extend({
                 .finally(() => {
                     this.loading = false               
                 })
+            }
         },        
 
         validarCampos(): boolean {    
