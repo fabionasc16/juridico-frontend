@@ -567,21 +567,21 @@ export default Vue.extend({
         listarTipoProcesso(){            
             RestApiService.get1("tipos-processo/list")
               .then((response) => {
-                  this.optionsTipoProcesso = response.data.data                   
+                  this.optionsTipoProcesso = response.data                 
               }) 
         },
         listarOrgaos(){
             let busca = {}            
             RestApiService.get1("orgaos-demandantes/list")
             .then((response) => {
-                this.optionsOrgaos = response.data.data                  
+                this.optionsOrgaos = response.data               
             })                     
         },
         listarAssuntos(){  
             let busca ={}   
             RestApiService.get1("assuntos/list")
                 .then((response: any) => {         
-                this.optionsAssunto = response.data.data
+                this.optionsAssunto = response.data
                 
             })
             .catch((e) => {
@@ -591,14 +591,14 @@ export default Vue.extend({
         listarClassificacoes() {
             RestApiService.get1("classificacoes/list")            
                 .then((response) => {
-                    this.optionsClassificacao = response.data.data                    
+                    this.optionsClassificacao = response.data                    
                 })                    
         },
         listarResponsaveis() { 
             let busca = {}
             RestApiService.get1("responsaveis/list")                        
                 .then((response) => {                    
-                    this.optionsResponsavel = response.data.data                    
+                    this.optionsResponsavel = response.data                  
                 })                         
         },
         exibirCampoSIGED(): void {
