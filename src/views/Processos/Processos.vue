@@ -6,7 +6,7 @@
            <hr />
            </b-form-group>
          </div>
-     </div>
+     </div> 
  
           <!-- NOTIFICAÇÕES -->       
          <notifications :notifications="Notificacao"></notifications>     

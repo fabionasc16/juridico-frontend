@@ -237,6 +237,15 @@ export default Vue.extend({
                     this.loading = false;
                 });
             }                 
+<<<<<<< HEAD
+        },
+        carregarStatusPrazo(): void {
+            this.loading = true   
+                RestApiService.get1(
+                "status/recepcao")
+                .then((response: any) => {        
+                    this.optionsStatusProcesso = response.data                   
+=======
         },        
         carregarStatusProcesso(): void {
 
@@ -260,6 +269,7 @@ export default Vue.extend({
                 )
                 .then((response: any) => {                   
                     this.optionsStatusProcesso = response.data    
+>>>>>>> 166a2c0b2b00f41496b3aff7c14465dee2fb73b6
                 })
                 .catch((e) => {          
                     console.log(e)
