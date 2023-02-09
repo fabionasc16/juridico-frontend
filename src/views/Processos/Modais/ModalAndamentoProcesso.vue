@@ -233,10 +233,8 @@ export default Vue.extend({
         },
         carregarStatusPrazo(): void {
             this.loading = true   
-                RestApiService.get(
-                "status/aplicacaostatus",
-                `?aplicaA=PROCESSO&currentPage=1&perPage=${this.perPageListagens}`
-                )
+                RestApiService.get1(
+                "status/recepcao")
                 .then((response: any) => {        
                     this.optionsStatusProcesso = response.data                   
                 })
