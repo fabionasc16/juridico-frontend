@@ -23,10 +23,11 @@
                     <div class="row"> 
                         <b-form-group class="font col-7 col-sm-7 col-md-7 col-lg-7">                            
                             <label>Status Processo:<span class="text-danger">*</span></label>
-                            <v-select style="font-size: 0.85rem" 
+                            <v-select style="font-size: 0.85rem"
                                 :options="optionsStatusProcesso" class="font" label="desc_status"
                                         v-model="statusProcessoSelecionado" required 
-                                        @input="alteraStatus"/>
+                                        @input="alteraStatus"
+                                        :clearable="false" /> 
                         </b-form-group>                           
                     </div>
                     <div class="row" v-if="exibirData">    
@@ -74,6 +75,7 @@ import RestApiService from "@/services/rest/service";
 import LoadingSpinner from "@/components/LoadingSpinner.vue";
 import { Processo } from '@/type/processo';
 import { StatusProcesso } from "@/type/statusProcesso";
+import AuthService from "@/services/auth";
 
 export default Vue.extend({
     directives: { mask },
@@ -102,7 +104,7 @@ export default Vue.extend({
             form: {} as Processo,  
            // carregarForm: {} as Processo,  
             dataArquivamentoBR: "" as string,
-            optionsStatusProcesso: [] as Array<StatusProcesso>, 
+            optionsStatusProcesso: [] as Array<String>, 
             statusProcessoSelecionado: {
                     desc_status: "Selecione" as string,
                     id_status: null as any,
@@ -116,6 +118,8 @@ export default Vue.extend({
                 id_responsavel: "" as string,
             }, 
             statusDistribuido: '11' as string,
+            statusRecebido: '10' as string,
+            statusArquivado: '14' as string,
             responsavelBD: null as any, //responsavel que vem diretamente no BD, antes do usuario alterar na tela
         }
     },    
@@ -123,15 +127,18 @@ export default Vue.extend({
     beforeMount() {
         this.isLoading = false
         this.carregarDados() 
-        this.carregarStatusPrazo() 
+        this.carregarStatusProcesso() 
         this.listarResponsaveis()         
     }, 
             
-    methods: {         
+    methods: {  
+        userIsRecepcao(): boolean {
+            return AuthService.userIsRecepcao()
+        },       
         alteraStatus(): void {
             this.dataArquivamentoBR = ""
             this.form.dataArquivamento = ""
-            this.statusProcessoSelecionado.id_status == '14' ? this.exibirData = true : this.exibirData = false             
+            this.statusProcessoSelecionado.id_status == this.statusArquivado ? this.exibirData = true : this.exibirData = false             
         },
         carregarDados(): void {       
             this.loading = true;          
@@ -165,7 +172,7 @@ export default Vue.extend({
             .finally(() => {
                 this.loading = false;
             });
-        },
+        },      
         listarResponsaveis() { 
             let busca = {}
             RestApiService.post3("responsaveis/list", `?currentPage=1&perPage=300000`, busca)                        
@@ -230,6 +237,7 @@ export default Vue.extend({
                     this.loading = false;
                 });
             }                 
+<<<<<<< HEAD
         },
         carregarStatusPrazo(): void {
             this.loading = true   
@@ -237,6 +245,31 @@ export default Vue.extend({
                 "status/recepcao")
                 .then((response: any) => {        
                     this.optionsStatusProcesso = response.data                   
+=======
+        },        
+        carregarStatusProcesso(): void {
+
+            if(this.userIsRecepcao()){
+                const statusRecepcao :  Array<any> = [
+                    { aplica_a: "PROCESSO", desc_status: "Recebido",  id_status: 10 },
+                    { aplica_a: "PROCESSO", desc_status: "Distribuido",  id_status: 11 },
+                ]
+                    
+                this.optionsStatusProcesso = statusRecepcao
+            }
+            else {
+                this.loading = true   
+               /*  RestApiService.get(
+                "status/aplicacaostatUs",
+                `?aplicaA=PROCESSO`
+                )*/
+                RestApiService.get(
+                "status/aplicacaostatus",
+                `?aplicaA=PROCESSO&currentPage=1&perPage=${this.perPageListagens}`
+                )
+                .then((response: any) => {                   
+                    this.optionsStatusProcesso = response.data    
+>>>>>>> 166a2c0b2b00f41496b3aff7c14465dee2fb73b6
                 })
                 .catch((e) => {          
                     console.log(e)
@@ -244,6 +277,7 @@ export default Vue.extend({
                 .finally(() => {
                     this.loading = false               
                 })
+            }
         },        
 
         validarCampos(): boolean {    
@@ -256,14 +290,14 @@ export default Vue.extend({
                 );
             }    
 
-            if(this.statusAtual != 10 && this.statusProcessoSelecionado.id_status == 10) {
+            if(this.statusAtual != this.statusRecebido && this.statusProcessoSelecionado.id_status == this.statusRecebido) {
                 this.adicionarNotificacao(
                 "danger",
                 "Não é possível retornar ao status Recebido!"
                 );
             }            
             
-            if( this.statusProcessoSelecionado.id_status=='14' && !this.dataArquivamentoBR){
+            if( this.statusProcessoSelecionado.id_status==this.statusArquivado && !this.dataArquivamentoBR){
                 this.adicionarNotificacao(
                 "danger",
                 "Campo Data é obrigatório!"
