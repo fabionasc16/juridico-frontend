@@ -121,15 +121,24 @@
             .then((res) => {
               this.$router.push({ path: '/processos' })
             })
-            .catch(error => {
-             if(error.response.status == '404'){
+            .catch(error => {          
+              if(error.response.status == '404'){
                 this.message = 'Ocorreu um erro na conexão do sistema.'  
-                this.showError = true;
-                return;               
-              }          
-              
-              this.message = error.response.data.message
-              this.showError = true;                 
+                this.showError = true;                                          
+              } 
+              else if(error.code === 'ERR_NETWORK') {
+                this.message = "Sem conexão de rede. Verifique sua conexão!"
+                this.showError = true;            
+              }              
+              else if( error && error.response &&  error.response.data &&
+                     error.response.data.message ) {
+                this.message = error.response.data.message
+                this.showError = true;               
+              }              
+              else {
+                this.message = 'Ocorreu um erro ao acessar o sistema'  
+                this.showError = true;      
+              }         
             })
             .finally(() => {
               this.loading = false           

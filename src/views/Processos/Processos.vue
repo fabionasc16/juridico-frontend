@@ -32,8 +32,6 @@
                 
                   <b-form-input v-show="selected=='proced'" size="md" type="text" v-model="form.numProcedimento" autofocus placeholder="Nº Procedimento" id="numprod"></b-form-input>
                    <b-form-input v-show="selected=='siged'" size="md" type="text" v-model="form.numProcessoSIGED" v-mask="'##.##.######.######/####-##'" autofocus placeholder="Nº SIGED" id="numsiged"></b-form-input>
- 
-                
                    <!-- v-mask="'######/####-##'" -->
                  </b-form-group>
 
@@ -111,8 +109,6 @@
                             v-model="statusPrazoSelecionado"/>
                 </b-form-group>                
              
-
-
                 <b-form-group label="Classificação:" append="m" class="font col-sm-6 col-md-5 col-lg-4"
                    v-show="exibirMaisDetalhes">
                    <v-select style="font-size: 0.85rem" :options="optionsClassificacao" 
@@ -138,7 +134,6 @@
                    id="caixa_atual_siged"                  
                    v-model="caixaSigedSelecionada"/>                 
                 </b-form-group>
- 
                 
                 <b-form-group label="Descrição:" append="m" class="font col-sm-6 col-md-5 col-lg-4" v-show="exibirMaisDetalhes">                            
                   <b-form-input size="md" type="text" v-model="form.descricaoProcesso" minlength="3" autofocus></b-form-input  >
@@ -147,8 +142,6 @@
                 <b-form-group label="Objeto:" append="m" class="font col-sm-6 col-md-5 col-lg-4" v-show="exibirMaisDetalhes">                            
                   <b-form-input size="md" type="text" v-model="form.objetoProcesso" minlength="3" autofocus></b-form-input  >
                 </b-form-group>
-              
-                   
                </div>
              </div>
            </div>
@@ -157,12 +150,11 @@
         <!-- CARD DA TABELA -->
         <div class="card-table p-0 m-0 table-responsive">    
           <!-- TOPO TABELA-->
-          <div class="topo-table">
-       
+          <div class="topo-table">       
             <div class="desc-topo-table">
               <b-icon-journal-text class="icon-topo-table"></b-icon-journal-text> 
               <span class="title-topo-table">Processos Cadastrados</span>
-            </div>                      
+            </div>                    
            
             <div class="button-topo-table">
               <b-icon-plus-circle v-b-modal.modal-cadastro-processo v-b-tooltip.hover.topleft="'Adicionar Processo'"></b-icon-plus-circle>
@@ -181,16 +173,38 @@
                </template>
  
                <template v-slot:cell(diasAExpirar)="data">
+                 <b-badge>
+                    {{calcularDiasAExpirarDesc(data.item.dias_percorridos,data.item.status.id_status)}}                  
+                 </b-badge>         
+               </template>  
+
+               <template v-slot:cell(prazo_total)="data">                 
+                 <b-badge :variant="data.item.dias_corridos=='S'? 'secondary' : 'primary'"
+                 v-b-popover.hover.top="data.item.dias_corridos=='S'? 'dias corridos' : 'dias utéis'"
+                 >
+                   {{data.item.prazo_total}}     
+                 </b-badge>         
+               </template>  
+               
+             <!--  <template v-slot:cell(diasAExpirar)="data">
                  <b-badge :variant="colorDiasRestantes(data.item.dia_limite_prazo)">
                     {{calcularDiasAExpirarDesc(data.item.dia_limite_prazo)}}                   
-                 </b-badge>                    
-               </template>             
+                 </b-badge>  
+               </template> -->
  
                <template v-slot:cell(reiteracoes)="data">  
                  <b-badge :variant="colorReiteracao(data.item._count.Reiteracao)">
                      {{data.item._count.Reiteracao}}
                  </b-badge>
                </template>
+
+               <template v-slot:cell(data_recebimento)="data">
+                 {{formatarDataBr(data.item.data_recebimento)}}
+              </template>  
+              
+              <template v-slot:cell(dia_limite_prazo)="data">
+                 {{formatarDataBr(data.item.dia_limite_prazo)}}
+              </template>              
               
                <!-- BOTÕES DE AÇÕES -->
                <template v-slot:cell(botaoAction)="data">              
@@ -208,8 +222,7 @@
                    <b-list-group-item block class="btn-light btn-outline-dark m-0 p-1"
                    v-if="data.item.status.id_status!=statusArquivado && permissaoRecepcaoMenu(data.item.fk_status )" 
                      @click="abrirModal('modal-editar-processo', data.item.id_processo)"
-                     @listarProcesso="listarProcesso(currentPage)"
-                     >
+                     @listarProcesso="listarProcesso(currentPage)">
                      Editar
                    </b-list-group-item>
  
@@ -277,6 +290,43 @@
            </div>
            <div>&nbsp <b>Total Registros:</b> {{totalRows}}</div>
          </div>
+
+        <div class="mt-5 mb-5">
+       
+          <b-form-checkbox v-model="legenda" @change="exibirLegenda()" switch class="font text-end">
+            <h5>Legenda</h5>
+          </b-form-checkbox>
+
+          <b-form-group append="m" v-show="exibeLegenda">  
+            <label>Status</label>
+            <ul style="list-style: none;">
+              <li><b-badge variant="secondary">Recebido</b-badge><small>: Processo foi recebido pela recepção. </small></li>
+              <li><b-badge variant="info">Distribuído</b-badge><small>: Processo foi distribuído para os responsáveis (advogados). </small></li>
+              <li><b-badge variant="warning">Tramitando</b-badge><small>: Processo está tramitando.</small></li>
+              <li><b-badge variant="primary">Respondendo</b-badge><small>: Processo está sendo respondido.</small></li>
+              <li><b-badge variant="dark">Arquivado</b-badge><small>: Processo foi arquivado no SIGED. Quando respondido para órgão demandante com ofício.</small></li>
+            </ul>
+          </b-form-group>
+
+          <b-form-group append="m" v-show="exibeLegenda">  
+            <label>Prazo Total</label>
+            <br><small>x: Prazo Total informado no momento do cadastro.</small>
+            <ul style="list-style: none;">
+              <li><b-badge variant="primary">x</b-badge><small>: Dias Úteis </small></li>
+              <li><b-badge variant="secondary">x</b-badge><small>: Dias Corridos </small></li>             
+            </ul>
+          </b-form-group>
+
+          <b-form-group append="m" v-show="exibeLegenda">  
+            <label>Dias a expirar</label>            
+            <ul style="list-style: none;">
+              <li><b-badge variant="success">x</b-badge><small>: Dentro do Prazo. </small></li>  
+              <li><b-badge variant="warning">x</b-badge><small>: Atenção. O prazo está curto. </small></li>
+              <li><b-badge variant="danger">x</b-badge><small>: Está próximo de expirar. </small></li>
+              <li><b-badge variant="dark">x</b-badge><small>: Expirado. </small></li>  
+            </ul>
+          </b-form-group>
+        </div>
  
            <!-- MODAL -->
          <!-- CADASTRO DO PROCESSO -->
@@ -405,12 +455,14 @@
        noCollapse: true,
        show: false as boolean,
        exibirMaisDetalhes: false as boolean,      
-       exibirRegistroSIGED: false as boolean,      
+       exibirRegistroSIGED: false as boolean, 
+       exibeLegenda: false as boolean,  
+       legenda: false as boolean,   
        pageOptions: [5, 10, 15, { value: 100, text: "Show a lot" }],
        form: {} as Processo,
        formDesarquivado: {} as Processo,
        selected: 'siged',
-      options: [
+       options: [
         { item: 'siged', name: 'N° Siged' },
         { item: 'proced', name: 'Nº Procedimento' }
         ],
@@ -519,7 +571,34 @@
          let diferencaDias = dataMixin.methods.diferencaEntreDataAtual(dataAExpirar) 
          return diferencaDias 
      },
-     calcularDiasAExpirarDesc(dataAExpirar: any): any{
+     calcularDiasAExpirarDesc(diasPercorridos: any, idStatus: any): any{
+              
+         if(!diasPercorridos || idStatus == this.statusArquivado){
+           return ""
+         }
+
+         if(diasPercorridos == 1) {
+           return "1 dia"
+         }
+
+         if(diasPercorridos == -1) {
+           return "Expira Hoje"
+         }
+
+         /*  if(diasPercorridos <= -1 ){
+           return "Expirado"
+         }*/
+         
+         if(diasPercorridos >-366 && diasPercorridos < -1 ){
+           return "Expirado "+-diasPercorridos+" dia(s)"
+         }
+         if(diasPercorridos < -365){
+           return "Expirado (+ de 1 ano)"
+         }
+ 
+         return diasPercorridos + " dias"
+     },   
+     /*calcularDiasAExpirarDesc(dataAExpirar: any): any{
          //let diferencaDias = dataMixin.methods.diferencaEntreDataAtual(dataAExpirar) 
          let diferencaDias = this.calcularDiasAExpirar(dataAExpirar)
        
@@ -545,8 +624,8 @@
            return "Expirado (+1 ano)"
          }*/
  
-         return diferencaDias + " dias"
-     },   
+     /*    return diferencaDias + " dias"
+     },*/   
      listarProcesso(currentpage: number): void {
        this.loading = true 
        let busca = {numProcedimento : this.form.numProcedimento ? this.form.numProcedimento : "",
@@ -597,11 +676,11 @@
          idResponsavel: this.responsavelSelecionado ? this.responsavelSelecionado.id_responsavel : "",
          descricaoProcesso: this.form.descricaoProcesso ? this.form.descricaoProcesso : "",
          objetoProcesso: this.form.objetoProcesso ? this.form.objetoProcesso : "",
-       }     
+       }    
 
-         this.currentPage = 1               
+        this.currentPage = 1               
       
-         RestApiService.post("processos/list", busca)
+        RestApiService.post("processos/list", busca)
            .then((response: any) => {  
             
             console.log(response.data)
@@ -759,7 +838,7 @@
      carregarAssunto(): void {
       this.loading = true
      
-     let busca = {}
+      let busca = {}
 
        RestApiService.get1("assuntos/list")
        .then((response: any) => {        
@@ -863,8 +942,7 @@
                  })
            .finally(() => {
              this.loading = false;
-           });        
-     
+           });             
     },
  
    excluir(id: any){
@@ -971,6 +1049,16 @@
          this.exibirMaisDetalhes = true;
        } else {
          this.exibirMaisDetalhes = false;
+       }
+     },
+
+     exibirLegenda(): void {
+       if (
+         this.legenda === true
+       ) {
+         this.exibeLegenda = true;
+       } else {
+         this.exibeLegenda = false;
        }
      },
     
