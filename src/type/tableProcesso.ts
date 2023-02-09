@@ -39,24 +39,34 @@ export const FieldsTableProcesso =
     label: 'Classificação',
     sortable: true,
   },
-  {
+ /* {
     key: 'caixa_atual_siged',
     label: 'Caixa SIGED',
     sortable: true,
-  },
+  },*/
   {
     key: 'status.desc_status',
     label: 'Status',
     sortable: true,
   },  
   {
+    key: 'data_recebimento',
+    label: 'Data Recebimento',
+    sortable: true,
+  },
+  {
     key: 'prazo_total',
-    label: 'Prazo',
+    label: 'Prazo Total',
     sortable: true,
   },  
+  /*{
+    key: 'dia_limite_prazo',
+    label: 'Data Final Limite',
+    sortable: true,
+  },   */
   {
     key: 'diasAExpirar',
-    label: 'Dias a Expirar (Corridos)',
+    label: 'Dias a Expirar',
     sortable: true,
   }, 
   {
