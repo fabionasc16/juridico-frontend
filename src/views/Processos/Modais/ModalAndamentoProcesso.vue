@@ -237,47 +237,20 @@ export default Vue.extend({
                     this.loading = false;
                 });
             }                 
-<<<<<<< HEAD
         },
-        carregarStatusPrazo(): void {
+        carregarStatusProcesso(): void {
             this.loading = true   
                 RestApiService.get1(
                 "status/recepcao")
                 .then((response: any) => {        
                     this.optionsStatusProcesso = response.data                   
-=======
-        },        
-        carregarStatusProcesso(): void {
-
-            if(this.userIsRecepcao()){
-                const statusRecepcao :  Array<any> = [
-                    { aplica_a: "PROCESSO", desc_status: "Recebido",  id_status: 10 },
-                    { aplica_a: "PROCESSO", desc_status: "Distribuido",  id_status: 11 },
-                ]
-                    
-                this.optionsStatusProcesso = statusRecepcao
-            }
-            else {
-                this.loading = true   
-               /*  RestApiService.get(
-                "status/aplicacaostatUs",
-                `?aplicaA=PROCESSO`
-                )*/
-                RestApiService.get(
-                "status/aplicacaostatus",
-                `?aplicaA=PROCESSO&currentPage=1&perPage=${this.perPageListagens}`
-                )
-                .then((response: any) => {                   
-                    this.optionsStatusProcesso = response.data    
->>>>>>> 166a2c0b2b00f41496b3aff7c14465dee2fb73b6
                 })
                 .catch((e) => {          
                     console.log(e)
                 })
                 .finally(() => {
                     this.loading = false               
-                })
-            }
+                })           
         },        
 
         validarCampos(): boolean {    
