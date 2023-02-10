@@ -24,7 +24,7 @@
                     <!-- 1ª LINHA (CPF + NOME) -->
                     <div class="row mt-3" >
                         <b-form-group class="font col-sm-5 col-md-5 col-lg-5">
-                           <label>CPF {{ form.idUsuario }}<span class="text-danger">*</span>:</label>
+                           <label>CPF<span class="text-danger">*</span>:</label>
                             <b-form-input :placeholder="'Digite seu CPF '" type="text" 
                                 v-model="form.cpfResponsavel"
                                 @focusout="verificaCpf"
@@ -146,7 +146,7 @@ export default Vue.extend({
             let url = "responsaveis";           
                     
             if (this.validarCampos()) {   
-              this.loading = true  
+              this.loading = true               
             
               RestApiService.salvar(url, this.form, acao, this.form.idResponsavel)
                 .then((res) => {
@@ -228,7 +228,7 @@ export default Vue.extend({
                         this.form.nomeResponsavel = response.data.nome   
                         this.form.telefone = response.data.telefone
                         this.form.email = response.data.email 
-                        this.disableMenosCPF=false                                                    
+                        this.disableMenosCPF=false  
                     })
                     .catch((e) => {        
                         this.limparCampos()         
@@ -250,16 +250,15 @@ export default Vue.extend({
             this.loading = true;       
                         
             RestApiService.get("responsaveis/id", this.id)
-                .then((res: any) => {          
-
-                console.log(res.data)
+                .then((res: any) => {                        
 
                 this.form.idResponsavel =  res.data.id_responsavel 
                 this.form.nomeResponsavel = res.data.nome_responsavel
                 this.form.cpfResponsavel =  res.data.cpf_responsavel
                 this.form.telefone = res.data.telefone
                 this.form.email = res.data.email
-                this.form.registroOAB = res.data.registro_oab               
+                this.form.registroOAB = res.data.registro_oab 
+                this.form.idUsuario = res.data.id_usuario              
                
             })
             .catch((e) => {
