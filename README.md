@@ -9,7 +9,8 @@ O Projeto SAPEJ auxiliará o setor Jurídico no controle de processos provenient
 <br>
 
 O cadastro do processo é realizado pela recepção do jurídico.<br>
-A recepção pode visualizar os processos até que sejam distribuídos.<br>
+<b>Antes:</b> A recepção pode visualizar os processos até que sejam distribuídos.<br>
+<b>Depois Atualizado:</b> A recepção pode visualizar todos os processos, mas poderá alterar apenas o com status Recebido.<br>
 Para distribuir processo, a recepção informará um responsável, o qual é um advogado cadastrado,
 e após isso muda o status para 'Distribuído'. <br>
 O processo fica agora em responsabilidade do Advogado, o qual pode ser tramitado, respondido ou arquivado.<br>
@@ -93,10 +94,10 @@ Cadastro de advogados que serão responsáveis pelo processo.
 Uma vez por ano deve-se registrar os feriados para o ano corrente. O feriado pode ser móvel ou fixo.
 O Ponto Facultativo também precisa ser registrado na tabela de feriado para que seja levado em consideração no cálculo do prazo final.
 <br>
-Nova reunião foi informado que seria conversado com o jurídico a respeito dos feriados.
-Mas a ideia seria o sistema cadastrar os feriados fixos e calcular os móveis, uma vez por ano.
-E o jurídico ficaria responsável pelo cadastro dos pontos facultativos.
-Em relação a feriados criados, o sistema enviaria para o usuário confirmar, por exemplo: 'Deseja atualizar o prazo dos processos que estão em aberto?'. Caso usuário confirme, o sistema atualiza o prazo de todos os processos que não estão arquivados, em que o feriado interfira o prazo do processo.
+A ideia seria o sistema cadastrar os feriados fixos e calcular os móveis, uma vez por ano.
+E o jurídico ficaria responsável pelo cadastro dos pontos facultativos. <br>
+<b>Antes:</b> Em relação a feriados criados, o sistema enviaria para o usuário confirmar, por exemplo: 'Deseja atualizar o prazo dos processos que estão em aberto?'. Caso usuário confirme, o sistema atualiza o prazo de todos os processos que não estão arquivados, em que o feriado interfira o prazo do processo.<br>
+<b>Depois Atualizado:</b> Após salvar ou atualizar feriado, o sistema roda uma rotina em que o prazo é recalculado e status do prazo atualizado. Essa rotina não é executada quando o processo está com status do Processo 'Arquivado'.
 
 ### Papéis no sistema
 - `Administrador`:
