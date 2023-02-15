@@ -168,7 +168,7 @@
                :fields="fields">
  
                <template v-slot:cell(status.desc_status)="data">
-                 <b-badge :variant="colorStatusProcesso(data.item.status.id_status)">
+                 <b-badge :variant="data.item.status.color_status_prazo">
                       {{data.item.status.desc_status}}</b-badge>            
                </template>
  
@@ -983,7 +983,7 @@
              return "light"            
      },
     
-     //dias corridos    
+     //dias a expirar    
      colorDiasRestantes(DataLimitePrazo: any) : any { 
 
             /* Calcula data atual menos a data limite prazo e informa quandos dias tem a expirar */
@@ -1010,38 +1010,7 @@
              }
    
              return ""            
-     },
-     /*statusDiasRestantes(prazo: any) : any {
- 
-             if(prazo < 0) {
-               return "Expirado" 
-             }
- 
-             if(prazo >= 0 && prazo < 4) {
-               return "Crítico"
-             }
- 
-             if(prazo >= 4 && prazo < 6 ) {
-               return "Atenção"
-             }
- 
-             if(prazo >= 6) {
-               return "Normal"
-             }
- 
-             return ""
-             
-     },*/
-     colorStatusProcesso(status: number) : any {
- 
-           switch(status){
-                 case 12: return "warning"; break;//tramitando
-                 case 11: return "info"; break;//distribuido
-                 case 14: return "dark"; break;//arquivado
-                 case 13: return "primary"; break;//respondendo
-                 default: ""; break;
-           }        
-     },
+     },        
      exibeMaisDetalhes(): void {
        if (
          this.maisDetalhes === true
@@ -1051,7 +1020,6 @@
          this.exibirMaisDetalhes = false;
        }
      },
-
      exibirLegenda(): void {
        if (
          this.legenda === true
