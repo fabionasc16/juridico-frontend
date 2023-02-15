@@ -44,7 +44,8 @@
                             </b-form-group>
                         </div>                                                  
                     </div>       
-                    <div class="row" v-if="statusProcessoSelecionado.id_status==statusDistribuido">
+                  
+                    <div class="row" v-if="exibirResponsavel()">
                         <b-form-group class="font col-sm-12 col-md-12 col-lg-12">  
                             <label>Responsável: <span class="text-danger">*</span></label>                                 
                             <v-select style="font-size: 0.85rem" :options="optionsResponsavel" class="font" label="nome_responsavel"
@@ -119,6 +120,8 @@ export default Vue.extend({
             }, 
             statusDistribuido: '11' as string,
             statusRecebido: '10' as string,
+            statusTramitando: '12' as string,
+            statusRespondendo: '13' as string,          
             statusArquivado: '14' as string,
             responsavelBD: null as any, //responsavel que vem diretamente no BD, antes do usuario alterar na tela
         }
@@ -132,6 +135,19 @@ export default Vue.extend({
     }, 
             
     methods: {  
+  
+        exibirResponsavel() : boolean {
+            if(this.statusProcessoSelecionado.id_status== this.statusDistribuido){
+                return true
+            }
+          
+            if((this.statusProcessoSelecionado.id_status==this.statusTramitando 
+                || this.statusProcessoSelecionado.id_status==this.statusRespondendo)
+                && (!this.responsavelBD )) {
+                return true
+            }
+            return false
+        },
         userIsRecepcao(): boolean {
             return AuthService.userIsRecepcao()
         },       
@@ -154,11 +170,11 @@ export default Vue.extend({
 
                     //formatar datas para formato br
                     this.dataArquivamentoBR = res.data.dataArquivamento ? 
-                    dataMixin.methods.formatarDataBr(res.data.dataArquivamento) : "";
-                    
-                    this.responsavelSelecionado.id_responsavel = res.data.responsavel.id_responsavel
-                    this.responsavelSelecionado.nome_responsavel = res.data.responsavel.nome_responsavel
-                    this.responsavelBD = res.data.responsavel.id_responsavel
+                    dataMixin.methods.formatarDataBr(res.data.dataArquivamento) : "";                    
+                  
+                    this.responsavelSelecionado.id_responsavel = res.data.responsavel ? res.data.responsavel.id_responsavel : ""
+                    this.responsavelSelecionado.nome_responsavel = res.data.responsavel ? res.data.responsavel.nome_responsavel : ""
+                    this.responsavelBD = res.data.responsavel ? res.data.responsavel.id_responsavel : ""
 
                     this.statusProcessoSelecionado.id_status = res.data.status.id_status
                     this.statusProcessoSelecionado.desc_status = res.data.status.desc_status
@@ -194,7 +210,17 @@ export default Vue.extend({
                 this.form.idStatusProcesso = this.statusProcessoSelecionado.id_status  
            
                 //Quando Distribuído
-                if(this.form.idStatusProcesso == this.statusDistribuido){
+                //ou quando tramitando e respondendo sem responsável
+                if(this.form.idStatusProcesso == this.statusDistribuido ||
+                    (
+                        (this.statusProcessoSelecionado.id_status==this.statusTramitando 
+                        || this.statusProcessoSelecionado.id_status==this.statusRespondendo)
+                        && (!this.responsavelBD  ))) {
+                        this.adicionarNotificacao(
+                            "danger",
+                            "O processo está sem responsável."
+                        );                  
+                   
                     this.form.idResponsavel = this.responsavelSelecionado.id_responsavel
                 }else{
                     //enviar o responsável que já estava no BD
@@ -288,6 +314,15 @@ export default Vue.extend({
                     this.adicionarNotificacao(
                         "danger",
                         "A data informada é inválida."
+                    );
+            }
+
+            if((this.statusProcessoSelecionado.id_status==this.statusTramitando 
+                || this.statusProcessoSelecionado.id_status==this.statusRespondendo)
+                && (!this.responsavelSelecionado.id_responsavel  )) {
+                    this.adicionarNotificacao(
+                        "danger",
+                        "O processo está sem responsável."
                     );
             }
 
