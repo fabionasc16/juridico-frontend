@@ -173,25 +173,25 @@
                </template>
  
                <template v-slot:cell(diasAExpirar)="data">
-                 <b-badge>
+                 <b-badge :variant="data.item.statusPrazo.color_status_prazo" v-show="data.item.status.id_status!=14">
                     {{calcularDiasAExpirarDesc(data.item.dias_percorridos,data.item.status.id_status)}}                  
-                 </b-badge>         
+                 </b-badge>
+                 <label v-show="data.item.status.id_status==14">-</label>         
                </template>  
 
-               <template v-slot:cell(prazo_total)="data">                 
-                 <b-badge :variant="data.item.dias_corridos=='S'? 'secondary' : 'primary'"
-                 v-b-popover.hover.top="data.item.dias_corridos=='S'? 'dias corridos' : 'dias utéis'"
-                 >
-                   {{data.item.prazo_total}}     
-                 </b-badge>         
-               </template>  
-               
-             <!--  <template v-slot:cell(diasAExpirar)="data">
+               <!--  <template v-slot:cell(diasAExpirar)="data">
                  <b-badge :variant="colorDiasRestantes(data.item.dia_limite_prazo)">
                     {{calcularDiasAExpirarDesc(data.item.dia_limite_prazo)}}                   
                  </b-badge>  
                </template> -->
- 
+
+               <template v-slot:cell(prazo_total)="data">                 
+                 <b-badge :variant="data.item.dias_corridos=='S'? 'secondary' : 'primary'"
+                 v-b-popover.hover.top="data.item.dias_corridos=='S'? 'dias corridos' : 'dias úteis'">
+                   {{data.item.prazo_total}}     
+                 </b-badge>         
+               </template>               
+              
                <template v-slot:cell(reiteracoes)="data">  
                  <b-badge :variant="colorReiteracao(data.item._count.Reiteracao)">
                      {{data.item._count.Reiteracao}}
@@ -573,16 +573,16 @@
      },
      calcularDiasAExpirarDesc(diasPercorridos: any, idStatus: any): any{
               
-         if(!diasPercorridos || idStatus == this.statusArquivado){
-           return ""
-         }
+         if(idStatus == this.statusArquivado){
+           return "arquivado"
+         } 
 
          if(diasPercorridos == 1) {
            return "1 dia"
          }
 
          if(diasPercorridos == -1) {
-           return "Expira Hoje"
+           return "Venc. Hoje"
          }
 
          /*  if(diasPercorridos <= -1 ){
@@ -598,34 +598,7 @@
  
          return diasPercorridos + " dias"
      },   
-     /*calcularDiasAExpirarDesc(dataAExpirar: any): any{
-         //let diferencaDias = dataMixin.methods.diferencaEntreDataAtual(dataAExpirar) 
-         let diferencaDias = this.calcularDiasAExpirar(dataAExpirar)
-       
-         if(!diferencaDias){
-           return ""
-         }
-         if(diferencaDias == 1) {
-           return "1 dia"
-         }
-
-         if(diferencaDias == -1) {
-           return "Expira Hoje"
-         }
-
-         if(diferencaDias < -1 ){
-           return "Expirado"
-         }
-         
-         /*if(diferencaDias >-365 && diferencaDias < 0 ){
-           return "Expirado ("+-diferencaDias+" dias)"
-         }
-         if(diferencaDias < -365){
-           return "Expirado (+1 ano)"
-         }*/
- 
-     /*    return diferencaDias + " dias"
-     },*/   
+      
      listarProcesso(currentpage: number): void {
        this.loading = true 
        let busca = {numProcedimento : this.form.numProcedimento ? this.form.numProcedimento : "",
