@@ -28,7 +28,7 @@
                 <b-form-group class="font col-sm-5 col-md-5 col-lg-4">
                   <label>Perfil de usuário  <span class="text-danger">*</span></label>
                  <template>
-                    <b-form-select :disabled="disabledAll" class="bordered" size="sm" v-model="form.perfilUsuario" required>
+                    <b-form-select :disabled="disabledAll" class="bordered" size="sm" v-model="perfilSelecionado" required>
                       <b-form-select-option value="">Selecione...</b-form-select-option>
                       <b-form-select-option v-for="perfil in optionsPerfis" :value="perfil.id" :key="perfil.id">
                         {{ perfil.profile_name == 'RECEPCAO'? 'RECEPÇÃO' :  perfil.profile_name}}
@@ -195,6 +195,7 @@ export default Vue.extend({
       optionsGenero: GeneroSeeder,     
       generoSelecionado: "" as string,
       dataNascimentoBR: "" as string,
+      perfilSelecionado: "" as string,
       form: {} as Usuario,      
       disabledAll: false as boolean,
       optionsPerfis: [],         
@@ -292,6 +293,11 @@ export default Vue.extend({
       this.loading = true      
       
       this.form.genero = this.generoSelecionado ? this.generoSelecionado : ""
+    
+      let perfil = [] as string[]
+      perfil.push(this.perfilSelecionado)
+
+      this.form.perfilUsuario = perfil
 
       RestApiService.salvar("usuarios", this.form, acao, this.form.id)
         .then((res) => {         
@@ -368,7 +374,8 @@ export default Vue.extend({
           //this.form.unidadeUsuario = response.data.unit_id; 
           this.form.id = idUser || response.data.id;         
           this.form.nome = response.data.nome;
-          this.form.perfilUsuario = response.data.perfilUsuario;         
+          this.form.perfilUsuario = response.data.perfilUsuario;     
+          this.perfilSelecionado =  response.data.perfilUsuario; 
           this.form.dataNascimento = response.data.dataNascimento;
           this.dataNascimentoBR = response.data.dataNascimento
             ? formatarDataBrMixin.methods.formatarDataBr(
@@ -466,7 +473,8 @@ export default Vue.extend({
     limparCampos(){
           this.form.id = ""       
           this.form.nome = ""
-          this.form.perfilUsuario = ""
+          //this.form.perfilUsuario = ""
+          this.form.perfilUsuario = []
           this.form.dataNascimento = ""
           this.dataNascimentoBR = ""            
           this.form.estadoCivil = ""
@@ -511,7 +519,8 @@ export default Vue.extend({
     fechaSuccess(): void {
       this.success = false;
       //reseta o form
-      (this.form.id = ""), (this.form.perfilUsuario = "");
+      //(this.form.id = ""), (this.form.perfilUsuario = "");
+      (this.form.id = ""), (this.form.perfilUsuario = []);
       //this.form.setorUsuario = ""
       //this.form.unidadeUsuario = ""
       this.form.nome = "";
