@@ -176,6 +176,9 @@
                  <b-badge :variant="data.item.statusPrazo.color_status_prazo" v-show="data.item.status.id_status!=14">
                     {{calcularDiasAExpirarDesc(data.item.dias_percorridos,data.item.status.id_status)}}                  
                  </b-badge>
+                 <div v-show="data.item.status.id_status!=14">                  
+                  <small>{{formatarDataBr(data.item.dia_limite_prazo)}}</small>
+                 </div>
                  <label v-show="data.item.status.id_status==14">-</label>         
                </template>  
 
