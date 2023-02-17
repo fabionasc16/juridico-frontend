@@ -8,7 +8,8 @@ export type Usuario = {
     telefone: string;
     matriculaUsuario: string;
     cargoUsuario: string;
-    perfilUsuario: string;
+    //perfilUsuario: string;
+    perfilUsuario: Array<string>;
     genero: string,
     generoOutro: string,
     cep: string,
