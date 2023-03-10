@@ -61,13 +61,15 @@ O <b>status do processo</b> pode ser: <br>
 
    - NORMAL: PRAZO>=6 DIAS (verde)
    - ATENÇÃO: PRAZO>=4 E < 6 DIAS (amarelo)
-   - CRÍTICO: PRAZO >=0 E <4 DIAS, E HOJE(== -1) (vermelho)
-   - EXPIRADO/VENCIDO: PRAZO <-1 (preto)
+   - CRÍTICO: PRAZO >=0 E <4 DIAS (vermelho)
+   - EXPIRADO/VENCIDO: PRAZO <=-1 (preto)
+
+   <br>dia de hoje pelo back = 0, pelo front era -1. Agora pego diretamente pelo back.
 
 <br><br>
-Na listagem de processo, ele leva em consideração para os <b>Dias e Expirar</b>, o dia_limite_prazo e os dias_percorridos
+Na listagem de processo, ele leva em consideração para os <b>Dias e Expirar</b>, o dia_limite_prazo e os dias_percorridos.
 <br>
-o campo dias_expirados não está sendo mais utilizado.
+O campo dias_expirados não está sendo mais utilizado.
 
 </p>
 
