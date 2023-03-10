@@ -580,15 +580,19 @@
            return "arquivado"
          } 
 
-         if(diasPercorridos == 1) {
-           return "1 dia"
+         if(diasPercorridos == -1) {
+           return "Expirado 1 dia"
          }
 
-         if(diasPercorridos == -1) {
+         if(diasPercorridos == 1) {
+           return "1 dia"
+         }         
+
+         if(diasPercorridos == 0) {
            return "Venc. Hoje"
          }
 
-         /*  if(diasPercorridos <= -1 ){
+         /* if(diasPercorridos < 0 ){
            return "Expirado"
          }*/
          
