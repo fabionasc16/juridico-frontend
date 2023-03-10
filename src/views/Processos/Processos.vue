@@ -174,7 +174,7 @@
  
                <template v-slot:cell(diasAExpirar)="data">
                  <b-badge :variant="data.item.statusPrazo.color_status_prazo" v-show="data.item.status.id_status!=14">
-                    {{calcularDiasAExpirarDesc(data.item.dias_percorridos,data.item.status.id_status)}}                  
+                    {{calcularDiasAExpirarDesc(data.item.dias_percorridos, data.item.statusPrazo.desc_status)}}                  
                  </b-badge>
                  <div v-show="data.item.status.id_status!=14">                  
                   <small>{{formatarDataBr(data.item.dia_limite_prazo)}}</small>
@@ -326,7 +326,7 @@
               <li><b-badge variant="success">x</b-badge><small>: Dentro do Prazo. </small></li>  
               <li><b-badge variant="warning">x</b-badge><small>: Atenção. O prazo está curto. </small></li>
               <li><b-badge variant="danger">x</b-badge><small>: Está próximo de expirar. </small></li>
-              <li><b-badge variant="dark">x</b-badge><small>: Expirado. </small></li>  
+              <li><b-badge variant="dark">x</b-badge><small>: Vencido. </small></li>  
             </ul>
           </b-form-group>
         </div>
@@ -574,14 +574,10 @@
          let diferencaDias = dataMixin.methods.diferencaEntreDataAtual(dataAExpirar) 
          return diferencaDias 
      },
-     calcularDiasAExpirarDesc(diasPercorridos: any, idStatus: any): any{
-              
-         if(idStatus == this.statusArquivado){
-           return "arquivado"
-         } 
-
+     calcularDiasAExpirarDesc(diasPercorridos: any, descStatus: string): any{
+         
          if(diasPercorridos == -1) {
-           return "Expirado 1 dia"
+           return descStatus+" 1 dia"
          }
 
          if(diasPercorridos == 1) {
@@ -589,7 +585,7 @@
          }         
 
          if(diasPercorridos == 0) {
-           return "Venc. Hoje"
+           return descStatus
          }
 
          /* if(diasPercorridos < 0 ){
@@ -597,10 +593,10 @@
          }*/
          
          if(diasPercorridos >-366 && diasPercorridos < -1 ){
-           return "Expirado "+-diasPercorridos+" dia(s)"
+           return descStatus +" "+ -diasPercorridos +" dia(s)"
          }
          if(diasPercorridos < -365){
-           return "Expirado (+ de 1 ano)"
+           return descStatus + " (+ de 1 ano)"
          }
  
          return diasPercorridos + " dias"
