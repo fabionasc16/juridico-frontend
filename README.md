@@ -9,8 +9,8 @@ O Projeto SAPEJ auxiliará o setor Jurídico no controle de processos provenient
 <br>
 
 O cadastro do processo é realizado pela recepção do jurídico.<br>
-<b>Antes:</b> A recepção pode visualizar os processos até que sejam distribuídos.<br>
-<b>Depois Atualizado:</b> A recepção pode visualizar todos os processos, mas poderá alterar apenas o com status Recebido.<br>
+<b>Antes:</b> <strike>A recepção pode visualizar os processos até que sejam distribuídos.</strike><br>
+<b>Depois (Atualizado):</b> A recepção pode visualizar todos os processos, mas poderá alterar apenas o com status Recebido.<br>
 Para distribuir processo, a recepção informará um responsável, o qual é um advogado cadastrado,
 e após isso muda o status para 'Distribuído'. <br>
 O processo fica agora em responsabilidade do Advogado, o qual pode ser tramitado, respondido ou arquivado.<br>
@@ -31,27 +31,28 @@ Esses processos cadastrados, podem ser vinculados a um número do Siged, então,
 ## 1. Processos
 
 O Prazo Total do Processo vem escrito no documento do orgão demandante.<br>
-A partir da data de recebimento do processo, é calculada a data final limite,
-que leva em consideração os feriados cadastrados no sistema, o prazo total informado,
-e se esse prazo total é em dias úteis ou corridos.
+A partir da data de recebimento do processo, é calculada a data final limite, 
+que leva em consideração o prazo total informado, e se esse prazo total é em dias úteis ou corridos.
+Caso seja em dias úteis ele verifica se tem algum feriado cadastrado no sistema.
+
 <p>
 Existem 2 status no processo: <b>status do prazo</b> e <b>status do processo</b>. 
 <br><br>
 O <b>status do processo</b> pode ser: <br>
 
-   - RECEBIDO: Chegou na mesa da Recepção, foi cadastrado.
-   - DISTRIBUÍDO: Entre as pessoas do setor que vão dar a solução, no caso os 
-   responsáveis (advogados) cadastrados.
-   - TRAMITANDO: Quando enviam para outro setor.
+   - RECEBIDO: Chegou na mesa da Recepção e foi cadastrado.
+   - DISTRIBUÍDO: Quando o processo foi distribuído entre as pessoas do setor que vão dar a solução, no caso os responsáveis (advogados) cadastrados. Ou seja, o processo é vinculado a um advogado.
+   - TRAMITANDO: Quando enviam o processo para outro setor.
    - RESPONDENDO: Tramitou e já estão respondendo.
    - ARQUIVADO: Quando foi arquivado no SIGED. Quando responde para o órgão demandante com ofício.
    
    É possível desarquivar o processo, após ser arquivado.
-   <br>
+   <p>
    Se orgão demandante não aceitar a resposta, abre outro processo.
+   </p>
    <p>O processo tem 2 números: número do SIGED ou número externo(número do procedimento).
-   - Número externo: número processo gerado pelo órgão externo, exemplo Ministério Público, para permitir que seja realizada busca.
-   - Número SIGED: número processo SIGED, para conduzir o externo.
+   <br>- Número externo: número processo gerado pelo órgão externo, exemplo Ministério Público, para permitir que seja realizada busca.
+   <br>- Número SIGED: número processo SIGED, para conduzir o externo.
    </p>
    Caixa do SIGED: posteriormente deverá ser feito update para saber em que caixa está, pois hoje só
    salva a caixa atual, no momento do cadastro do processo.
@@ -67,9 +68,12 @@ O <b>status do processo</b> pode ser: <br>
    <br>dia de hoje pelo back = 0, pelo front era -1. Agora pego diretamente pelo back.
 
 <br><br>
-Na listagem de processo, ele leva em consideração para os <b>Dias e Expirar</b>, o dia_limite_prazo e os dias_percorridos.
+Na listagem de processo, ele leva em consideração para os <b>Dias e Expirar</b>, o dia_limite_prazo e os dias_percorridos para a situação em que o processo ainda vai vencer.
 <br>
-O campo dias_expirados não está sendo mais utilizado.
+Quando o processo ainda não expirou, dias a expirar vai ser contabilizado de acordo com dia útil ou corrido.
+<br>
+Quando o processo já expirou (status vencido), ele sempre mostra em dias corridos. Além disso, nesse momento
+é utilizado o campo dias_expirados.
 
 </p>
 
@@ -103,7 +107,9 @@ O Ponto Facultativo também precisa ser registrado na tabela de feriado para que
 <br>
 A ideia seria o sistema cadastrar os feriados fixos e calcular os móveis, uma vez por ano.
 E o jurídico ficaria responsável pelo cadastro dos pontos facultativos. <br>
-<b>Antes:</b> Em relação a feriados criados, o sistema enviaria para o usuário confirmar, por exemplo: 'Deseja atualizar o prazo dos processos que estão em aberto?'. Caso usuário confirme, o sistema atualiza o prazo de todos os processos que não estão arquivados, em que o feriado interfira o prazo do processo.<br>
+<b>Antes:</b> <strike>Em relação a feriados criados, o sistema enviaria para o usuário confirmar, por exemplo: 'Deseja atualizar o prazo dos processos que estão em aberto?'. Caso usuário confirme, o sistema atualiza o prazo de todos os processos que não estão arquivados, em que o feriado interfira o prazo do processo.
+</strike>
+<br>
 <b>Depois Atualizado:</b> Após salvar ou atualizar feriado, o sistema roda uma rotina em que o prazo é recalculado e status do prazo atualizado. Essa rotina não é executada quando o processo está com status do Processo 'Arquivado'.
 
 ### Papéis no sistema
