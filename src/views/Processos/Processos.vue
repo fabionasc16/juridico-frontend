@@ -174,8 +174,10 @@
  
                <template v-slot:cell(diasAExpirar)="data">
                  <b-badge :variant="data.item.statusPrazo.color_status_prazo" v-show="data.item.status.id_status!=14">
-                    {{calcularDiasAExpirarDesc(data.item.dias_percorridos, data.item.statusPrazo.desc_status)}}                  
+                    {{calcularDiasAExpirarDesc(data.item.dias_percorridos, data.item.statusPrazo.desc_status,
+                    data.item.statusPrazo.id_status, data.item.dias_expirados)}}                  
                  </b-badge>
+                  <!--quando é diferente de arquivado-->
                  <div v-show="data.item.status.id_status!=14">                  
                   <small>{{formatarDataBr(data.item.dia_limite_prazo)}}</small>
                  </div>
@@ -574,31 +576,28 @@
          let diferencaDias = dataMixin.methods.diferencaEntreDataAtual(dataAExpirar) 
          return diferencaDias 
      },
-     calcularDiasAExpirarDesc(diasPercorridos: any, descStatus: string): any{
+     calcularDiasAExpirarDesc(diasPercorridos: any, descStatus: string, idStatusPrazo: number, diasExpirados: number): any{
          
-         if(diasPercorridos == -1) {
+         //vencido 1 dia //Status 9 == Vencido
+         if(idStatusPrazo == 9 && diasExpirados == -1) {
            return descStatus+" 1 dia"
          }
-
-         if(diasPercorridos == 1) {
-           return "1 dia"
-         }         
-
-         if(diasPercorridos == 0) {
-           return descStatus
+         if(idStatusPrazo == 9 && diasExpirados >-366 && diasExpirados < -1 ){
+           return descStatus +" "+ -diasExpirados +" dias"
          }
-
-         /* if(diasPercorridos < 0 ){
-           return "Expirado"
-         }*/
-         
-         if(diasPercorridos >-366 && diasPercorridos < -1 ){
-           return descStatus +" "+ -diasPercorridos +" dia(s)"
-         }
-         if(diasPercorridos < -365){
+         if(idStatusPrazo == 9 && diasExpirados < -365){
            return descStatus + " (+ de 1 ano)"
          }
- 
+
+         //vence em 1 dia = crítico
+         if(idStatusPrazo != 9 && diasPercorridos == 1) {
+           return "1 dia"
+         }  
+         //vence hoje
+         if(idStatusPrazo != 9 && diasPercorridos == 0) {
+           return descStatus
+         }   
+
          return diasPercorridos + " dias"
      },   
       
