@@ -75,6 +75,11 @@ Quando o processo ainda não expirou, dias a expirar vai ser contabilizado de ac
 Quando o processo já expirou (status vencido), ele sempre mostra em dias corridos. Além disso, nesse momento
 é utilizado o campo dias_expirados.
 
+<br>
+A regra que foi passada - Exemplo: dia de recebimento 10/03/2023, 5 dias corridos. Data limite = 15/03/2023
+<br> Dias a expirar 1 dia, sendo hoje dia 13/03/2023. Dia 14/03/2023 mostra 'expira hoje'
+e dia 15, que é o dia limite mostra expirado. 
+
 </p>
 
 ### 1.1. Tramitações

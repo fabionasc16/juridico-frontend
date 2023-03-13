@@ -73,7 +73,7 @@
                 text-field="texto"
                 > </b-form-select>    
               </b-form-group>              
-           
+                      
               <b-form-group v-show="generoSelecionado == 'autointitulado'" 
                 class="font col-sm-6 col-md-6 col-lg-4 animate__animated animate__backInRight">
                 <label>Informe o gênero <span class="text-danger">*</span></label>
@@ -369,8 +369,7 @@ export default Vue.extend({
 
       let idUser = this.id 
       RestApiService.get("usuarios/detalhes", idUser)
-        .then((response: any) => {            
-          
+        .then((response: any) => {          
           //this.form.unidadeUsuario = response.data.unit_id; 
           this.form.id = idUser || response.data.id;         
           this.form.nome = response.data.nome;
