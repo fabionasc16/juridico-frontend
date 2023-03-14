@@ -143,11 +143,12 @@ export default Vue.extend({
                 "logs",
                 `?idProcesso=${this.idProcesso}&search=${this.busca}`
             )
-                .then((response: any) => {
+                .then((response: any) => {         
+
                 this.perPage = response.data.perPage;
-                this.items = response.data.data;
+                this.items = response.data?response.data:[];
                 this.totalRows = response.data.total;
-                this.totalPageSearch = response.data.data.length  
+                this.totalPageSearch = response.data?response.data.length:0;  
                 })
                 .catch((e) => {
                 this.adicionarAlert(
